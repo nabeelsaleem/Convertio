@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Free online tools for PDF, images, and documents. Merge, split, compress, and convert files easily.">
+    <meta property="og:title" content="ToolKit - Free Online File Tools">
+    <meta property="og:description" content="All-in-one solution for your document needs. 100% free and easy to use.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://example.com">
+    <title>ToolKit - Free Online File Tools</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .dropzone {
+            border: 2px dashed #ccc;
+            transition: all 0.3s ease;
+        }
+        .dropzone.active {
+            border-color: #da3f0b;
+            background-color: rgba(218, 63, 11, 0.05);
+        }
+        .tool-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        .nav-dropdown {
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(10px);
+            transition: all 0.2s ease;
+        }
+        .nav-item:hover .nav-dropdown {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+        .progress-bar {
+            transition: width 0.3s ease;
+        }
+    </style>
+</head>
+<body class="font-sans bg-gray-50 min-h-screen flex flex-col">
+    <!-- Navigation -->
+    <header class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="container mx-auto px-4">
+            <nav class="flex items-center justify-between h-16">
+                <div class="flex items-center">
+                    <a href="index.html" class="text-2xl font-bold text-[#da3f0b]">ToolKit</a>
+                </div>
+                
+                <div class="hidden md:flex items-center space-x-8">
+                    <div class="relative nav-item">
+                        <button class="flex items-center text-gray-700 hover:text-[#da3f0b] transition">
+                            PDF Tools <i class="fas fa-chevron-down ml-2 text-xs"></i>
+                        </button>
+                        <div class="nav-dropdown absolute left-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50">
+                            <a href="merge.html" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Merge PDF</a>
+                            <a href="split.html" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Split PDF</a>
+                            <a href="compress.html" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Compress PDF</a>
+                        </div>
+                    </div>
+                    
+                    <div class="relative nav-item">
+                        <button class="flex items-center text-gray-700 hover:text-[#da3f0b] transition">
+                            Image Tools <i class="fas fa-chevron-down ml-2 text-xs"></i>
+                        </button>
+                        <div class="nav-dropdown absolute left-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50">
+                            <a href="convert-image.html" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Convert Image</a>
+                            <a href="resize.html" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Resize Image</a>
+                            <a href="compress-image.html" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Compress Image</a>
+                        </div>
+                    </div>
+                    
+                    <a href="#" class="text-gray-700 hover:text-[#da3f0b] transition">Document Tools</a>
+                    <a href="#" class="text-gray-700 hover:text-[#da3f0b] transition">More Tools</a>
+                </div>
+                
+                <div class="flex items-center space-x-4">
+                    <button class="md:hidden text-gray-700" id="mobile-menu-button">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </nav>
+        </div>
+        
+        <!-- Mobile menu -->
+        <div class="hidden md:hidden bg-white py-2 px-4 shadow-md" id="mobile-menu">
+            <div class="flex flex-col space-y-3">
+                <div>
+                    <button class="flex items-center justify-between w-full text-gray-700 py-2">
+                        <span>PDF Tools</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="pl-4 hidden" id="pdf-mobile-dropdown">
+                        <a href="merge.html" class="block py-2 text-gray-600">Merge PDF</a>
+                        <a href="split.html" class="block py-2 text-gray-600">Split PDF</a>
+                        <a href="compress.html" class="block py-2 text-gray-600">Compress PDF</a>
+                    </div>
+                </div>
+                
+                <div>
+                    <button class="flex items-center justify-between w-full text-gray-700 py-2">
+                        <span>Image Tools</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="pl-4 hidden" id="image-mobile-dropdown">
+                        <a href="convert-image.html" class="block py-2 text-gray-600">Convert Image</a>
+                        <a href="resize.html" class="block py-2 text-gray-600">Resize Image</a>
+                        <a href="compress-image.html" class="block py-2 text-gray-600">Compress Image</a>
+                    </div>
+                </div>
+                
+                <a href="#" class="text-gray-700 py-2">Document Tools</a>
+                <a href="#" class="text-gray-700 py-2">More Tools</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-grow">
+        <!-- Hero Section -->
+        <section class="bg-white py-16">
+            <div class="container mx-auto px-4">
+                <div class="max-w-3xl mx-auto text-center">
+                    <h1 class="text-4xl md:text-5xl font-bold text-gray-800 mb-6">All Your File Tools in One Place</h1>
+                    <p class="text-xl text-gray-600 mb-8">Free online tools for PDFs, images, and documents. No installation, no registration, just simple tools that work.</p>
+                    <div class="flex flex-col sm:flex-row justify-center gap-4">
+                        <a href="#tools" class="bg-[#da3f0b] hover:bg-[#c23a0a] text-white px-6 py-3 rounded-lg shadow transition duration-300 font-medium">Explore Tools</a>
+                        <a href="#" class="border border-gray-300 hover:border-[#da3f0b] text-gray-700 hover:text-[#da3f0b] px-6 py-3 rounded-lg transition duration-300 font-medium">How It Works</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Tools Grid -->
+        <section class="py-12 bg-gray-50" id="tools">
+            <div class="container mx-auto px-4">
+                <h2 class="text-3xl font-bold text-center text-gray-800 mb-12">Popular Tools</h2>
+                
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                    <!-- Tool Card 1 -->
+                    <a href="merge.html" class="tool-card bg-white rounded-xl shadow p-6 transition duration-300 flex flex-col">
+                        <div class="w-12 h-12 bg-[#da3f0b]/10 text-[#da3f0b] rounded-lg flex items-center justify-center mb-4">
+                            <i class="fas fa-object-group text-xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold text-gray-800 mb-2">Merge PDF</h3>
+                        <p class="text-gray-600 mb-4">Combine multiple PDF files into a single document in seconds.</p>
+                        <div class="mt-auto text-[#da3f0b] font-medium flex items-center">
+                            <span>Use Tool</span>
+                            <i class="fas fa-arrow-right ml-2"></i>
+                        </div>
+                    </a>
+                    
+                    <!-- Tool Card 2 -->
+                    <a href="split.html" class="tool-card bg-white rounded-xl shadow p-6 transition duration-300 flex flex-col">
+                        <div class="w-12 h-12 bg-[#da3f0b]/10 text-[#da3f0b] rounded-lg flex items-center justify-center mb-4">
+                            <i class="fas fa-cut text-xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold text-gray-800 mb-2">Split PDF</h3>
+                        <p class="text-gray-600 mb-4">Extract pages or split your PDF into multiple files.</p>
+                        <div class="mt-auto text-[#da3f0b] font-medium flex items-center">
+                            <span>Use Tool</span>
+                            <i class="fas fa-arrow-right ml-2"></i>
+                        </div>
+                    </a>
+                    
+                    <!-- Tool Card 3 -->
+                    <a href="compress.html" class="tool-card bg-white rounded-xl shadow p-6 transition duration-300 flex flex-col">
+                        <div class="w-12 h-12 bg-[#da3f0b]/10 text-[#da3f0b] rounded-lg flex items-center justify-center mb-4">
+                            <i class="fas fa-compress-alt text-xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold text-gray-800 mb-2">Compress PDF</h3>
+                        <p class="text-gray-600 mb-4">Reduce PDF file size while maintaining quality.</p>
+                        <div class="mt-auto text-[#da3f0b] font-medium flex items-center">
+                            <span>Use Tool</span>
+                            <i class="fas fa-arrow-right ml-2"></i>
+                        </div>
+                    </a>
+                    
+                    <!-- Tool Card 4 -->
+                    <a href="convert-image.html" class="tool-card bg-white rounded-xl shadow p-6 transition duration-300 flex flex-col">
+                        <div class="w-12 h-12 bg-[#da3f0b]/10 text-[#da3f0b] rounded-lg flex items-center justify-center mb-4">
+                            <i class="fas fa-exchange-alt text-xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold text-gray-800 mb-2">Convert Image</h3>
+                        <p class="text-gray-600 mb-4">Change image format (JPG, PNG, GIF, etc.) easily.</p>
+                        <div class="mt-auto text-[#da3f0b] font-medium flex items-center">
+                            <span>Use Tool</span>
+                            <i class="fas fa-arrow-right ml-2"></i>
+                        </div>
+                    </a>
+                    
+                    <!-- Tool Card 5 -->
+                    <a href="resize.html" class="tool-card bg-white rounded-xl shadow p-6 transition duration-300 flex flex-col">
+                        <div class="w-12 h-12 bg-[#da3f0b]/10 text-[#da3f0b] rounded-lg flex items-center justify-center mb-4">
+                            <i class="fas fa-expand-alt text-xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold text-gray-800 mb-2">Resize Image</h3>
+                        <p class="text-gray-600 mb-4">Change dimensions of your images without quality loss.</p>
+                        <div class="mt-auto text-[#da3f0b] font-medium flex items-center">
+                            <span>Use Tool</span>
+                            <i class="fas fa-arrow-right ml-2"></i>
+                        </div>
+                    </a>
+                    
+                    <!-- Tool Card 6 -->
+                    <a href="compress-image.html" class="tool-card bg-white rounded-xl shadow p-6 transition duration-300 flex flex-col">
+                        <div class="w-12 h-12 bg-[#da3f0b]/10 text-[#da3f0b] rounded-lg flex items-center justify-center mb-4">
+                            <i class="fas fa-file-image text-xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold text-gray-800 mb-2">Compress Image</h3>
+                        <p class="text-gray-600 mb-4">Reduce image file size for web or email.</p>
+                        <div class="mt-auto text-[#da3f0b] font-medium flex items-center">
+                            <span>Use Tool</span>
+                            <i class="fas fa-arrow-right ml-2"></i>
+                        </div>
+                    </a>
+                    
+                    <!-- Tool Card 7 -->
+                    <a href="#" class="tool-card bg-white rounded-xl shadow p-6 transition duration-300 flex flex-col">
+                        <div class="w-12 h-12 bg-[#da3f0b]/10 text-[#da3f0b] rounded-lg flex items-center justify-center mb-4">
+                            <i class="fas fa-file-word text-xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold text-gray-800 mb-2">Word to PDF</h3>
+                        <p class="text-gray-600 mb-4">Convert DOC or DOCX files to PDF format.</p>
+                        <div class="mt-auto text-[#da3f0b] font-medium flex items-center">
+                            <span>Use Tool</span>
+                            <i class="fas fa-arrow-right ml-2"></i>
+                        </div>
+                    </a>
+                    
+                    <!-- Tool Card 8 -->
+                    <a href="#" class="tool-card bg-white rounded-xl shadow p-6 transition duration-300 flex flex-col">
+                        <div class="w-12 h-12 bg-[#da3f0b]/10 text-[#da3f0b] rounded-lg flex items-center justify-center mb-4">
+                            <i class="fas fa-lock text-xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold text-gray-800 mb-2">Protect PDF</h3>
+                        <p class="text-gray-600 mb-4">Add password protection to your PDF files.</p>
+                        <div class="mt-auto text-[#da3f0b] font-medium flex items-center">
+                            <span>Use Tool</span>
+                            <i class="fas fa-arrow-right ml-2"></i>
+                        </div>
+                    </a>
+                </div>
+                
+                <div class="text-center mt-12">
+                    <a href="#" class="inline-flex items-center text-[#da3f0b] font-medium">
+                        <span>View All Tools</span>
+                        <i class="fas fa-chevron-right ml-2"></i>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section class="py-16 bg-white">
+            <div class="container mx-auto px-4">
+                <h2 class="text-3xl font-bold text-center text-gray-800 mb-12">Why Choose Our Tools?</h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div class="text-center">
+                        <div class="w-16 h-16 bg-[#da3f0b]/10 text-[#da3f0b] rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-bolt text-2xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold text-gray-800 mb-2">Lightning Fast</h3>
+                        <p class="text-gray-600">Our tools process files in seconds using advanced algorithms.</p>
+                    </div>
+                    
+                    <div class="text-center">
+                        <div class="w-16 h-16 bg-[#da3f0b]/10 text-[#da3f0b] rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-lock text-2xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold text-gray-800 mb-2">Secure Processing</h3>
+                        <p class="text-gray-600">Files are processed in your browser and never uploaded to our servers.</p>
+                    </div>
+                    
+                    <div class="text-center">
+                        <div class="w-16 h-16 bg-[#da3f0b]/10 text-[#da3f0b] rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-dollar-sign text-2xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold text-gray-800 mb-2">100% Free</h3>
+                        <p class="text-gray-600">No hidden charges, no watermarks, no registration required.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-8">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-4 md:mb-0">
+                    <a href="index.html" class="text-2xl font-bold text-white">ToolKit</a>
+                    <p class="text-gray-400 mt-2">Simple tools for everyday tasks.</p>
+                </div>
+                
+                <div class="flex space-x-6">
+                    <a href="#" class="text-gray-400 hover:text-white transition">
+                        <i class="fab fa-twitter text-xl"></i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-white transition">
+                        <i class="fab fa-github text-xl"></i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-white transition">
+                        <i class="fab fa-linkedin text-xl"></i>
+                    </a>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
+                <p>&copy; 2023 ToolKit. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Tool Page Template (hidden by default) -->
+    <div id="tool-page-template" class="hidden">
+        <div class="container mx-auto px-4 py-12">
+            <div class="max-w-4xl mx-auto">
+                <div class="mb-8">
+                    <h1 class="text-3xl md:text-4xl font-bold text-gray-800 mb-2">Merge PDF Files</h1>
+                    <p class="text-gray-600">Combine multiple PDFs into one document in the order you prefer.</p>
+                </div>
+                
+                <div class="bg-white rounded-xl shadow p-6 mb-8">
+                    <div id="dropzone" class="dropzone rounded-lg p-12 text-center cursor-pointer mb-6">
+                        <i class="fas fa-cloud-upload-alt text-4xl text-gray-400 mb-4"></i>
+                        <h3 class="text-xl font-semibold text-gray-700 mb-2">Drag & Drop your files here</h3>
+                        <p class="text-gray-500 mb-4">or</p>
+                        <button id="select-files" class="bg-[#da3f0b] hover:bg-[#c23a0a] text-white px-6 py-2 rounded-lg shadow transition duration-300 font-medium">
+                            Select Files
+                        </button>
+                        <input type="file" id="file-input" class="hidden" multiple accept=".pdf">
+                    </div>
+                    
+                    <div id="file-list" class="hidden mb-6">
+                        <h3 class="text-lg font-semibold text-gray-700 mb-3">Selected Files</h3>
+                        <ul id="files" class="space-y-2"></ul>
+                    </div>
+                    
+                    <div id="progress-container" class="hidden mb-6">
+                        <div class="flex justify-between mb-1">
+                            <span class="text-sm font-medium text-gray-700">Processing...</span>
+                            <span class="text-sm font-medium text-gray-700" id="progress-percent">0%</span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-2.5">
+                            <div id="progress-bar" class="progress-bar bg-[#da3f0b] h-2.5 rounded-full" style="width: 0%"></div>
+                        </div>
+                    </div>
+                    
+                    <div id="options" class="mb-6 hidden">
+                        <h3 class="text-lg font-semibold text-gray-700 mb-3">Merge Options</h3>
+                        <div class="space-y-4">
+                            <div>
+                                <label class="flex items-center">
+                                    <input type="radio" name="merge-order" class="form-radio text-[#da3f0b]" checked>
+                                    <span class="ml-2 text-gray-700">Merge in selected order</span>
+                                </label>
+                            </div>
+                            <div>
+                                <label class="flex items-center">
+                                    <input type="radio" name="merge-order" class="form-radio text-[#da3f0b]">
+                                    <span class="ml-2 text-gray-700">Merge in alphabetical order</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="flex flex-col sm:flex-row gap-4">
+                        <button id="merge-button" class="bg-[#da3f0b] hover:bg-[#c23a0a] text-white px-6 py-3 rounded-lg shadow transition duration-300 font-medium flex-1">
+                            Merge PDFs
+                        </button>
+                        <button id="clear-button" class="border border-gray-300 hover:border-[#da3f0b] text-gray-700 hover:text-[#da3f0b] px-6 py-3 rounded-lg transition duration-300 font-medium flex-1">
+                            Clear All
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-xl shadow p-6">
+                    <h2 class="text-xl font-semibold text-gray-800 mb-4">How to merge PDF files</h2>
+                    <ol class="list-decimal list-inside space-y-2 text-gray-700">
+                        <li>Upload your PDF files by dragging and dropping or clicking the "Select Files" button</li>
+                        <li>Rearrange files by dragging them up or down in the list</li>
+                        <li>Click the "Merge PDFs" button to combine your files</li>
+                        <li>Download your merged PDF file</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Mobile menu toggle
+        document.getElementById('mobile-menu-button').addEventListener('click', function() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        });
+
+        // Mobile dropdown toggles
+        document.querySelectorAll('#mobile-menu button').forEach(button => {
+            button.addEventListener('click', function() {
+                const targetId = this.textContent.trim().toLowerCase().replace(' ', '-') + '-mobile-dropdown';
+                const dropdown = document.getElementById(targetId);
+                dropdown.classList.toggle('hidden');
+                
+                // Toggle chevron icon
+                const icon = this.querySelector('i');
+                if (icon.classList.contains('fa-chevron-down')) {
+                    icon.classList.remove('fa-chevron-down');
+                    icon.classList.add('fa-chevron-up');
+                } else {
+                    icon.classList.remove('fa-chevron-up');
+                    icon.classList.add('fa-chevron-down');
+                }
+            });
+        });
+
+        // Simulate tool page functionality
+        if (window.location.pathname.includes('merge.html')) {
+            document.querySelector('main').innerHTML = document.getElementById('tool-page-template').innerHTML;
+            
+            // Tool page specific JavaScript
+            const dropzone = document.getElementById('dropzone');
+            const fileInput = document.getElementById('file-input');
+            const selectFilesBtn = document.getElementById('select-files');
+            const fileList = document.getElementById('file-list');
+            const filesContainer = document.getElementById('files');
+            const progressContainer = document.getElementById('progress-container');
+            const progressBar = document.getElementById('progress-bar');
+            const progressPercent = document.getElementById('progress-percent');
+            const options = document.getElementById('options');
+            const mergeBtn = document.getElementById('merge-button');
+            const clearBtn = document.getElementById('clear-button');
+            
+            let files = [];
+            
+            // Highlight dropzone when dragging over
+            ['dragenter', 'dragover'].forEach(eventName => {
+                dropzone.addEventListener(eventName, (e) => {
+                    e.preventDefault();
+                    dropzone.classList.add('active');
+                });
+            });
+            
+            ['dragleave', 'drop'].forEach(eventName => {
+                dropzone.addEventListener(eventName, (e) => {
+                    e.preventDefault();
+                    dropzone.classList.remove('active');
+                });
+            });
+            
+            // Handle dropped files
+            dropzone.addEventListener('drop', (e) => {
+                e.preventDefault();
+                const dt = e.dataTransfer;
+                const newFiles = dt.files;
+                handleFiles(newFiles);
+            });
+            
+            // Handle selected files
+            selectFilesBtn.addEventListener('click', () => {
+                fileInput.click();
+            });
+            
+            fileInput.addEventListener('change', () => {
+                handleFiles(fileInput.files);
+            });
+            
+            // Handle files
+            function handleFiles(newFiles) {
+                files = [...files, ...Array.from(newFiles)];
+                updateFileList();
+                
+                if (files.length > 0) {
+                    fileList.classList.remove('hidden');
+                    options.classList.remove('hidden');
+                }
+            }
+            
+            // Update file list UI
+            function updateFileList() {
+                filesContainer.innerHTML = '';
+                
+                files.forEach((file, index) => {
+                    const li = document.createElement('li');
+                    li.className = 'flex items-center justify-between bg-gray-50 p-3 rounded-lg';
+                    li.draggable = true;
+                    li.dataset.index = index;
+                    
+                    li.innerHTML = `
+                        <div class="flex items-center">
+                            <i class="fas fa-file-pdf text-red-500 mr-3"></i>
+                            <div>
+                                <p class="text-gray-800 font-medium">${file.name}</p>
+                                <p class="text-gray-500 text-sm">${formatFileSize(file.size)}</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <button class="move-up text-gray-500 hover:text-[#da3f0b] p-1">
+                                <i class="fas fa-arrow-up"></i>
+                            </button>
+                            <button class="move-down text-gray-500 hover:text-[#da3f0b] p-1">
+                                <i class="fas fa-arrow-down"></i>
+                            </button>
+                            <button class="remove-file text-gray-500 hover:text-red-500 p-1">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    `;
+                    
+                    filesContainer.appendChild(li);
+                });
+                
+                // Add event listeners for buttons
+                document.querySelectorAll('.move-up').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const li = e.target.closest('li');
+                        const index = parseInt(li.dataset.index);
+                        if (index > 0) {
+                            [files[index], files[index - 1]] = [files[index - 1], files[index]];
+                            updateFileList();
+                        }
+                    });
+                });
+                
+                document.querySelectorAll('.move-down').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const li = e.target.closest('li');
+                        const index = parseInt(li.dataset.index);
+                        if (index < files.length - 1) {
+                            [files[index], files[index + 1]] = [files[index + 1], files[index]];
+                            updateFileList();
+                        }
+                    });
+                });
+                
+                document.querySelectorAll('.remove-file').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const li = e.target.closest('li');
+                        const index = parseInt(li.dataset.index);
+                        files.splice(index, 1);
+                        updateFileList();
+                        
+                        if (files.length === 0) {
+                            fileList.classList.add('hidden');
+                            options.classList.add('hidden');
+                        }
+                    });
+                });
+                
+                // Add drag and drop sorting
+                document.querySelectorAll('#files li').forEach(li => {
+                    li.addEventListener('dragstart', (e) => {
+                        e.dataTransfer.setData('text/plain', li.dataset.index);
+                        setTimeout(() => {
+                            li.classList.add('opacity-0');
+                        }, 0);
+                    });
+                    
+                    li.addEventListener('dragend', () => {
+                        document.querySelectorAll('#files li').forEach(el => {
+                            el.classList.remove('opacity-0');
+                        });
+                    });
+                    
+                    li.addEventListener('dragover', (e) => {
+                        e.preventDefault();
+                        const rect = li.getBoundingClientRect();
+                        const midpoint = rect.top + rect.height / 2;
+                        
+                        if (e.clientY < midpoint) {
+                            li.classList.add('border-t-2', 'border-[#da3f0b]');
+                            li.classList.remove('border-b-2');
+                        } else {
+                            li.classList.add('border-b-2', 'border-[#da3f0b]');
+                            li.classList.remove('border-t-2');
+                        }
+                    });
+                    
+                    li.addEventListener('dragleave', () => {
+                        li.classList.remove('border-t-2', 'border-b-2', 'border-[#da3f0b]');
+                    });
+                    
+                    li.addEventListener('drop', (e) => {
+                        e.preventDefault();
+                        li.classList.remove('border-t-2', 'border-b-2', 'border-[#da3f0b]');
+                        
+                        const fromIndex = parseInt(e.dataTransfer.getData('text/plain'));
+                        const toIndex = parseInt(li.dataset.index);
+                        const rect = li.getBoundingClientRect();
+                        const midpoint = rect.top + rect.height / 2;
+                        
+                        let newIndex;
+                        if (e.clientY < midpoint) {
+                            newIndex = toIndex;
+                        } else {
+                            newIndex = toIndex + 1;
+                        }
+                        
+                        if (fromIndex < newIndex) {
+                            newIndex--;
+                        }
+                        
+                        if (fromIndex !== newIndex) {
+                            const [movedItem] = files.splice(fromIndex, 1);
+                            files.splice(newIndex, 0, movedItem);
+                            updateFileList();
+                        }
+                    });
+                });
+            }
+            
+            // Format file size
+            function formatFileSize(bytes) {
+                if (bytes === 0) return '0 Bytes';
+                const k = 1024;
+                const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+                const i = Math.floor(Math.log(bytes) / Math.log(k));
+                return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+            }
+            
+            // Merge button click
+            mergeBtn.addEventListener('click', () => {
+                if (files.length === 0) {
+                    alert('Please select at least one file to merge.');
+                    return;
+                }
+                
+                progressContainer.classList.remove('hidden');
+                mergeBtn.disabled = true;
+                
+                // Simulate processing
+                let progress = 0;
+                const interval = setInterval(() => {
+                    progress += Math.random() * 10;
+                    if (progress > 100) progress = 100;
+                    
+                    progressBar.style.width = `${progress}%`;
+                    progressPercent.textContent = `${Math.round(progress)}%`;
+                    
+                    if (progress === 100) {
+                        clearInterval(interval);
+                        setTimeout(() => {
+                            alert('Files merged successfully! This is a demo. In a real application, the merged file would download automatically.');
+                            progressContainer.classList.add('hidden');
+                            mergeBtn.disabled = false;
+                        }, 500);
+                    }
+                }, 200);
+            });
+            
+            // Clear button click
+            clearBtn.addEventListener('click', () => {
+                files = [];
+                fileInput.value = '';
+                fileList.classList.add('hidden');
+                options.classList.add('hidden');
+                progressContainer.classList.add('hidden');
+                mergeBtn.disabled = false;
+            });
+        }
+    </script>
+</body>
+</html>
