@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Free online tools for PDF, images, and documents. Merge, split, compress, and convert files easily.">
+    <meta property="og:title" content="ToolKit - Free Online File Tools">
+    <meta property="og:description" content="All-in-one solution for your document needs. 100% free and easy to use.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://example.com">
+    <title>ToolKit - Free Online File Tools</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .dropzone {
+            border: 2px dashed #ccc;
+            transition: all 0.3s ease;
+        }
+        .dropzone.active {
+            border-color: #da3f0b;
+            background-color: rgba(218, 63, 11, 0.05);
+        }
+        .tool-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        .nav-dropdown {
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(10px);
+            transition: all 0.2s ease;
+        }
+        .nav-item:hover .nav-dropdown {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+        .progress-bar {
+            transition: width 0.3s ease;
+        }
+    </style>
+</head>
+<body class="font-sans bg-gray-50 min-h-screen flex flex-col">
+    <!-- Navigation -->
+    <header class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="container mx-auto px-4">
+            <nav class="flex items-center justify-between h-16">
+                <div class="flex items-center">
+                    <a href="index.html" class="text-2xl font-bold text-[#da3f0b]">ToolKit</a>
+                </div>
+                
+                <div class="hidden md:flex items-center space-x-8">
+                    <div class="relative nav-item">
+                        <button class="flex items-center text-gray-700 hover:text-[#da3f0b] transition">
+                            PDF Tools <i class="fas fa-chevron-down ml-2 text-xs"></i>
+                        </button>
+                        <div class="nav-dropdown absolute left-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50">
+                            <a href="merge.html" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Merge PDF</a>
+                            <a href="split.html" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Split PDF</a>
+                            <a href="compress.html" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Compress PDF</a>
+                        </div>
+                    </div>
+                    
+                    <div class="relative nav-item">
+                        <button class="flex items-center text-gray-700 hover:text-[#da3f0b] transition">
+                            Image Tools <i class="fas fa-chevron-down ml-2 text-xs"></i>
+                        </button>
+                        <div class="nav-dropdown absolute left-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50">
+                            <a href="convert-image.html" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Convert Image</a>
+                            <a href="resize.html" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Resize Image</a>
+                            <a href="compress-image.html" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Compress Image</a>
+                        </div>
+                    </div>
+                    
+                    <a href="#" class="text-gray-700 hover:text-[#da3f0b] transition">Document Tools</a>
+                    <a href="#" class="text-gray-700 hover:text-[#da3f0b] transition">More Tools</a>
+                </div>
+                
+                <div class="flex items-center space-x-4">
+                    <button class="md:hidden text-gray-700" id="mobile-menu-button">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </nav>
+        </div>
+        
+        <!-- Mobile menu -->
+        <div class="hidden md:hidden bg-white py-2 px-4 shadow-md" id="mobile-menu">
+            <div class="flex flex-col space-y-3">
+                <div>
+                    <button class="flex items-center justify-between w-full text-gray-700 py-2">
+                        <span>PDF Tools</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="pl-4 hidden" id="pdf-mobile-dropdown">
+                        <a href="merge.html" class="block py-2 text-gray-600">Merge PDF</a>
+                        <a href="split.html" class="block py-2 text-gray-600">Split PDF</a>
+                        <a href="compress.html" class="block py-2 text-gray-600">Compress PDF</a>
+                    </div>
+                </div>
+                
+                <div>
+                    <button class="flex items-center justify-between w-full text-gray-700 py-2">
+                        <span>Image Tools</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="pl-4 hidden" id="image-mobile-dropdown">
+                        <a href="convert-image.html" class="block py-2 text-gray-600">Convert Image</a>
+                        <a href="resize.html" class="block py-2 text-gray-600">Resize Image</a>
+                        <a href="compress-image.html" class="block py-2 text-gray-600">Compress Image</a>
+                    </div>
+                </div>
+                
+                <a href="#" class="text-gray-700 py-2">Document Tools</a>
+                <a href="#" class="text-gray-700 py-2">More Tools</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-grow">
+        <!-- Tool Section -->
+        <section class="bg-white py-12">
+            <div class="container mx-auto px-4">
+                <div class="max-w-3xl mx-auto text-center mb-8">
+                    <h1 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">Merge PDF Files</h1>
+                    <p class="text-lg text-gray-600">Combine multiple PDFs into one document in seconds</p>
+                </div>
+
+                <!-- Tool Content Area -->
+                <div class="max-w-2xl mx-auto bg-gray-50 rounded-xl p-8">
+                    <!-- Tool content will be inserted here -->
+                    <div id="tool-container" class="text-center">
+                        <!-- The tool script will populate this area -->
+                        <div class="py-12 text-gray-500">
+                            <i class="fas fa-spinner fa-spin fa-2x mb-4"></i>
+                            <p>Loading tool...</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Instructions Section -->
+                <div class="max-w-2xl mx-auto mt-8">
+                    <div class="bg-white rounded-xl shadow p-6">
+                        <h2 class="text-xl font-semibold text-gray-800 mb-4">How to merge PDF files</h2>
+                        <ol class="list-decimal list-inside space-y-2 text-gray-700">
+                            <li>Upload your PDF files by dragging and dropping or clicking the upload button</li>
+                            <li>Rearrange files by dragging them up or down in the list</li>
+                            <li>Click the "Merge PDFs" button to combine your files</li>
+                            <li>Download your merged PDF file</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Tools Grid -->
+        <section class="py-12 bg-gray-50" id="tools">
+            <div class="container mx-auto px-4">
+                <h2 class="text-3xl font-bold text-center text-gray-800 mb-12">Popular Tools</h2>
+                
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                    <!-- Tool Card 1 -->
+                    <a href="merge.html" class="tool-card bg-white rounded-xl shadow p-6 transition duration-300 flex flex-col">
+                        <div class="w-12 h-12 bg-[#da3f0b]/10 text-[#da3f0b] rounded-lg flex items-center justify-center mb-4">
+                            <i class="fas fa-object-group text-xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold text-gray-800 mb-2">Merge PDF</h3>
+                        <p class="text-gray-600 mb-4">Combine multiple PDF files into a single document in seconds.</p>
+                        <div class="mt-auto text-[#da3f0b] font-medium flex items-center">
+                            <span>Use Tool</span>
+                            <i class="fas fa-arrow-right ml-2"></i>
+                        </div>
+                    </a>
+                    
+                    <!-- Tool Card 2 -->
+                    <a href="split.html" class="tool-card bg-white rounded-xl shadow p-6 transition duration-300 flex flex-col">
+                        <div class="w-12 h-12 bg-[#da3f0b]/10 text-[#da3f0b] rounded-lg flex items-center justify-center mb-4">
+                            <i class="fas fa-cut text-xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold text-gray-800 mb-2">Split PDF</h3>
+                        <p class="text-gray-600 mb-4">Extract pages or split your PDF into multiple files.</p>
+                        <div class="mt-auto text-[#da3f0b] font-medium flex items-center">
+                            <span>Use Tool</span>
+                            <i class="fas fa-arrow-right ml-2"></i>
+                        </div>
+                    </a>
+                    
+                    <!-- Tool Card 3 -->
+                    <a href="compress.html" class="tool-card bg-white rounded-xl shadow p-6 transition duration-300 flex flex-col">
+                        <div class="w-12 h-12 bg-[#da3f0b]/10 text-[#da3f0b] rounded-lg flex items-center justify-center mb-4">
+                            <i class="fas fa-compress-alt text-xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold text-gray-800 mb-2">Compress PDF</h3>
+                        <p class="text-gray-600 mb-4">Reduce PDF file size while maintaining quality.</p>
+                        <div class="mt-auto text-[#da3f0b] font-medium flex items-center">
+                            <span>Use Tool</span>
+                            <i class="fas fa-arrow-right ml-2"></i>
+                        </div>
+                    </a>
+                    
+                    <!-- Tool Card 4 -->
+                    <a href="convert-image.html" class="tool-card bg-white rounded-xl shadow p-6 transition duration-300 flex flex-col">
+                        <div class="w-12 h-12 bg-[#da3f0b]/10 text-[#da3f0b] rounded-lg flex items-center justify-center mb-4">
+                            <i class="fas fa-exchange-alt text-xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold text-gray-800 mb-2">Convert Image</h3>
+                        <p class="text-gray-600 mb-4">Change image format (JPG, PNG, GIF, etc.) easily.</p>
+                        <div class="mt-auto text-[#da3f0b] font-medium flex items-center">
+                            <span>Use Tool</span>
+                            <i class="fas fa-arrow-right ml-2"></i>
+                        </div>
+                    </a>
+                    
+                    <!-- Tool Card 5 -->
+                    <a href="resize.html" class="tool-card bg-white rounded-xl shadow p-6 transition duration-300 flex flex-col">
+                        <div class="w-12 h-12 bg-[#da3f0b]/10 text-[#da3f0b] rounded-lg flex items-center justify-center mb-4">
+                            <i class="fas fa-expand-alt text-xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold text-gray-800 mb-2">Resize Image</h3>
+                        <p class="text-gray-600 mb-4">Change dimensions of your images without quality loss.</p>
+                        <div class="mt-auto text-[#da3f0b] font-medium flex items-center">
+                            <span>Use Tool</span>
+                            <i class="fas fa-arrow-right ml-2"></i>
+                        </div>
+                    </a>
+                    
+                    <!-- Tool Card 6 -->
+                    <a href="compress-image.html" class="tool-card bg-white rounded-xl shadow p-6 transition duration-300 flex flex-col">
+                        <div class="w-12 h-12 bg-[#da3f0b]/10 text-[#da3f0b] rounded-lg flex items-center justify-center mb-4">
+                            <i class="fas fa-file-image text-xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold text-gray-800 mb-2">Compress Image</h3>
+                        <p class="text-gray-600 mb-4">Reduce image file size for web or email.</p>
+                        <div class="mt-auto text-[#da3f0b] font-medium flex items-center">
+                            <span>Use Tool</span>
+                            <i class="fas fa-arrow-right ml-2"></i>
+                        </div>
+                    </a>
+                    
+                    <!-- Tool Card 7 -->
+                    <a href="#" class="tool-card bg-white rounded-xl shadow p-6 transition duration-300 flex flex-col">
+                        <div class="w-12 h-12 bg-[#da3f0b]/10 text-[#da3f0b] rounded-lg flex items-center justify-center mb-4">
+                            <i class="fas fa-file-word text-xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold text-gray-800 mb-2">Word to PDF</h3>
+                        <p class="text-gray-600 mb-4">Convert DOC or DOCX files to PDF format.</p>
+                        <div class="mt-auto text-[#da3f0b] font-medium flex items-center">
+                            <span>Use Tool</span>
+                            <i class="fas fa-arrow-right ml-2"></i>
+                        </div>
+                    </a>
+                    
+                    <!-- Tool Card 8 -->
+                    <a href="#" class="tool-card bg-white rounded-xl shadow p-6 transition duration-300 flex flex-col">
+                        <div class="w-12 h-12 bg-[#da3f0b]/10 text-[#da3f0b] rounded-lg flex items-center justify-center mb-4">
+                            <i class="fas fa-lock text-xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold text-gray-800 mb-2">Protect PDF</h3>
+                        <p class="text-gray-600 mb-4">Add password protection to your PDF files.</p>
+                        <div class="mt-auto text-[#da3f0b] font-medium flex items-center">
+                            <span>Use Tool</span>
+                            <i class="fas fa-arrow-right ml-2"></i>
+                        </div>
+                    </a>
+                </div>
+                
+                <div class="text-center mt-12">
+                    <a href="#" class="inline-flex items-center text-[#da3f0b] font-medium">
+                        <span>View All Tools</span>
+                        <i class="fas fa-chevron-right ml-2"></i>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section class="py-16 bg-white">
+            <div class="container mx-auto px-4">
+                <h2 class="text-3xl font-bold text-center text-gray-800 mb-12">Why Choose Our Tools?</h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div class="text-center">
+                        <div class="w-16 h-16 bg-[#da3f0b]/10 text-[#da3f0b] rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-bolt text-2xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold text-gray-800 mb-2">Lightning Fast</h3>
+                        <p class="text-gray-600">Our tools process files in seconds using advanced algorithms.</p>
+                    </div>
+                    
+                    <div class="text-center">
+                        <div class="w-16 h-16 bg-[#da3f0b]/10 text-[#da3f0b] rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-lock text-2xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold text-gray-800 mb-2">Secure Processing</h3>
+                        <p class="text-gray-600">Files are processed in your browser and never uploaded to our servers.</p>
+                    </div>
+                    
+                    <div class="text-center">
+                        <div class="w-16 h-16 bg-[#da3f0b]/10 text-[#da3f0b] rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-dollar-sign text-2xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold text-gray-800 mb-2">100% Free</h3>
+                        <p class="text-gray-600">No hidden charges, no watermarks, no registration required.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-8">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-4 md:mb-0">
+                    <a href="index.html" class="text-2xl font-bold text-white">ToolKit</a>
+                    <p class="text-gray-400 mt-2">Simple tools for everyday tasks.</p>
+                </div>
+                
+                <div class="flex space-x-6">
+                    <a href="#" class="text-gray-400 hover:text-white transition">
+                        <i class="fab fa-twitter text-xl"></i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-white transition">
+                        <i class="fab fa-github text-xl"></i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-white transition">
+                        <i class="fab fa-linkedin text-xl"></i>
+                    </a>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
+                <p>&copy; 2023 ToolKit. All rights resferved.</p>
+            </div>
+        </div>
+
+</body>
+</html>
