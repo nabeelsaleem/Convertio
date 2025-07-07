@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Primary Meta Tags -->
+    <meta name="title" content="Supatool - Free Online PDF & Image Tools">
+    <meta name="description" content="100% free online tools for PDFs and images. Merge, split, compress, convert files with no watermarks or registration required.">
+    <meta name="keywords" content="PDF tools, image converter, merge PDF, split PDF, compress PDF, online tools, free tools">
+    <meta name="author" content="Supatool">
+    <meta name="robots" content="index, follow">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://supatool.com/">
+    <meta property="og:title" content="Supatool - Free Online PDF & Image Tools">
+    <meta property="og:description" content="100% free online tools for PDFs and images. No watermarks, no registration required.">
+    <meta property="og:image" content="https://supatool.com/images/og-image.jpg">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://supatool.com/">
+    <meta property="twitter:title" content="Supatool - Free Online PDF & Image Tools">
+    <meta property="twitter:description" content="100% free online tools for PDFs and images. No watermarks, no registration required.">
+    <meta property="twitter:image" content="https://supatool.com/images/og-image.jpg">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://supatool.com/">
+    <title>ToolKit - Free Online File Tools</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .dropzone {
+            border: 2px dashed #ccc;
+            transition: all 0.3s ease;
+        }
+        .dropzone.active {
+            border-color: #da3f0b;
+            background-color: rgba(218, 63, 11, 0.05);
+        }
+        .tool-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        .nav-dropdown {
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(10px);
+            transition: all 0.2s ease;
+        }
+        .nav-item:hover .nav-dropdown {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+        .progress-bar {
+            transition: width 0.3s ease;
+        }
+    </style>
+</head>
+<body class="font-sans bg-gray-50 min-h-screen flex flex-col">
+    <!-- Main Navigation - Fluid Width -->
+    <header class="bg-white shadow-sm sticky top-0 z-50 w-full">
+        <div class="max-w-screen-4xl mx-auto px-4">
+            <nav class="flex items-center h-16">
+                <!-- Logo - Left Aligned -->
+                <div class="flex-shrink-0">
+                    <a href="index.html" class="text-2xl font-bold text-[#da3f0b]">Supatool</a>
+                </div>
+                
+                <!-- Main Navigation Links -->
+                <div class="hidden md:flex items-center space-x-8 ml-8">
+                    <div class="relative nav-item">
+                        <button class="flex items-center text-gray-700 hover:text-[#da3f0b] transition">
+                            PDF Tools <i class="fas fa-chevron-down ml-2 text-xs"></i>
+                        </button>
+                        <div class="nav-dropdown absolute left-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50">
+                            <a href="merge.html" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Merge PDF</a>
+                            <a href="split.html" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Split PDF</a>
+                            <a href="compress.html" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Compress PDF</a>
+                        </div>
+                    </div>
+                    
+                    <div class="relative nav-item">
+                        <button class="flex items-center text-gray-700 hover:text-[#da3f0b] transition">
+                            Image Tools <i class="fas fa-chevron-down ml-2 text-xs"></i>
+                        </button>
+                        <div class="nav-dropdown absolute left-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50">
+                            <a href="convert-image.html" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Convert Image</a>
+                            <a href="resize.html" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Resize Image</a>
+                            <a href="compress-image.html" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Compress Image</a>
+                        </div>
+                    </div>
+                    
+                    <a href="#" class="text-gray-700 hover:text-[#da3f0b] transition">Document Tools</a>
+                    <a href="#" class="text-gray-700 hover:text-[#da3f0b] transition">More Tools</a>
+                </div>
+                
+                <div class="flex items-center space-x-4 ml-auto">
+                    <button class="hidden md:flex items-center space-x-1 bg-gray-100 hover:bg-gray-200 px-3 py-1.5 rounded-lg transition">
+                        <i class="fas fa-th text-gray-600"></i>
+                        <span class="text-gray-700 font-medium">Apps</span>
+                    </button>
+                    <button class="md:hidden text-gray-700" id="mobile-menu-button">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </nav>
+        </div>
+        
+        <!-- Apps Mega Menu -->
+        <div class="hidden absolute top-full right-0 w-full max-w-4xl bg-white shadow-xl rounded-b-lg p-6 z-50" id="apps-mega-menu">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+                <div>
+                    <h4 class="font-bold text-gray-800 mb-3 border-b pb-2">PDF Tools</h4>
+                    <ul class="space-y-2">
+                        <li><a href="merge.html" class="text-gray-600 hover:text-[#da3f0b] flex items-center"><i class="fas fa-random text-xs w-5 mr-2"></i> Merge PDF</a></li>
+                        <li><a href="split.html" class="text-gray-600 hover:text-[#da3f0b] flex items-center"><i class="fas fa-cut text-xs w-5 mr-2"></i> Split PDF</a></li>
+                        <li><a href="compress.html" class="text-gray-600 hover:text-[#da3f0b] flex items-center"><i class="fas fa-compress-alt text-xs w-5 mr-2"></i> Compress PDF</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold text-gray-800 mb-3 border-b pb-2">Image Tools</h4>
+                    <ul class="space-y-2">
+                        <li><a href="convert-image.html" class="text-gray-600 hover:text-[#da3f0b] flex items-center"><i class="fas fa-exchange-alt text-xs w-5 mr-2"></i> Convert Image</a></li>
+                        <li><a href="resize.html" class="text-gray-600 hover:text-[#da3f0b] flex items-center"><i class="fas fa-expand text-xs w-5 mr-2"></i> Resize Image</a></li>
+                        <li><a href="compress-image.html" class="text-gray-600 hover:text-[#da3f0b] flex items-center"><i class="fas fa-file-image text-xs w-5 mr-2"></i> Compress Image</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold text-gray-800 mb-3 border-b pb-2">Document Tools</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-600 hover:text-[#da3f0b] flex items-center"><i class="fas fa-file-word text-xs w-5 mr-2"></i> Word to PDF</a></li>
+                        <li><a href="#" class="text-gray-600 hover:text-[#da3f0b] flex items-center"><i class="fas fa-file-excel text-xs w-5 mr-2"></i> Excel to PDF</a></li>
+                        <li><a href="#" class="text-gray-600 hover:text-[#da3f0b] flex items-center"><i class="fas fa-file-powerpoint text-xs w-5 mr-2"></i> PPT to PDF</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold text-gray-800 mb-3 border-b pb-2">Other Tools</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-600 hover:text-[#da3f0b] flex items-center"><i class="fas fa-qrcode text-xs w-5 mr-2"></i> QR Generator</a></li>
+                        <li><a href="#" class="text-gray-600 hover:text-[#da3f0b] flex items-center"><i class="fas fa-lock text-xs w-5 mr-2"></i> Password Generator</a></li>
+                        <li><a href="#" class="text-gray-600 hover:text-[#da3f0b] flex items-center"><i class="fas fa-palette text-xs w-5 mr-2"></i> Color Picker</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile menu -->
+        <div class="hidden md:hidden bg-white py-2 px-4 shadow-md" id="mobile-menu">
+            <div class="flex flex-col space-y-3">
+                <div>
+                    <button class="flex items-center justify-between w-full text-gray-700 py-2">
+                        <span>PDF Tools</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="pl-4 hidden" id="pdf-mobile-dropdown">
+                        <a href="merge.html" class="block py-2 text-gray-600">Merge PDF</a>
+                        <a href="split.html" class="block py-2 text-gray-600">Split PDF</a>
+                        <a href="compress.html" class="block py-2 text-gray-600">Compress PDF</a>
+                    </div>
+                </div>
+                
+                <div>
+                    <button class="flex items-center justify-between w-full text-gray-700 py-2">
+                        <span>Image Tools</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="pl-4 hidden" id="image-mobile-dropdown">
+                        <a href="convert-image.html" class="block py-2 text-gray-600">Convert Image</a>
+                        <a href="resize.html" class="block py-2 text-gray-600">Resize Image</a>
+                        <a href="compress-image.html" class="block py-2 text-gray-600">Compress Image</a>
+                    </div>
+                </div>
+                
+                <a href="#" class="text-gray-700 py-2">Document Tools</a>
+                <a href="#" class="text-gray-700 py-2">More Tools</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content - Merge PDF Tool -->
+    <main class="flex-grow">
+        <section class="bg-white py-12">
+            <div class="container mx-auto px-4">
+                <div class="max-w-4xl mx-auto">
+                    <h1 class="text-4xl md:text-5xl font-bold text-gray-800 mb-4">Merge PDF Files Online - Free PDF Combiner Tool</h1>
+                    <p class="text-xl text-gray-600 mb-8">Combine multiple PDFs into a single document instantly. Our free online PDF merger preserves quality with no file size limits or watermarks.</p>
+                    
+                    <!-- Tool Container -->
+                    <div class="bg-white rounded-xl shadow-lg p-6 mb-8 border border-gray-200">
+                        <!-- Your tool HTML will go here -->
+                        <div id="pdf-merge-tool" class="text-center">
+                            <div class="dropzone rounded-lg p-12 mb-6 border-2 border-dashed border-gray-300 cursor-pointer bg-gray-50">
+                                <i class="fas fa-cloud-upload-alt text-4xl text-gray-400 mb-4"></i>
+                                <h3 class="text-xl font-semibold text-gray-700 mb-2">Drag & Drop PDF Files Here</h3>
+                                <p class="text-gray-500 mb-4">or</p>
+                                <button class="bg-[#da3f0b] hover:bg-[#c23a0a] text-white px-6 py-2 rounded-lg shadow transition font-medium">
+                                    Select PDF Files
+                                </button>
+                                <input type="file" id="pdf-input" multiple accept=".pdf" class="hidden">
+                            </div>
+                            <div id="file-preview" class="hidden mb-6">
+                                <h3 class="text-lg font-semibold mb-3 text-left">Files to Merge</h3>
+                                <ul id="pdf-list" class="space-y-2"></ul>
+                            </div>
+                            <button id="merge-btn" class="w-full bg-[#da3f0b] hover:bg-[#c23a0a] text-white px-6 py-3 rounded-lg shadow-lg font-medium text-lg">
+                                Merge PDFs Now
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Popular Tools Section -->
+                    <div class="mb-12">
+                        <h2 class="text-2xl font-bold text-gray-800 mb-6">Popular Tools You Might Need</h2>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                            <!-- Tool Card 1 -->
+                            <a href="split.html" class="tool-card bg-white rounded-lg shadow-md p-6 border border-gray-100 hover:border-[#da3f0b] transition duration-300">
+                                <div class="flex items-center mb-4">
+                                    <div class="bg-[#da3f0b]/10 p-3 rounded-lg mr-4">
+                                        <i class="fas fa-cut text-[#da3f0b] text-xl"></i>
+                                    </div>
+                                    <h3 class="text-lg font-semibold text-gray-800">Split PDF</h3>
+                                </div>
+                                <p class="text-gray-600">Divide a PDF into multiple separate files by pages or extract specific pages.</p>
+                            </a>
+
+                            <!-- Tool Card 2 -->
+                            <a href="compress.html" class="tool-card bg-white rounded-lg shadow-md p-6 border border-gray-100 hover:border-[#da3f0b] transition duration-300">
+                                <div class="flex items-center mb-4">
+                                    <div class="bg-[#da3f0b]/10 p-3 rounded-lg mr-4">
+                                        <i class="fas fa-compress-alt text-[#da3f0b] text-xl"></i>
+                                    </div>
+                                    <h3 class="text-lg font-semibold text-gray-800">Compress PDF</h3>
+                                </div>
+                                <p class="text-gray-600">Reduce PDF file size while maintaining good quality for sharing and storage.</p>
+                            </a>
+
+                            <!-- Tool Card 3 -->
+                            <a href="convert-image.html" class="tool-card bg-white rounded-lg shadow-md p-6 border border-gray-100 hover:border-[#da3f0b] transition duration-300">
+                                <div class="flex items-center mb-4">
+                                    <div class="bg-[#da3f0b]/10 p-3 rounded-lg mr-4">
+                                        <i class="fas fa-exchange-alt text-[#da3f0b] text-xl"></i>
+                                    </div>
+                                    <h3 class="text-lg font-semibold text-gray-800">Image Converter</h3>
+                                </div>
+                                <p class="text-gray-600">Convert between JPG, PNG, WEBP, and other image formats in seconds.</p>
+                            </a>
+
+                            <!-- Tool Card 4 -->
+                            <a href="resize.html" class="tool-card bg-white rounded-lg shadow-md p-6 border border-gray-100 hover:border-[#da3f0b] transition duration-300">
+                                <div class="flex items-center mb-4">
+                                    <div class="bg-[#da3f0b]/10 p-3 rounded-lg mr-4">
+                                        <i class="fas fa-expand text-[#da3f0b] text-xl"></i>
+                                    </div>
+                                    <h3 class="text-lg font-semibold text-gray-800">Resize Image</h3>
+                                </div>
+                                <p class="text-gray-600">Change dimensions of your images while maintaining aspect ratio.</p>
+                            </a>
+
+                            <!-- Tool Card 5 -->
+                            <a href="#" class="tool-card bg-white rounded-lg shadow-md p-6 border border-gray-100 hover:border-[#da3f0b] transition duration-300">
+                                <div class="flex items-center mb-4">
+                                    <div class="bg-[#da3f0b]/10 p-3 rounded-lg mr-4">
+                                        <i class="fas fa-file-word text-[#da3f0b] text-xl"></i>
+                                    </div>
+                                    <h3 class="text-lg font-semibold text-gray-800">Word to PDF</h3>
+                                </div>
+                                <p class="text-gray-600">Convert DOC/DOCX documents to PDF format with perfect formatting.</p>
+                            </a>
+
+                            <!-- Tool Card 6 -->
+                            <a href="#" class="tool-card bg-white rounded-lg shadow-md p-6 border border-gray-100 hover:border-[#da3f0b] transition duration-300">
+                                <div class="flex items-center mb-4">
+                                    <div class="bg-[#da3f0b]/10 p-3 rounded-lg mr-4">
+                                        <i class="fas fa-qrcode text-[#da3f0b] text-xl"></i>
+                                    </div>
+                                    <h3 class="text-lg font-semibold text-gray-800">QR Generator</h3>
+                                </div>
+                                <p class="text-gray-600">Create custom QR codes for URLs, contact info, WiFi and more.</p>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Article Section -->
+                    <article class="prose max-w-none">
+=======
+                        <h2>The Complete Guide to Merging PDF Files Online</h2>
+                        
+                        <p>In today's digital world, PDF documents have become the standard for sharing important files while preserving their formatting. Whether you're a student compiling research papers, a business professional combining reports, or simply organizing personal documents, knowing how to <strong>merge PDF files</strong> is an essential skill. Our free online <strong>PDF merger tool</strong> provides the perfect solution.</p>
+                        
+                        <h3>Why Merge PDF Documents?</h3>
+                        <p>There are countless scenarios where combining multiple PDFs into one file becomes necessary:</p>
+                        
+                        <ul>
+                            <li>Combining chapters of an ebook or research paper</li>
+                            <li>Merging scanned documents into a single file</li>
+                            <li>Creating a portfolio of work samples</li>
+                            <li>Compiling financial statements or reports</li>
+                            <li>Grouping related legal documents</li>
+                            <li>Organizing multiple receipts for expense reports</li>
+                        </ul>
+
+                        <h3>How to Use Our PDF Merger Tool</h3>
+                        <p>Our <strong>PDF combiner</strong> makes the process incredibly simple:</p>
+                        
+                        <ol>
+                            <li>Click "Select PDF Files" or drag and drop your documents</li>
+                            <li>Rearrange files by dragging them into your preferred order</li>
+                            <li>Click "Merge PDFs Now" to combine your files</li>
+                            <li>Download your single, merged PDF document</li>
+                        </ol>
+
+                        <h3>Key Features of Our Online PDF Merger</h3>
+                        <p>Unlike many other <strong>PDF merge tools</strong>, our solution offers:</p>
+                        
+                        <ul>
+                            <li><strong>No file size limits</strong> - Combine large PDFs without restrictions</li>
+                            <li><strong>Full privacy protection</strong> - Files process in your browser without uploading</li>
+                            <li><strong>Original quality preservation</strong> - No compression or quality loss</li>
+                            <li><strong>Drag-and-drop interface</strong> - Easily rearrange pages</li>
+                            <li><strong>Completely free</strong> - No watermarks, no registration required</li>
+                        </ul>
+
+                        <h3>Alternative Methods to Combine PDF Files</h3>
+                        <p>While our online tool provides the simplest solution, there are other ways to <strong>merge PDF documents</strong>:</p>
+
+                        <h4>1. Adobe Acrobat Pro</h4>
+                        <p>The industry standard but requires expensive software. Go to Tools > Combine Files and select your PDFs.</p>
+
+                        <h4>2. Preview (Mac Users)</h4>
+                        <p>Open PDFs in Preview, show thumbnail view, drag pages between documents.</p>
+
+                        <h4>3. Command Line Tools</h4>
+                        <p>For tech-savvy users, tools like PDFtk and Ghostscript can merge PDFs via command line.</p>
+
+                        <h4>4. Mobile Apps</h4>
+                        <p>Various apps like Adobe Scan and Foxit allow PDF merging on smartphones.</p>
+
+                        <h3>Frequently Asked Questions</h3>
+
+                        <h4>Is PDF merging safe?</h4>
+                        <p>Absolutely. Our tool performs all merging in your browser - your files never get uploaded to any server.</p>
+
+                        <h4>How many PDFs can I combine at once?</h4>
+                        <p>There's no hard limit. You can merge as many PDFs as your device memory can handle.</p>
+
+                        <h4>Will formatting be preserved?</h4>
+                        <p>Yes, all text formatting, images, and layouts remain exactly as in the original documents.</p>
+
+                        <h4>Does this work on mobile devices?</h4>
+                        <p>Yes, our PDF combiner works perfectly on smartphones and tablets.</p>
+
+                        <h4>Are there any watermarks on merged files?</h4>
+                        <p>No, we never add watermarks or any other markings to your documents.</p>
+
+                        <h3>Advanced PDF Merging Tips</h3>
+                        <p>For power users wanting more control over their <strong>PDF combination</strong>:</p>
+                        
+                        <ul>
+                            <li>Use "Print to PDF" to convert other file types before merging</li>
+                            <li>Name your files in alphabetical order for automatic sorting</li>
+                            <li>Compress large files before merging for better performance</li>
+                            <li>Consider adding page numbers after merging lengthy documents</li>
+                        </ul>
+
+                        <p>Whether you need to <strong>combine PDF files</strong> for work, school, or personal use, our free online merger provides the easiest solution. No software to install, no skills required - just drag, drop, and merge in seconds. Try it now and simplify your document workflow!</p>
+                    </article>
+                </div>
+            </div>
+        </section>
+                    
+    </main>
+
+    <!-- Footer with Multiple Sections -->
+    <footer class="bg-gray-800 text-white py-12">
+        <div class="max-w-screen-2xl mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-5 gap-8">
+                <!-- Company Info -->
+                <div>
+                    <h3 class="text-xl font-bold mb-4 flex items-center">
+                        <i class="fas fa-tools mr-2"></i> Supatool
+                    </h3>
+                    <p class="text-gray-400">Powerful online tools for all your document needs.</p>
+                </div>
+                
+                <!-- PDF Tools -->
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">PDF Tools</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white transition flex items-center"><i class="fas fa-chevron-right text-xs mr-2"></i> Merge PDF</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition flex items-center"><i class="fas fa-chevron-right text-xs mr-2"></i> Split PDF</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition flex items-center"><i class="fas fa-chevron-right text-xs mr-2"></i> Compress PDF</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Image Tools -->
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Image Tools</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white transition flex items-center"><i class="fas fa-chevron-right text-xs mr-2"></i> Convert Image</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition flex items-center"><i class="fas fa-chevron-right text-xs mr-2"></i> Resize Image</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition flex items-center"><i class="fas fa-chevron-right text-xs mr-2"></i> Compress Image</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Resources -->
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Resources</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white transition flex items-center"><i class="fas fa-chevron-right text-xs mr-2"></i> Blog</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition flex items-center"><i class="fas fa-chevron-right text-xs mr-2"></i> Tutorials</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition flex items-center"><i class="fas fa-chevron-right text-xs mr-2"></i> API</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Legal -->
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Legal</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white transition flex items-center"><i class="fas fa-chevron-right text-xs mr-2"></i> Privacy Policy</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition flex items-center"><i class="fas fa-chevron-right text-xs mr-2"></i> Terms of Service</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition flex items-center"><i class="fas fa-chevron-right text-xs mr-2"></i> Contact Us</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- Copyright -->
+            <div class="border-t border-gray-700 mt-12 pt-8 text-center text-gray-400">
+                <p>&copy; 2023 Supatool. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Tool Page Template (hidden by default) -->
+    <div id="tool-page-template" class="hidden">
+        <div class="container mx-auto px-4 py-12">
+            <div class="max-w-4xl mx-auto">
+                <div class="mb-8">
+                    <h1 class="text-3xl md:text-4xl font-bold text-gray-800 mb-2">Merge PDF Files</h1>
+                    <p class="text-gray-600">Combine multiple PDFs into one document in the order you prefer.</p>
+                </div>
+                
+                <div class="bg-white rounded-xl shadow p-6 mb-8">
+                    <div id="dropzone" class="dropzone rounded-lg p-12 text-center cursor-pointer mb-6">
+                        <i class="fas fa-cloud-upload-alt text-4xl text-gray-400 mb-4"></i>
+                        <h3 class="text-xl font-semibold text-gray-700 mb-2">Drag & Drop your files here</h3>
+                        <p class="text-gray-500 mb-4">or</p>
+                        <button id="select-files" class="bg-[#da3f0b] hover:bg-[#c23a0a] text-white px-6 py-2 rounded-lg shadow transition duration-300 font-medium">
+                            Select Files
+                        </button>
+                        <input type="file" id="file-input" class="hidden" multiple accept=".pdf">
+                    </div>
+                    
+                    <div id="file-list" class="hidden mb-6">
+                        <h3 class="text-lg font-semibold text-gray-700 mb-3">Selected Files</h3>
+                        <ul id="files" class="space-y-2"></ul>
+                    </div>
+                    
+                    <div id="progress-container" class="hidden mb-6">
+                        <div class="flex justify-between mb-1">
+                            <span class="text-sm font-medium text-gray-700">Processing...</span>
+                            <span class="text-sm font-medium text-gray-700" id="progress-percent">0%</span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-2.5">
+                            <div id="progress-bar" class="progress-bar bg-[#da3f0b] h-2.5 rounded-full" style="width: 0%"></div>
+                        </div>
+                    </div>
+                    
+                    <div id="options" class="mb-6 hidden">
+                        <h3 class="text-lg font-semibold text-gray-700 mb-3">Merge Options</h3>
+                        <div class="space-y-4">
+                            <div>
+                                <label class="flex items-center">
+                                    <input type="radio" name="merge-order" class="form-radio text-[#da3f0b]" checked>
+                                    <span class="ml-2 text-gray-700">Merge in selected order</span>
+                                </label>
+                            </div>
+                            <div>
+                                <label class="flex items-center">
+                                    <input type="radio" name="merge-order" class="form-radio text-[#da3f0b]">
+                                    <span class="ml-2 text-gray-700">Merge in alphabetical order</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="flex flex-col sm:flex-row gap-4">
+                        <button id="merge-button" class="bg-[#da3f0b] hover:bg-[#c23a0a] text-white px-6 py-3 rounded-lg shadow transition duration-300 font-medium flex-1">
+                            Merge PDFs
+                        </button>
+                        <button id="clear-button" class="border border-gray-300 hover:border-[#da3f0b] text-gray-700 hover:text-[#da3f0b] px-6 py-3 rounded-lg transition duration-300 font-medium flex-1">
+                            Clear All
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-xl shadow p-6">
+                    <h2 class="text-xl font-semibold text-gray-800 mb-4">How to merge PDF files</h2>
+                    <ol class="list-decimal list-inside space-y-2 text-gray-700">
+                        <li>Upload your PDF files by dragging and dropping or clicking the "Select Files" button</li>
+                        <li>Rearrange files by dragging them up or down in the list</li>
+                        <li>Click the "Merge PDFs" button to combine your files</li>
+                        <li>Download your merged PDF file</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Apps Mega Menu Toggle
+        const appsButton = document.querySelector('.bg-gray-100');
+        const appsMenu = document.getElementById('apps-mega-menu');
+        
+        appsButton.addEventListener('click', (e) => {
+            e.stopPropagation();
+            appsMenu.classList.toggle('hidden');
+        });
+
+        // Close menu when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!appsMenu.contains(e.target) && e.target !== appsButton) {
+                appsMenu.classList.add('hidden');
+            }
+        });
+
+        // Mobile menu toggle
+        document.getElementById('mobile-menu-button').addEventListener('click', function() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        });
+
+        // Mobile dropdown toggles
+        document.querySelectorAll('#mobile-menu button').forEach(button => {
+            button.addEventListener('click', function() {
+                const targetId = this.textContent.trim().toLowerCase().replace(' ', '-') + '-mobile-dropdown';
+                const dropdown = document.getElementById(targetId);
+                dropdown.classList.toggle('hidden');
+                
+                // Toggle chevron icon
+                const icon = this.querySelector('i');
+                if (icon.classList.contains('fa-chevron-down')) {
+                    icon.classList.remove('fa-chevron-down');
+                    icon.classList.add('fa-chevron-up');
+                } else {
+                    icon.classList.remove('fa-chevron-up');
+                    icon.classList.add('fa-chevron-down');
+                }
+            });
+        });
+
+        // Simulate tool page functionality
+        if (window.location.pathname.includes('merge.html')) {
+            document.querySelector('main').innerHTML = document.getElementById('tool-page-template').innerHTML;
+            
+            // Tool page specific JavaScript
+            const dropzone = document.getElementById('dropzone');
+            const fileInput = document.getElementById('file-input');
+            const selectFilesBtn = document.getElementById('select-files');
+            const fileList = document.getElementById('file-list');
+            const filesContainer = document.getElementById('files');
+            const progressContainer = document.getElementById('progress-container');
+            const progressBar = document.getElementById('progress-bar');
+            const progressPercent = document.getElementById('progress-percent');
+            const options = document.getElementById('options');
+            const mergeBtn = document.getElementById('merge-button');
+            const clearBtn = document.getElementById('clear-button');
+            
+            let files = [];
+            
+            // Highlight dropzone when dragging over
+            ['dragenter', 'dragover'].forEach(eventName => {
+                dropzone.addEventListener(eventName, (e) => {
+                    e.preventDefault();
+                    dropzone.classList.add('active');
+                });
+            });
+            
+            ['dragleave', 'drop'].forEach(eventName => {
+                dropzone.addEventListener(eventName, (e) => {
+                    e.preventDefault();
+                    dropzone.classList.remove('active');
+                });
+            });
+            
+            // Handle dropped files
+            dropzone.addEventListener('drop', (e) => {
+                e.preventDefault();
+                const dt = e.dataTransfer;
+                const newFiles = dt.files;
+                handleFiles(newFiles);
+            });
+            
+            // Handle selected files
+            selectFilesBtn.addEventListener('click', () => {
+                fileInput.click();
+            });
+            
+            fileInput.addEventListener('change', () => {
+                handleFiles(fileInput.files);
+            });
+            
+            // Handle files
+            function handleFiles(newFiles) {
+                files = [...files, ...Array.from(newFiles)];
+                updateFileList();
+                
+                if (files.length > 0) {
+                    fileList.classList.remove('hidden');
+                    options.classList.remove('hidden');
+                }
+            }
+            
+            // Update file list UI
+            function updateFileList() {
+                filesContainer.innerHTML = '';
+                
+                files.forEach((file, index) => {
+                    const li = document.createElement('li');
+                    li.className = 'flex items-center justify-between bg-gray-50 p-3 rounded-lg';
+                    li.draggable = true;
+                    li.dataset.index = index;
+                    
+                    li.innerHTML = `
+                        <div class="flex items-center">
+                            <i class="fas fa-file-pdf text-red-500 mr-3"></i>
+                            <div>
+                                <p class="text-gray-800 font-medium">${file.name}</p>
+                                <p class="text-gray-500 text-sm">${formatFileSize(file.size)}</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <button class="move-up text-gray-500 hover:text-[#da3f0b] p-1">
+                                <i class="fas fa-arrow-up"></i>
+                            </button>
+                            <button class="move-down text-gray-500 hover:text-[#da3f0b] p-1">
+                                <i class="fas fa-arrow-down"></i>
+                            </button>
+                            <button class="remove-file text-gray-500 hover:text-red-500 p-1">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    `;
+                    
+                    filesContainer.appendChild(li);
+                });
+                
+                // Add event listeners for buttons
+                document.querySelectorAll('.move-up').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const li = e.target.closest('li');
+                        const index = parseInt(li.dataset.index);
+                        if (index > 0) {
+                            [files[index], files[index - 1]] = [files[index - 1], files[index]];
+                            updateFileList();
+                        }
+                    });
+                });
+                
+                document.querySelectorAll('.move-down').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const li = e.target.closest('li');
+                        const index = parseInt(li.dataset.index);
+                        if (index < files.length - 1) {
+                            [files[index], files[index + 1]] = [files[index + 1], files[index]];
+                            updateFileList();
+                        }
+                    });
+                });
+                
+                document.querySelectorAll('.remove-file').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const li = e.target.closest('li');
+                        const index = parseInt(li.dataset.index);
+                        files.splice(index, 1);
+                        updateFileList();
+                        
+                        if (files.length === 0) {
+                            fileList.classList.add('hidden');
+                            options.classList.add('hidden');
+                        }
+                    });
+                });
+                
+                // Add drag and drop sorting
+                document.querySelectorAll('#files li').forEach(li => {
+                    li.addEventListener('dragstart', (e) => {
+                        e.dataTransfer.setData('text/plain', li.dataset.index);
+                        setTimeout(() => {
+                            li.classList.add('opacity-0');
+                        }, 0);
+                    });
+                    
+                    li.addEventListener('dragend', () => {
+                        document.querySelectorAll('#files li').forEach(el => {
+                            el.classList.remove('opacity-0');
+                        });
+                    });
+                    
+                    li.addEventListener('dragover', (e) => {
+                        e.preventDefault();
+                        const rect = li.getBoundingClientRect();
+                        const midpoint = rect.top + rect.height / 2;
+                        
+                        if (e.clientY < midpoint) {
+                            li.classList.add('border-t-2', 'border-[#da3f0b]');
+                            li.classList.remove('border-b-2');
+                        } else {
+                            li.classList.add('border-b-2', 'border-[#da3f0b]');
+                            li.classList.remove('border-t-2');
+                        }
+                    });
+                    
+                    li.addEventListener('dragleave', () => {
+                        li.classList.remove('border-t-2', 'border-b-2', 'border-[#da3f0b]');
+                    });
+                    
+                    li.addEventListener('drop', (e) => {
+                        e.preventDefault();
+                        li.classList.remove('border-t-2', 'border-b-2', 'border-[#da3f0b]');
+                        
+                        const fromIndex = parseInt(e.dataTransfer.getData('text/plain'));
+                        const toIndex = parseInt(li.dataset.index);
+                        const rect = li.getBoundingClientRect();
+                        const midpoint = rect.top + rect.height / 2;
+                        
+                        let newIndex;
+                        if (e.clientY < midpoint) {
+                            newIndex = toIndex;
+                        } else {
+                            newIndex = toIndex + 1;
+                        }
+                        
+                        if (fromIndex < newIndex) {
+                            newIndex--;
+                        }
+                        
+                        if (fromIndex !== newIndex) {
+                            const [movedItem] = files.splice(fromIndex, 1);
+                            files.splice(newIndex, 0, movedItem);
+                            updateFileList();
+                        }
+                    });
+                });
+            }
+            
+            // Format file size
+            function formatFileSize(bytes) {
+                if (bytes === 0) return '0 Bytes';
+                const k = 1024;
+                const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+                const i = Math.floor(Math.log(bytes) / Math.log(k));
+                return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+            }
+            
+            // Merge button click
+            mergeBtn.addEventListener('click', () => {
+                if (files.length === 0) {
+                    alert('Please select at least one file to merge.');
+                    return;
+                }
+                
+                progressContainer.classList.remove('hidden');
+                mergeBtn.disabled = true;
+                
+                // Simulate processing
+                let progress = 0;
+                const interval = setInterval(() => {
+                    progress += Math.random() * 10;
+                    if (progress > 100) progress = 100;
+                    
+                    progressBar.style.width = `${progress}%`;
+                    progressPercent.textContent = `${Math.round(progress)}%`;
+                    
+                    if (progress === 100) {
+                        clearInterval(interval);
+                        setTimeout(() => {
+                            alert('Files merged successfully! This is a demo. In a real application, the merged file would download automatically.');
+                            progressContainer.classList.add('hidden');
+                            mergeBtn.disabled = false;
+                        }, 500);
+                    }
+                }, 200);
+            });
+            
+            // Clear button click
+            clearBtn.addEventListener('click', () => {
+                files = [];
+                fileInput.value = '';
+                fileList.classList.add('hidden');
+                options.classList.add('hidden');
+                progressContainer.classList.add('hidden');
+                mergeBtn.disabled = false;
+            });
+        }
+    </script>
+</body>
+</html>
