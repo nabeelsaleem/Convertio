@@ -1,400 +1,324 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PDF to Word Converter | Free Online Tool</title>
-    <meta name="description" content="Convert PDF files to editable Word documents online for free. No installation or registration required.">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Merge PDF – Free Online PDF Merger</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            DEFAULT: '#da3f0b',
+                            '50': '#fef3f2',
+                            '100': '#fee4e2',
+                            '200': '#fecdca',
+                            '300': '#fda49b',
+                            '400': '#f86a59',
+                            '500': '#ef4444',
+                            '600': '#da3f0b',
+                            '700': '#b91c1c',
+                            '800': '#991b1b',
+                            '900': '#7f1d1d',
+                            '950': '#450a0a'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-        body { font-family: 'Inter', sans-serif; }
-        .drop-zone--over { border-color: #da3f0b; background-color: rgba(218, 63, 11, 0.05); }
-        .progress-bar { transition: width 0.3s ease; }
+        body {
+            font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+        }
     </style>
+<script type="importmap">
+{
+  "imports": {
+    "react": "https://esm.sh/react@^19.1.0",
+    "react-dom/": "https://esm.sh/react-dom@^19.1.0/",
+    "react/": "https://esm.sh/react@^19.1.0/"
+  }
+}
+</script>
 </head>
-<body class="bg-gray-50 min-h-screen">
-    <!-- Navigation -->
-    <nav class="bg-white shadow-md sticky top-0 z-50">
-        <div class="container mx-auto px-4 py-3">
-            <div class="flex justify-between items-center">
-                <a href="#" class="text-2xl font-bold text-[#da3f0b]">PDFTools</a>
-                <div class="hidden md:flex space-x-6">
-                    <a href="#" class="text-gray-700 hover:text-[#da3f0b]">Tools</a>
-                    <a href="#" class="text-gray-700 hover:text-[#da3f0b]">About</a>
-                    <a href="#" class="text-gray-700 hover:text-[#da3f0b]">FAQ</a>
+<body class="bg-slate-50">
+
+    <div class="min-h-screen flex flex-col items-center justify-center p-4 sm:p-6 lg:p-8 font-sans">
+        <div class="w-full max-w-2xl mx-auto">
+            <header class="text-center mb-8">
+                <h1 class="text-4xl sm:text-5xl font-bold text-slate-900">Merge PDF – Combine Files Instantly</h1>
+                <p class="mt-4 text-lg text-slate-600">
+                    Combine multiple PDFs into one single document, right in your browser.
+                </p>
+            </header>
+
+            <main id="app-container" class="bg-white rounded-xl shadow-md p-6">
+                <!-- Dropzone Area -->
+                <div id="dropzone-container">
+                    <div id="dropzone" class="relative flex flex-col items-center justify-center w-full p-12 border-2 border-dashed rounded-xl transition-all duration-300 cursor-pointer border-slate-300 bg-slate-50 hover:border-primary/70 hover:bg-primary/5">
+                        <input id="file-input" type="file" multiple accept=".pdf" class="hidden" />
+                        <div id="dropzone-text" class="text-center">
+                            <svg class="mx-auto h-16 w-16 text-slate-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 16.5V9.75m0 0l3 3m-3-3l-3 3M6.75 19.5a4.5 4.5 0 01-1.41-8.775 5.25 5.25 0 0110.233-2.33 3 3 0 013.758 3.848A3.752 3.752 0 0118 19.5H6.75z" />
+                            </svg>
+                            <p class="mt-4 text-2xl font-semibold text-slate-700">Drop your PDF files here</p>
+                            <p class="mt-2 text-slate-500">or <span class="font-bold text-primary">click to browse</span></p>
+                        </div>
+                    </div>
                 </div>
-                <button class="md:hidden text-gray-700 focus:outline-none">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+
+                <!-- File List and Actions -->
+                <div id="file-list-view" class="hidden flex-col gap-6">
+                    <div>
+                        <h2 class="text-xl font-semibold mb-4 text-center text-slate-800">Your Files</h2>
+                        <ul id="file-list" class="space-y-3"></ul>
+                    </div>
+                    <div id="action-buttons" class="flex flex-col sm:flex-row gap-4 items-center justify-center mt-4">
+                        <button id="merge-button" class="w-full sm:w-auto flex items-center justify-center gap-3 px-8 py-3 bg-primary text-white font-bold text-lg rounded-lg shadow-md hover:bg-primary-700 active:bg-primary-800 focus:outline-none focus:ring-4 focus:ring-primary/30 transition-all duration-300 disabled:bg-slate-400 disabled:shadow-none">
+                            Merge PDFs
+                        </button>
+                        <button id="reset-button-list" class="w-full sm:w-auto px-6 py-3 bg-slate-200 text-slate-700 font-semibold rounded-lg hover:bg-slate-300 focus:outline-none focus:ring-4 focus:ring-slate-300 transition-all duration-200">
+                            Start Over
+                        </button>
+                    </div>
+                </div>
+                
+                 <!-- Processing Spinner View -->
+                <div id="merging-view" class="hidden text-center p-8">
+                    <div role="status" class="flex flex-col items-center justify-center">
+                        <svg aria-hidden="true" class="w-10 h-10 text-slate-300 animate-spin fill-primary" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor"/>
+                            <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0492C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentFill"/>
+                        </svg>
+                        <p class="mt-4 text-lg font-semibold">Processing your PDFs...</p>
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                </div>
+
+                <!-- Result View -->
+                <div id="result-view" class="hidden text-center p-8 bg-green-50 rounded-2xl border-2 border-dashed border-green-300">
+                    <h2 class="text-2xl font-bold text-green-800">Merge Successful!</h2>
+                    <p class="mt-2 text-slate-600">Your file is ready for download.</p>
+                    <div class="mt-6 flex flex-col sm:flex-row gap-4 justify-center">
+                        <a id="download-button" href="#" download="merged.pdf" class="w-full sm:w-auto inline-block px-8 py-3 bg-green-600 text-white font-bold text-lg rounded-lg shadow-md hover:bg-green-700 active:bg-green-800 focus:outline-none focus:ring-4 focus:ring-green-300 transition-all duration-300">
+                            Download Merged PDF
+                        </a>
+                        <button id="reset-button-result" class="w-full sm:w-auto px-6 py-3 bg-slate-200 text-slate-700 font-semibold rounded-lg hover:bg-slate-300 focus:outline-none focus:ring-4 focus:ring-slate-300 transition-all duration-200">
+                            Merge More Files
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Error Message -->
+                <div id="error-view" class="hidden mt-6 p-4 bg-red-100 border-l-4 border-red-500 text-red-700 rounded-r-lg">
+                    <p class="font-bold">Error</p>
+                    <p id="error-message"></p>
+                </div>
+            </main>
+
+            <footer class="text-center mt-8">
+                <div class="flex items-center justify-center gap-2 text-slate-500">
+                    <svg class="w-5 h-5 text-green-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.286zm0 13.036h.008v.016h-.008v-.016z" />
                     </svg>
-                </button>
-            </div>
+                    <p>Your files never leave your browser. All processing is done locally.</p>
+                </div>
+            </footer>
         </div>
-    </nav>
-
-    <!-- Main Content -->
-    <main class="container mx-auto px-4 py-8">
-        <div class="max-w-3xl mx-auto">
-            <h1 class="text-3xl md:text-4xl font-bold text-gray-800 mb-2 text-center">PDF to Word Converter</h1>
-            <p class="text-lg text-gray-600 mb-8 text-center">Convert your PDF documents to editable Word files in seconds</p>
-            
-            <!-- Upload Area -->
-            <div id="drop-zone" class="border-2 border-dashed border-gray-300 rounded-xl p-8 text-center mb-8 bg-white hover:border-[#da3f0b] transition duration-300">
-                <svg class="w-16 h-16 text-[#da3f0b] mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
-                </svg>
-                <h2 class="text-xl font-semibold text-gray-800 mb-2">Drag and drop your PDF file here</h2>
-                <p class="text-gray-500 mb-4">or</p>
-                <button id="select-file" class="bg-[#da3f0b] hover:bg-[#c23a0a] text-white px-6 py-2 rounded-lg shadow hover:shadow-md transition duration-300">Select File</button>
-                <input type="file" id="file-input" class="hidden" accept=".pdf">
-                <p class="text-sm text-gray-500 mt-4">Maximum file size: 10MB</p>
-            </div>
-            
-            <!-- File Info -->
-            <div id="file-info" class="hidden bg-white rounded-xl shadow-md p-6 mb-8">
-                <div class="flex items-start justify-between mb-4">
-                    <div class="flex items-start">
-                        <div class="text-[#da3f0b] mr-4">
-                            <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
-                            </svg>
-                        </div>
-                        <div>
-                            <h3 id="file-name" class="text-lg font-semibold text-gray-800 mb-1">document.pdf</h3>
-                            <p id="file-size" class="text-gray-600 mb-1">2.4 MB</p>
-                            <p id="file-pages" class="text-gray-600">Estimated pages: 5</p>
-                        </div>
-                    </div>
-                    <button id="clear-file" class="text-gray-400 hover:text-red-500">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
-                        </svg>
-                    </button>
-                </div>
-                
-                <div class="mt-6">
-                    <label for="output-name" class="block text-sm font-medium text-gray-700 mb-1">Output filename:</label>
-                    <div class="flex">
-                        <input type="text" id="output-name" class="flex-1 rounded-l-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#da3f0b] focus:border-transparent" placeholder="converted-document">
-                        <span class="inline-flex items-center px-3 rounded-r-lg border border-l-0 border-gray-300 bg-gray-50 text-gray-500 text-sm">.docx</span>
-                    </div>
-                </div>
-                
-                <button id="convert-btn" class="w-full mt-6 bg-[#da3f0b] hover:bg-[#c23a0a] text-white px-6 py-3 rounded-lg shadow hover:shadow-md transition duration-300 font-semibold">
-                    Convert to Word
-                </button>
-            </div>
-            
-            <!-- Progress Section -->
-            <div id="progress-section" class="hidden bg-white rounded-xl shadow-md p-6 mb-8">
-                <h3 class="text-lg font-semibold text-gray-800 mb-4">Converting your file...</h3>
-                
-                <div class="mb-4">
-                    <div class="flex justify-between text-sm text-gray-600 mb-1">
-                        <span>Progress</span>
-                        <span id="progress-percent">0%</span>
-                    </div>
-                    <div class="w-full bg-gray-200 rounded-full h-2.5">
-                        <div id="progress-bar" class="progress-bar bg-[#da3f0b] h-2.5 rounded-full" style="width: 0%"></div>
-                    </div>
-                </div>
-                
-                <div id="progress-log" class="text-sm text-gray-600 space-y-2">
-                    <p>Starting conversion...</p>
-                </div>
-            </div>
-            
-            <!-- Result Section -->
-            <div id="result-section" class="hidden bg-white rounded-xl shadow-md p-6">
-                <div class="flex items-center justify-between mb-4">
-                    <h3 class="text-lg font-semibold text-gray-800">Conversion complete!</h3>
-                    <span class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded">Success</span>
-                </div>
-                
-                <div class="flex flex-col sm:flex-row justify-between items-center">
-                    <div class="flex items-center mb-4 sm:mb-0">
-                        <div class="text-[#da3f0b] mr-3">
-                            <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                            </svg>
-                        </div>
-                        <div>
-                            <p id="result-filename" class="font-medium text-gray-800">converted-document.docx</p>
-                            <p id="result-time" class="text-sm text-gray-500">Converted just now</p>
-                        </div>
-                    </div>
-                    
-                    <button id="download-btn" class="bg-[#da3f0b] hover:bg-[#c23a0a] text-white px-6 py-2 rounded-lg shadow hover:shadow-md transition duration-300">
-                        Download
-                    </button>
-                </div>
-                
-                <div class="mt-6 pt-6 border-t border-gray-200">
-                    <button id="convert-another" class="text-[#da3f0b] hover:text-[#c23a0a] flex items-center">
-                        <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-                        </svg>
-                        Convert Another File
-                    </button>
-                </div>
-            </div>
-        </div>
-    </main>
-
-    <!-- Footer -->
-    <footer class="bg-gray-800 text-white py-8">
-        <div class="container mx-auto px-4">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div>
-                    <h3 class="text-xl font-bold mb-4">PDFTools</h3>
-                    <p class="text-gray-400">Free online PDF tools for all your document needs.</p>
-                </div>
-                <div>
-                    <h4 class="font-semibold mb-4">Tools</h4>
-                    <ul class="space-y-2">
-                        <li><a href="#" class="text-gray-400 hover:text-white">PDF to Word</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-white">Merge PDF</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-white">Compress PDF</a></li>
-                    </ul>
-                </div>
-                <div>
-                    <h4 class="font-semibold mb-4">Legal</h4>
-                    <ul class="space-y-2">
-                        <li><a href="#" class="text-gray-400 hover:text-white">Terms</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-white">Privacy</a></li>
-                    </ul>
-                </div>
-            </div>
-            <div class="border-t border-gray-700 mt-8 pt-6 text-center text-gray-400">
-                <p>© 2023 PDFTools. All rights reserved.</p>
-            </div>
-        </div>
-    </footer>
+    </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', () => {
+            // State
+            let files = []; // Array of { id: string, file: File }
+            let mergedPdfUrl = null;
+
             // DOM Elements
-            const dropZone = document.getElementById('drop-zone');
+            const dropzoneContainer = document.getElementById('dropzone-container');
+            const dropzone = document.getElementById('dropzone');
             const fileInput = document.getElementById('file-input');
-            const selectFileBtn = document.getElementById('select-file');
-            const fileInfo = document.getElementById('file-info');
-            const fileName = document.getElementById('file-name');
-            const fileSize = document.getElementById('file-size');
-            const filePages = document.getElementById('file-pages');
-            const clearFileBtn = document.getElementById('clear-file');
-            const outputName = document.getElementById('output-name');
-            const convertBtn = document.getElementById('convert-btn');
-            const progressSection = document.getElementById('progress-section');
-            const progressBar = document.getElementById('progress-bar');
-            const progressPercent = document.getElementById('progress-percent');
-            const progressLog = document.getElementById('progress-log');
-            const resultSection = document.getElementById('result-section');
-            const resultFilename = document.getElementById('result-filename');
-            const resultTime = document.getElementById('result-time');
-            const downloadBtn = document.getElementById('download-btn');
-            const convertAnotherBtn = document.getElementById('convert-another');
+            const fileListView = document.getElementById('file-list-view');
+            const fileListEl = document.getElementById('file-list');
+            const mergingView = document.getElementById('merging-view');
+            const resultView = document.getElementById('result-view');
+            const errorView = document.getElementById('error-view');
+            const errorMessageEl = document.getElementById('error-message');
+            const mergeButton = document.getElementById('merge-button');
+            const downloadButton = document.getElementById('download-button');
+
+            // --- ICONS ---
+            const iconCache = {
+                pdf: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="h-8 w-8 text-primary/80 flex-shrink-0"><path d="M14 2H6C4.9 2 4 2.9 4 4V20C4 21.1 4.9 22 6 22H18C19.1 22 20 21.1 20 20V8L14 2ZM18 20H6V4H13V9H18V20ZM9.5 14.5V11.5H11.5V13.5H13V11.5C13 10.95 12.55 10.5 12 10.5H9C8.45 10.5 8 10.95 8 11.5V14.5C8 15.6 8.9 16.5 10 16.5H11.5V14.5H9.5ZM16 16.5H14.5V10.5H16V16.5Z" /></svg>`,
+                trash: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-5 w-5"><path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" /></svg>`,
+                arrowUp: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-5 w-5"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm.707-10.293a1 1 0 00-1.414-1.414l-3 3a1 1 0 001.414 1.414L9 9.414V13a1 1 0 102 0V9.414l1.293 1.293a1 1 0 001.414-1.414l-3-3z" clip-rule="evenodd" /></svg>`,
+                arrowDown: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-5 w-5"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm-.707-4.707a1 1 0 001.414 1.414l3-3a1 1 0 00-1.414-1.414L11 10.586V7a1 1 0 10-2 0v3.586L7.707 9.293a1 1 0 00-1.414 1.414l3 3z" clip-rule="evenodd" /></svg>`,
+            };
+
+            // --- UI Update Logic ---
+            const renderFileList = () => {
+                fileListEl.innerHTML = '';
+                files.forEach((appFile, index) => {
+                    const isFirst = index === 0;
+                    const isLast = index === files.length - 1;
+                    const li = document.createElement('li');
+                    li.className = "flex items-center p-3 bg-slate-100 rounded-lg shadow-sm";
+                    li.dataset.id = appFile.id;
+                    li.innerHTML = `
+                        ${iconCache.pdf}
+                        <span class="ml-4 flex-grow truncate font-medium text-slate-700" title="${appFile.file.name}">${appFile.file.name}</span>
+                        <div class="ml-4 flex items-center space-x-1 flex-shrink-0">
+                            <button data-action="move-up" class="p-2 rounded-full text-slate-500 hover:bg-slate-200 disabled:opacity-30 disabled:cursor-not-allowed" ${isFirst ? 'disabled' : ''}>${iconCache.arrowUp}</button>
+                            <button data-action="move-down" class="p-2 rounded-full text-slate-500 hover:bg-slate-200 disabled:opacity-30 disabled:cursor-not-allowed" ${isLast ? 'disabled' : ''}>${iconCache.arrowDown}</button>
+                            <button data-action="remove" class="p-2 rounded-full text-red-500 hover:bg-red-100">${iconCache.trash}</button>
+                        </div>
+                    `;
+                    fileListEl.appendChild(li);
+                });
+                mergeButton.disabled = files.length < 2;
+            };
+
+            const updateView = (view) => {
+                dropzoneContainer.classList.toggle('hidden', view !== 'dropzone');
+                fileListView.classList.toggle('hidden', view !== 'files');
+                fileListView.classList.toggle('flex', view === 'files');
+                mergingView.classList.toggle('hidden', view !== 'merging');
+                resultView.classList.toggle('hidden', view !== 'result');
+                errorView.classList.toggle('hidden', !errorMessageEl.textContent);
+            };
+
+            const resetState = () => {
+                files = [];
+                if (mergedPdfUrl) {
+                    URL.revokeObjectURL(mergedPdfUrl);
+                    mergedPdfUrl = null;
+                }
+                errorMessageEl.textContent = '';
+                updateView('dropzone');
+            };
+
+            // --- Event Handlers ---
+            const handleFilesAdded = (incomingFiles) => {
+                const newFiles = Array.from(incomingFiles)
+                    .filter(file => file.type === 'application/pdf')
+                    .map(file => ({ id: crypto.randomUUID(), file }));
+                
+                if (newFiles.length !== incomingFiles.length) {
+                    showError("Some files were not PDFs and have been ignored.");
+                } else {
+                   errorMessageEl.textContent = '';
+                   errorView.classList.add('hidden');
+                }
+
+                files = [...files, ...newFiles];
+                renderFileList();
+                updateView('files');
+            };
+
+            const handleMerge = async () => {
+                if (files.length < 2) {
+                    showError("Please upload at least two PDF files to merge.");
+                    return;
+                }
+                
+                updateView('merging');
+                errorMessageEl.textContent = '';
+                errorView.classList.add('hidden');
+
+                try {
+                    const { PDFDocument } = PDFLib;
+                    const mergedPdf = await PDFDocument.create();
+                    
+                    for (const appFile of files) {
+                        const arrayBuffer = await appFile.file.arrayBuffer();
+                        const pdf = await PDFDocument.load(arrayBuffer, { ignoreEncryption: true });
+                        const copiedPages = await mergedPdf.copyPages(pdf, pdf.getPageIndices());
+                        copiedPages.forEach((page) => mergedPdf.addPage(page));
+                    }
+
+                    const mergedPdfBytes = await mergedPdf.save();
+                    const blob = new Blob([mergedPdfBytes], { type: 'application/pdf' });
+                    
+                    if(mergedPdfUrl) URL.revokeObjectURL(mergedPdfUrl);
+                    mergedPdfUrl = URL.createObjectURL(blob);
+                    
+                    downloadButton.href = mergedPdfUrl;
+                    downloadButton.download = `merged-${Date.now()}.pdf`;
+                    updateView('result');
+
+                } catch (e) {
+                    console.error(e);
+                    const message = e instanceof Error ? e.message : 'An unknown error occurred.';
+                    showError(`Failed to merge PDFs. One file may be corrupt or encrypted. Details: ${message}`);
+                    updateView('files');
+                }
+            };
             
-            // File handling
-            let currentFile = null;
-            
-            // Event Listeners
-            selectFileBtn.addEventListener('click', () => fileInput.click());
-            fileInput.addEventListener('change', handleFileSelect);
-            clearFileBtn.addEventListener('click', resetFile);
-            convertBtn.addEventListener('click', startConversion);
-            downloadBtn.addEventListener('click', downloadFile);
-            convertAnotherBtn.addEventListener('click', resetConverter);
-            
-            // Drag and drop events
+            const showError = (message) => {
+                 errorMessageEl.textContent = message;
+                 updateView(files.length > 0 ? 'files' : 'dropzone');
+            };
+
+            // --- Event Listeners ---
+            dropzone.addEventListener('click', () => fileInput.click());
+            fileInput.addEventListener('change', () => handleFilesAdded(fileInput.files));
+
             ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
-                dropZone.addEventListener(eventName, preventDefaults, false);
+                dropzone.addEventListener(eventName, e => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                });
             });
-            
+
             ['dragenter', 'dragover'].forEach(eventName => {
-                dropZone.addEventListener(eventName, highlightDropZone, false);
+                dropzone.addEventListener(eventName, () => {
+                    dropzone.classList.add('border-primary', 'bg-primary/10');
+                });
             });
-            
+
             ['dragleave', 'drop'].forEach(eventName => {
-                dropZone.addEventListener(eventName, unhighlightDropZone, false);
+                dropzone.addEventListener(eventName, () => {
+                    dropzone.classList.remove('border-primary', 'bg-primary/10');
+                });
+            });
+
+            dropzone.addEventListener('drop', e => {
+                handleFilesAdded(e.dataTransfer.files);
             });
             
-            dropZone.addEventListener('drop', handleDrop, false);
-            
-            // Functions
-            function preventDefaults(e) {
-                e.preventDefault();
-                e.stopPropagation();
-            }
-            
-            function highlightDropZone() {
-                dropZone.classList.add('drop-zone--over');
-            }
-            
-            function unhighlightDropZone() {
-                dropZone.classList.remove('drop-zone--over');
-            }
-            
-            function handleDrop(e) {
-                const dt = e.dataTransfer;
-                const files = dt.files;
-                if (files.length > 0) {
-                    handleFile(files[0]);
-                }
-            }
-            
-            function handleFileSelect(e) {
-                if (e.target.files.length > 0) {
-                    handleFile(e.target.files[0]);
-                }
-            }
-            
-            function handleFile(file) {
-                // Validate file type
-                if (!file.name.toLowerCase().endsWith('.pdf')) {
-                    alert('Please select a PDF file.');
-                    return;
-                }
+            fileListEl.addEventListener('click', (e) => {
+                const button = e.target.closest('button');
+                if (!button) return;
                 
-                // Validate file size (10MB max)
-                const maxSize = 10 * 1024 * 1024; // 10MB
-                if (file.size > maxSize) {
-                    alert('File size exceeds 10MB limit.');
-                    return;
-                }
-                
-                currentFile = file;
-                
-                // Update UI with file info
-                fileName.textContent = file.name;
-                fileSize.textContent = formatFileSize(file.size);
-                
-                // Estimate page count (1 page per 50KB as a rough estimate)
-                const pageEstimate = Math.max(1, Math.round(file.size / (50 * 1024)));
-                filePages.textContent = `Estimated pages: ${pageEstimate}`;
-                
-                // Set default output name (filename without extension)
-                const baseName = file.name.replace(/\.[^/.]+$/, "");
-                outputName.value = baseName;
-                
-                // Show file info section
-                fileInfo.classList.remove('hidden');
-                
-                // Scroll to file info
-                fileInfo.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-            }
-            
-            function formatFileSize(bytes) {
-                if (bytes === 0) return '0 Bytes';
-                const k = 1024;
-                const sizes = ['Bytes', 'KB', 'MB', 'GB'];
-                const i = Math.floor(Math.log(bytes) / Math.log(k));
-                return parseFloat((bytes / Math.pow(k, i)).toFixed(1) + ' ' + sizes[i];
-            }
-            
-            function resetFile() {
-                currentFile = null;
-                fileInput.value = '';
-                fileInfo.classList.add('hidden');
-            }
-            
-            function startConversion() {
-                if (!currentFile) return;
-                
-                // Hide file info, show progress
-                fileInfo.classList.add('hidden');
-                progressSection.classList.remove('hidden');
-                progressLog.innerHTML = '<p>Starting conversion...</p>';
-                
-                // Simulate conversion progress
-                let progress = 0;
-                const interval = setInterval(() => {
-                    progress += Math.random() * 10;
-                    if (progress > 100) progress = 100;
-                    
-                    progressBar.style.width = progress + '%';
-                    progressPercent.textContent = Math.round(progress) + '%';
-                    
-                    // Add log messages at certain progress points
-                    if (progress >= 20 && progress < 21) {
-                        addLogMessage('Extracting text from PDF...');
-                    }
-                    if (progress >= 45 && progress < 46) {
-                        addLogMessage('Formatting Word document...');
-                    }
-                    if (progress >= 70 && progress < 71) {
-                        addLogMessage('Optimizing document layout...');
-                    }
-                    
-                    if (progress === 100) {
-                        clearInterval(interval);
-                        addLogMessage('Conversion complete!');
-                        setTimeout(showResult, 500);
-                    }
-                }, 200);
-            }
-            
-            function addLogMessage(message) {
-                const now = new Date();
-                const timeString = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-                progressLog.innerHTML += `<p>[${timeString}] ${message}</p>`;
-                progressLog.scrollTop = progressLog.scrollHeight;
-            }
-            
-            function showResult() {
-                progressSection.classList.add('hidden');
-                resultSection.classList.remove('hidden');
-                
-                // Set result filename
-                const outputFilename = outputName.value.trim() || 'converted-document';
-                resultFilename.textContent = outputFilename + '.docx';
-                
-                // Set conversion time
-                resultTime.textContent = 'Converted just now';
-                
-                // Scroll to result
-                resultSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-            }
-            
-            function downloadFile() {
-                if (!currentFile) return;
-                
-                // Create a simple Word document (simulated)
-                const outputFilename = (outputName.value.trim() || 'converted-document') + '.docx';
-                
-                // In a real implementation, this would be the actual converted file
-                // For simulation, we'll create a text file with some content
-                const content = `This is a simulated Word document conversion from ${currentFile.name}.
-                
-Original PDF: ${currentFile.name} (${formatFileSize(currentFile.size)})
-Converted on: ${new Date().toLocaleString()}
+                const action = button.dataset.action;
+                const li = e.target.closest('li');
+                const id = li.dataset.id;
+                const index = files.findIndex(f => f.id === id);
 
-This is placeholder content. In a real implementation, this would be the actual text extracted from the PDF.
+                if (action === 'remove') {
+                    files.splice(index, 1);
+                } else if (action === 'move-up' && index > 0) {
+                    [files[index], files[index - 1]] = [files[index - 1], files[index]];
+                } else if (action === 'move-down' && index < files.length - 1) {
+                    [files[index], files[index + 1]] = [files[index + 1], files[index]];
+                }
 
-Thank you for using our PDF to Word converter!`;
-                
-                const blob = new Blob([content], { type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' });
-                const url = URL.createObjectURL(blob);
-                
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = outputFilename;
-                document.body.appendChild(a);
-                a.click();
-                
-                setTimeout(() => {
-                    document.body.removeChild(a);
-                    URL.revokeObjectURL(url);
-                }, 0);
-            }
+                if (files.length === 0) {
+                    resetState();
+                } else {
+                    renderFileList();
+                }
+            });
+
+            mergeButton.addEventListener('click', handleMerge);
+            document.getElementById('reset-button-list').addEventListener('click', resetState);
+            document.getElementById('reset-button-result').addEventListener('click', resetState);
             
-            function resetConverter() {
-                resetFile();
-                resultSection.classList.add('hidden');
-                progressBar.style.width = '0%';
-                progressPercent.textContent = '0%';
-                progressLog.innerHTML = '';
-            }
+            // Initial render
+            updateView('dropzone');
         });
     </script>
 </body>
