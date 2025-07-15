@@ -1,414 +1,1340 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Compress PDF – Free Online PDF Optimizer</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
-    <!-- Add pdf.js for rendering, which is needed for high-compression rasterization -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        primary: {
-                            DEFAULT: '#da3f0b',
-                            '50': '#fef3f2',
-                            '100': '#fee4e2',
-                            '200': '#fecdca',
-                            '300': '#fda49b',
-                            '400': '#f86a59',
-                            '500': '#ef4444',
-                            '600': '#da3f0b',
-                            '700': '#b91c1c',
-                            '800': '#991b1b',
-                            '900': '#7f1d1d',
-                            '950': '#450a0a'
-                        }
-                    }
-                }
-            }
-        }
-    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+ <!-- Primary Meta Tags -->
+    <meta name="title" content="Merge PDF Online - Free & Secure PDF Combiner | simpliconvert">
+    <meta name="description" content="Merge PDF files online for free with simpliconvert. Combine multiple PDFs into a single document without watermarks or sign-up. Fast, secure & easy to use.">
+    <meta name="keywords" content="merge PDF, combine PDF files, PDF combiner, online PDF merger, free PDF merge tool, merge PDFs without watermark, secure PDF tool, fast PDF merge, no registration PDF merge, merge multiple PDFs">
+    <meta name="author" content="simpliconvert">
+    <meta name="robots" content="index, follow">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://simpliconvert.com/merge-pdf">
+    <meta property="og:title" content="Merge PDF Online - Free & Secure PDF Combiner | simpliconvert">
+    <meta property="og:description" content="Easily merge multiple PDF files into one. Free, secure and no watermarks. Combine PDFs in seconds with our online tool.">
+    <meta property="og:image" content="https://simpliconvert.com/images/merge-pdf-og.jpg">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://simpliconvert.com/merge-pdf">
+    <meta property="twitter:title" content="Merge PDF Online - Free & Secure PDF Combiner | simpliconvert">
+    <meta property="twitter:description" content="Use our free Merge PDF tool to combine multiple PDF files online. No watermark, no login, just simple and fast merging.">
+    <meta property="twitter:image" content="https://simpliconvert.com/images/merge-pdf-og.jpg">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://simpliconvert.com/merge_pdf_online">
+    <title>Merge PDF Online - Free PDF Combiner Tool | simpliconvert</title>
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+
+
+
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com"></script>
+
+<!-- Babel for JSX -->
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+<!-- React & Dependencies -->
+<script type="importmap">
+{
+  "imports": {
+    "react": "https://esm.sh/react@18.2.0",
+    "react-dom/client": "https://esm.sh/react-dom@18.2.0/client",
+    "react-dropzone": "https://esm.sh/react-dropzone@14.2.3?deps=react@18.2.0",
+    "@hello-pangea/dnd": "https://esm.sh/@hello-pangea/dnd@16.5.0?deps=react@18.2.0"
+  }
+}
+</script>
+
+<!-- PDF Libraries -->
+<script src="https://unpkg.com/pdfjs-dist@3.4.120/build/pdf.min.js"></script>
+<script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+
+
+
+
+
+
+
+
+
+    
     <style>
-        body {
-            font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+        .nav-dropdown {
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(15px);
+            transition: all 0.3s ease;
         }
-        /* Custom styles for radio buttons */
-        .peer:checked~.radio-check {
+        .nav-item:hover .nav-dropdown {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+        #apps-mega-menu {
+            transition: all 0.3s ease;
+        }
+        .tool-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        .feature-card:hover .feature-icon {
+            background-color: rgba(218, 63, 11, 0.1);
+        }
+        .footer-link:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        /* New styles for redesigned tools section */
+        .new-tool-card {
+            display: flex;
+            align-items: flex-start;
+            padding: 1.25rem;
+            border-radius: 0.75rem;
+            background-color: #faf4f1;
+            border: 1px solid #e5e7eb;
+            transition: all 0.3s ease;
+        }
+        .new-tool-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
             border-color: #da3f0b;
         }
-        .peer:checked~.radio-check .radio-dot {
-            transform: scale(1);
-            background-color: #da3f0b;
+        .tool-icon-container {
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 0.5rem;
+            background-color: rgba(218, 63, 11, 0.1);
+            margin-right: 1rem;
         }
-        .peer:checked~.radio-label {
+        .tool-icon {
             color: #da3f0b;
+            font-size: 1rem;
+        }
+        .tool-content {
+            flex-grow: 1;
+        }
+        .tool-title {
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 0.25rem;
+        }
+        .tool-desc {
+            color: #6b7280;
+            font-size: 0.875rem;
+            line-height: 1.25rem;
+        }
+        /* Enhanced footer styles */
+        .footer {
+            min-height: 600px;
         }
     </style>
 </head>
-<body class="bg-slate-50">
-
-    <div class="min-h-screen flex flex-col items-center justify-center p-4 sm:p-6 lg:p-8 font-sans">
-        <div class="w-full max-w-2xl mx-auto">
-            <header class="text-center mb-8">
-                <h1 class="text-4xl font-bold text-slate-800">Compress PDF</h1>
-                <p class="mt-2 text-slate-500">Reduce the size of your PDF files online, for free.</p>
-            </header>
-            <main id="app-container" class="bg-white rounded-xl shadow-md p-6">
-                <!-- Dropzone View -->
-                <div id="dropzone-view">
-                    <div id="dropzone" class="relative flex flex-col items-center justify-center w-full p-12 border-2 border-dashed rounded-xl transition-all duration-300 cursor-pointer border-slate-300 bg-slate-50 hover:border-primary/70 hover:bg-primary/5">
-                        <input id="file-input" type="file" accept="application/pdf" class="hidden" />
-                        <div class="text-center">
-                            <svg class="mx-auto h-16 w-16 text-slate-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
-                            </svg>
-                            <p class="mt-4 text-2xl font-semibold text-slate-700">Drop your PDF file here</p>
-                            <p class="mt-2 text-slate-500">or <span class="font-bold text-primary">click to browse</span></p>
-                        </div>
-                    </div>
+<body class="font-sans bg-gray-50 min-h-screen flex flex-col">
+    <!-- Main Navigation -->
+    <header class="bg-white shadow-sm sticky top-0 z-50 w-full">
+        <div class="max-w-screen-4xl mx-auto px-4">
+            <nav class="flex items-center h-16">
+                <!-- Logo -->
+                <div class="flex-shrink-0">
+                    <a href="https://simpliconvert.com" class="text-2xl font-bold text-[#da3f0b]">simpliconvert</a>
                 </div>
+                
+                <!-- Main Navigation Links -->
+                <div class="hidden md:flex items-center space-x-8 ml-8">
+                    <div class="relative nav-item group">
+                        <a href="/merge_pdf_online" class="flex items-center font-semibold text-gray-1000 hover:text-[#da3f0b] transition">
+                            <i ></i> Merge PDF</i>
+                        </a>
 
-                <!-- File & Options View -->
-                <div id="file-view" class="hidden flex-col gap-6">
-                    <div class="p-4 bg-slate-100 rounded-lg flex items-center gap-4">
-                        <svg class="h-8 w-8 text-primary flex-shrink-0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                            <path fill-rule="evenodd" d="M4 2a2 2 0 00-2 2v12a2 2 0 002 2h12a2 2 0 002-2V7.414A2 2 0 0017.414 6L12 1.586A2 2 0 0010.586 1H4zm2 8a1 1 0 100 2h8a1 1 0 100-2H6z" clip-rule="evenodd" />
-                        </svg>
-                        <div>
-                            <p id="file-name" class="font-bold text-slate-800 truncate"></p>
-                            <p id="file-size" class="text-sm text-slate-500"></p>
-                        </div>
+
+                        
+                        <!--<div class="nav-dropdown absolute left-0 mt-2 w-64 bg-gray-50 rounded-lg shadow-xl p-4 z-50">
+                             <div class="grid grid-cols-1 gap-2">
+                                <a href="merge.html" class="flex items-center px-4 py-3 text-gray-700 hover:bg-white hover:text-[#da3f0b] rounded-lg transition">
+                                    <i class="fas fa-random text-[#da3f0b] mr-3"></i>
+                                    <div>
+                                        <h4 class="font-medium">Merge PDF</h4>
+                                        <p class="text-xs text-gray-500">Combine multiple PDFs into one</p>
+                                    </div>
+                                </a>
+                                <a href="split.html" class="flex items-center px-4 py-3 text-gray-700 hover:bg-white hover:text-[#da3f0b] rounded-lg transition">
+                                    <i class="fas fa-cut text-[#da3f0b] mr-3"></i>
+                                    <div>
+                                        <h4 class="font-medium">Split PDF</h4>
+                                        <p class="text-xs text-gray-500">Divide PDF into multiple files</p>
+                                    </div>
+                                </a>
+                                <a href="compress.html" class="flex items-center px-4 py-3 text-gray-700 hover:bg-white hover:text-[#da3f0b] rounded-lg transition">
+                                    <i class="fas fa-compress-alt text-[#da3f0b] mr-3"></i>
+                                    <div>
+                                        <h4 class="font-medium">Compress PDF</h4>
+                                        <p class="text-xs text-gray-500">Reduce PDF file size</p>
+                                    </div>
+                                </a>
+                            </div> 
+                        </div>-->
                     </div>
 
-                    <fieldset class="space-y-3">
-                        <legend class="text-lg font-semibold mb-2 text-slate-800">Select Compression Level</legend>
-                        
-                        <label for="level-extreme" class="relative flex p-4 border rounded-lg cursor-pointer transition-all duration-200 has-[:checked]:border-primary has-[:checked]:ring-2 has-[:checked]:ring-primary/20">
-                            <input type="radio" name="compression-level" value="extreme" id="level-extreme" class="peer absolute opacity-0 h-0 w-0">
-                            <div class="flex-grow">
-                                <span class="font-bold text-slate-700 radio-label transition-colors">Extreme Compression</span>
-                                <p class="text-sm text-slate-500">Lower quality, highest compression. (Loses text selectability)</p>
-                            </div>
-                            <div class="radio-check flex items-center justify-center w-6 h-6 border-2 border-slate-300 rounded-full transition-all duration-200">
-                                <div class="radio-dot w-3 h-3 bg-transparent rounded-full transform scale-0 transition-transform duration-200"></div>
-                            </div>
-                        </label>
 
-                        <label for="level-recommended" class="relative flex p-4 border rounded-lg cursor-pointer transition-all duration-200 has-[:checked]:border-primary has-[:checked]:ring-2 has-[:checked]:ring-primary/20">
-                            <input type="radio" name="compression-level" value="recommended" id="level-recommended" class="peer absolute opacity-0 h-0 w-0" checked>
-                            <div class="flex-grow">
-                                <span class="font-bold text-slate-700 radio-label transition-colors">Recommended Compression</span>
-                                <p class="text-sm text-slate-500">Good quality, good compression.</p>
-                            </div>
-                            <div class="radio-check flex items-center justify-center w-6 h-6 border-2 border-slate-300 rounded-full transition-all duration-200">
-                                <div class="radio-dot w-3 h-3 bg-transparent rounded-full transform scale-0 transition-transform duration-200"></div>
-                            </div>
-                        </label>
-                        
-                        <label for="level-less" class="relative flex p-4 border rounded-lg cursor-pointer transition-all duration-200 has-[:checked]:border-primary has-[:checked]:ring-2 has-[:checked]:ring-primary/20">
-                             <input type="radio" name="compression-level" value="less" id="level-less" class="peer absolute opacity-0 h-0 w-0">
-                             <div class="flex-grow">
-                                <span class="font-bold text-slate-700 radio-label transition-colors">Less Compression</span>
-                                <p class="text-sm text-slate-500">High quality, less compression.</p>
-                            </div>
-                             <div class="radio-check flex items-center justify-center w-6 h-6 border-2 border-slate-300 rounded-full transition-all duration-200">
-                                <div class="radio-dot w-3 h-3 bg-transparent rounded-full transform scale-0 transition-transform duration-200"></div>
-                            </div>
-                        </label>
-                    </fieldset>
+<div class="relative nav-item group">
+                        <button class="flex items-center font-semibold text-gray-1000 hover:text-[#da3f0b] transition">
+                            <i ></i> Compress PDF</i>
+                        </button>
+                                          </div>
 
-                    <div class="flex flex-col gap-4 items-center justify-center mt-4">
-                        <button id="compress-button" class="w-full max-w-sm flex items-center justify-center gap-3 px-8 py-3 bg-primary text-white font-bold text-lg rounded-lg shadow-md hover:bg-primary-700 active:bg-primary-800 focus:outline-none focus:ring-4 focus:ring-primary/30 transition-all duration-300">
-                            Compress PDF
+
+                    <div class="relative nav-item group">
+                        <button class="flex items-center font-semibold text-gray-1000 hover:text-[#da3f0b] transition">
+                            <i ></i> Split PDF</i>
                         </button>
-                        <button id="reset-button-list" class="w-full sm:w-auto px-6 py-3 bg-slate-200 text-slate-700 font-semibold rounded-lg hover:bg-slate-300 focus:outline-none focus:ring-4 focus:ring-slate-300 transition-all duration-200">
-                            Start Over
+                                       </div>
+
+                    <div class="relative nav-item group">
+                        <button class="flex items-center font-semibold text-gray-1000 hover:text-[#da3f0b] transition">
+                            <i ></i> Sign PDF</i>
                         </button>
+                                            </div>
+                    
+                    
+                    <div class="relative nav-item group">
+                        <button class="flex items-center font-semibold text-orange-700 hover:text-[#da3f0b] transition">
+                            <i class="fas fa-image mr-2 text-[#da3f0b]"></i> Image Tools <i class="fas fa-chevron-down ml-2 text-xs"></i>
+                        </button>
+                        <div class="nav-dropdown absolute left-0 mt-2 w-64 bg-gray-50 rounded-lg shadow-xl p-4 z-50">
+                            <div class="grid grid-cols-1 gap-2">
+                                <a href="convert-image.html" class="flex items-center px-4 py-3 text-gray-700 hover:bg-white hover:text-[#da3f0b] rounded-lg transition">
+                                    <i class="fas fa-exchange-alt text-[#da3f0b] mr-3"></i>
+                                    <div>
+                                        <h4 class="font-medium">JPG to PDF</h4>
+                                        <p class="text-xs text-gray-500">Convert JPG images to PDF in seconds</p>
+                                    </div>
+                                </a>
+                                <a href="resize.html" class="flex items-center px-4 py-3 text-gray-7hover:text-[#da3f0b] rounded-lg transition">
+                                    <i class="fas fa-expand text-[#da3f0b] mr-3"></i>
+                                    <div>
+                                        <h4 class="font-medium">Resize Image</h4>
+                                        <p class="text-xs text-gray-500">Adjust image dimensions</p>
+                                    </div>
+                                </a>
+                                <a href="compress-image.html" class="flex items-center px-4 py-3 text-gray-700 hover:bg-white hover:text-[#da3f0b] rounded-lg transition">
+                                    <i class="fas fa-file-image text-[#da3f0b] mr-3"></i>
+                                    <div>
+                                        <h4 class="font-medium">Compress Image</h4>
+                                        <p class="text-xs text-gray-500">Reduce image file size</p>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                  <!--   <a href="#" class="text-gray-7hover:text-[#da3f0b] transition">Document Tools</a>
+                    <a href="#" class="text-gray-7hover:text-[#da3f0b] transition">More Tools</a>-->
+                </div>
+                
+                <div class="flex items-center space-x-4 ml-auto">
+                    <!-- <button class="hidden md:flex items-center space-x-1 bg-gray-100 hover:bg-gray-200 px-3 py-1.5 rounded-lg transition" id="apps-button">
+                        <i class="fas fa-th text-gray-600"></i>
+                        <span class="text-gray-700 font-medium">Apps</span>
+                    </button>
+                    <button class="md:hidden text-gray-700" id="mobile-menu-button">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button> -->
+                </div>
+            </nav>
+        </div>
+        
+        <!-- Apps Mega Menu -->
+        <div class="hidden absolute top-full right-0 w-full max-w-7xl bg-white rounded-lg shadow-xl p-6 z-50" id="apps-mega-menu">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                <!-- PDF Tools Column -->
+                <div>
+                    <h4 class="font-bold text-lg text-gray-800 mb-4 border-b pb-2 flex items-center">
+                        <i class="fas fa-file-pdf text-[#da3f0b] mr-2"></i> PDF Tools
+                    </h4>
+                    <div class="grid grid-cols-1 gap-3">
+                        <a href="merge.html" class="flex items-center p-3 rounded-lg hover:bg-gray-50 transition">
+                            <div class="bg-[#da3f0b]/10 p-2 rounded-lg mr-3">
+                                <i class="fas fa-random text-[#da3f0b]"></i>
+                            </div>
+                            <div>
+                                <h5 class="font-medium">Merge PDF</h5>
+                                <p class="text-xs text-gray-500">Combine multiple PDFs</p>
+                            </div>
+                        </a>
+                        <a href="split.html" class="flex items-center p-3 rounded-lg hover:bg-gray-50 transition">
+                            <div class="bg-[#da3f0b]/10 p-2 rounded-lg mr-3">
+                                <i class="fas fa-cut text-[#da3f0b]"></i>
+                            </div>
+                            <div>
+                                <h5 class="font-medium">Split PDF</h5>
+                                <p class="text-xs text-gray-500">Divide PDF into parts</p>
+                            </div>
+                        </a>
+                        <a href="compress.html" class="flex items-center p-3 rounded-lg hover:bg-gray-50 transition">
+                            <div class="bg#[#da3f0b]/10 p-2 rounded-lg mr-3">
+                                <i class="fas fa-compress-alt text-[#da3f0b]"></i>
+                            </div>
+                            <div>
+                                <h5 class="font-medium">Compress PDF</h5>
+                                <p class="text-xs text-gray-500">Reduce file size</p>
+                            </div>
+                        </a>
+                        <a href="#" class="flex items-center p-3 rounded-lg hover:bg-gray-50 transition">
+                            <div class="bg-[#da3f0b]/10 p-2 rounded-lg mr-3">
+                                <i class="fas fa-lock text-[#da3f0b]"></i>
+                            </div>
+                            <div>
+                                <h5 class="font-medium">Protect PDF</h5>
+                                <p class="text-xs text-gray-500">Add password protection</p>
+                            </div>
+                        </a>
+                        <a href="#" class="flex items-center p-3 rounded-lg hover:bg-gray-50 transition">
+                            <div class="bg-[#da3f0b]/10 p-2 rounded-lg mr-3">
+                                <i class="fas fa-file-import text-[#da3f0b]"></i>
+                            </div>
+                            <div>
+                                <h5 class="font-medium">PDF to Word</h5>
+                                <p class="text-xs text-gray-500">Convert PDF to DOCX</p>
+                            </div>
+                        </a>
                     </div>
                 </div>
                 
-                 <!-- Processing Spinner View -->
-                <div id="processing-view" class="hidden text-center p-8">
-                    <div role="status" class="flex flex-col items-center justify-center">
-                        <svg aria-hidden="true" class="w-10 h-10 text-slate-300 animate-spin fill-primary" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor"/>
-                            <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0492C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentFill"/>
-                        </svg>
-                        <p id="processing-message" class="mt-4 text-lg font-semibold">Compressing your PDF...</p>
-                        <span class="sr-only">Loading...</span>
-                    </div>
-                </div>
-
-                <!-- Result View -->
-                <div id="result-view" class="hidden text-center p-8 bg-green-50 rounded-2xl border-2 border-dashed border-green-300">
-                    <h2 class="text-2xl font-bold text-green-800">Compression Successful!</h2>
-                    <div class="mt-4 flex justify-center items-baseline gap-4 text-slate-600">
-                        <div>
-                            <p class="text-sm">Original Size</p>
-                            <p id="original-size" class="text-lg font-bold text-slate-800"></p>
-                        </div>
-                         <div class="text-2xl font-light text-slate-400">&rarr;</div>
-                        <div>
-                            <p class="text-sm">New Size</p>
-                            <p id="new-size" class="text-lg font-bold text-slate-800"></p>
-                        </div>
-                    </div>
-                    <div id="reduction-badge" class="mt-4 inline-block bg-green-200 text-green-800 text-sm font-bold px-3 py-1 rounded-full"></div>
-
-                    <div class="mt-6 flex flex-col gap-4 items-center w-full max-w-md mx-auto">
-                        <a id="download-button" href="#" download="" class="w-full flex items-center justify-center gap-3 px-8 py-3 bg-primary text-white font-bold text-lg rounded-lg shadow-md hover:bg-primary-700 active:bg-primary-800 focus:outline-none focus:ring-4 focus:ring-primary/30 transition-all duration-300">
-                           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5"><path d="M10.75 2.75a.75.75 0 00-1.5 0v8.614L6.295 8.235a.75.75 0 10-1.09 1.03l4.25 4.5a.75.75 0 001.09 0l4.25-4.5a.75.75 0 00-1.09-1.03l-2.955 3.129V2.75z" /><path d="M3.5 12.75a.75.75 0 00-1.5 0v2.5A2.75 2.75 0 004.75 18h10.5A2.75 2.75 0 0018 15.25v-2.5a.75.75 0 00-1.5 0v2.5c0 .69-.56 1.25-1.25 1.25H4.75c-.69 0-1.25-.56-1.25-1.25v-2.5z" /></svg>
-                            Download Compressed PDF
+                <!-- Image Tools Column -->
+                <div>
+                    <h4 class="font-bold text-lg text-gray-800 mb-4 border-b pb-2 flex items-center">
+                        <i class="fas fa-image text-[#da3f0b] mr-2"></i> Image Tools
+                    </h4>
+                    <div class="grid grid-cols-1 gap-3">
+                        <a href="convert-image.html" class="flex items-center p-3 rounded-lg hover:bg-gray-50 transition">
+                            <div class="bg-[#da3f0b]/10 p-2 rounded-lg mr-3">
+                                <i class="fas fa-exchange-alt text-[#da3f0b]"></i>
+                            </div>
+                            <div>
+                                <h5 class="font-medium">Convert Image</h5>
+                                <p class="text-xs text-gray-500">Change format (JPG, PNG, etc.)</p>
+                            </div>
                         </a>
-                         <button id="reset-button-result" class="w-full sm:w-auto px-6 py-3 bg-slate-200 text-slate-700 font-semibold rounded-lg hover:bg-slate-300 focus:outline-none focus:ring-4 focus:ring-slate-300 transition-all duration-200">
-                            Compress Another PDF
-                        </button>
+                        <a href="resize.html" class="flex items-center p-3 rounded-lg hover:bg-gray-50 transition">
+                            <div class="bg-[#da3f0b]/10 p-2 rounded-lg mr-3">
+                                <i class="fas fa-expand text-[#da3f0b]"></i>
+                            </div>
+                            <div>
+                                <h5 class="font-medium">Resize Image</h5>
+                                <p class="text-xs text-gray-500">Adjust dimensions</p>
+                            </div>
+                        </a>
+                        <a href="compress-image.html" class="flex items-center p-3 rounded-lg hover:bg-gray-50 transition">
+                            <div class="bg-[#da3f0b]/10 p-2 rounded-lg mr-3">
+                                <i class="fas fa-file-image text-[#da3f0b]"></i>
+                            </div>
+                            <div>
+                                <h5 class="font-medium">Compress Image</h5>
+                                <p class="text-xs text-gray-500">Reduce file size</p>
+                            </div>
+                        </a>
+                        <a href="#" class="flex items-center p-3 rounded-lg hover:bg-gray-50 transition">
+                            <div class="bg-[#da3f0b]/10 p-2 rounded-lg mr-3">
+                                <i class="fas fa-crop text-[#da3f0b]"></i>
+                            </div>
+                            <div>
+                                <h5 class="font-medium">Crop Image</h5>
+                                <p class="text-xs text-gray-500">Trim unwanted areas</p>
+                            </div>
+                        </a>
+                        <a href="#" class="flex items-center p-3 rounded-lg hover:bg-gray-50 transition">
+                            <div class="bg-[#da3f0b]/10 p-2 rounded-lg mr-3">
+                                <i class="fas fa-magic text-[#da3f0b]"></i>
+                            </div>
+                            <div>
+                                <h5 class="font-medium">Enhance Image</h5>
+                                <p class="text-xs text-gray-500">Improve quality</p>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Document Tools Column -->
+                <div>
+                    <h4 class="font-bold text-lg text-gray-800 mb-4 border-b pb-2 flex items-center">
+                        <i class="fas fa-file-alt text-[#da3f0b] mr-2"></i> Document Tools
+                    </h4>
+                    <div class="grid grid-cols-1 gap 3">
+                        <a href="#" class="flex items-center p-3 rounded-lg hover:bg-gray-50 transition">
+                            <div class="bg-[#da3f0b]/10 p-2 rounded-lg mr-3">
+                                <i class="fas fa-file-word text-[#da3f0b]"></i>
+                            </div>
+                            <div>
+                                <h5 class="font-medium">Word to PDF</h5>
+                                <p class="text-xs text-gray-500">Convert DOCX to PDF</p>
+                            </div>
+                        </a>
+                        <a href="#" class="flex items-center p-3 rounded-lg hover:bg-gray-50 transition">
+                            <div class="bg-[#da3f0b]/10 p-2 rounded-lg mr-3">
+                                <i class="fas fa-file-excel text-[#da3f0b]"></i>
+                            </div>
+                            <div>
+                                <h5 class="font-medium">Excel to PDF</h5>
+                                <p class="text-xs text-gray-500">Convert XLSX to PDF</p>
+                            </div>
+                        </a>
+                        <a href="#" class="flex items-center p-3 rounded-lg hover:bg-gray-50 transition">
+                            <div class="bg-[#da3f0b]/10 p-2 rounded-lg mr-3">
+                                <i class="fas fa-file-powerpoint text-[#da3f0b]"></i>
+                            </div>
+                            <div>
+                                <h5 class="font-medium">PPT to PDF</h5]
+                                <p class="text-xs text-gray-500">Convert presentations</p>
+                            </div>
+                        </a>
+                        <a href="#" class="flex items-center p-3 rounded-lg hover:bg-gray-50 transition">
+                            <div class="bg-[#da3f0b]/10 p-2 rounded-lg mr-3">
+                                <i class="fas fa-file-pdf text-[#da3f0b]"></i>
+                            </div>
+                            <div>
+                                <h5 class="font-medium">OCR PDF</h5>
+                                <p class="text-xs text-gray-500">Extract text from scanned PDFs</p>
+                            </div>
+                        </a>
+                        <a href="#" class="flex items-center p-3 rounded-lg hover:bg-gray-50 transition">
+                            <div class="bg-[#da3f0b]/10 p-2 rounded-lg mr-3">
+                                <i class="fas fa-file-archive text-[#da3f0b]"></i>
+                            </div>
+                            <div>
+                                <h5 class="font-medium">PDF to ZIP</h5>
+                                <p class="text-xs text-gray-500">Compress multiple PDFs</p>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Other Tools Column -->
+                <div>
+                    <h4 class="font-bold text-lg text-gray-800 mb-4 border-b pb-2 flex items-center">
+                        <i class="fas fa-tools text-[#da3f0b] mr-2"></i> Other Tools
+                    </h4>
+                    <div class="grid grid-cols-1 gap-3">
+                        <a href="#" class="flex items-center p-3 rounded-lg hover:bg-gray-50 transition">
+                            <div class="bg-[#da3f0b]/10 p-2 rounded-lg mr-3">
+                                <i class="fas fa-qrcode text-[#da3f0b]"></i>
+                            </div>
+                            <div>
+                                <h5 class="font-medium">QR Generator</h5>
+                                <p class="text-xs text-gray-500">Create custom QR codes</p>
+                            </div>
+                        </a>
+                        <a href="#" class="flex itemsCenter p-3 rounded-lg hover:bg-gray-50 transition">
+                            <div class="bg-[#da3f0b]/10 p-2 rounded-lg mr-3">
+                                <i class="fas fa-lock text-[#da3f0b]"></i>
+                            </div>
+                            <div>
+                                <h5 class="font-medium">Password Generator</h5>
+                                <p class="text-xs text-gray-500">Create secure passwords</p>
+                            </div>
+                        </a>
+                        <a href="#" class="flex items-center p-3 rounded-lg hover:bg-gray-50 transition">
+                            <div class="bg-[#da3f0b]/10 p-2 rounded-lg mr-3">
+                                <i class="fas fa-palette text-[#da3f0b]"></i>
+                            </div>
+                            <div>
+                                <h5 class="font-medium">Color Picker</h5>
+                                <p class="text-xs text-gray-500">Select and convert colors</p>
+                            </div>
+                        </a>
+                        <a href="#" class="flex items-center p-3 rounded-lg hover:bg-gray-50 transition">
+                            <div class="bg-[#da3f0b]/10 p-2 rounded-lg mr-3">
+                                <i class="fas fa-hashtag text-[#da3f0b]"></i>
+                            </div>
+                            <div>
+                                <h5 class="font-medium">Base64 Encoder</h5>
+                                <p class="text-xs text-gray-500">Encode/decode base64</p>
+                            </div>
+                        </a>
+                        <a href="#" class="flex items-center p-3 rounded-lg hover:bg-gray-50 transition">
+                            <div class="bg-[#da3f0b]/10 p-2 rounded-lg mr-3">
+                                <i class="fas fa-code text-[#da3f0b]"></i>
+                            </div>
+                            <div>
+                                <h5 class="font-medium">HTML Formatter</h5>
+                                <p class="text-xs text-gray-500">Beautify HTML code</p>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mt-6 pt-4 border-t border-gray-200">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <h4 class="font-semibold text-gray-800">Looking for something else?</h4>
+                        <p class="text-sm text-gray-500">Explore all our tools or suggest a new one</p>
+                    </div>
+                    <div class="flex space-x-3">
+                        <a href="#" class="px-4 py-2 bg-[#da3f0b] text-white rounded-lg hover:bg-[#c23a0a] transition">View All Tools</a>
+                        <a href="#" class="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:border-[#da3f0b] hover:text-[#da3f0b] transition">Suggest a Tool</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile menu -->
+        <div class="hidden md:hidden bg-white py-2 px-4 shadow-md" id="mobile-menu">
+            <div class="flex flex-col space-y-3">
+                <div>
+                    <button class="flex items-center justify-between w-full text-gray-700 py-2">
+                        <span>PDF Tools</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="pl-4 hidden" id="pdf-mobile-dropdown">
+                        <a href="merge.html" class="block py-2 text-gray-600">Merge PDF</a>
+                        <a href="split.html", class="block py-2 text-gray-600">Split PDF</a>
+                        <a href="compress.html" class="block py-2 text-gray-600">Compress PDF</a>
+                    </div>
+                </div>
+                                
+                <div>
+                    <button class="flex items-center justify-between w-full text-gray-700 py-2">
+                        <span>Image Tools</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="pl-4 hidden" id="image-mobile-dropdown">
+                        <a href="convert-image.html" class="block py-2 text-gray-600">Convert Image</a>
+                        <a href="resize.html" class="block py-2 text-gray-600">Resize Image</a>
+                        <a href="compress-image.html" class="block py-2 text-gray-600">Compress Image</a>
+                    </div>
+                </div>
+                
+                <a href="#" class="text-gray-700 py-2">Document Tools</a>
+                <a href="#" class="text-gray-700 py-2">More Tools</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="bg-gray-10 text-black py-6"> <div class="max-w-7xl mx-auto px-4 text-center"> <h1 class="text-4xl md:text-5xl font-bold mb-6"> Merge PDF </h1> <p class="text-xl md:text-2xl max-w-3xl mx-auto">Combine PDFs in the order you want with the simplest PDF merger available.
+ </p> </div> </section>
+
+
+    <!-- Single Too Code Section -->
+
+
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+<!-- Add pdf.js for rendering, which is needed for high-compression rasterization -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+<script>
+    tailwind.config = {
+        theme: {
+            extend: {
+                colors: {
+                    primary: {
+                        DEFAULT: '#da3f0b',
+                        '50': '#fef3f2',
+                        '100': '#fee4e2',
+                        '200': '#fecdca',
+                        '300': '#fda49b',
+                        '400': '#f86a59',
+                        '500': '#ef4444',
+                        '600': '#da3f0b',
+                        '700': '#b91c1c',
+                        '800': '#991b1b',
+                        '900': '#7f1d1d',
+                        '950': '#450a0a'
+                    }
+                }
+            }
+        }
+    }
+</script>
+<style>
+    body {
+        font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+    }
+    /* Custom styles for radio buttons */
+    .peer:checked~.radio-check {
+        border-color: #da3f0b;
+    }
+    .peer:checked~.radio-check .radio-dot {
+        transform: scale(1);
+        background-color: #da3f0b;
+    }
+    .peer:checked~.radio-label {
+        color: #da3f0b;
+    }
+</style>
+<div class="min-h-screen flex flex-col items-center justify-center p-4 sm:p-6 lg:p-8 font-sans bg-slate-50">
+    <div class="w-full max-w-2xl mx-auto">
+             <main id="app-container" class="bg-white rounded-xl shadow-md p-6">
+            <!-- Dropzone View -->
+            <div id="dropzone-view">
+                <div id="dropzone" class="relative flex flex-col items-center justify-center w-full p-12 border-2 border-dashed rounded-xl transition-all duration-300 cursor-pointer border-slate-300 bg-slate-50 hover:border-primary/70 hover:bg-primary/5">
+                    <input id="file-input" type="file" accept="application/pdf" class="hidden" />
+                    <div class="text-center">
+                        <svg class="mx-auto h-16 w-16 text-slate-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
+                        </svg>
+                        <p class="mt-4 text-2xl font-semibold text-slate-700">Drop your PDF file here</p>
+                        <p class="mt-2 text-slate-500">or <span class="font-bold text-primary">click to browse</span></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- File & Options View -->
+            <div id="file-view" class="hidden flex-col gap-6">
+                <div class="p-4 bg-slate-100 rounded-lg flex items-center gap-4">
+                    <svg class="h-8 w-8 text-primary flex-shrink-0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M4 2a2 2 0 00-2 2v12a2 2 0 002 2h12a2 2 0 002-2V7.414A2 2 0 0017.414 6L12 1.586A2 2 0 0010.586 1H4zm2 8a1 1 0 100 2h8a1 1 0 100-2H6z" clip-rule="evenodd" />
+                    </svg>
+                    <div>
+                        <p id="file-name" class="font-bold text-slate-800 truncate"></p>
+                        <p id="file-size" class="text-sm text-slate-500"></p>
                     </div>
                 </div>
 
-                <!-- Error Message -->
-                <div id="error-view" class="hidden mt-6 p-4 bg-red-100 border-l-4 border-red-500 text-red-700 rounded-r-lg">
-                    <p class="font-bold">Error</p>
-                    <p id="error-message"></p>
-                </div>
-            </main>
+                <fieldset class="space-y-3">
+                    <legend class="text-lg font-semibold mb-2 text-slate-800">Select Compression Level</legend>
+                    
+                    <label for="level-extreme" class="relative flex p-4 border rounded-lg cursor-pointer transition-all duration-200 has-[:checked]:border-primary has-[:checked]:ring-2 has-[:checked]:ring-primary/20">
+                        <input type="radio" name="compression-level" value="extreme" id="level-extreme" class="peer absolute opacity-0 h-0 w-0">
+                        <div class="flex-grow">
+                            <span class="font-bold text-slate-700 radio-label transition-colors">Extreme Compression</span>
+                            <p class="text-sm text-slate-500">Lower quality, highest compression. (Loses text selectability)</p>
+                        </div>
+                        <div class="radio-check flex items-center justify-center w-6 h-6 border-2 border-slate-300 rounded-full transition-all duration-200">
+                            <div class="radio-dot w-3 h-3 bg-transparent rounded-full transform scale-0 transition-transform duration-200"></div>
+                        </div>
+                    </label>
 
-            <footer class="text-center mt-8">
-                <div class="flex items-center justify-center gap-2 text-slate-500">
-                    <svg class="w-5 h-5 text-green-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.286zm0 13.036h.008v.016h-.008v-.016z" />
+                    <label for="level-recommended" class="relative flex p-4 border rounded-lg cursor-pointer transition-all duration-200 has-[:checked]:border-primary has-[:checked]:ring-2 has-[:checked]:ring-primary/20">
+                        <input type="radio" name="compression-level" value="recommended" id="level-recommended" class="peer absolute opacity-0 h-0 w-0" checked>
+                        <div class="flex-grow">
+                            <span class="font-bold text-slate-700 radio-label transition-colors">Recommended Compression</span>
+                            <p class="text-sm text-slate-500">Good quality, good compression.</p>
+                        </div>
+                        <div class="radio-check flex items-center justify-center w-6 h-6 border-2 border-slate-300 rounded-full transition-all duration-200">
+                            <div class="radio-dot w-3 h-3 bg-transparent rounded-full transform scale-0 transition-transform duration-200"></div>
+                        </div>
+                    </label>
+                    
+                    <label for="level-less" class="relative flex p-4 border rounded-lg cursor-pointer transition-all duration-200 has-[:checked]:border-primary has-[:checked]:ring-2 has-[:checked]:ring-primary/20">
+                         <input type="radio" name="compression-level" value="less" id="level-less" class="peer absolute opacity-0 h-0 w-0">
+                         <div class="flex-grow">
+                            <span class="font-bold text-slate-700 radio-label transition-colors">Less Compression</span>
+                            <p class="text-sm text-slate-500">High quality, less compression.</p>
+                        </div>
+                         <div class="radio-check flex items-center justify-center w-6 h-6 border-2 border-slate-300 rounded-full transition-all duration-200">
+                            <div class="radio-dot w-3 h-3 bg-transparent rounded-full transform scale-0 transition-transform duration-200"></div>
+                        </div>
+                    </label>
+                </fieldset>
+
+                <div class="flex flex-col gap-4 items-center justify-center mt-4">
+                    <button id="compress-button" class="w-full max-w-sm flex items-center justify-center gap-3 px-8 py-3 bg-primary text-white font-bold text-lg rounded-lg shadow-md hover:bg-primary-700 active:bg-primary-800 focus:outline-none focus:ring-4 focus:ring-primary/30 transition-all duration-300">
+                        Compress PDF
+                    </button>
+                    <button id="reset-button-list" class="w-full sm:w-auto px-6 py-3 bg-slate-200 text-slate-700 font-semibold rounded-lg hover:bg-slate-300 focus:outline-none focus:ring-4 focus:ring-slate-300 transition-all duration-200">
+                        Start Over
+                    </button>
+                </div>
+            </div>
+            
+             <!-- Processing Spinner View -->
+            <div id="processing-view" class="hidden text-center p-8">
+                <div role="status" class="flex flex-col items-center justify-center">
+                    <svg aria-hidden="true" class="w-10 h-10 text-slate-300 animate-spin fill-primary" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor"/>
+                        <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0492C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentFill"/>
                     </svg>
-                    <p>Your files are processed entirely in your browser. No data is sent to our servers.</p>
+                    <p id="processing-message" class="mt-4 text-lg font-semibold">Compressing your PDF...</p>
+                    <span class="sr-only">Loading...</span>
                 </div>
-            </footer>
-        </div>
-    </div>
+            </div>
 
-    <script>
-        // Setup pdf.js worker. It's required for the library to work.
-        if (typeof pdfjsLib !== 'undefined') {
-            pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
+            <!-- Result View -->
+            <div id="result-view" class="hidden text-center p-8 bg-green-50 rounded-2xl border-2 border-dashed border-green-300">
+                <h2 class="text-2xl font-bold text-green-800">Compression Successful!</h2>
+                <div class="mt-4 flex justify-center items-baseline gap-4 text-slate-600">
+                    <div>
+                        <p class="text-sm">Original Size</p>
+                        <p id="original-size" class="text-lg font-bold text-slate-800"></p>
+                    </div>
+                     <div class="text-2xl font-light text-slate-400">&rarr;</div>
+                    <div>
+                        <p class="text-sm">New Size</p>
+                        <p id="new-size" class="text-lg font-bold text-slate-800"></p>
+                    </div>
+                </div>
+                <div id="reduction-badge" class="mt-4 inline-block bg-green-200 text-green-800 text-sm font-bold px-3 py-1 rounded-full"></div>
+
+                <div class="mt-6 flex flex-col gap-4 items-center w-full max-w-md mx-auto">
+                    <a id="download-button" href="#" download="" class="w-full flex items-center justify-center gap-3 px-8 py-3 bg-primary text-white font-bold text-lg rounded-lg shadow-md hover:bg-primary-700 active:bg-primary-800 focus:outline-none focus:ring-4 focus:ring-primary/30 transition-all duration-300">
+                       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5"><path d="M10.75 2.75a.75.75 0 00-1.5 0v8.614L6.295 8.235a.75.75 0 10-1.09 1.03l4.25 4.5a.75.75 0 001.09 0l4.25-4.5a.75.75 0 00-1.09-1.03l-2.955 3.129V2.75z" /><path d="M3.5 12.75a.75.75 0 00-1.5 0v2.5A2.75 2.75 0 004.75 18h10.5A2.75 2.75 0 0018 15.25v-2.5a.75.75 0 00-1.5 0v2.5c0 .69-.56 1.25-1.25 1.25H4.75c-.69 0-1.25-.56-1.25-1.25v-2.5z" /></svg>
+                        Download Compressed PDF
+                    </a>
+                     <button id="reset-button-result" class="w-full sm:w-auto px-6 py-3 bg-slate-200 text-slate-700 font-semibold rounded-lg hover:bg-slate-300 focus:outline-none focus:ring-4 focus:ring-slate-300 transition-all duration-200">
+                        Compress Another PDF
+                    </button>
+                </div>
+            </div>
+
+            <!-- Error Message -->
+            <div id="error-view" class="hidden mt-6 p-4 bg-red-100 border-l-4 border-red-500 text-red-700 rounded-r-lg">
+                <p class="font-bold">Error</p>
+                <p id="error-message"></p>
+            </div>
+        </main>
+
+        <footer class="text-center mt-8">
+            <div class="flex items-center justify-center gap-2 text-slate-500">
+                <svg class="w-5 h-5 text-green-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.286zm0 13.036h.008v.016h-.008v-.016z" />
+                </svg>
+                <p>Your files are processed entirely in your browser. No data is sent to our servers.</p>
+            </div>
+        </footer>
+    </div>
+</div>
+
+<script>
+    // Setup pdf.js worker. It's required for the library to work.
+    if (typeof pdfjsLib !== 'undefined') {
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        // State
+        let pdfFile = null;
+        let downloadUrl = null;
+
+        // DOM Elements
+        const dropzoneView = document.getElementById('dropzone-view');
+        const fileView = document.getElementById('file-view');
+        const processingView = document.getElementById('processing-view');
+        const resultView = document.getElementById('result-view');
+        const errorView = document.getElementById('error-view');
+        
+        const dropzone = document.getElementById('dropzone');
+        const fileInput = document.getElementById('file-input');
+        const fileNameEl = document.getElementById('file-name');
+        const fileSizeEl = document.getElementById('file-size');
+        const errorMessageEl = document.getElementById('error-message');
+        const processingMessageEl = document.getElementById('processing-message');
+        
+        const compressButton = document.getElementById('compress-button');
+        const downloadButton = document.getElementById('download-button');
+
+        // --- UI Update Logic ---
+        const updateView = (view) => {
+            dropzoneView.classList.toggle('hidden', view !== 'dropzone');
+            fileView.classList.toggle('hidden', view !== 'file');
+            fileView.classList.toggle('flex', view === 'file');
+            processingView.classList.toggle('hidden', view !== 'processing');
+            resultView.classList.toggle('hidden', view !== 'result');
+            errorView.classList.toggle('hidden', !errorMessageEl.textContent);
+        };
+
+        const formatBytes = (bytes, decimals = 2) => {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const dm = decimals < 0 ? 0 : decimals;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
         }
 
-        document.addEventListener('DOMContentLoaded', () => {
-            // State
-            let pdfFile = null;
-            let downloadUrl = null;
-
-            // DOM Elements
-            const dropzoneView = document.getElementById('dropzone-view');
-            const fileView = document.getElementById('file-view');
-            const processingView = document.getElementById('processing-view');
-            const resultView = document.getElementById('result-view');
-            const errorView = document.getElementById('error-view');
-            
-            const dropzone = document.getElementById('dropzone');
-            const fileInput = document.getElementById('file-input');
-            const fileNameEl = document.getElementById('file-name');
-            const fileSizeEl = document.getElementById('file-size');
-            const errorMessageEl = document.getElementById('error-message');
-            const processingMessageEl = document.getElementById('processing-message');
-            
-            const compressButton = document.getElementById('compress-button');
-            const downloadButton = document.getElementById('download-button');
-
-            // --- UI Update Logic ---
-            const updateView = (view) => {
-                dropzoneView.classList.toggle('hidden', view !== 'dropzone');
-                fileView.classList.toggle('hidden', view !== 'file');
-                fileView.classList.toggle('flex', view === 'file');
-                processingView.classList.toggle('hidden', view !== 'processing');
-                resultView.classList.toggle('hidden', view !== 'result');
-                errorView.classList.toggle('hidden', !errorMessageEl.textContent);
-            };
-
-            const formatBytes = (bytes, decimals = 2) => {
-                if (bytes === 0) return '0 Bytes';
-                const k = 1024;
-                const dm = decimals < 0 ? 0 : decimals;
-                const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
-                const i = Math.floor(Math.log(bytes) / Math.log(k));
-                return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+        const resetState = () => {
+            if (downloadUrl) {
+                URL.revokeObjectURL(downloadUrl);
+                downloadUrl = null;
             }
-
-            const resetState = () => {
-                if (downloadUrl) {
-                    URL.revokeObjectURL(downloadUrl);
-                    downloadUrl = null;
-                }
-                pdfFile = null;
-                fileInput.value = '';
-                errorMessageEl.textContent = '';
-                updateView('dropzone');
-            };
+            pdfFile = null;
+            fileInput.value = '';
+            errorMessageEl.textContent = '';
+            updateView('dropzone');
+        };
+        
+        const showResults = (blob, originalSize) => {
+            const newSize = blob.size;
+            const reduction = Math.round(((originalSize - newSize) / originalSize) * 100);
             
-            const showResults = (blob, originalSize) => {
-                const newSize = blob.size;
-                const reduction = Math.round(((originalSize - newSize) / originalSize) * 100);
-                
-                if (downloadUrl) URL.revokeObjectURL(downloadUrl);
-                downloadUrl = URL.createObjectURL(blob);
-                
-                downloadButton.href = downloadUrl;
-                downloadButton.download = `compressed-${pdfFile.name}`;
-
-                document.getElementById('original-size').textContent = formatBytes(originalSize);
-                document.getElementById('new-size').textContent = formatBytes(newSize);
-                
-                const reductionBadge = document.getElementById('reduction-badge');
-                if (reduction > 0) {
-                    reductionBadge.textContent = `${reduction}% smaller`;
-                    reductionBadge.classList.remove('hidden');
-                } else {
-                    reductionBadge.classList.add('hidden');
-                    document.getElementById('new-size').textContent += ' (No significant reduction)';
-                }
-                
-                updateView('result');
-            };
-
-            const showError = (message) => {
-                 errorMessageEl.textContent = message;
-                 updateView(pdfFile ? 'file' : 'dropzone');
-            };
-
-            // --- Event Handlers ---
-            const handleFileSelected = (file) => {
-                if (!file || file.type !== 'application/pdf') {
-                    showError("Please select a valid PDF file.");
-                    return;
-                }
-                pdfFile = file;
-                errorMessageEl.textContent = '';
-                fileNameEl.textContent = pdfFile.name;
-                fileSizeEl.textContent = `Size: ${formatBytes(pdfFile.size)}`;
-                updateView('file');
-            };
+            if (downloadUrl) URL.revokeObjectURL(downloadUrl);
+            downloadUrl = URL.createObjectURL(blob);
             
-            const handleCompress = async () => {
-                if (!pdfFile) return;
+            downloadButton.href = downloadUrl;
+            downloadButton.download = `compressed-${pdfFile.name}`;
 
-                const compressionLevel = document.querySelector('input[name="compression-level"]:checked').value;
-                
-                processingMessageEl.textContent = compressionLevel === 'extreme' 
-                    ? 'Rasterizing and compressing pages...'
-                    : 'Optimizing PDF structure...';
-                updateView('processing');
-                errorMessageEl.textContent = '';
-                errorView.classList.add('hidden');
+            document.getElementById('original-size').textContent = formatBytes(originalSize);
+            document.getElementById('new-size').textContent = formatBytes(newSize);
+            
+            const reductionBadge = document.getElementById('reduction-badge');
+            if (reduction > 0) {
+                reductionBadge.textContent = `${reduction}% smaller`;
+                reductionBadge.classList.remove('hidden');
+            } else {
+                reductionBadge.classList.add('hidden');
+                document.getElementById('new-size').textContent += ' (No significant reduction)';
+            }
+            
+            updateView('result');
+        };
 
-                try {
-                    const { PDFDocument } = PDFLib;
-                    const originalBytes = await pdfFile.arrayBuffer();
-                    let compressedBytes;
+        const showError = (message) => {
+             errorMessageEl.textContent = message;
+             updateView(pdfFile ? 'file' : 'dropzone');
+        };
 
-                    if (compressionLevel === 'extreme') {
-                        // Extreme Compression: Rasterize pages into images. This sacrifices text selectability for size.
-                        const newPdfDoc = await PDFDocument.create();
-                        const typedarray = new Uint8Array(originalBytes);
-                        const pdfjsDoc = await pdfjsLib.getDocument({ data: typedarray }).promise;
-                        
-                        // Quality settings for extreme compression
-                        const renderDpi = 96; // Lower DPI for smaller file size
-                        const imageQuality = 0.6; // Lower JPEG quality
+        // --- Event Handlers ---
+        const handleFileSelected = (file) => {
+            if (!file || file.type !== 'application/pdf') {
+                showError("Please select a valid PDF file.");
+                return;
+            }
+            pdfFile = file;
+            errorMessageEl.textContent = '';
+            fileNameEl.textContent = pdfFile.name;
+            fileSizeEl.textContent = `Size: ${formatBytes(pdfFile.size)}`;
+            updateView('file');
+        };
+        
+        const handleCompress = async () => {
+            if (!pdfFile) return;
 
-                        for (let i = 1; i <= pdfjsDoc.numPages; i++) {
-                            processingMessageEl.textContent = `Processing page ${i} of ${pdfjsDoc.numPages}...`;
-                            const page = await pdfjsDoc.getPage(i);
-                            const scale = renderDpi / 72;
-                            const viewport = page.getViewport({ scale });
+            const compressionLevel = document.querySelector('input[name="compression-level"]:checked').value;
+            
+            processingMessageEl.textContent = compressionLevel === 'extreme' 
+                ? 'Rasterizing and compressing pages...'
+                : 'Optimizing PDF structure...';
+            updateView('processing');
+            errorMessageEl.textContent = '';
+            errorView.classList.add('hidden');
 
-                            const canvas = document.createElement('canvas');
-                            const context = canvas.getContext('2d');
-                            canvas.width = viewport.width;
-                            canvas.height = viewport.height;
+            try {
+                const { PDFDocument } = PDFLib;
+                const originalBytes = await pdfFile.arrayBuffer();
+                let compressedBytes;
 
-                            await page.render({ canvasContext: context, viewport: viewport }).promise;
+                if (compressionLevel === 'extreme') {
+                    // Extreme Compression: Rasterize pages into images. This sacrifices text selectability for size.
+                    const newPdfDoc = await PDFDocument.create();
+                    const typedarray = new Uint8Array(originalBytes);
+                    const pdfjsDoc = await pdfjsLib.getDocument({ data: typedarray }).promise;
+                    
+                    // Quality settings for extreme compression
+                    const renderDpi = 96; // Lower DPI for smaller file size
+                    const imageQuality = 0.6; // Lower JPEG quality
 
-                            const jpgBytes = await new Promise((resolve, reject) => {
-                                canvas.toBlob(blob => {
-                                    if (!blob) {
-                                        reject(new Error('Canvas to Blob conversion failed'));
-                                        return;
-                                    }
-                                    const reader = new FileReader();
-                                    reader.onloadend = () => resolve(new Uint8Array(reader.result));
-                                    reader.onerror = reject;
-                                    reader.readAsArrayBuffer(blob);
-                                }, 'image/jpeg', imageQuality);
-                            });
+                    for (let i = 1; i <= pdfjsDoc.numPages; i++) {
+                        processingMessageEl.textContent = `Processing page ${i} of ${pdfjsDoc.numPages}...`;
+                        const page = await pdfjsDoc.getPage(i);
+                        const scale = renderDpi / 72;
+                        const viewport = page.getViewport({ scale });
 
-                            const jpgImage = await newPdfDoc.embedJpg(jpgBytes);
-                            const newPage = newPdfDoc.addPage([viewport.width, viewport.height]);
-                            newPage.drawImage(jpgImage, {
-                                x: 0,
-                                y: 0,
-                                width: newPage.getWidth(),
-                                height: newPage.getHeight(),
-                            });
-                        }
-                        compressedBytes = await newPdfDoc.save();
-                    } else {
-                        // Recommended & Less Compression: Use pdf-lib optimizations that preserve document quality.
-                        const pdfDoc = await PDFDocument.load(originalBytes);
+                        const canvas = document.createElement('canvas');
+                        const context = canvas.getContext('2d');
+                        canvas.width = viewport.width;
+                        canvas.height = viewport.height;
 
-                        if (compressionLevel === 'recommended') {
-                            pdfDoc.setTitle('');
-                            pdfDoc.setAuthor('');
-                            pdfDoc.setSubject('');
-                            pdfDoc.setKeywords([]);
-                            pdfDoc.setProducer('WebApp PDF Compressor');
-                            pdfDoc.setCreator(pdfFile.name);
-                            
-                            const form = pdfDoc.getForm();
-                            try {
-                                if (form.getFields().length > 0) {
-                                    form.flatten({ updateFieldAppearances: false });
+                        await page.render({ canvasContext: context, viewport: viewport }).promise;
+
+                        const jpgBytes = await new Promise((resolve, reject) => {
+                            canvas.toBlob(blob => {
+                                if (!blob) {
+                                    reject(new Error('Canvas to Blob conversion failed'));
+                                    return;
                                 }
-                            } catch (e) {
-                               console.info("Could not flatten form.", e);
+                                const reader = new FileReader();
+                                reader.onloadend = () => resolve(new Uint8Array(reader.result));
+                                reader.onerror = reject;
+                                reader.readAsArrayBuffer(blob);
+                            }, 'image/jpeg', imageQuality);
+                        });
+
+                        const jpgImage = await newPdfDoc.embedJpg(jpgBytes);
+                        const newPage = newPdfDoc.addPage([viewport.width, viewport.height]);
+                        newPage.drawImage(jpgImage, {
+                            x: 0,
+                            y: 0,
+                            width: newPage.getWidth(),
+                            height: newPage.getHeight(),
+                        });
+                    }
+                    compressedBytes = await newPdfDoc.save();
+                } else {
+                    // Recommended & Less Compression: Use pdf-lib optimizations that preserve document quality.
+                    const pdfDoc = await PDFDocument.load(originalBytes);
+
+                    if (compressionLevel === 'recommended') {
+                        pdfDoc.setTitle('');
+                        pdfDoc.setAuthor('');
+                        pdfDoc.setSubject('');
+                        pdfDoc.setKeywords([]);
+                        pdfDoc.setProducer('WebApp PDF Compressor');
+                        pdfDoc.setCreator(pdfFile.name);
+                        
+                        const form = pdfDoc.getForm();
+                        try {
+                            if (form.getFields().length > 0) {
+                                form.flatten({ updateFieldAppearances: false });
                             }
-                        }
-                        
-                        compressedBytes = await pdfDoc.save({ useObjectStreams: true });
-                        
-                        if (compressedBytes.byteLength >= originalBytes.byteLength) {
-                            compressedBytes = originalBytes;
+                        } catch (e) {
+                           console.info("Could not flatten form.", e);
                         }
                     }
-
-                    const blob = new Blob([compressedBytes], { type: 'application/pdf' });
-                    showResults(blob, pdfFile.size);
-
-                } catch (e) {
-                    console.error(e);
-                    const message = e instanceof Error ? e.message : 'An unknown error occurred.';
-                    showError(`Failed to process PDF. The file may be corrupt or protected. Details: ${message}`);
-                    updateView('file');
+                    
+                    compressedBytes = await pdfDoc.save({ useObjectStreams: true });
+                    
+                    if (compressedBytes.byteLength >= originalBytes.byteLength) {
+                        compressedBytes = originalBytes;
+                    }
                 }
-            };
+
+                const blob = new Blob([compressedBytes], { type: 'application/pdf' });
+                showResults(blob, pdfFile.size);
+
+            } catch (e) {
+                console.error(e);
+                const message = e instanceof Error ? e.message : 'An unknown error occurred.';
+                showError(`Failed to process PDF. The file may be corrupt or protected. Details: ${message}`);
+                updateView('file');
+            }
+        };
+        
+        // --- Event Listeners ---
+        dropzone.addEventListener('click', () => fileInput.click());
+        fileInput.addEventListener('change', () => handleFileSelected(fileInput.files[0]));
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => dropzone.addEventListener(eventName, e => {
+            e.preventDefault();
+            e.stopPropagation();
+        }));
+        ['dragenter', 'dragover'].forEach(eventName => dropzone.addEventListener(eventName, () => dropzone.classList.add('border-primary', 'bg-primary/10')));
+        ['dragleave', 'drop'].forEach(eventName => dropzone.addEventListener(eventName, () => dropzone.classList.remove('border-primary', 'bg-primary/10')));
+        dropzone.addEventListener('drop', e => handleFileSelected(e.dataTransfer.files[0]));
+        
+        compressButton.addEventListener('click', handleCompress);
+        document.getElementById('reset-button-list').addEventListener('click', resetState);
+        document.getElementById('reset-button-result').addEventListener('click', resetState);
+        
+        // Initial view
+        updateView('dropzone');
+    });
+</script>
+
+
+
+
+
+
+
+   <!-- Tools Section -->
+    <section class="py-16 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-dark mb-4">Popular Tools</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto">
+                    Choose from our comprehensive collection of PDF tools to handle all your document needs
+                </p>
+            </div>
             
-            // --- Event Listeners ---
-            dropzone.addEventListener('click', () => fileInput.click());
-            fileInput.addEventListener('change', () => handleFileSelected(fileInput.files[0]));
-            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => dropzone.addEventListener(eventName, e => {
-                e.preventDefault();
-                e.stopPropagation();
-            }));
-            ['dragenter', 'dragover'].forEach(eventName => dropzone.addEventListener(eventName, () => dropzone.classList.add('border-primary', 'bg-primary/10')));
-            ['dragleave', 'drop'].forEach(eventName => dropzone.addEventListener(eventName, () => dropzone.classList.remove('border-primary', 'bg-primary/10')));
-            dropzone.addEventListener('drop', e => handleFileSelected(e.dataTransfer.files[0]));
             
-            compressButton.addEventListener('click', handleCompress);
-            document.getElementById('reset-button-list').addEventListener('click', resetState);
-            document.getElementById('reset-button-result').addEventListener('click', resetState);
+            <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-6">
+                <!-- Tool Cards -->
+                <!-- TOOL 1 -->
+<div class="tool-card bg-white p-6 rounded-lg shadow-sm border border-gray-200 hover:shadow-md hover:scale-105 transition-all duration-300 cursor-pointer">
+  <a href="merge_pdf_online" class="block h-full w-full">
+    <div class="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center mb-4">
+      <i class="fas fa-file-pdf text-red-500 text-xl"></i>
+    </div>
+    <h3 class="font-semibold text-dark mb-2">Merge PDF</h3>
+    <p class="text-sm text-gray-600">Combine multiple PDFs into one</p>
+  </a>
+</div>
+
+<!-- TOOL 2 -->
+<div class="tool-card bg-white p-6 rounded-lg shadow-sm border border-gray-200 hover:shadow-md hover:scale-105 transition-all duration-300 cursor-pointer">
+  <a href="split_pdf.html" class="block h-full w-full">
+    <div class="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center mb-4">
+      <i class="fas fa-cut text-yellow-500 text-xl"></i>
+    </div>
+    <h3 class="font-semibold text-dark mb-2">Split PDF</h3>
+    <p class="text-sm text-gray-600">Split one PDF into multiple files</p>
+  </a>
+</div>
+
+<!-- TOOL 7 -->
+<div class="tool-card bg-white p-6 rounded-lg shadow-sm border border-gray-200 hover:shadow-md hover:scale-105 transition-all duration-300 cursor-pointer">
+  <a href="compress_pdf.html" class="block h-full w-full">
+    <div class="w-12 h-12 bg-indigo-100 rounded-lg flex items-center justify-center mb-4">
+      <i class="fas fa-compress-alt text-indigo-500 text-xl"></i>
+    </div>
+    <h3 class="font-semibold text-dark mb-2">Compress PDF</h3>
+    <p class="text-sm text-gray-600">Reduce PDF file size for sharing</p>
+  </a>
+</div>
+
+<!-- TOOL 3 -->
+<div class="tool-card bg-white p-6 rounded-lg shadow-sm border border-gray-200 hover:shadow-md hover:scale-105 transition-all duration-300 cursor-pointer">
+  <a href="pdf_to_word.html" class="block h-full w-full">
+    <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-4">
+      <i class="fas fa-file-word text-blue-500 text-xl"></i>
+    </div>
+    <h3 class="font-semibold text-dark mb-2">JPG to PDF</h3>
+    <p class="text-sm text-gray-600">Convert JPG images to PDF in seconds.</p>
+  </a>
+</div>
+
+
+
+<!-- TOOL 6 -->
+<div class="tool-card bg-white p-6 rounded-lg shadow-sm border border-gray-200 hover:shadow-md hover:scale-105 transition-all duration-300 cursor-pointer">
+  <a href="image_to_pdf.html" class="block h-full w-full">
+    <div class="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center mb-4">
+      <i class="fas fa-file-image text-orange-500 text-xl"></i>
+    </div>
+    <h3 class="font-semibold text-dark mb-2">Images to PDF</h3>
+    <p class="text-sm text-gray-600">Convert multiple images into one PDF</p>
+  </a>
+</div>
+
+
+
+<!-- TOOL 8 -->
+<div class="tool-card bg-white p-6 rounded-lg shadow-sm border border-gray-200 hover:shadow-md hover:scale-105 transition-all duration-300 cursor-pointer">
+  <a href="protect_pdf.html" class="block h-full w-full">
+    <div class="w-12 h-12 bg-pink-100 rounded-lg flex items-center justify-center mb-4">
+      <i class="fas fa-lock text-pink-500 text-xl"></i>
+    </div>
+    <h3 class="font-semibold text-dark mb-2">Protect PDF</h3>
+    <p class="text-sm text-gray-600">Add password protection to PDF</p>
+  </a>
+</div>
+
+<!-- TOOL 9 -->
+<div class="tool-card bg-white p-6 rounded-lg shadow-sm border border-gray-200 hover:shadow-md hover:scale-105 transition-all duration-300 cursor-pointer">
+  <a href="unlock_pdf.html" class="block h-full w-full">
+    <div class="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center mb-4">
+      <i class="fas fa-unlock text-gray-600 text-xl"></i>
+    </div>
+    <h3 class="font-semibold text-dark mb-2">Unlock PDF</h3>
+    <p class="text-sm text-gray-600">Remove password from PDF</p>
+  </a>
+</div>
+
+<!-- TOOL 10 -->
+<div class="tool-card bg-white p-6 rounded-lg shadow-sm border border-gray-200 hover:shadow-md hover:scale-105 transition-all duration-300 cursor-pointer">
+  <a href="rotate_pdf.html" class="block h-full w-full">
+    <div class="w-12 h-12 bg-teal-100 rounded-lg flex items-center justify-center mb-4">
+      <i class="fas fa-sync-alt text-teal-500 text-xl"></i>
+    </div>
+    <h3 class="font-semibold text-dark mb-2">Rotate PDF</h3>
+    <p class="text-sm text-gray-600">Rotate PDF pages to any angle</p>
+  </a>
+</div>
+
+<!-- TOOL 11 -->
+<div class="tool-card bg-white p-6 rounded-lg shadow-sm border border-gray-200 hover:shadow-md hover:scale-105 transition-all duration-300 cursor-pointer">
+  <a href="reorder_pdf.html" class="block h-full w-full">
+    <div class="w-12 h-12 bg-lime-100 rounded-lg flex items-center justify-center mb-4">
+      <i class="fas fa-sort text-lime-500 text-xl"></i>
+    </div>
+    <h3 class="font-semibold text-dark mb-2">Reorder Pages</h3>
+    <p class="text-sm text-gray-600">Change PDF page order visually</p>
+  </a>
+</div>
+
+
+<!-- TOOL 16 -->
+<div class="tool-card bg-white p-6 rounded-lg shadow-sm border border-gray-200 hover:shadow-md hover:scale-105 transition-all duration-300 cursor-pointer">
+  <a href="watermark_pdf.html" class="block h-full w-full">
+    <div class="w-12 h-12 bg-sky-100 rounded-lg flex items-center justify-center mb-4">
+      <i class="fas fa-tint text-sky-500 text-xl"></i>
+    </div>
+    <h3 class="font-semibold text-dark mb-2">Watermark PDF</h3>
+    <p class="text-sm text-gray-600">Add watermark to PDF files</p>
+  </a>
+</div>
+
+<!-- TOOL 17 -->
+<div class="tool-card bg-white p-6 rounded-lg shadow-sm border border-gray-200 hover:shadow-md hover:scale-105 transition-all duration-300 cursor-pointer">
+  <a href="pdf_to_text.html" class="block h-full w-full">
+    <div class="w-12 h-12 bg-violet-100 rounded-lg flex items-center justify-center mb-4">
+      <i class="fas fa-font text-violet-500 text-xl"></i>
+    </div>
+    <h3 class="font-semibold text-dark mb-2">PDF to Text</h3>
+    <p class="text-sm text-gray-600">Convert PDF into raw text format</p>
+  </a>
+</div>
+
+<!-- TOOL 18 -->
+<div class="tool-card bg-white p-6 rounded-lg shadow-sm border border-gray-200 hover:shadow-md hover:scale-105 transition-all duration-300 cursor-pointer">
+  <a href="doc_to_pdf.html" class="block h-full w-full">
+    <div class="w-12 h-12 bg-stone-100 rounded-lg flex items-center justify-center mb-4">
+      <i class="fas fa-file-alt text-stone-500 text-xl"></i>
+    </div>
+    <h3 class="font-semibold text-dark mb-2">DOC to PDF</h3>
+    <p class="text-sm text-gray-600">Convert Word docs to PDF format</p>
+  </a>
+</div>
+
+
+               
+       
+    </section>
+
+   
+    <!-- Why Choose Us Section -->
+    <section class="py-16 bg-white">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-gray-800 mb-4">Why Choose simpliconvert?</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto">The best free online tools for all your document and image needs</p>
+            </div>
             
-            // Initial view
-            updateView('dropzone');
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Benefit 1 -->
+                <div class="feature-card bg-white p-6 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition duration-300">
+                    <div class="feature-icon bg-[#da3f0b]/5 w-12 h-12 rounded-lg flex items-center justify-center mb-4 transition duration-300">
+                        <i class="fas fa-bolt text-[#da3f0b] text-xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-800 mb-2">Lightning Fast Processing</h3>
+                    <p class="text-gray-600">Our optimized tools process files in seconds, saving you valuable time on repetitive document tasks.</p>
+                </div>
+                
+                <!-- Benefit 2 -->
+                <div class="feature-card bg-white p-6 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition duration-300">
+                    <div class="feature-icon bg-[#da3f0b]/5 w-12 h-12 rounded-lg flex items-center justify-center mb-4 transition duration-300">
+                        <i class="fas fa-shield-alt text-[#da3f0b] text-xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-800 mb-2">100% Secure</h3>
+                    <p class="text-gray-600">Files are processed in your browser only, never uploaded to our servers, ensuring complete data privacy.</p>
+                </div>
+                
+                <!-- Benefit 3 -->
+                <div class="feature-card bg-white p-6 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition duration-300">
+                    <div class="feature-icon bg-[#da3f0b]/5 w-12 h-12 rounded-lg flex items-center justify-center mb-4 transition duration-300">
+                        <i class="fas fa-heart text-[#da3f0b] text-xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-800 mb-2">Totally Free Forever</h3>
+                    <p class="text-gray-600">No subscriptions, no trial periods, no hidden costs. All our core tools are completely free to use.</p>
+                </div>
+                
+                <!-- Benefit 4 -->
+                <div class="feature-card bg-white p-6 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition duration-300">
+                    <div class="feature-icon bg-[#da3f0b]/5 w-12 h-12 rounded-lg flex items-center justify-center mb-4 transition duration-300">
+                        <i class="fas fa-desktop text-[#da3f0b] text-xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-800 mb-2">Works on Any Device</h3>
+                    <p class="text-gray-600">Access all tools from any computer, tablet or smartphone with a modern browser - no app required.</p>
+                </div>
+                
+                <!-- Benefit 5 -->
+                <div class="feature-card bg-white p-6 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition duration-300">
+                    <div class="feature-icon bg-[#da3f0b]/5 w-12 h-12 rounded-lg flex items-center justify-center mb-4 transition duration-300">
+                        <i class="fas fa-broom text-[#da3f0b] text-xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-800 mb-2">No Watermarks</h3>
+                    <p class="text-gray-600">Unlike many "free" services, we never add watermarks, logos or branding to your processed files.</p>
+                </div>
+                
+                <!-- Benefit 6 -->
+                <div class="feature-card bg-white p-6 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition duration-300">
+                    <div class="feature-icon bg-[#da3f0b]/5 w-12 h-12 rounded-lg flex items-center justify-center mb-4 transition duration-300">
+                        <i class="fas fa-infinity text-[#da3f0b] text-xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-800 mb-2">No Limits</h3>
+                    <p class="text-gray-600">Use our tools as much as you want - no daily quotas, file size limits or usage restrictions.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="py-16 bg-gradient-to-r from-[#da3f0b] to-[#f57648] text-white">
+        <div class="max-w-4xl mx-auto px-4 text-center">
+            <h2 class="text-3xl md:text-4xl font-bold mb-6">Ready to Simplify Your Work?</h2>
+            <p class="text-xl mb-8">Join millions of users who trust simpliconvert for their document and image processing needs.</p>
+            <div class="flex flex-col sm:flex-row justify-center gap-4">
+                <a href="#all-tools" class="bg-white text-[#da3f0b] px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition">Start Using for Free</a>
+                <a href="#" class="bg-transparent border-2 border-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-[#da3f0b] transition">Learn More</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Big Footer --><footer class="footer bg-white text-black pt-16 pb-8">
+  <div class="max-w-screen-2xl mx-auto px-4">
+    <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8 mb-12">
+      <!-- Company Info -->
+      <div>
+        <h3 class="text-xl font-bold mb-6 flex items-center">
+          <i class="fas fa-tools mr-2 text-[#da3f0b]"></i> simpliconvert
+        </h3>
+        <p class="text-gray-700 mb-4">
+          
+          Simpliconvert offers 100% free tools to convert, edit, and manage files.
+
+        </p>
+
+        <div class="flex space-x-4">
+          <a href="#" class="text-gray-600 hover:text-black transition duration-300"><i class="fab fa-twitter text-lg"></i></a>
+          <a href="#" class="text-gray-600 hover:text-black transition duration-300"><i class="fab fa-facebook text-lg"></i></a>
+          <a href="#" class="text-gray-600 hover:text-black transition duration-300"><i class="fab fa-instagram text-lg"></i></a>
+          <a href="#" class="text-gray-600 hover:text-black transition duration-300"><i class="fab fa-linkedin text-lg"></i></a>
+        </div>
+      </div>
+
+      <!-- PDF Tools -->
+      <div>
+        <h3 class="text-lg font-semibold mb-6">PDF Tools</h3>
+        <ul class="space-y-3">
+          <li><a href="#" class="flex items-center text-gray-700 hover:bg-gray-100 p-2 rounded-lg transition duration-300">
+              <i class="fas fa-random text-[#da3f0b] text-sm mr-3 w-5"></i> Merge PDF</a></li>
+          <li><a href="#" class="flex items-center text-gray-700 hover:bg-gray-100 p-2 rounded-lg transition duration-300">
+              <i class="fas fa-cut text-[#da3f0b] text-sm mr-3 w-5"></i> Split PDF</a></li>
+          <li><a href="#" class="flex items-center text-gray-700 hover:bg-gray-100 p-2 rounded-lg transition duration-300">
+              <i class="fas fa-compress-alt text-[#da3f0b] text-sm mr-3 w-5"></i> Compress PDF</a></li>
+          <li><a href="#" class="flex items-center text-gray-700 hover:bg-gray-100 p-2 rounded-lg transition duration-300">
+              <i class="fas fa-lock text-[#da3f0b] text-sm mr-3 w-5"></i> Protect PDF</a></li>
+          <li><a href="#" class="flex items-center text-gray-700 hover:bg-gray-100 p-2 rounded-lg transition duration-300">
+              <i class="fas fa-file-import text-[#da3f0b] text-sm mr-3 w-5"></i> Word to PDF</a></li>
+        </ul>
+      </div>
+
+      <!-- Image Tools -->
+      <div>
+        <h3 class="text-lg font-semibold mb-6">Image Tools</h3>
+        <ul class="space-y-3">
+          <li><a href="#" class="flex items-center text-gray-700 hover:bg-gray-100 p-2 rounded-lg transition duration-300">
+              <i class="fas fa-exchange-alt text-[#da3f0b] text-sm mr-3 w-5"></i> Convert Image</a></li>
+          <li><a href="#" class="flex items-center text-gray-700 hover:bg-gray-100 p-2 rounded-lg transition duration-300">
+              <i class="fas fa-expand text-[#da3f0b] text-sm mr-3 w-5"></i> Resize Image</a></li>
+          <li><a href="#" class="flex items-center text-gray-700 hover:bg-gray-100 p-2 rounded-lg transition duration-300">
+              <i class="fas fa-file-image text-[#da3f0b] text-sm mr-3 w-5"></i> Compress Image</a></li>
+          <li><a href="#" class="flex items-center text-gray-700 hover:bg-gray-100 p-2 rounded-lg transition duration-300">
+              <i class="fas fa-crop text-[#da3f0b] text-sm mr-3 w-5"></i> Crop Image</a></li>
+          <li><a href="#" class="flex items-center text-gray-700 hover:bg-gray-100 p-2 rounded-lg transition duration-300">
+              <i class="fas fa-camera-retro text-[#da3f0b] text-sm mr-3 w-5"></i> Image to PDF</a></li>
+        </ul>
+      </div>
+
+      <!-- Document Tools -->
+      <div>
+        <h3 class="text-lg font-semibold mb-6">Document Tools</h3>
+        <ul class="space-y-3">
+          <li><a href="#" class="flex items-center text-gray-700 hover:bg-gray-100 p-2 rounded-lg transition duration-300">
+              <i class="fas fa-file-word text-[#da3f0b] text-sm mr-3 w-5"></i> Word to PDF</a></li>
+          <li><a href="#" class="flex items-center text-gray-700 hover:bg-gray-100 p-2 rounded-lg transition duration-300">
+              <i class="fas fa-file-excel text-[#da3f0b] text-sm mr-3 w-5"></i> Excel to PDF</a></li>
+          <li><a href="#" class="flex items-center text-gray-700 hover:bg-gray-100 p-2 rounded-lg transition duration-300">
+              <i class="fas fa-file-powerpoint text-[#da3f0b] text-sm mr-3 w-5"></i> PPT to PDF</a></li>
+          <li><a href="#" class="flex items-center text-gray-700 hover:bg-gray-100 p-2 rounded-lg transition duration-300">
+              <i class="fas fa-file-pdf text-[#da3f0b] text-sm mr-3 w-5"></i> OCR PDF</a></li>
+          <li><a href="#" class="flex items-center text-gray-700 hover:bg-gray-100 p-2 rounded-lg transition duration-300">
+              <i class="fas fa-file-archive text-[#da3f0b] text-sm mr-3 w-5"></i> PDF to ZIP</a></li>
+        </ul>
+      </div>
+
+      <!-- Resources -->
+      <div>
+        <h3 class="text-lg font-semibold mb-6">Company</h3>
+        <ul class="space-y-3">
+          <li><a href="#" class="flex items-center text-gray-700 hover:bg-gray-100 p-2 rounded-lg transition duration-300">
+              <i class="fas fa-info-circle text-[#da3f0b] text-sm mr-3 w-5"></i> About Us</a></li>
+          <li><a href="#" class="flex items-center text-gray-700 hover:bg-gray-100 p-2 rounded-lg transition duration-300">
+              <i class="fas fa-blog text-[#da3f0b] text-sm mr-3 w-5"></i> Blog</a></li>
+          <li><a href="#" class="flex items-center text-gray-700 hover:bg-gray-100 p-2 rounded-lg transition duration-300">
+              <i class="fas fa-envelope text-[#da3f0b] text-sm mr-3 w-5"></i> Contact</a></li>
+          <li><a href="#" class="flex items-center text-gray-700 hover:bg-gray-100 p-2 rounded-lg transition duration-300">
+              <i class="fas fa-code text-[#da3f0b] text-sm mr-3 w-5"></i> Developers</a></li>
+          <li><a href="#" class="flex items-center text-gray-700 hover:bg-gray-100 p-2 rounded-lg transition duration-300">
+              <i class="fas fa-lightbulb text-[#da3f0b] text-sm mr-3 w-5"></i> Suggest a Tool</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- About Section -->
+    <div class="bg-gray-100 p-8 rounded-lg mb-8">
+      <div class="max-w-4xl mx-auto">
+        <h3 class="text-2xl font-bold mb-4 text-[#da3f0b]">About SimpliConvert</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 text-gray-700">
+          <div>
+            <p class="mb-4">SimpliConvert is your all-in-one online platform for converting and managing files effortlessly. From PDFs and images to Office documents and more, our tools are designed to simplify your digital work — completely free.
+
+</p>
+            <p>We support over 100 popular file tools including PDF merge, split, compress, JPG to PDF, Word to PDF, and more. Whether you're editing a document or converting files for work or school, Simpliconvert makes it fast and secure.</p>
+          </div>
+          <div>
+            <p class="mb-4">No registrations. No watermarks. Just clean, high-quality conversions that respect your time and privacy. We believe file tools should be simple, powerful, and available to everyone.</p>
+            <p>Have a suggestion? We actively listen to user feedback and add new tools based on what you need most. Your ideas help shape the future of Simpliconvert.
+
+</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Copyright -->
+    <div class="border-t border-gray-300 pt-8">
+      <div class="flex flex-col md:flex-row justify-between items-center text-sm text-gray-500">
+        <div class="mb-4 md:mb-0">&copy; 2025 simpliconvert. All rights reserved.</div>
+        <div class="flex space-x-6">
+          <a href="/terms_of_services/" class="hover:text-black transition">Terms of Service</a>
+          <a href="/privacy_policy/" class="hover:text-black transition">Privacy Policy</a>
+          <a href="/contact/" class="hover:text-black transition">Contact Us</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+    <script>
+        // Apps Mega Menu Toggle
+        const appsButton = document.getElementById('apps-button');
+        const appsMenu = document.getElementById('apps-mega-menu');
+        
+        appsButton.addEventListener('click', (e) => {
+            e.stopPropagation();
+            appsMenu.classList.toggle('hidden');
+        });
+
+        // Close menu when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!appsMenu.contains(e.target) && e.target !== appsButton) {
+                appsMenu.classList.add('hidden');
+            }
+        });
+
+        // Mobile menu toggle
+        document.getElementById('mobile-menu-button').addEventListener('click', function() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        });
+
+        // Mobile dropdown toggles
+        document.querySelectorAll('#mobile-menu button').forEach(button => {
+            button.addEventListener('click', function() {
+                const targetId = this.textContent.trim().toLowerCase().replace(' ', '-') + '-mobile-dropdown';
+                const dropdown = document.getElementById(targetId);
+                dropdown.classList.toggle('hidden');
+                
+                // Toggle chevron icon
+                const icon = this.querySelector('i');
+                if (icon.classList.contains('fa-chevron-down')) {
+                    icon.classList.remove('fa-chevron-down');
+                    icon.classList.add('fa-chevron-up');
+                } else {
+                    icon.classList.remove('fa-chevron-up');
+                    icon.classList.add('fa-chevron-down');
+                }
+            });
         });
     </script>
 </body>
