@@ -1,0 +1,403 @@
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script>
+    tailwind.config = {
+        theme: {
+            extend: {
+                colors: {
+                    primary: {
+                        DEFAULT: '#da3f0b',
+                        '50': '#fef3f2',
+                        '100': '#fee4e2',
+                        '200': '#fecdca',
+                        '300': '#fda49b',
+                        '400': '#f86a59',
+                        '500': '#ef4444',
+                        '600': '#da3f0b',
+                        '700': '#b91c1c',
+                        '800': '#991b1b',
+                        '900': '#7f1d1d',
+                        '950': '#450a0a'
+                    }
+                }
+            }
+        }
+    }
+</script>
+<style>
+    body {
+        font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+    }
+    /* Custom styles for radio buttons */
+    .peer:checked~.radio-check {
+        border-color: #da3f0b;
+    }
+    .peer:checked~.radio-check .radio-dot {
+        transform: scale(1);
+        background-color: #da3f0b;
+    }
+    .peer:checked~.radio-label {
+        color: #da3f0b;
+    }
+    .peer:disabled~.radio-label, .peer:disabled~* {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+    input:disabled, input:disabled ~ span {
+        background-color: #f3f4f6;
+        cursor: not-allowed;
+    }
+</style>
+<div class="min-h-screen flex flex-col items-center p-4 sm:p-6 lg:p-8 font-sans bg-slate-50">
+    <div class="w-full max-w-2xl mx-auto">
+        <header class="text-center mb-6">
+            <h1 class="text-4xl font-bold text-slate-800">Split PDF</h1>
+            <p class="mt-2 text-lg text-slate-600">Easily divide your PDF into multiple files, securely in your browser.</p>
+        </header>
+         <main id="app-container" class="bg-white rounded-xl shadow-md p-6">
+            <!-- Error Message View -->
+            <div id="error-view" class="hidden my-4 p-4 bg-red-100 border-l-4 border-red-500 text-red-700 rounded-r-lg">
+                <p class="font-bold">Error</p>
+                <p id="error-message"></p>
+            </div>
+
+            <!-- ======================= -->
+            <!--     SPLIT PDF TOOL      -->
+            <!-- ======================= -->
+            <div id="split-tool">
+                 <!-- Dropzone View -->
+                <div id="dropzone-view">
+                    <div id="dropzone" class="relative flex flex-col items-center justify-center w-full p-12 border-2 border-dashed rounded-xl transition-all duration-300 cursor-pointer border-slate-300 bg-slate-50 hover:border-primary/70 hover:bg-primary/5">
+                        <input id="file-input" type="file" accept="application/pdf" class="hidden" />
+                        <div class="text-center">
+                            <svg class="mx-auto h-16 w-16 text-slate-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 3.75H19.5a2.25 2.25 0 012.25 2.25v13.5a2.25 2.25 0 01-2.25 2.25H8.25a2.25 2.25 0 01-2.25-2.25V6a2.25 2.25 0 012.25-2.25z" /><path stroke-linecap="round" stroke-linejoin="round" d="M3 12.75h4.5m-4.5 5.25h4.5" /></svg>
+                            <p class="mt-4 text-2xl font-semibold text-slate-700">Drop PDF to Split</p>
+                            <p class="mt-2 text-slate-500">or <span class="font-bold text-primary">click to browse</span></p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- File & Options View -->
+                <div id="file-view" class="hidden flex-col gap-6">
+                     <div class="p-4 bg-slate-100 rounded-lg flex items-center gap-4">
+                        <svg class="h-8 w-8 text-primary flex-shrink-0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M4 2a2 2 0 00-2 2v12a2 2 0 002 2h12a2 2 0 002-2V7.414A2 2 0 0017.414 6L12 1.586A2 2 0 0010.586 1H4zm2 8a1 1 0 100 2h8a1 1 0 100-2H6z" clip-rule="evenodd" /></svg>
+                        <div>
+                            <p id="file-name" class="font-bold text-slate-800 truncate"></p>
+                            <p id="file-info" class="text-sm text-slate-500"></p>
+                        </div>
+                    </div>
+
+                    <fieldset class="space-y-3">
+                        <legend class="text-lg font-semibold mb-2 text-slate-800">Select Split Mode</legend>
+                        <label for="mode-extract" class="relative flex flex-col p-4 border rounded-lg cursor-pointer transition-all duration-200 has-[:checked]:border-primary has-[:checked]:ring-2 has-[:checked]:ring-primary/20">
+                            <div class="flex">
+                                <input type="radio" name="split-mode" value="extract" id="mode-extract" class="peer absolute opacity-0 h-0 w-0" checked>
+                                <div class="flex-grow">
+                                    <span class="font-bold text-slate-700 radio-label transition-colors">Extract pages</span>
+                                    <p class="text-sm text-slate-500">Create one PDF with selected pages/ranges.</p>
+                                </div>
+                                <div class="radio-check flex items-center justify-center w-6 h-6 border-2 border-slate-300 rounded-full transition-all duration-200"><div class="radio-dot w-3 h-3 bg-transparent rounded-full transform scale-0 transition-transform duration-200"></div></div>
+                            </div>
+                            <input type="text" id="split-pages-range" class="mt-3 w-full p-2 border border-slate-300 rounded-md focus:ring-primary focus:border-primary transition" placeholder="e.g., 1-3, 5, 9-11">
+                        </label>
+                         <label for="mode-all-pages" class="relative flex p-4 border rounded-lg cursor-pointer transition-all duration-200 has-[:checked]:border-primary has-[:checked]:ring-2 has-[:checked]:ring-primary/20">
+                            <input type="radio" name="split-mode" value="all_pages" id="mode-all-pages" class="peer absolute opacity-0 h-0 w-0">
+                            <div class="flex-grow">
+                                <span class="font-bold text-slate-700 radio-label transition-colors">Split into single pages</span>
+                                <p class="text-sm text-slate-500">Extract every page into a separate PDF file.</p>
+                            </div>
+                            <div class="radio-check flex items-center justify-center w-6 h-6 border-2 border-slate-300 rounded-full transition-all duration-200"><div class="radio-dot w-3 h-3 bg-transparent rounded-full transform scale-0 transition-transform duration-200"></div></div>
+                        </label>
+                        <label for="mode-fixed-range" class="relative flex flex-col p-4 border rounded-lg cursor-pointer transition-all duration-200 has-[:checked]:border-primary has-[:checked]:ring-2 has-[:checked]:ring-primary/20">
+                            <div class="flex">
+                                <input type="radio" name="split-mode" value="fixed_range" id="mode-fixed-range" class="peer absolute opacity-0 h-0 w-0">
+                                <div class="flex-grow">
+                                    <span class="font-bold text-slate-700 radio-label transition-colors">Split by fixed range</span>
+                                    <p class="text-sm text-slate-500">Create multiple PDFs with a set number of pages.</p>
+                                </div>
+                                <div class="radio-check flex items-center justify-center w-6 h-6 border-2 border-slate-300 rounded-full transition-all duration-200"><div class="radio-dot w-3 h-3 bg-transparent rounded-full transform scale-0 transition-transform duration-200"></div></div>
+                            </div>
+                            <div class="mt-3 flex items-center gap-2">
+                                <input type="number" id="split-fixed-range-size" class="w-24 p-2 border border-slate-300 rounded-md focus:ring-primary focus:border-primary transition" min="1" value="1">
+                                <span class="text-slate-600">pages per file</span>
+                            </div>
+                        </label>
+                    </fieldset>
+                    <div class="flex flex-col gap-4 items-center justify-center mt-4">
+                        <button id="split-button" class="w-full max-w-sm flex items-center justify-center gap-3 px-8 py-3 bg-primary text-white font-bold text-lg rounded-lg shadow-md hover:bg-primary-700 active:bg-primary-800 focus:outline-none focus:ring-4 focus:ring-primary/30 transition-all duration-300">Split PDF</button>
+                        <button id="reset-button" class="w-full sm:w-auto px-6 py-3 bg-slate-200 text-slate-700 font-semibold rounded-lg hover:bg-slate-300 focus:outline-none focus:ring-4 focus:ring-slate-300 transition-all duration-200">Start Over</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ======================= -->
+            <!--   PROCESSING & RESULT   -->
+            <!-- ======================= -->
+             <div id="processing-view" class="hidden text-center p-8">
+                <div role="status" class="flex flex-col items-center justify-center">
+                    <svg aria-hidden="true" class="w-10 h-10 text-slate-300 animate-spin fill-primary" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor"/><path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0492C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentFill"/></svg>
+                    <p id="processing-message" class="mt-4 text-lg font-semibold text-slate-700">Processing...</p>
+                    <span class="sr-only">Loading...</span>
+                </div>
+            </div>
+
+            <div id="result-view" class="hidden text-center p-8 bg-green-50 rounded-2xl border-2 border-dashed border-green-300">
+                <h2 id="result-title" class="text-2xl font-bold text-green-800">Split Successful!</h2>
+                <div id="split-result-details">
+                    <p id="split-result-message" class="mt-2 text-slate-600"></p>
+                </div>
+                <div class="mt-6 flex flex-col gap-4 items-center w-full max-w-md mx-auto">
+                    <a id="download-button" href="#" download="" class="w-full flex items-center justify-center gap-3 px-8 py-3 bg-primary text-white font-bold text-lg rounded-lg shadow-md hover:bg-primary-700 active:bg-primary-800 focus:outline-none focus:ring-4 focus:ring-primary/30 transition-all duration-300">
+                       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5"><path d="M10.75 2.75a.75.75 0 00-1.5 0v8.614L6.295 8.235a.75.75 0 10-1.09 1.03l4.25 4.5a.75.75 0 001.09 0l4.25-4.5a.75.75 0 00-1.09-1.03l-2.955 3.129V2.75z" /><path d="M3.5 12.75a.75.75 0 00-1.5 0v2.5A2.75 2.75 0 004.75 18h10.5A2.75 2.75 0 0018 15.25v-2.5a.75.75 0 00-1.5 0v2.5c0 .69-.56 1.25-1.25 1.25H4.75c-.69 0-1.25-.56-1.25-1.25v-2.5z" /></svg>
+                        <span id="download-button-text">Download</span>
+                    </a>
+                     <button id="reset-button-result" class="w-full sm:w-auto px-6 py-3 bg-slate-200 text-slate-700 font-semibold rounded-lg hover:bg-slate-300 focus:outline-none focus:ring-4 focus:ring-slate-300 transition-all duration-200">
+                        Process Another PDF
+                    </button>
+                </div>
+            </div>
+        </main>
+
+        <footer class="text-center mt-8">
+            <div class="flex items-center justify-center gap-2 text-slate-500">
+                <svg class="w-5 h-5 text-green-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.286zm0 13.036h.008v.016h-.008v-.016z" /></svg>
+                <p>Your files are processed entirely in your browser. No data is sent to servers.</p>
+            </div>
+        </footer>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // --- State ---
+        let pdfFile = null;
+        let pdfDoc = null; // To store loaded pdf-lib document
+        let downloadUrl = null;
+
+        // --- DOM Elements ---
+        const D = (id) => document.getElementById(id);
+        
+        const dropzoneView = D('dropzone-view');
+        const fileView = D('file-view');
+        const processingView = D('processing-view');
+        const resultView = D('result-view');
+        const errorView = D('error-view');
+
+        const dropzone = D('dropzone');
+        const fileInput = D('file-input');
+        const fileNameEl = D('file-name');
+        const fileInfoEl = D('file-info');
+        
+        const splitButton = D('split-button');
+        const splitModeRadios = document.querySelectorAll('input[name="split-mode"]');
+        const splitPagesRangeInput = D('split-pages-range');
+        const splitFixedRangeInput = D('split-fixed-range-size');
+        
+        const processingMessageEl = D('processing-message');
+        const errorMessageEl = D('error-message');
+        const resultTitleEl = D('result-title');
+        const splitResultMessageEl = D('split-result-message');
+        const downloadButton = D('download-button');
+        const downloadButtonText = D('download-button-text');
+        
+        // --- Utility Functions ---
+        const formatBytes = (bytes, decimals = 2) => {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const dm = decimals < 0 ? 0 : decimals;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+        };
+
+        const parsePageRanges = (rangeStr, maxPage) => {
+            const pages = new Set();
+            if (!rangeStr.trim()) throw new Error("Page range cannot be empty.");
+            
+            const parts = rangeStr.split(',').filter(p => p.trim() !== '');
+            if (parts.length === 0) throw new Error("Page range cannot be empty.");
+
+            for (const part of parts) {
+                const trimmedPart = part.trim();
+                if (trimmedPart.includes('-')) {
+                    const [startStr, endStr] = trimmedPart.split('-');
+                    const start = parseInt(startStr.trim(), 10);
+                    const end = parseInt(endStr.trim(), 10);
+                    if (isNaN(start) || isNaN(end) || start < 1 || end > maxPage || start > end) {
+                        throw new Error(`Invalid range: "${trimmedPart}". Ensure pages are between 1 and ${maxPage} and start is less than end.`);
+                    }
+                    for (let i = start; i <= end; i++) pages.add(i - 1);
+                } else {
+                    const pageNum = parseInt(trimmedPart, 10);
+                    if (isNaN(pageNum) || pageNum < 1 || pageNum > maxPage) {
+                        throw new Error(`Invalid page number: "${trimmedPart}". Must be between 1 and ${maxPage}.`);
+                    }
+                    pages.add(pageNum - 1);
+                }
+            }
+            if (pages.size === 0) throw new Error("No valid pages selected.");
+            return Array.from(pages).sort((a, b) => a - b);
+        };
+
+        // --- UI Update Logic ---
+        const updateView = (view) => {
+            [dropzoneView, fileView, processingView, resultView].forEach(v => v.classList.add('hidden'));
+            errorView.classList.add('hidden');
+            errorMessageEl.textContent = '';
+            
+            switch (view) {
+                case 'dropzone': dropzoneView.classList.remove('hidden'); break;
+                case 'file': fileView.classList.remove('hidden'); fileView.style.display = 'flex'; break;
+                case 'processing': processingView.classList.remove('hidden'); break;
+                case 'result': resultView.classList.remove('hidden'); break;
+            }
+        };
+        
+        const resetState = () => {
+            if (downloadUrl) URL.revokeObjectURL(downloadUrl);
+            pdfFile = null;
+            pdfDoc = null;
+            downloadUrl = null;
+            fileInput.value = '';
+            updateView('dropzone');
+        };
+
+        const showResults = (blob, details) => {
+            if (downloadUrl) URL.revokeObjectURL(downloadUrl);
+            downloadUrl = URL.createObjectURL(blob);
+            downloadButton.href = downloadUrl;
+            downloadButton.download = details.filename;
+            downloadButtonText.textContent = details.buttonText;
+            resultTitleEl.textContent = 'Split Successful!';
+            splitResultMessageEl.textContent = details.message;
+            updateView('result');
+        };
+
+        const showError = (message) => {
+             errorMessageEl.textContent = message;
+             errorView.classList.remove('hidden');
+        };
+        
+        // --- Event Handlers ---
+        const handleFileSelected = async (file) => {
+            if (!file || file.type !== 'application/pdf') {
+                showError("Please select a valid PDF file.");
+                return;
+            }
+            pdfFile = file;
+            updateView('file');
+
+            fileNameEl.textContent = pdfFile.name;
+            fileInfoEl.textContent = `Size: ${formatBytes(pdfFile.size)} - Loading page count...`;
+            
+            try {
+                const { PDFDocument } = PDFLib;
+                const fileBytes = await file.arrayBuffer();
+                pdfDoc = await PDFDocument.load(fileBytes, { ignoreEncryption: true });
+                fileInfoEl.textContent = `Size: ${formatBytes(pdfFile.size)} - ${pdfDoc.getPageCount()} pages`;
+            } catch (e) {
+                pdfDoc = null;
+                fileInfoEl.textContent = `Size: ${formatBytes(pdfFile.size)} - Could not read pages`;
+                showError("Could not read PDF metadata. The file might be corrupt or password-protected.");
+            }
+        };
+        
+        const handleSplit = async () => {
+            if (!pdfFile || !pdfDoc) {
+                showError("Please select a valid PDF file first.");
+                return;
+            }
+            
+            const splitMode = document.querySelector('input[name="split-mode"]:checked').value;
+            updateView('processing');
+
+            try {
+                const { PDFDocument } = PDFLib;
+                const sourcePdfDoc = pdfDoc; // Use the already loaded document
+                
+                if (splitMode === 'extract') {
+                    processingMessageEl.textContent = 'Extracting selected pages...';
+                    const rangeStr = splitPagesRangeInput.value;
+                    const pageIndices = parsePageRanges(rangeStr, sourcePdfDoc.getPageCount());
+                    
+                    const newPdfDoc = await PDFDocument.create();
+                    const copiedPages = await newPdfDoc.copyPages(sourcePdfDoc, pageIndices);
+                    copiedPages.forEach(page => newPdfDoc.addPage(page));
+                    
+                    const pdfBytes = await newPdfDoc.save();
+                    const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+                    showResults(blob, {
+                        filename: `extracted-${pdfFile.name}`,
+                        buttonText: 'Download Extracted PDF',
+                        message: `Successfully extracted ${pageIndices.length} page(s).`
+                    });
+
+                } else if (splitMode === 'all_pages' || splitMode === 'fixed_range') {
+                    processingMessageEl.textContent = 'Splitting PDF into multiple files...';
+                    const zip = new JSZip();
+                    const numPages = sourcePdfDoc.getPageCount();
+                    const rangeSize = splitMode === 'fixed_range' ? parseInt(splitFixedRangeInput.value, 10) : 1;
+
+                    if (isNaN(rangeSize) || rangeSize < 1) throw new Error("Invalid range size.");
+
+                    let fileCount = 0;
+                    for (let i = 0; i < numPages; i += rangeSize) {
+                        fileCount++;
+                        processingMessageEl.textContent = `Creating file ${fileCount}...`;
+                        const pageIndices = Array.from({ length: Math.min(rangeSize, numPages - i) }, (_, k) => i + k);
+                        
+                        const newPdfDoc = await PDFDocument.create();
+                        const copiedPages = await newPdfDoc.copyPages(sourcePdfDoc, pageIndices);
+                        copiedPages.forEach(page => newPdfDoc.addPage(page));
+                        
+                        const pdfBytes = await newPdfDoc.save();
+                        const pageRangeStr = rangeSize > 1 ? `pages_${i+1}-${i+pageIndices.length}`: `page_${i+1}`;
+                        zip.file(`${pdfFile.name.replace('.pdf', '')}_${pageRangeStr}.pdf`, pdfBytes);
+                    }
+                    
+                    const zipBlob = await zip.generateAsync({type:"blob"});
+                     showResults(zipBlob, {
+                        filename: `${pdfFile.name.replace('.pdf', '')}_split.zip`,
+                        buttonText: 'Download ZIP File',
+                        message: `Successfully split the PDF into ${fileCount} file(s).`
+                    });
+                }
+            } catch (e) {
+                console.error(e);
+                const message = e instanceof Error ? e.message : 'An unknown error occurred.';
+                showError(`Failed to split PDF. Details: ${message}`);
+                updateView('file');
+            }
+        };
+
+        // --- Event Listeners Setup ---
+        const setupDropzone = (dropzone, onFileSelected) => {
+            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => dropzone.addEventListener(eventName, e => { e.preventDefault(); e.stopPropagation(); }));
+            ['dragenter', 'dragover'].forEach(eventName => dropzone.addEventListener(eventName, () => dropzone.classList.add('border-primary', 'bg-primary/10')));
+            ['dragleave', 'drop'].forEach(eventName => dropzone.addEventListener(eventName, () => dropzone.classList.remove('border-primary', 'bg-primary/10')));
+            dropzone.addEventListener('drop', e => onFileSelected(e.dataTransfer.files[0]));
+        };
+
+        dropzone.addEventListener('click', () => fileInput.click());
+        fileInput.addEventListener('change', () => handleFileSelected(fileInput.files[0]));
+        setupDropzone(dropzone, handleFileSelected);
+
+        splitButton.addEventListener('click', handleSplit);
+        D('reset-button').addEventListener('click', resetState);
+        D('reset-button-result').addEventListener('click', resetState);
+
+        const updateSplitInputs = () => {
+            const selectedMode = document.querySelector('input[name="split-mode"]:checked').value;
+            splitPagesRangeInput.disabled = selectedMode !== 'extract';
+            splitFixedRangeInput.disabled = selectedMode !== 'fixed_range';
+        };
+        splitModeRadios.forEach(radio => radio.addEventListener('change', updateSplitInputs));
+        
+        // --- Initial State ---
+        updateSplitInputs();
+        resetState();
+    });
+</script>
