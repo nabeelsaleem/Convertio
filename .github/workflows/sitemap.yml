@@ -1,25 +1,23 @@
 name: Update Sitemap
 on:
   push:
-    branches: [ main ]  # or 'master' if your repo uses it
+    branches: [ main ]
   schedule:
-    - cron: '0 0 * * 0'  # Runs every Sunday at midnight (UTC)
+    - cron: '0 0 * * 0'
 
 jobs:
   generate-sitemap:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GH_PAT }}  # 👈 Uses your PAT for checkout
 
       - name: Generate sitemap.xml
         run: |
           echo '<?xml version="1.0" encoding="UTF-8"?>' > sitemap.xml
           echo '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' >> sitemap.xml
-          
-          # Add root domain (index.html)
           echo '  <url><loc>https://simpliconvert.com/</loc><lastmod>$(date -I)</lastmod></url>' >> sitemap.xml
-          
-          # Find all HTML files (including subfolders)
           find . -name "*.html" | while read file; do
             if [[ "$file" != "./index.html" ]]; then
               path="${file#./}"
@@ -27,7 +25,6 @@ jobs:
               echo "  <url><loc>$url</loc><lastmod>$(date -I -r "$file")</lastmod></url>" >> sitemap.xml
             fi
           done
-          
           echo '</urlset>' >> sitemap.xml
 
       - name: Generate robots.txt
