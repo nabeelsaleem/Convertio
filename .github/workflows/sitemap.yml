@@ -1,37 +1,32 @@
 name: Update Sitemap
-
 on:
   push:
     branches: [ main ]
   schedule:
-    - cron: '0 0 * * 0' # Runs every Sunday at midnight
+    - cron: '0 0 * * 0'  # Runs every Sunday at midnight (UTC)
 
 jobs:
   generate-sitemap:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
         with:
-          token: ${{ secrets.GH_PAT }} # Make sure this PAT has push access
+          token: ${{ secrets.GH_PAT }}
 
-   - name: Generate sitemap.xml
-  run: |
-    echo '<?xml version="1.0" encoding="UTF-8"?>' > sitemap.xml
-    echo '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' >> sitemap.xml
-    # For the homepage (current date)
-    echo "  <url><loc>https://simpliconvert.com/</loc><lastmod>$(date +%Y-%m-%d)</lastmod></url>" >> sitemap.xml
-    # For other HTML files (use file modification dates)
-    find . -name "*.html" | while read file; do
-      if [[ "$file" != "./index.html" ]]; then
-        path="${file#./}"
-        url="https://simpliconvert.com/${path// /%20}"
-        mod_date=$(date -r "$file" +%Y-%m-%d)
-        echo "  <url><loc>$url</loc><lastmod>$mod_date</lastmod></url>" >> sitemap.xml
-      fi
-    done
-    echo '</urlset>' >> sitemap.xml
+      - name: Generate sitemap.xml
+        run: |
+          echo '<?xml version="1.0" encoding="UTF-8"?>' > sitemap.xml
+          echo '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' >> sitemap.xml
+          echo "  <url><loc>https://simpliconvert.com/</loc><lastmod>$(date +%Y-%m-%d)</lastmod></url>" >> sitemap.xml
+          find . -name "*.html" | while read file; do
+            if [[ "$file" != "./index.html" ]]; then
+              path="${file#./}"
+              url="https://simpliconvert.com/${path// /%20}"
+              mod_date=$(date -r "$file" +%Y-%m-%d)
+              echo "  <url><loc>$url</loc><lastmod>$mod_date</lastmod></url>" >> sitemap.xml
+            fi
+          done
+          echo '</urlset>' >> sitemap.xml
 
       - name: Generate robots.txt
         run: |
@@ -44,5 +39,5 @@ jobs:
           git config --global user.name "GitHub Actions"
           git config --global user.email "actions@github.com"
           git add sitemap.xml robots.txt
-          git diff --quiet && git diff --staged --quiet || git commit -m "Auto-update sitemap & robots.txt [skip ci]"
+          git commit -m "Auto-update sitemap & robots.txt [skip ci]"
           git push
