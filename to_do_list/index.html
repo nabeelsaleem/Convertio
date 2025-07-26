@@ -1,30 +1,328 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>To-Do List</title>
-    <meta name="description" content="A simple and elegant to-do list application to manage your daily tasks. Add, complete, and delete tasks with ease. Your tasks are saved locally in your browser.">
-    <script src="https://cdn.tailwindcss.com"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- Primary Meta Tags -->
+<meta name="title" content="Simple To-Do List App - Free & Minimal Task Manager | SimpliTasks">
+<meta name="description" content="Stay organized with SimpliTasks – a free, simple to-do list app. Manage daily tasks effortlessly with a clean interface, no sign-up, and offline support.">
+<meta name="keywords" content="simple to do list app, free to do list app, task manager app, daily task planner, to do to do list, to-do app for productivity, lightweight to do app, online checklist app, best to do list tool, todoist, to do ist, no sign up task manager">
+<meta name="author" content="SimpliTasks">
+<meta name="robots" content="index, follow">
+
+<!-- Open Graph / Facebook -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://simpliconvert.com/todo">
+<meta property="og:title" content="Simple To-Do List App - Free & Minimal Task Manager | SimpliTasks">
+<meta property="og:description" content="Organize your tasks easily with SimpliTasks – a minimalist to-do list app that's fast, free, and secure. No ads, no registration.">
+<meta property="og:image" content="https://simpliconvert.com/images/todo-og.jpg">
+
+<!-- Twitter -->
+<meta property="twitter:card" content="summary_large_image">
+<meta property="twitter:url" content="https://simpliconvert.com/todo">
+<meta property="twitter:title" content="Simple To-Do List App - Free & Minimal Task Manager | SimpliTasks">
+<meta property="twitter:description" content="Use SimpliTasks to manage your daily tasks. A clean, no-fuss to-do list app that works on mobile & desktop. No sign-up required.">
+<meta property="twitter:image" content="https://simpliconvert.com/images/todo-og.jpg">
+
+<!-- Canonical URL -->
+<link rel="canonical" href="https://simpliconvert.com/todo">
+<title>Simple To-Do List App - Free & Minimal Task Manager | SimpliTasks</title>
+
+<!-- Schema.org Structured Data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  "name": "Simple To-Do List App - Free Task Manager | SimpliTasks",
+  "description": "SimpliTasks is a clean and simple to-do list app. Manage tasks quickly with no login, no ads, and full offline support.",
+  "url": "https://simpliconvert.com/todo",
+  "publisher": {
+    "@type": "Organization",
+    "name": "simpliconvert",
+    "url": "https://simpliconvert.com"
+  }
+}
+</script>
+
+
+
+<link rel="icon" href="favicon.ico" type="image/x-icon">
+
+
+
+    
+    <!-- Preconnect to required origins -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <!-- Preload critical resources -->
+    <link rel="preload" href="https://cdn.tailwindcss.com" as="script">
+    
+    <!-- Asynchronously load fonts -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"></noscript>
+
+    
+    <!-- Tailwind CSS -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#da3f0b',
+                        primaryLight: '#f57648',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    
+    <!-- Custom CSS -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .nav-dropdown {
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(15px);
+            transition: all 0.3s ease;
+        }
+        
+        .nav-item:hover .nav-dropdown {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+        
+        .tool-card {
+            transition: all 0.3s ease;
+            height: 100%;
+        }
+        
+        .tool-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        
+        .feature-card:hover .feature-icon {
+            background-color: rgba(218, 63, 11, 0.1);
+        }
+        
+        .footer-link:hover {
+            background-color: rgba(255,255,255,0.1);
+        }
+        
+        .mobile-menu {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+        
+        .mobile-menu.open {
+            max-height: 1000px;
+        }
+        
+        .hero-gradient {
+            background: linear-gradient(135deg, #da3f0b 0%, #f57648 100%);
+        }
+        
+        .btn-primary {
+            background-color: #da3f0b;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover {
+            background-color: #c2380a;
+            transform: translateY(-2px);
+        }
+        
+        .btn-outline {
+            border: 2px solid white;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-outline:hover {
+            background-color: white;
+            color: #da3f0b;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen flex flex-col">
+    <!-- Main Navigation -->
+    <header class="bg-white shadow-sm sticky top-0 z-50 w-full">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <!-- Logo -->
+                <div class="flex-shrink-0">
+                    <a href="/" class="text-2xl font-bold text-primary flex items-center">
+                        <svg width="40" height="45" viewBox="0 0 164 145" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<rect width="144" height="145" fill="url(#pattern0_4986_183)"/>
+<defs>
+<pattern id="pattern0_4986_183" patternContentUnits="objectBoundingBox" width="1" height="1">
+<use xlink:href="#image0_4986_183" transform="scale(0.00694444 0.00689655)"/>
+</pattern>
+<image id="image0_4986_183" width="144" height="145" preserveAspectRatio="none" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJAAAACRCAMAAAAbxMEvAAAAAXNSR0IB2cksfwAAAAlwSFlzAAAOxAAADsQBlSsOGwAAATJQTFRFAAAA2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8LTXydTgAAAGZ0Uk5TAAcXSIzv//2VPxYJAR28ryDpEVkxLxByO7O4dmZKG6zUQxMDHlCPCzIrOeWe3AYUUshUmQJh4YEODBldGveoKF+/BHkPPXzYCjfzRgUIIS0pJMM0ZEyhbYlqQSOGElfLfnAmk8+k1TGl7QAACxVJREFUeJztnOl3FEUQwGdDCAILJFyBhHCFM0CCsCAoIAmBoBIVuRG8nv5VPi8eAl54AIII4VAR8eCQwyt48FARPDiVARJnZ3e6qrqrrwUffkh9CLM9PT2/memurqquJhX8zyR1uwFk6QCySQeQTTqAbNIBZJObBUrFQn5dvl1A6VTqH/5M14ttBbdaKFCp7UW09/ijoIYLAupz0a1ez3P+bfsD9Tvv03yv3zyb9wUq/9PzgqD3r17V/YAG/u5VPS9lZzwq+wBVFNAlctLvtHNVd6BBvr2BSPkpx4quQIP9egIjA35yquYINOQX/bmKSDu3Js1Vp0Jd1T6GNjyBul/TnRma+porHnOSrV185dYAjW3ly0ccNzVc861aOOrorQAqYUtHp44wpXWp1LHc0bizPboytw9vHojlmfC5UpRJHba2FUlnyxxoA2K7z8QDCk2ngy40WbFobgvQtC+YwskfSwV3f+ZKk5UpHxUO1P8vtaztulQwQ3lfFjF2bSMQxzNMGuejv/fEiWSc4fuagKarPVfuk+k7P/HniXrC3kKAUp3VMmnU3iv3JlfRGwB6oDSjMqSiyV8qNcrLkHrqX3NYN8iHMGrTAsTon9Bc456L3GgrKmabH/ydJ5CVp+FDetYwm3OdMajiJyQd0JwPlKJr7fiXNAJn7dDixMKYvvwsogFinune9/UVrjv4YfN2OxFpgNQPVv8e/jW/Bf2YudOOk5XO0s3mbHUGsnWgDJ7px3DTPiu9L9Hfk/Y7AvW9oBRR2woDWw0K3YX8tRxQhnlkcilqtu/PPjyRavgU/1LmRR7ofnXEzMB9BvkfDiagJA+QsaEYDhwQZ0zgF4RMpIE/+vIEwX1kCCgfjQFienTJJfZ86ip/zwWpc8GR6hKNldT1Bvox/x0rkDwUsoKf46GtbHFeqq9if7J99p8MFQmeyG2oQMwLuv8t9nytfLOFW9RrI8YTckk9shmn77EAcXMhfgp4PMk7Ts/bzOHENwnbaYFBbShAzAsiNj2cJy2lr5qN4W5k6sOmTfMbRqA6eL/TEj2K5/FhIo5BRuxiuW+qQqbfJW/DMX1FMhB6Qc2bmCvYF1T7lRVH345kGemBBtcmfYK9NXptVa4BKeSS4a5KXpEENAW8zzBhm70dzi8V4w1aGeo+e9wFVhZ6RSYgqFZdmlg8Uz9kzkNMjHf9ddKwLX+ADLyFr2iBqmEkh8s35o+wuhF3b0o6WBdpRAcjLyR2fqbygBqTHJREajSviAKB4Tp7ewlTHeI+SeEd1FYsKpb1vDL+ep3N/YumTD0QUM9o4YBAxeYL6UzZhQ2oy75t4gHBzRattwOFYBSFzPnK3E3IeO/0N4eTlW7U7MlfXFwEd9MArXw9OSo7AwF7DijvUeMOXcJMykKGkbjwkpezf5EfpQOC9qtaVyQa/Y4LTIVcC4s2iTO24PiC7fhXbpzgDmIDCoNHErW4dK0WCOqPjfVXpmdwQRsqIj5HfH1PsbqFHkcLJI4ffJ2pEDc4QijrzkEaO4J8b1r1KhzfsysgvR2+GQZaLRRUZCozKlAGMqlEzlebtxuO49mfmxgxUOXZ5ChSzqIyjm8SIH30OpbuVYrzMv4bOA4D2mc5IGILih8VP2iArEtDA/vJHQr5M9nnBLVWKgxfHijU2BkEyGESu+9tqYDOF6BahguFhoCQGRcdTfga/VDai/SQmxEk2/CECKZOGMoICN0hxJMUBxQ90Ug3n0zy/HuA58R/BgSEIiwhtro4oPZrwUzHcGdOLQuBy8YdtACBOd31PA6ZoxgF2G+hSxfKiRROZJUdC/Twu8lRbCOKyjfA02wWQaLaz9wNM6xag6BGmNDVJ0APcEADxMr/3bsD2zAbf93NsI+FDjbU8GMbTEAwIy9eZwUKqjWLaLGsaHuF/CbhdvgSY4aLQw6oU6fkKF6ZYz0wcJanMdEvkKrWJfStsNGKuVuLlQoICMZV7K6AhYYXS117TijNLFgfzRXu/Ky9ynn2DeW8dvabzdvtBpS15XuhSR8bMdDyMvFlOSCwF+NOjQJlyBHiFhxYydabhOJraZQsIwyR8UdxdRkIXIqVL2b/8ibmE+vcgOLpEkdPURtCxzXuUM4ioFIRaM1HMuGb4UiLey8KSFABqTOmDQ4Ihc5yp8EixI+HDGk7EO5HqI1eiknJAakWJTwI606b5dEXpNqL4WMrKxcQzUVA2I/O/TPxuFziQxRqWuWaACtca6BJJQs2Qj12qVoHhNpA+loGgtUbHii5FNk8w9Hc9RC3aqJIcgWnz2QgGDU80PI16oWDUIIJ6FqT5O8PDhkA3XmMrSoBzd6nVMBr8k1oeK0kFoUZCJzWB95MjiYeZ6tKQI171Qo4zQsvSrqsRys9ESL/T60lNVFkTeu5qmXUPuaWjGK5IabEpBH4wKLZRrpwj1YkNUB1YhWJOBdkDRAmYyx9xwiVJW4v2hXBOMnJtEc/UBUak8KGTbrmkAoUMrfHzkpOpDekAwIjFgdIqJ4ndgQNsuQhVCBhOscxhqxIS2A6IPSKVj/HleYuaUJhwzRdUsxmv4rq4m0++pp8Z5qktup5O5Blrnhsz9XK4PDQb4pocTY1BSwmcQD9MCmiRow+6PnMS+KQ9A/H2Sv+IjBxMkNVnZPMQDghhpiGT68J7NIY+xCMa2MBmouX2bSR/GA8mUIdsoTzaUpGZcYCmZYWlm/U1LPnniYxM3EvlGsm93NqmZuAcE0xRvMygU3qTCSTnwjN8e08EImcZPahH6b1MiWhxuBxQA4XxAUNQPovpgCRJVcFQBNWrOgLes4eeZNSjyrpyoNxzZVZl0/TF5yVsstoOgHbrRStl0tAZBa0LQKDVg108fmntkK4s3xkCznHvqAGab7FD42XB1kg+n2xM+Ui4O3mvN/8sfiiMRCxpeRuoQLRpRtpEdsiaLLFN4JlOCXgvpRaag65H167IOBSEjUTxbGuenAbOqWMGwZI8uIe2aBWsfLQG4nyOC0KP7CazsjlIzRJGtG4EsbzgDkfYJc8i0kiWapm44AUBeiShEdtXdLC1EO4GL+gsWpOOJuxoTiCD7/KVSNC/Aj6RBDC20J5sBVoBFIS/BR9qggZCaVkTwr4cNG3r8F5FdxU5JzHKEWbqdSTJHJp/Q7rSvJdm7jAjgZofgtXWsruxpHTmBbSkDAsEDRsIw9aRxL2LECKr5tIz1qC2r2/sg1J3pjELyUE/AfzyxYWsuB8781L1k1ivLJoQLxGf0OgsOSSA49fPrWDDJI24YAKefxZkh+pyV42pcAXQqT0U7SsOgLrW6I5HYEsi7yMqHmoy8R964gOnMvm81mAvInUrPYRmix0w14HY26d154NJvLQ/B5TLzDuorDsfOF2UvAi50fGoumFxonIsjfI7aut/IAbMo2a9yAbrV5ATMClrf1J7Fc/fk4zXlZobM3lZq+8kP1l8fpeuvxMYLCT5E0WQpTcAm8gZuoPetiyLHCWB23MtvndZY9iDbdJZaruFUS+8Wktr3217WZ2cfafyOQHZ07p4yScQVYQkOETBKNOTC/bFXem2vTB5rd01bKi2w5UCJBW57pLu5ved98rXfjW7ViU5HuNeOwmV1WSu0hWpEG89ttzexZdxGffoBeQFBtxlKHaAcGJJxDJkXcS5432efEGiiYNJ0c2lhX7jXFJTgoAiqT7qGP2Su2ZQvZ4FgYUSeaMMfvVL66EpGCg+K5Fh9T/ZaBi1uFLptwii9wUUCzp+p1NbcVXvh+dXj/1yknHyM1/CXSLpQPIJh1ANukAskkHkE3+Ba+7Kb9bzceoAAAAAElFTkSuQmCC"/>
+</defs>
+</svg>
+
+                        simpliconvert
+                    </a>
+                </div>
+
+                <!-- Desktop Navigation -->
+                <div class="hidden md:flex items-center space-x-6">
+                    <div class="relative nav-item group">
+                        <a href="/merge_pdf_online/" class="flex items-center font-medium text-gray-800 hover:text-primary transition px-3 py-2">
+                            Merge PDF
+                        </a>
+                    </div>
+
+                    <div class="relative nav-item group">
+                        <a href="/compress_pdf/" class="flex items-center font-medium text-gray-800 hover:text-primary transition px-3 py-2">
+                            Compress PDF
+                        </a>    
+                    </div>
+
+                    <div class="relative nav-item group">
+                        <a href="/split_pdf/" class="flex items-center font-medium text-gray-800 hover:text-primary transition px-3 py-2">
+                            Split PDF
+                        </a>
+                    </div>
+
+                    <div class="relative nav-item group">
+                        <a href="/sign_pdf/" class="flex items-center font-medium text-gray-800 hover:text-primary transition px-3 py-2">
+                            Sign PDF
+                        </a>
+                    </div>
+                    
+                    <div class="relative nav-item group">
+                        <button class="flex items-center font-medium text-gray-800 hover:text-primary transition px-1 py-4">
+                           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#DA3F0B" class="size-6">
+  <path fill-rule="evenodd" d="M1.5 6a2.25 2.25 0 0 1 2.25-2.25h16.5A2.25 2.25 0 0 1 22.5 6v12a2.25 2.25 0 0 1-2.25 2.25H3.75A2.25 2.25 0 0 1 1.5 18V6ZM3 16.06V18c0 .414.336.75.75.75h16.5A.75.75 0 0 0 21 18v-1.94l-2.69-2.689a1.5 1.5 0 0 0-2.12 0l-.88.879.97.97a.75.75 0 1 1-1.06 1.06l-5.16-5.159a1.5 1.5 0 0 0-2.12 0L3 16.061Zm10.125-7.81a1.125 1.125 0 1 1 2.25 0 1.125 1.125 0 0 1-2.25 0Z" clip-rule="evenodd" />
+</svg>
+
+                            Image Tools 
+                          <svg class="ml-2 text-xs h-3 w-3" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" aria-hidden="true"><title>Chevron Down</title><path d="M143 352.3L7 216.3c-9.4-9.4-9.4-24.6 0-33.9l22.6-22.6c9.4-9.4 24.6-9.4 33.9 0l80.7 80.7L258.1 159.8c9.4-9.4 24.6-9.4 33.9 0l22.6 22.6c9.4 9.4 9.4 24.6 0 33.9l-136 136c-9.4 9.5-24.6 9.5-34 .1z"/></svg>
+                        </button>
+                        <div class="nav-dropdown absolute left-7 mt-2 w-64 bg-white rounded-lg shadow-xl p-4 z-50 border border-gray-100">
+                            <div class="grid grid-cols-1 gap-2">
+                                <a href="/jpg_to_pdf/" class="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-50 hover:text-primary rounded-lg transition">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="#DA3F0B" d="M17.5 6h3.9a.25.25 0 0 0 .17-.43L16.43.43A.25.25 0 0 0 16 .6v3.9A1.5 1.5 0 0 0 17.5 6M12 13.12h-.62a.26.26 0 0 0-.26.26v1.24a.26.26 0 0 0 .26.26H12a.88.88 0 0 0 0-1.76"/><path fill="#DA3F0B" d="M21.75 7H17.5A2.5 2.5 0 0 1 15 4.5V.25a.25.25 0 0 0-.25-.25H4a2 2 0 0 0-2 2v20a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V7.25a.25.25 0 0 0-.25-.25M9.12 17a2.12 2.12 0 1 1-4.24 0a.62.62 0 1 1 1.24 0a.88.88 0 1 0 1.76 0v-4.5a.62.62 0 0 1 1.24 0Zm2.75-.88h-.49a.26.26 0 0 0-.26.26v2.12a.62.62 0 1 1-1.24 0v-6a.61.61 0 0 1 .62-.62H12a2.12 2.12 0 0 1 2.11 2.34a2.2 2.2 0 0 1-2.24 1.9m7.25-1.62a.62.62 0 1 1-1.24 0V14a.88.88 0 0 0-1.76 0v3a.88.88 0 0 0 1.65.42c.05-.09.12-.3-.09-.3h-.18a.62.62 0 1 1 0-1.24h1a.62.62 0 0 1 .62.62v.5a2.12 2.12 0 0 1-4.24 0v-3a2.12 2.12 0 0 1 4.24 0Z"/></svg>
+                                    <div>
+                                        <h4 class="font-medium">JPG to PDF</h4>
+                                        <p class="text-xs text-gray-500">Convert JPG images to PDF in seconds</p>
+                                    </div>
+                                </a>
+                                <a href="/resize_image/" class="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-50 hover:text-primary rounded-lg transition">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 20 20"><path fill="#DA3F0B" d="M5.25 2A3.25 3.25 0 0 0 2 5.25v3a.75.75 0 0 0 1.5 0v-3c0-.966.784-1.75 1.75-1.75h3a.75.75 0 0 0 0-1.5zm6.5 0a.75.75 0 0 0 0 1.5h3c.966 0 1.75.784 1.75 1.75v3a.75.75 0 0 0 1.5 0v-3A3.25 3.25 0 0 0 14.75 2zM18 11.75a.75.75 0 0 0-1.5 0v3a1.75 1.75 0 0 1-1.75 1.75h-3a.75.75 0 0 0 0 1.5h3A3.25 3.25 0 0 0 18 14.75zM1 12.5A2.5 2.5 0 0 1 3.5 10h4a2.5 2.5 0 0 1 2.5 2.5v4c0 .51-.152.983-.414 1.379L6.56 14.854a1.5 1.5 0 0 0-2.122 0l-3.025 3.025A2.5 2.5 0 0 1 1 16.5zm7 .25a.75.75 0 1 0-1.5 0a.75.75 0 0 0 1.5 0m-5.879 5.836c.396.262.87.414 1.379.414h4c.51 0 .983-.152 1.379-.414L5.854 15.56a.5.5 0 0 0-.708 0z"/></svg>
+                                    <div>
+                                        <h4 class="font-medium">Resize Image</h4>
+                                        <p class="text-xs text-gray-500">Adjust image dimensions</p>
+                                    </div>
+                                </a>
+                                <a href="/compress_image" class="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-50 hover:text-primary rounded-lg transition">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 448 512"><path fill="#DA3F0B" d="M4.686 427.314L104 328l-32.922-31.029C55.958 281.851 66.666 256 88.048 256h112C213.303 256 224 266.745 224 280v112c0 21.382-25.803 32.09-40.922 16.971L152 376l-99.314 99.314c-6.248 6.248-16.379 6.248-22.627 0L4.686 449.941c-6.248-6.248-6.248-16.379 0-22.627M443.314 84.686L344 184l32.922 31.029c15.12 15.12 4.412 40.971-16.97 40.971h-112C234.697 256 224 245.255 224 232V120c0-21.382 25.803-32.09 40.922-16.971L296 136l99.314-99.314c6.248-6.248 16.379-6.248 22.627 0l25.373 25.373c6.248 6.248 6.248 16.379 0 22.627"/></svg>
+                                    <div>
+                                        <h4 class="font-medium">Compress Image</h4>
+                                        <p class="text-xs text-gray-500">Reduce image file size</p>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Mobile menu button -->
+                <div class="md:hidden flex items-center">
+                    <button id="mobile-menu-button" class="text-gray-800 hover:text-primary focus:outline-none" aria-label="Toggle menu">
+                        <svg id="menu-icon-bars" class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                        <svg id="menu-icon-times" class="h-6 w-6 hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile menu -->
+        <div id="mobile-menu" class="mobile-menu md:hidden bg-white shadow-lg">
+            <div class="px-4 py-3 space-y-2">
+                <a href="/merge_pdf_online/" class="block px-3 py-2 text-gray-800 hover:text-primary hover:bg-gray-50 rounded-md transition">Merge PDF</a>
+                <a href="/compress_pdf/" class="block px-3 py-2 text-gray-800 hover:text-primary hover:bg-gray-50 rounded-md transition">Compress PDF</a>
+                <a href="/split_pdf/" class="block px-3 py-2 text-gray-800 hover:text-primary hover:bg-gray-50 rounded-md transition">Split PDF</a>
+                <a href="/sign_pdf/" class="block px-3 py-2 text-gray-800 hover:text-primary hover:bg-gray-50 rounded-md transition">Sign PDF</a>
+                
+                <div class="pt-2 border-t border-gray-100">
+                    <button class="flex items-center justify-between w-full px-3 py-2 text-gray-800 hover:text-primary rounded-md transition">
+                        <span class="flex items-center">
+                            <svg class="mr-2 text-primary h-5 w-5" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" aria-hidden="true"><title>Image</title><path d="M448 80H64C28.7 80 0 108.7 0 144v224c0 35.3 28.7 64 64 64h384c35.3 0 64-28.7 64-64V144c0-35.3-28.7-64-64-64zM64 368V144h384v224H64zM256 192c-35.3 0-64 28.7-64 64s28.7 64 64 64 64-28.7 64-64-28.7-64-64-64z"/></svg> Image Tools
+                        </span>
+                        <svg class="text-xs h-3 w-3" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" aria-hidden="true"><title>Chevron Down</title><path d="M143 352.3L7 216.3c-9.4-9.4-9.4-24.6 0-33.9l22.6-22.6c9.4-9.4 24.6-9.4 33.9 0l80.7 80.7L258.1 159.8c9.4-9.4 24.6-9.4 33.9 0l22.6 22.6c9.4 9.4 9.4 24.6 0 33.9l-136 136c-9.4 9.5-24.6 9.5-34 .1z"/></svg>
+                    </button>
+                    <div class="pl-6 mt-1 space-y-1">
+                        <a href="/jpg_to_pdf/" class="block px-3 py-2 text-sm text-gray-700 hover:text-primary hover:bg-gray-50 rounded-md transition">JPG to PDF</a>
+                        <a href="/resize_image/" class="block px-3 py-2 text-sm text-gray-700 hover:text-primary hover:bg-gray-50 rounded-md transition">Resize Image</a>
+                        <a href="/compress_image/" class="block px-3 py-2 text-sm text-gray-700 hover:text-primary hover:bg-gray-50 rounded-md transition">Compress Image</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero-white text-black py-2 md:py-10">
+        <div class="container mx-auto px-4 text-center">
+            <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-2">Simple To-Do List App</h1>
+            <p class="text-lg md:text-xl max-w-3x1 mx-auto mb-2">
+                Drag to reorder, then rotate, and merge your PDF files with ease.
+            </p>
+           <!-- <div class="flex flex-col sm:flex-row justify-center gap-4">
+                <a href="#all-tools" class="btn-primary px-8 py-3 rounded-lg font-semibold text-white inline-flex items-center justify-center">
+                    Start Using for Free <svg class="ml-2 h-4 w-4" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" aria-hidden="true"><title>Arrow Right</title><path d="M438.6 278.6l-160 160C272.4 444.9 264.2 448 256 448s-16.38-3.125-22.62-9.375c-12.5-12.5-12.5-32.75 0-45.25L338.8 288H32C14.33 288 .0016 273.7 .0016 256S14.33 224 32 224h306.8l-105.4-105.4c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0l160 160C451.1 245.9 451.1 266.1 438.6 278.6z"/></svg>
+                </a>
+                <a href="#" class="btn-outline px-8 py-3 rounded-lg font-semibold text-white inline-flex items-center justify-center">
+                    Learn More <svg class="ml-2 h-4 w-4" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" aria-hidden="true"><title>Info Circle</title><path d="M256 0C114.6 0 0 114.6 0 256s114.6 256 256 256s256-114.6 256-256S397.4 0 256 0zM256 128c17.67 0 32 14.33 32 32s-14.33 32-32 32s-32-14.33-32-32S238.3 128 256 128zM296 384h-80C202.7 384 192 373.3 192 360s10.75-24 24-24h16v-64H224c-13.25 0-24-10.75-24-24S210.8 224 224 224h48c13.25 0 24 10.75 24 24v88h16c13.25 0 24 10.75 24 24S309.3 384 296 384z"/></svg>
+                </a>
+            </div> -->
+        </div>
+    </section>
+
+    <!-- TOOL START -->
+
+
+
+  <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     colors: {
                         primary: {
-                            DEFAULT: '#4f46e5',
+                            DEFAULT: '#da3f0b',
                             '50': '#eef2ff',
                             '100': '#e0e7ff',
                             '200': '#c7d2fe',
                             '300': '#a5b4fc',
                             '400': '#818cf8',
                             '500': '#6366f1',
-                            '600': '#4f46e5',
+                            '600': '#da3f0b',
                             '700': '#4338ca',
                             '800': '#3730a3',
                             '900': '#312e81',
                             '950': '#1e1b4b'
+                        },
+                        priority: {
+                            high: '#FF4D4D', // red-500
+                            medium: '#EBA00C', // orange-500
+                            low: '#4CBA6C' // blue-500
                         }
                     },
                      keyframes: {
@@ -55,40 +353,68 @@
         .task-checkbox:checked {
             background-image: url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='white' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M12.207 4.793a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L6.5 9.086l4.293-4.293a1 1 0 011.414 0z'/%3e%3c/svg%3e");
         }
+         /* Style for datetime-local icon */
+        input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+            cursor: pointer;
+            filter: invert(50%);
+        }
     </style>
 </head>
 <body class="bg-slate-100 text-slate-800">
 
-    <div class="min-h-screen flex flex-col items-center pt-8 sm:pt-16 px-4">
-        <div class="w-full max-w-lg mx-auto">
+    <div class="min-h-screen flex flex-col items-center pt-8 sm:pt-12 px-4">
+        <div class="w-full max-w-2xl mx-auto">
             
-            <header class="text-center mb-8">
-                <h1 class="text-4xl font-bold text-slate-800">My To-Do List</h1>
-                <p class="mt-2 text-slate-500">Stay organized, get things done.</p>
-            </header>
-
             <main class="bg-white rounded-xl shadow-lg p-6 w-full">
                 <!-- Add Task Form -->
-                <form id="add-task-form" class="flex gap-3 mb-4">
-                    <input id="task-input" type="text" placeholder="e.g., Learn about Gemini API" class="flex-grow p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition" required>
-                    <button type="submit" class="bg-primary text-white font-semibold px-6 py-3 rounded-lg hover:bg-primary-700 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary">
-                        Add
-                    </button>
+                <form id="add-task-form" class="mb-4">
+                    <div class="flex gap-3">
+                        <input id="task-input" type="text" placeholder="e.g., Learn about Gemini API" class="flex-grow p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition" required>
+                        <button type="submit" class="bg-primary text-white font-semibold px-6 py-3 rounded-lg hover:bg-primary-700 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary shrink-0">
+                            Add Task
+                        </button>
+                    </div>
+                    <div id="additional-options" class="grid grid-cols-1 sm:grid-cols-3 gap-3 mt-3">
+                        <div>
+                            <label for="due-date-input" class="block text-xs font-medium text-slate-600 mb-1">Due Date (Optional)</label>
+                            <input id="due-date-input" type="datetime-local" class="w-full p-2 border border-slate-300 rounded-md text-sm focus:ring-1 focus:ring-primary focus:border-primary transition">
+                        </div>
+                        <div>
+                            <label for="priority-input" class="block text-xs font-medium text-slate-600 mb-1">Priority</label>
+                            <select id="priority-input" class="w-full p-2 border border-slate-300 rounded-md text-sm focus:ring-1 focus:ring-primary focus:border-primary transition bg-white">
+                                <option value="low">Low</option>
+                                <option value="medium" selected>Medium</option>
+                                <option value="high">High</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="tags-input" class="block text-xs font-medium text-slate-600 mb-1">Tags (comma-separated)</label>
+                            <input id="tags-input" type="text" placeholder="work, personal" class="w-full p-2 border border-slate-300 rounded-md text-sm focus:ring-1 focus:ring-primary focus:border-primary transition">
+                        </div>
+                    </div>
                 </form>
 
                 <!-- Filters and Controls -->
-                <div id="controls" class="flex flex-wrap gap-2 sm:gap-4 items-center justify-between mb-4 pb-4 border-b border-slate-200">
+                <div id="controls" class="flex flex-wrap gap-x-4 gap-y-2 items-center justify-between mb-4 pb-4 border-b border-slate-200">
                     <div id="filters" class="flex gap-2" role="radiogroup" aria-label="Task filters">
                         <button data-filter="all" class="filter-btn px-3 py-1 text-sm font-medium rounded-md">All</button>
                         <button data-filter="active" class="filter-btn px-3 py-1 text-sm font-medium rounded-md">Active</button>
                         <button data-filter="completed" class="filter-btn px-3 py-1 text-sm font-medium rounded-md">Completed</button>
+                    </div>
+                     <div class="flex items-center gap-2">
+                        <label for="sort-by" class="text-sm font-medium text-slate-600">Sort by:</label>
+                        <select id="sort-by" class="text-sm rounded-md border-slate-300 focus:ring-primary focus:border-primary bg-white p-1 pr-7">
+                            <option value="createdAt">Created Date</option>
+                            <option value="dueDate">Due Date</option>
+                            <option value="priority">Priority</option>
+                        </select>
                     </div>
                     <button id="clear-completed-btn" class="text-sm text-slate-500 hover:text-primary transition-colors">Clear Completed</button>
                 </div>
 
                 <!-- Task List -->
                 <div class="relative min-h-[200px]">
-                    <ul id="task-list" class="space-y-2">
+                    <ul id="task-list" class="space-y-3">
                         <!-- Task items will be injected here -->
                     </ul>
                     <div id="empty-state" class="hidden absolute inset-0 flex flex-col items-center justify-center text-center text-slate-500">
@@ -100,19 +426,24 @@
 
             </main>
 
-            <footer class="text-center mt-8">
-                <p class="text-slate-400 text-sm">Tasks are saved in your browser's local storage.</p>
+            <footer class="text-center mt-8 pb-8">
+                <p class="text-slate-400 text-sm">Tasks are saved in your browser's local storage. You can refresh and comeback later to see tasks.</p>
             </footer>
         </div>
     </div>
 
     <template id="task-item-template">
-        <li class="task-item flex items-center p-3 bg-slate-50 rounded-lg transition-all duration-300 animate-fade-in" data-id="">
-            <label class="flex items-center gap-3 flex-grow cursor-pointer">
-                <input type="checkbox" class="task-checkbox h-5 w-5 rounded border-slate-300 text-primary bg-slate-100 focus:ring-primary/50 focus:ring-offset-0 focus:ring-2 transition-all duration-200 appearance-none">
-                <span class="task-text flex-grow">Task content goes here</span>
-            </label>
-            <button class="delete-btn ml-4 text-slate-400 hover:text-red-500 transition-colors p-1 opacity-0 group-hover:opacity-100" title="Delete task">
+        <li class="task-item flex items-start gap-3 bg-slate-50 rounded-lg transition-all duration-300 animate-fade-in border-l-4" data-id="">
+            <div class="flex-grow pt-3 pl-1">
+                <label class="flex items-center gap-3 w-full cursor-pointer">
+                    <input type="checkbox" class="task-checkbox h-5 w-5 rounded border-slate-300 text-primary bg-slate-100 focus:ring-primary/50 focus:ring-offset-0 focus:ring-2 transition-all duration-200 appearance-none shrink-0">
+                    <span class="task-text flex-grow">Task content goes here</span>
+                </label>
+                <div class="task-meta pl-8 pt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs">
+                    <!-- Due date and tags will be injected here -->
+                </div>
+            </div>
+            <button class="delete-btn ml-auto text-slate-400 hover:text-red-500 transition-colors p-2 opacity-0 group-hover:opacity-100 shrink-0 self-center" title="Delete task">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
                 </svg>
@@ -121,19 +452,27 @@
     </template>
     
     <script type="module">
+        // --- TYPE DEFINITIONS ---
+        // type Task = { id: number; text: string; completed: boolean; createdAt: number; dueDate: string | null; priority: 'low'|'medium'|'high'; tags: string[]; };
+        // type Filter = 'all' | 'active' | 'completed';
+        // type SortBy = 'createdAt' | 'dueDate' | 'priority';
+
         // --- STATE ---
-        // We'll manage tasks as an array of objects: {id, text, completed, createdAt}
         let tasks = [];
-        // Current filter can be 'all', 'active', or 'completed'
         let currentFilter = 'all';
+        let currentSort = 'createdAt';
 
         // --- DOM ELEMENTS ---
         const dom = {
             addTaskForm: document.getElementById('add-task-form'),
             taskInput: document.getElementById('task-input'),
+            dueDateInput: document.getElementById('due-date-input'),
+            priorityInput: document.getElementById('priority-input'),
+            tagsInput: document.getElementById('tags-input'),
             taskList: document.getElementById('task-list'),
             taskItemTemplate: document.getElementById('task-item-template'),
             filters: document.getElementById('filters'),
+            sortBy: document.getElementById('sort-by'),
             clearCompletedBtn: document.getElementById('clear-completed-btn'),
             emptyState: document.getElementById('empty-state'),
             emptyStateMessage: document.getElementById('empty-state-message'),
@@ -142,7 +481,7 @@
         // --- DATA PERSISTENCE ---
         const saveTasks = () => {
             try {
-                localStorage.setItem('todo-tasks', JSON.stringify(tasks));
+                localStorage.setItem('todo-tasks-v2', JSON.stringify(tasks));
             } catch (error) {
                 console.error("Could not save tasks to localStorage", error);
             }
@@ -150,9 +489,16 @@
 
         const loadTasks = () => {
             try {
-                const savedTasks = localStorage.getItem('todo-tasks');
+                const savedTasks = localStorage.getItem('todo-tasks-v2');
                 if (savedTasks) {
-                    tasks = JSON.parse(savedTasks);
+                    const loaded = JSON.parse(savedTasks);
+                    // Ensure backward compatibility with older task structures
+                    tasks = loaded.map(task => ({
+                        dueDate: null,
+                        priority: 'medium',
+                        tags: [],
+                        ...task,
+                    }));
                 }
             } catch (error) {
                 console.error("Could not load tasks from localStorage", error);
@@ -162,70 +508,115 @@
 
         // --- CORE LOGIC ---
         const renderTasks = () => {
-            // Clear current list
             dom.taskList.innerHTML = '';
+            
+            const priorityMap = { high: 3, medium: 2, low: 1 };
 
-            // Filter tasks
-            const filteredTasks = tasks.filter(task => {
+            // 1. Sort tasks
+            const sortedTasks = [...tasks].sort((a, b) => {
+                switch (currentSort) {
+                    case 'priority':
+                        return priorityMap[b.priority] - priorityMap[a.priority];
+                    case 'dueDate':
+                        if (a.dueDate && b.dueDate) return new Date(a.dueDate) - new Date(b.dueDate);
+                        if (a.dueDate) return -1; // tasks with due dates first
+                        if (b.dueDate) return 1;
+                        return 0;
+                    case 'createdAt':
+                    default:
+                        return a.createdAt - b.createdAt;
+                }
+            });
+
+            // 2. Filter tasks
+            const filteredTasks = sortedTasks.filter(task => {
                 if (currentFilter === 'active') return !task.completed;
                 if (currentFilter === 'completed') return task.completed;
                 return true; // 'all'
             });
 
-            // Handle empty state
+            // 3. Handle empty state
             if (filteredTasks.length === 0) {
                 dom.emptyState.classList.remove('hidden');
                 switch (currentFilter) {
-                    case 'all':
-                        dom.emptyStateMessage.textContent = 'Add a task to get started!';
-                        break;
-                    case 'active':
-                        dom.emptyStateMessage.textContent = 'No active tasks. Great job!';
-                        break;
-                    case 'completed':
-                        dom.emptyStateMessage.textContent = 'No tasks completed yet.';
-                        break;
+                    case 'all': dom.emptyStateMessage.textContent = 'Add a task to get started!'; break;
+                    case 'active': dom.emptyStateMessage.textContent = 'No active tasks. Great job!'; break;
+                    case 'completed': dom.emptyStateMessage.textContent = 'No tasks completed yet.'; break;
                 }
             } else {
                 dom.emptyState.classList.add('hidden');
             }
 
-            // Render tasks
-            filteredTasks
-                .sort((a, b) => a.createdAt - b.createdAt) // Show oldest first
-                .forEach(task => {
-                    const taskElement = document.importNode(dom.taskItemTemplate.content, true);
-                    const listItem = taskElement.querySelector('.task-item');
-                    const checkbox = taskElement.querySelector('.task-checkbox');
-                    const textSpan = taskElement.querySelector('.task-text');
+            // 4. Render tasks
+            filteredTasks.forEach(task => {
+                const taskElement = document.importNode(dom.taskItemTemplate.content, true);
+                const listItem = taskElement.querySelector('.task-item');
+                const checkbox = taskElement.querySelector('.task-checkbox');
+                const textSpan = taskElement.querySelector('.task-text');
+                const metaContainer = taskElement.querySelector('.task-meta');
 
-                    listItem.dataset.id = task.id.toString();
-                    listItem.classList.add('group');
-                    textSpan.textContent = task.text;
-                    checkbox.checked = task.completed;
-                    
-                    if (task.completed) {
-                        listItem.classList.add('opacity-60');
-                        textSpan.classList.add('line-through', 'text-slate-500');
-                        checkbox.classList.add('bg-primary');
-                    } else {
-                        checkbox.classList.remove('bg-primary');
-                    }
+                listItem.dataset.id = task.id.toString();
+                listItem.classList.add('group');
+                
+                // Set priority color
+                const priorityColors = {
+                    high: 'border-priority-high',
+                    medium: 'border-priority-medium',
+                    low: 'border-priority-low'
+                };
+                listItem.classList.add(priorityColors[task.priority]);
 
-                    dom.taskList.appendChild(taskElement);
+
+                textSpan.textContent = task.text;
+                checkbox.checked = task.completed;
+                
+                if (task.completed) {
+                    listItem.classList.add('opacity-60');
+                    textSpan.classList.add('line-through', 'text-slate-500');
+                    checkbox.classList.add('bg-primary');
+                }
+
+                // Render meta info (due date and tags)
+                if (task.dueDate) {
+                    const dueDateEl = document.createElement('div');
+                    const dueDate = new Date(task.dueDate);
+                    const isOverdue = !task.completed && dueDate < new Date();
+                    dueDateEl.className = `flex items-center gap-1.5 px-2 py-0.5 rounded-full ${isOverdue ? 'bg-red-100 text-red-700' : 'bg-slate-200 text-slate-600'}`;
+                    dueDateEl.innerHTML = `
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd" /></svg>
+                        <span>${isOverdue ? 'Overdue: ' : ''}${dueDate.toLocaleString([], {dateStyle: 'medium', timeStyle: 'short'})}</span>`;
+                    metaContainer.appendChild(dueDateEl);
+                }
+
+                task.tags.forEach(tag => {
+                    const tagEl = document.createElement('span');
+                    tagEl.className = 'px-2 py-0.5 bg-blue-100 text-blue-700 rounded-full';
+                    tagEl.textContent = `#${tag}`;
+                    metaContainer.appendChild(tagEl);
                 });
+
+
+                dom.taskList.appendChild(taskElement);
+            });
             
             updateControls();
         };
 
-        const addTask = (text) => {
+        const addTask = (text, dueDate, priority, tags) => {
             if (!text.trim()) return;
+
+            const newTags = tags.split(',')
+                .map(tag => tag.trim())
+                .filter(tag => tag.length > 0);
 
             const newTask = {
                 id: Date.now(),
                 text: text.trim(),
                 completed: false,
                 createdAt: Date.now(),
+                dueDate: dueDate || null,
+                priority: priority,
+                tags: newTags,
             };
 
             tasks.push(newTask);
@@ -252,7 +643,6 @@
                     renderTasks();
                 }, { once: true });
             } else {
-                // Fallback if animation fails
                 tasks = tasks.filter(t => t.id !== id);
                 saveTasks();
                 renderTasks();
@@ -271,7 +661,7 @@
             filterButtons.forEach(button => {
                 if (button.getAttribute('data-filter') === currentFilter) {
                     button.classList.add('bg-primary/10', 'text-primary');
-                    button.classList.remove('text-slate-500');
+                    button.classList.remove('text-slate-500', 'hover:bg-slate-200');
                 } else {
                     button.classList.remove('bg-primary/10', 'text-primary');
                     button.classList.add('text-slate-500', 'hover:bg-slate-200');
@@ -281,34 +671,39 @@
             // Update clear completed button
             const hasCompletedTasks = tasks.some(task => task.completed);
             dom.clearCompletedBtn.classList.toggle('hidden', !hasCompletedTasks);
+            
+            // Set sort dropdown value
+            dom.sortBy.value = currentSort;
         };
 
         // --- EVENT LISTENERS ---
         const setupEventListeners = () => {
-            // Add task
             dom.addTaskForm.addEventListener('submit', e => {
                 e.preventDefault();
-                addTask(dom.taskInput.value);
-                dom.taskInput.value = '';
+                addTask(
+                    dom.taskInput.value,
+                    dom.dueDateInput.value,
+                    dom.priorityInput.value,
+                    dom.tagsInput.value
+                );
+                dom.addTaskForm.reset();
+                dom.priorityInput.value = 'medium'; // Reset select to default
                 dom.taskInput.focus();
             });
 
-            // Toggle or Delete task (using event delegation)
             dom.taskList.addEventListener('click', e => {
                 const target = e.target;
                 const listItem = target.closest('.task-item');
                 if (!listItem) return;
 
                 const taskId = Number(listItem.getAttribute('data-id'));
-
-                if (target.matches('.delete-btn, .delete-btn *')) {
+                if (target.closest('.delete-btn')) {
                     deleteTask(taskId);
                 } else if (target.matches('.task-checkbox')) {
                     toggleTask(taskId);
                 }
             });
             
-            // Change filter
             dom.filters.addEventListener('click', e => {
                 const target = e.target;
                 const filterButton = target.closest('.filter-btn');
@@ -318,7 +713,11 @@
                 }
             });
             
-            // Clear completed
+            dom.sortBy.addEventListener('change', e => {
+                currentSort = e.target.value;
+                renderTasks();
+            });
+
             dom.clearCompletedBtn.addEventListener('click', clearCompletedTasks);
         };
 
@@ -327,6 +726,383 @@
             loadTasks();
             setupEventListeners();
             renderTasks();
+        });
+    </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <!-- TOOL END -->
+
+    <!-- Tools Section -->
+    <section id="all-tools" class="py-12 bg-white">
+        <div class="container mx-auto px-1">
+            <div class="text-center mb-8">
+                <h2 class="text-3xl font-bold text-gray-800 mb-4">Popular Tools</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto">
+                    Choose from our comprehensive collection of PDF tools to handle all your document needs
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
+
+  <!-- Merge PDF -->
+  <a href="/merge_pdf_online/" class="tool-card bg-white p-6 rounded-lg shadow-sm border border-gray-200 hover:border-brand transition-all duration-300 flex flex-col">
+    <div class="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center mb-4">
+      <!-- two pages merging -->
+      <svg class="w-6 h-6 text-red-500" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+        <path d="M8 3h5l5 5v13a1 1 0 0 1-1 1H8a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z"/>
+        <polyline points="13 3 13 8 18 8"/>
+        <path d="M16 13H9m0 0l3-3m-3 3l3 3"/>
+      </svg>
+    </div>
+    <h3 class="font-semibold text-gray-800 mb-2">Merge PDF</h3>
+    <p class="text-sm text-gray-600">Combine multiple PDFs into one</p>
+  </a>
+
+  <!-- Split PDF -->
+  <a href="/split_pdf/" class="tool-card bg-white p-6 rounded-lg shadow-sm border border-gray-200 hover:border-brand transition-all duration-300 flex flex-col">
+    <div class="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center mb-4">
+      <!-- scissors -->
+      <svg class="w-6 h-6 text-yellow-500" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+        <circle cx="6" cy="6" r="3" />
+        <circle cx="6" cy="18" r="3" />
+        <line x1="20" y1="4" x2="8.12" y2="15.88" />
+        <line x1="14.5" y1="14.5" x2="20" y2="20" />
+        <line x1="8.12" y1="8.12" x2="12" y2="12" />
+      </svg>
+    </div>
+    <h3 class="font-semibold text-gray-800 mb-2">Split PDF</h3>
+    <p class="text-sm text-gray-600">Split one PDF into multiple files</p>
+  </a>
+
+  <!-- Compress PDF -->
+  <a href="/compress_pdf/" class="tool-card bg-white p-6 rounded-lg shadow-sm border border-gray-200 hover:border-brand transition-all duration-300 flex flex-col">
+    <div class="w-12 h-12 bg-indigo-100 rounded-lg flex items-center justify-center mb-4">
+      <!-- arrows pointing inwards -->
+      <svg class="w-6 h-6 text-indigo-500" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+        <polyline points="4 14 10 14 10 20"/>
+        <polyline points="20 10 14 10 14 4"/>
+        <line x1="14" y1="10" x2="21" y2="3"/>
+        <line x1="10" y1="14" x2="3" y2="21"/>
+      </svg>
+    </div>
+    <h3 class="font-semibold text-gray-800 mb-2">Compress PDF</h3>
+    <p class="text-sm text-gray-600">Reduce PDF file size for sharing</p>
+  </a>
+
+  <!-- JPG to PDF -->
+  <a href="/jpg_to_pdf/" class="tool-card bg-white p-6 rounded-lg shadow-sm border border-gray-200 hover:border-brand transition-all duration-300 flex flex-col">
+    <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-4">
+      <!-- photo → file -->
+      <svg class="w-6 h-6 text-blue-500" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+        <rect x="2" y="3" width="14" height="14" rx="2" ry="2"/>
+        <circle cx="8.5" cy="8.5" r="1.5"/>
+        <polyline points="2 17 8 11 11 14 14 11 16 13"/>
+        <path d="M16 3h5v5"/>
+        <polyline points="21 3 21 21 8 21"/>
+      </svg>
+    </div>
+    <h3 class="font-semibold text-gray-800 mb-2">JPG to PDF</h3>
+    <p class="text-sm text-gray-600">Convert JPG images to PDF in seconds</p>
+  </a>
+
+  <!-- PDF to Excel -->
+  <a href="/pdf_to_excel/" class="tool-card bg-white p-6 rounded-lg shadow-sm border border-gray-200 hover:border-brand transition-all duration-300 flex flex-col">
+    <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mb-4">
+      <!-- spreadsheet -->
+      <svg class="w-6 h-6 text-green-500" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+        <path d="M16 2H8a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V8l-6-6z"/>
+        <polyline points="16 2 16 8 22 8"/>
+        <path d="M8 13h8M8 17h8M12 13v4"/>
+      </svg>
+    </div>
+    <h3 class="font-semibold text-gray-800 mb-2">PDF to Excel</h3>
+    <p class="text-sm text-gray-600">Convert PDF to Excel spreadsheets</p>
+  </a>
+
+  <!-- PDF to Images -->
+  <a href="/pdf_to_images/" class="tool-card bg-white p-6 rounded-lg shadow-sm border border-gray-200 hover:border-brand transition-all duration-300 flex flex-col">
+    <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mb-4">
+      <!-- image icon -->
+      <svg class="w-6 h-6 text-purple-500" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+        <circle cx="8.5" cy="8.5" r="1.5"/>
+        <polyline points="21 15 16 10 5 21"/>
+      </svg>
+    </div>
+    <h3 class="font-semibold text-gray-800 mb-2">PDF to Images</h3>
+    <p class="text-sm text-gray-600">Convert PDF pages to JPG or PNG</p>
+  </a>
+
+  <!-- Images to PDF -->
+  <a href="/images_to_pdf/" class="tool-card bg-white p-6 rounded-lg shadow-sm border border-gray-200 hover:border-brand transition-all duration-300 flex flex-col">
+    <div class="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center mb-4">
+      <!-- images stack -->
+      <svg class="w-6 h-6 text-orange-500" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+        <rect x="4" y="4" width="16" height="16" rx="2" ry="2"/>
+        <rect x="9" y="9" width="16" height="16" rx="2" ry="2" transform="rotate(180 17 17)"/>
+      </svg>
+    </div>
+    <h3 class="font-semibold text-gray-800 mb-2">Images to PDF</h3>
+    <p class="text-sm text-gray-600">Convert multiple images into one PDF</p>
+  </a>
+
+  <!-- Protect PDF -->
+  <a href="/protect_pdf/" class="tool-card bg-white p-6 rounded-lg shadow-sm border border-gray-200 hover:border-brand transition-all duration-300 flex flex-col">
+    <div class="w-12 h-12 bg-teal-100 rounded-lg flex items-center justify-center mb-4">
+      <!-- lock -->
+      <svg class="w-6 h-6 text-teal-500" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+        <rect x="3" y="11" width="18" height="10" rx="2" ry="2"/>
+        <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+      </svg>
+    </div>
+    <h3 class="font-semibold text-gray-800 mb-2">Protect PDF</h3>
+    <p class="text-sm text-gray-600">Add password protection to PDF</p>
+  </a>
+
+  <!-- Unlock PDF -->
+  <a href="/unlock_pdf/" class="tool-card bg-white p-6 rounded-lg shadow-sm border border-gray-200 hover:border-brand transition-all duration-300 flex flex-col">
+    <div class="w-12 h-12 bg-lime-100 rounded-lg flex items-center justify-center mb-4">
+      <!-- unlock -->
+      <svg class="w-6 h-6 text-lime-500" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+        <rect x="3" y="11" width="18" height="10" rx="2" ry="2"/>
+        <path d="M7 11V7a5 5 0 0 1 9.9-1"/>
+      </svg>
+    </div>
+    <h3 class="font-semibold text-gray-800 mb-2">Unlock PDF</h3>
+    <p class="text-sm text-gray-600">Remove password from PDF</p>
+  </a>
+
+  <!-- Rotate PDF -->
+  <a href="/rotate_pdf/" class="tool-card bg-white p-6 rounded-lg shadow-sm border border-gray-200 hover:border-brand transition-all duration-300 flex flex-col">
+    <div class="w-12 h-12 bg-cyan-100 rounded-lg flex items-center justify-center mb-4">
+      <!-- rotate -->
+      <svg class="w-6 h-6 text-cyan-500" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+        <polyline points="23 4 23 10 17 10"/>
+        <polyline points="1 20 1 14 7 14"/>
+        <path d="M3.51 9A9 9 0 0 1 21 15"/>
+        <path d="M20.49 15A9 9 0 0 1 3 9"/>
+      </svg>
+    </div>
+    <h3 class="font-semibold text-gray-800 mb-2">Rotate PDF</h3>
+    <p class="text-sm text-gray-600">Rotate PDF pages to any angle</p>
+  </a>
+
+  <!-- Reorder Pages -->
+  <a href="/reorder_pages/" class="tool-card bg-white p-6 rounded-lg shadow-sm border border-gray-200 hover:border-brand transition-all duration-300 flex flex-col">
+    <div class="w-12 h-12 bg-pink-100 rounded-lg flex items-center justify-center mb-4">
+      <!-- drag handle -->
+      <svg class="w-6 h-6 text-pink-500" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+        <line x1="8" y1="5" x2="21" y2="5"/>
+        <line x1="8" y1="12" x2="21" y2="12"/>
+        <line x1="8" y1="19" x2="21" y2="19"/>
+        <circle cx="4" cy="5" r="1.5"/>
+        <circle cx="4" cy="12" r="1.5"/>
+        <circle cx="4" cy="19" r="1.5"/>
+      </svg>
+    </div>
+    <h3 class="font-semibold text-gray-800 mb-2">Reorder Pages</h3>
+    <p class="text-sm text-gray-600">Change PDF page order visually</p>
+  </a>
+
+  <!-- Extract Text -->
+  <a href="/extract_text/" class="tool-card bg-white p-6 rounded-lg shadow-sm border border-gray-200 hover:border-brand transition-all duration-300 flex flex-col">
+    <div class="w-12 h-12 bg-emerald-100 rounded-lg flex items-center justify-center mb-4">
+      <!-- letter T -->
+      <svg class="w-6 h-6 text-emerald-500" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+        <polyline points="4 7 4 4 20 4 20 7"/>
+        <line x1="12" y1="4" x2="12" y2="20"/>
+        <line x1="9" y1="20" x2="15" y2="20"/>
+      </svg>
+    </div>
+    <h3 class="font-semibold text-gray-800 mb-2">Extract Text</h3>
+    <p class="text-sm text-gray-600">Get text from PDF pages</p>
+  </a>
+
+
+
+</div>
+            
+    </section>
+
+    <!-- Features Section -->
+    <section class="py-16 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-gray-800 mb-4">Supercharge Your Productivity</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto">Powerful features to simplify your document workflows</p>
+            </div>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center mb-16">
+                <div class="order-2 lg:order-1">
+                    <h3 class="text-2xl font-bold text-gray-800 mb-4">Smart Tools for Smart Work
+</h3>
+                    <p class="text-gray-600 mb-6">Merge PDF files, compress large documents, or convert Markdown to CSV—all right in your browser. Our tools are easy to use and don't require downloads, registrations, or technical know-how.</p>
+                    <div class="space-y-4">
+                        <div class="flex items-start">
+                            <div class="flex-shrink-0 mt-1">
+                                <svg class="text-primary text-lg h-5 w-5" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" aria-hidden="true"><title>Check Circle</title><path d="M504 256c0 136.967-111.033 248-248 248S8 392.967 8 256 119.033 8 256 8s248 111.033 248 248zM227.314 387.314l184-184c6.248-6.248 6.248-16.379 0-22.627l-22.627-22.627c-6.248-6.249-16.379-6.249-22.628 0L216 308.118l-70.059-70.059c-6.248-6.248-16.379-6.248-22.628 0l-22.627 22.627c-6.248 6.248-6.248 16.379 0 22.627l104 104c6.249 6.249 16.379 6.249 22.628.001z"/></svg>
+                            </div>
+                            <div class="ml-3">
+                                <p class="text-gray-800 font-medium">No registration required</p>
+                                <p class="text-gray-600 text-sm">Start using our tools immediately without signing up</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start">
+                            <div class="flex-shrink-0 mt-1">
+                                <svg class="text-primary text-lg h-5 w-5" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" aria-hidden="true"><title>Check Circle</title><path d="M504 256c0 136.967-111.033 248-248 248S8 392.967 8 256 119.033 8 256 8s248 111.033 248 248zM227.314 387.314l184-184c6.248-6.248 6.248-16.379 0-22.627l-22.627-22.627c-6.248-6.249-16.379-6.249-22.628 0L216 308.118l-70.059-70.059c-6.248-6.248-16.379-6.248-22.628 0l-22.627 22.627c-6.248 6.248-6.248 16.379 0 22.627l104 104c6.249 6.249 16.379 6.249 22.628.001z"/></svg>
+                            </div>
+                            <div class="ml-3">
+                                <p class="text-gray-800 font-medium">Browser-based processing</p>
+                                <p class="text-gray-600 text-sm">Files are processed in your browser for maximum privacy</p>
+                            </div>                        
+                        </div>
+                           <div class="flex items-start">
+                            <div class="flex-shrink-0 mt-1">
+                                <svg class="text-primary text-lg h-5 w-5" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" aria-hidden="true"><title>Check Circle</title><path d="M504 256c0 136.967-111.033 248-248 248S8 392.967 8 256 119.033 8 256 8s248 111.033 248 248zM227.314 387.314l184-184c6.248-6.248 6.248-16.379 0-22.627l-22.627-22.627c-6.248-6.249-16.379-6.249-22.628 0L216 308.118l-70.059-70.059c-6.248-6.248-16.379-6.248-22.628 0l-22.627 22.627c-6.248 6.248-6.248 16.379 0 22.627l104 104c6.249 6.249 16.379 6.249 22.628.001z"/></svg>
+                            </div>
+                            <div class="ml-3">
+                                <p class="text-gray-800 font-medium">Totally Free Forever</p>
+                                <p class="text-gray-600 text-sm">No subscriptions, no trial periods. All our core tools are completely free to use.
+
+</p>
+                            </div>                        
+                        </div>
+                    </div>
+                </div>
+                <div class="order-1 lg:order-2">
+                    <img src="https://images.unsplash.com/photo-1551434678-e076c223a692?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80" alt="Instant Access" class="rounded-xl shadow-lg w-full" loading="lazy" width="600" height="400" decoding="async">
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white pt-16 pb-8">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8 mb-12">
+                <!-- Company Info -->
+                <div class="col-span-2 lg:col-span-1">
+                    <h3 class="text-xl font-bold mb-6 flex items-center">
+                       <svg width="44" height="45" viewBox="0 0 164 145" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<rect width="144" height="145" fill="url(#pattern0_4986_183)"/>
+<defs>
+<pattern id="pattern0_4986_183" patternContentUnits="objectBoundingBox" width="1" height="1">
+<use xlink:href="#image0_4986_183" transform="scale(0.00694444 0.00689655)"/>
+</pattern>
+<image id="image0_4986_183" width="144" height="145" preserveAspectRatio="none" xlink:href="data:image/png;base64,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"/>
+</defs>
+</svg>
+ simpliconvert
+                    </h3>
+                    <p class="text-gray-300 mb-4">Simpliconvert offers 100% free tools to convert, edit, and manage files.</p>
+                </div>
+
+                <!-- PDF Tools -->
+                <div>
+                    <h3 class="text-lg font-semibold mb-6">PDF Tools</h3>
+                    <ul class="space-y-3">
+                        <li><a href="#" class="flex items-center text-gray-300 hover:text-white p-2 rounded-lg transition duration-300">Merge PDF</a></li>
+                        <li><a href="#" class="flex items-center text-gray-300 hover:text-white p-2 rounded-lg transition duration-300">Split PDF</a></li>
+                        <li><a href="#" class="flex items-center text-gray-300 hover:text-white p-2 rounded-lg transition duration-300">Compress PDF</a></li>
+                        <li><a href="#" class="flex items-center text-gray-300 hover:text-white p-2 rounded-lg transition duration-300">PDF to Word</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-lg font-semibold mb-6">PDF Tools</h3>
+                    <ul class="space-y-3">
+                        <li><a href="#" class="flex items-center text-gray-300 hover:text-white p-2 rounded-lg transition duration-300">Merge PDF</a></li>
+                        <li><a href="#" class="flex items-center text-gray-300 hover:text-white p-2 rounded-lg transition duration-300">Split PDF</a></li>
+                        <li><a href="#" class="flex items-center text-gray-300 hover:text-white p-2 rounded-lg transition duration-300">Compress PDF</a></li>
+                        <li><a href="#" class="flex items-center text-gray-300 hover:text-white p-2 rounded-lg transition duration-300">PDF to Word</a></li>
+                    </ul>
+                </div>
+
+                <!-- Image Tools -->
+                <div>
+                    <h3 class="text-lg font-semibold mb-6">Image Tools</h3>
+                    <ul class="space-y-3">
+                        <li><a href="#" class="flex items-center text-gray-300 hover:text-white p-2 rounded-lg transition duration-300">JPG to PDF</a></li>
+                        <li><a href="#" class="flex items-center text-gray-300 hover:text-white p-2 rounded-lg transition duration-300">Resize Image</a></li>
+                        <li><a href="#" class="flex items-center text-gray-300 hover:text-white p-2 rounded-lg transition duration-300">Compress Image</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Company -->
+                <div>
+                    <h3 class="text-lg font-semibold mb-6">Company</h3>
+                    <ul class="space-y-3">
+                        <li><a href="#" class="text-gray-300 hover:text-white transition duration-300">About Us</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white transition duration-300">Blog</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white transition duration-300">Careers</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white transition duration-300">Contact</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Copyright -->
+            <div class="border-t border-gray-700 pt-8">
+                <div class="flex flex-col md:flex-row justify-between items-center text-sm text-gray-400">
+                    <div class="mb-4 md:mb-0">&copy; 2025 simpliconvert. All rights reserved.</div>
+                    <div class="flex flex-wrap justify-center gap-4">
+                        <a href="/terms_of_services/" class="hover:text-white transition">Terms of Service</a>
+                        <a href="/privacy_policy/" class="hover:text-white transition">Privacy Policy</a>
+                        <a href="/cookie_policy/" class="hover:text-white transition">Cookie Policy</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        // Mobile menu toggle
+        document.addEventListener('DOMContentLoaded', function() {
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            
+            if (mobileMenuButton && mobileMenu) {
+                const menuIconBars = document.getElementById('menu-icon-bars');
+                const menuIconTimes = document.getElementById('menu-icon-times');
+                
+                mobileMenuButton.addEventListener('click', function() {
+                    mobileMenu.classList.toggle('open');
+                    
+                    if (menuIconBars && menuIconTimes) {
+                        menuIconBars.classList.toggle('hidden');
+                        menuIconTimes.classList.toggle('hidden');
+                    }
+                });
+            }
+            
+            // Smooth scrolling for anchor links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    
+                    const targetId = this.getAttribute('href');
+                    if (targetId === '#') return;
+                    
+                    const targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                        targetElement.scrollIntoView({
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
         });
     </script>
 </body>
