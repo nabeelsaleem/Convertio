@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>To-Do List App</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            DEFAULT: '#4f46e5',
+                            '50': '#eef2ff',
+                            '100': '#e0e7ff',
+                            '200': '#c7d2fe',
+                            '300': '#a5b4fc',
+                            '400': '#818cf8',
+                            '500': '#6366f1',
+                            '600': '#4f46e5',
+                            '700': '#4338ca',
+                            '800': '#3730a3',
+                            '900': '#312e81',
+                            '950': '#1e1b4b'
+                        }
+                    },
+                     keyframes: {
+                       'fade-in': {
+                           'from': { opacity: 0, transform: 'translateY(-10px)' },
+                           'to': { opacity: 1, transform: 'translateY(0)' },
+                       },
+                       'fade-out': {
+                           'from': { opacity: 1, transform: 'scale(1)' },
+                           'to': { opacity: 0, transform: 'scale(0.9)' },
+                       }
+                    },
+                    animation: {
+                        'fade-in': 'fade-in 0.3s ease-out forwards',
+                        'fade-out': 'fade-out 0.2s ease-in forwards',
+                    },
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        /* Custom checkbox style */
+        .task-checkbox:checked {
+            background-image: url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='white' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M12.207 4.793a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L6.5 9.086l4.293-4.293a1 1 0 011.414 0z'/%3e%3c/svg%3e");
+        }
+    </style>
+</head>
+<body class="bg-slate-100 text-slate-800">
+
+    <div class="min-h-screen flex flex-col items-center pt-8 sm:pt-16 px-4">
+        <div class="w-full max-w-lg mx-auto">
+            
+            <header class="text-center mb-8">
+                <h1 class="text-4xl font-bold text-slate-800">My To-Do List</h1>
+                <p class="mt-2 text-slate-500">Stay organized, get things done.</p>
+            </header>
+
+            <main class="bg-white rounded-xl shadow-lg p-6 w-full">
+                <!-- Add Task Form -->
+                <form id="add-task-form" class="flex gap-3 mb-4">
+                    <input id="task-input" type="text" placeholder="e.g., Learn about Gemini API" class="flex-grow p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition" required>
+                    <button type="submit" class="bg-primary text-white font-semibold px-6 py-3 rounded-lg hover:bg-primary-700 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary">
+                        Add
+                    </button>
+                </form>
+
+                <!-- Filters and Controls -->
+                <div id="controls" class="flex flex-wrap gap-2 sm:gap-4 items-center justify-between mb-4 pb-4 border-b border-slate-200">
+                    <div id="filters" class="flex gap-2" role="radiogroup" aria-label="Task filters">
+                        <button data-filter="all" class="filter-btn px-3 py-1 text-sm font-medium rounded-md">All</button>
+                        <button data-filter="active" class="filter-btn px-3 py-1 text-sm font-medium rounded-md">Active</button>
+                        <button data-filter="completed" class="filter-btn px-3 py-1 text-sm font-medium rounded-md">Completed</button>
+                    </div>
+                    <button id="clear-completed-btn" class="text-sm text-slate-500 hover:text-primary transition-colors">Clear Completed</button>
+                </div>
+
+                <!-- Task List -->
+                <div class="relative min-h-[200px]">
+                    <ul id="task-list" class="space-y-2">
+                        <!-- Task items will be injected here -->
+                    </ul>
+                    <div id="empty-state" class="hidden absolute inset-0 flex flex-col items-center justify-center text-center text-slate-500">
+                         <svg xmlns="http://www.w3.org/2000/svg" class="w-16 h-16 text-slate-300" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 6.75h7.5M8.25 12h7.5m-7.5 5.25h7.5M3.75 6.75h.007v.008H3.75V6.75zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zM3.75 12h.007v.008H3.75V12zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zM3.75 17.25h.007v.008H3.75v-.008zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" /></svg>
+                        <p class="mt-4 font-semibold">No tasks here</p>
+                        <p id="empty-state-message" class="text-sm">Add a task to get started!</p>
+                    </div>
+                </div>
+
+            </main>
+
+            <footer class="text-center mt-8">
+                <p class="text-slate-400 text-sm">Tasks are saved in your browser's local storage.</p>
+            </footer>
+        </div>
+    </div>
+
+    <template id="task-item-template">
+        <li class="task-item flex items-center p-3 bg-slate-50 rounded-lg transition-all duration-300 animate-fade-in" data-id="">
+            <label class="flex items-center gap-3 flex-grow cursor-pointer">
+                <input type="checkbox" class="task-checkbox h-5 w-5 rounded border-slate-300 text-primary bg-slate-100 focus:ring-primary/50 focus:ring-offset-0 focus:ring-2 transition-all duration-200 appearance-none">
+                <span class="task-text flex-grow">Task content goes here</span>
+            </label>
+            <button class="delete-btn ml-4 text-slate-400 hover:text-red-500 transition-colors p-1 opacity-0 group-hover:opacity-100" title="Delete task">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+        </li>
+    </template>
+    
+    <script type="module" src="./index.tsx"></script>
+
+</body>
+</html>
