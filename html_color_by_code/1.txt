@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Color Picker Tool</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .color-wheel {
+            touch-action: none;
+        }
+        
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            background: #fff;
+            border: 2px solid #ccc;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        .color-history-item {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <div class="container mx-auto px-4 py-8">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <!-- Color Wheel Section -->
+            <div class="bg-white rounded-xl shadow-md p-6">
+                <canvas id="colorWheel" class="color-wheel w-full max-w-md mx-auto mb-4" height="400"></canvas>
+                <div class="flex justify-center">
+                    <div id="colorPreview" class="w-24 h-24 rounded-lg shadow-inner"></div>
+                </div>
+            </div>
+
+            <!-- Controls Section -->
+            <div class="bg-white rounded-xl shadow-md p-6">
+                <!-- RGB Controls -->
+                <div class="mb-6">
+                    <h3 class="text-lg font-semibold mb-4">RGB Controls</h3>
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium mb-1">Red</label>
+                            <input type="range" min="0" max="255" value="0" class="w-full" id="redSlider">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-1">Green</label>
+                            <input type="range" min="0" max="255" value="0" class="w-full" id="greenSlider">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-1">Blue</label>
+                            <input type="range" min="0" max="255" value="0" class="w-full" id="blueSlider">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- HSL Controls -->
+                <div class="mb-6">
+                    <h3 class="text-lg font-semibold mb-4">HSL Controls</h3>
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium mb-1">Hue</label>
+                            <input type="range" min="0" max="360" value="0" class="w-full" id="hueSlider">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-1">Saturation</label>
+                            <input type="range" min="0" max="100" value="100" class="w-full" id="satSlider">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-1">Lightness</label>
+                            <input type="range" min="0" max="100" value="50" class="w-full" id="lightSlider">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Color Values -->
+                <div class="mb-6">
+                    <h3 class="text-lg font-semibold mb-4">Color Values</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium mb-1">HEX</label>
+                            <input type="text" id="hexInput" class="w-full px-3 py-2 border rounded-lg">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-1">RGB</label>
+                            <input type="text" id="rgbInput" class="w-full px-3 py-2 border rounded-lg" readonly>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="flex gap-4">
+                    <button id="copyHex" class="bg-[#da3f0b] text-white px-4 py-2 rounded-lg hover:bg-[#b83809]">
+                        Copy HEX
+                    </button>
+                    <button id="copyRgb" class="bg-[#da3f0b] text-white px-4 py-2 rounded-lg hover:bg-[#b83809]">
+                        Copy RGB
+                    </button>
+                    <button id="saveColor" class="bg-[#da3f0b] text-white px-4 py-2 rounded-lg hover:bg-[#b83809]">
+                        Save Color
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Color History -->
+        <div class="mt-6 bg-white rounded-xl shadow-md p-6">
+            <h3 class="text-lg font-semibold mb-4">Color History</h3>
+            <div id="colorHistory" class="flex flex-wrap gap-2"></div>
+        </div>
+    </div>
+
+    <script>
+        class ColorPicker {
+            constructor() {
+                this.canvas = document.getElementById('colorWheel');
+                this.ctx = this.canvas.getContext('2d');
+                this.currentColor = { r: 0, g: 0, b: 0 };
+                this.colorHistory = [];
+                
+                this.setupCanvas();
+                this.setupEventListeners();
+                this.drawColorWheel();
+                this.loadColorHistory();
+            }
+
+            setupCanvas() {
+                const rect = this.canvas.getBoundingClientRect();
+                this.canvas.width = rect.width;
+                this.canvas.height = rect.width;
+            }
+
+            setupEventListeners() {
+                this.canvas.addEventListener('mousedown', this.handleColorSelect.bind(this));
+                this.canvas.addEventListener('touchstart', this.handleColorSelect.bind(this));
+                
+                document.getElementById('hexInput').addEventListener('change', this.handleHexInput.bind(this));
+                document.getElementById('copyHex').addEventListener('click', this.copyHex.bind(this));
+                document.getElementById('copyRgb').addEventListener('click', this.copyRgb.bind(this));
+                document.getElementById('saveColor').addEventListener('click', this.saveColor.bind(this));
+
+                ['red', 'green', 'blue'].forEach(color => {
+                    document.getElementById(`${color}Slider`).addEventListener('input', this.handleRGBSlider.bind(this));
+                });
+
+                ['hue', 'sat', 'light'].forEach(control => {
+                    document.getElementById(`${control}Slider`).addEventListener('input', this.handleHSLSlider.bind(this));
+                });
+            }
+
+            drawColorWheel() {
+                const centerX = this.canvas.width / 2;
+                const centerY = this.canvas.height / 2;
+                const radius = Math.min(centerX, centerY) - 10;
+
+                for (let x = -radius; x < radius; x++) {
+                    for (let y = -radius; y < radius; y++) {
+                        const distance = Math.sqrt(x * x + y * y);
+                        
+                        if (distance <= radius) {
+                            const hue = ((Math.atan2(y, x) + Math.PI) / (2 * Math.PI)) * 360;
+                            const saturation = (distance / radius) * 100;
+                            
+                            const rgb = this.hslToRgb(hue, saturation, 50);
+                            
+                            this.ctx.fillStyle = `rgb(${rgb.r}, ${rgb.g}, ${rgb.b})`;
+                            this.ctx.fillRect(centerX + x, centerY + y, 1, 1);
+                        }
+                    }
+                }
+            }
+
+            handleColorSelect(e) {
+                e.preventDefault();
+                const rect = this.canvas.getBoundingClientRect();
+                const x = (e.clientX || e.touches[0].clientX) - rect.left;
+                const y = (e.clientY || e.touches[0].clientY) - rect.top;
+                
+                const imageData = this.ctx.getImageData(x, y, 1, 1).data;
+                this.currentColor = {
+                    r: imageData[0],
+                    g: imageData[1],
+                    b: imageData[2]
+                };
+                
+                this.updateUI();
+            }
+
+            handleRGBSlider() {
+                this.currentColor = {
+                    r: parseInt(document.getElementById('redSlider').value),
+                    g: parseInt(document.getElementById('greenSlider').value),
+                    b: parseInt(document.getElementById('blueSlider').value)
+                };
+                this.updateUI();
+            }
+
+            handleHSLSlider() {
+                const h = parseInt(document.getElementById('hueSlider').value);
+                const s = parseInt(document.getElementById('satSlider').value);
+                const l = parseInt(document.getElementById('lightSlider').value);
+                
+                const rgb = this.hslToRgb(h, s, l);
+                this.currentColor = rgb;
+                this.updateUI();
+            }
+
+            handleHexInput(e) {
+                const hex = e.target.value.replace('#', '');
+                if (hex.length === 6) {
+                    this.currentColor = {
+                        r: parseInt(hex.substring(0, 2), 16),
+                        g: parseInt(hex.substring(2, 4), 16),
+                        b: parseInt(hex.substring(4, 6), 16)
+                    };
+                    this.updateUI();
+                }
+            }
+
+            updateUI() {
+                const preview = document.getElementById('colorPreview');
+                const hexInput = document.getElementById('hexInput');
+                const rgbInput = document.getElementById('rgbInput');
+
+                preview.style.backgroundColor = this.getRgbString();
+                hexInput.value = this.getRgbHex();
+                rgbInput.value = this.getRgbString();
+
+                document.getElementById('redSlider').value = this.currentColor.r;
+                document.getElementById('greenSlider').value = this.currentColor.g;
+                document.getElementById('blueSlider').value = this.currentColor.b;
+
+                const hsl = this.rgbToHsl(this.currentColor.r, this.currentColor.g, this.currentColor.b);
+                document.getElementById('hueSlider').value = hsl.h;
+                document.getElementById('satSlider').value = hsl.s;
+                document.getElementById('lightSlider').value = hsl.l;
+            }
+
+            getRgbString() {
+                return `rgb(${this.currentColor.r}, ${this.currentColor.g}, ${this.currentColor.b})`;
+            }
+
+            getRgbHex() {
+                const toHex = (n) => {
+                    const hex = n.toString(16);
+                    return hex.length === 1 ? '0' + hex : hex;
+                };
+                return `#${toHex(this.currentColor.r)}${toHex(this.currentColor.g)}${toHex(this.currentColor.b)}`;
+            }
+
+            copyHex() {
+                navigator.clipboard.writeText(this.getRgbHex());
+            }
+
+            copyRgb() {
+                navigator.clipboard.writeText(this.getRgbString());
+            }
+
+            saveColor() {
+                const color = this.getRgbHex();
+                if (!this.colorHistory.includes(color)) {
+                    this.colorHistory.unshift(color);
+                    if (this.colorHistory.length > 10) {
+                        this.colorHistory.pop();
+                    }
+                    this.updateColorHistory();
+                    localStorage.setItem('colorHistory', JSON.stringify(this.colorHistory));
+                }
+            }
+
+            loadColorHistory() {
+                const saved = localStorage.getItem('colorHistory');
+                if (saved) {
+                    this.colorHistory = JSON.parse(saved);
+                    this.updateColorHistory();
+                }
+            }
+
+            updateColorHistory() {
+                const container = document.getElementById('colorHistory');
+                container.innerHTML = '';
+                
+                this.colorHistory.forEach(color => {
+                    const div = document.createElement('div');
+                    div.className = 'color-history-item';
+                    div.style.backgroundColor = color;
+                    div.addEventListener('click', () => {
+                        const hex = color.replace('#', '');
+                        this.currentColor = {
+                            r: parseInt(hex.substring(0, 2), 16),
+                            g: parseInt(hex.substring(2, 4), 16),
+                            b: parseInt(hex.substring(4, 6), 16)
+                        };
+                        this.updateUI();
+                    });
+                    container.appendChild(div);
+                });
+            }
+
+            hslToRgb(h, s, l) {
+                s /= 100;
+                l /= 100;
+                const k = n => (n + h / 30) % 12;
+                const a = s * Math.min(l, 1 - l);
+                const f = n => l - a * Math.max(-1, Math.min(k(n) - 3, Math.min(9 - k(n), 1)));
+                return {
+                    r: Math.round(255 * f(0)),
+                    g: Math.round(255 * f(8)),
+                    b: Math.round(255 * f(4))
+                };
+            }
+
+            rgbToHsl(r, g, b) {
+                r /= 255;
+                g /= 255;
+                b /= 255;
+                const max = Math.max(r, g, b);
+                const min = Math.min(r, g, b);
+                let h, s, l = (max + min) / 2;
+
+                if (max === min) {
+                    h = s = 0;
+                } else {
+                    const d = max - min;
+                    s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+                    switch (max) {
+                        case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+                        case g: h = (b - r) / d + 2; break;
+                        case b: h = (r - g) / d + 4; break;
+                    }
+                    h /= 6;
+                }
+
+                return {
+                    h: Math.round(h * 360),
+                    s: Math.round(s * 100),
+                    l: Math.round(l * 100)
+                };
+            }
+        }
+
+        // Initialize the color picker
+        window.addEventListener('load', () => {
+            new ColorPicker();
+        });
+    </script>
+</body>
+</html>

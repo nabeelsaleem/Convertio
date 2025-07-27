@@ -1,0 +1,55 @@
+
+import React, { useRef, useEffect } from 'react';
+import tinycolor from 'tinycolor2';
+// @ts-ignore
+import iro from '@jaames/iro';
+
+interface ColorPickerProps {
+    color: tinycolor.Instance;
+    onChange: (color: tinycolor.Instance) => void;
+}
+
+export const ColorPicker: React.FC<ColorPickerProps> = ({ color, onChange }) => {
+    const pickerRef = useRef<HTMLDivElement>(null);
+    const iroInstance = useRef<any>(null);
+
+    useEffect(() => {
+        if (pickerRef.current && !iroInstance.current) {
+            iroInstance.current = new iro.ColorPicker(pickerRef.current, {
+                width: 280,
+                color: color.toRgbString(),
+                borderWidth: 1,
+                borderColor: "#fff",
+                layout: [
+                    { component: iro.ui.Wheel, options: { wheelLightness: false } },
+                    { component: iro.ui.Slider, options: { sliderType: 'value' } },
+                    { component: iro.ui.Slider, options: { sliderType: 'alpha' } },
+                ]
+            });
+
+            const onColorChange = (newColor: any) => {
+                onChange(tinycolor(newColor.rgba));
+            };
+            
+            iroInstance.current.on('color:change', onColorChange);
+        }
+
+        return () => {
+            // Cleanup would go here if needed
+        };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    useEffect(() => {
+        if (iroInstance.current && color.toRgbString() !== iroInstance.current.color.rgbaString) {
+             iroInstance.current.color.set(color.toRgbString());
+        }
+    }, [color]);
+    
+
+    return (
+        <div className="flex items-center justify-center p-4 sm:p-6 bg-slate-50">
+            <div ref={pickerRef}></div>
+        </div>
+    );
+};
