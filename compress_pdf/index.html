@@ -47,9 +47,6 @@
 
 <link rel="icon" href="favicon.ico" type="image/x-icon">
 
-
-
-    
     <!-- Preconnect to required origins -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -60,16 +57,32 @@
     <!-- Asynchronously load fonts -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" media="print" onload="this.media='all'">
     <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"></noscript>
-
     
-    <!-- Tailwind CSS -->
+    <!-- External Libraries -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+    
+    <!-- Tailwind CSS Config -->
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     colors: {
-                        primary: '#da3f0b',
+                        primary: {
+                            DEFAULT: '#da3f0b',
+                            '50': '#fef3f2',
+                            '100': '#fee4e2',
+                            '200': '#fecdca',
+                            '300': '#fda49b',
+                            '400': '#f86a59',
+                            '500': '#ef4444',
+                            '600': '#da3f0b',
+                            '700': '#b91c1c',
+                            '800': '#991b1b',
+                            '900': '#7f1d1d',
+                            '950': '#450a0a'
+                        },
                         primaryLight: '#f57648',
                     },
                     fontFamily: {
@@ -150,6 +163,18 @@
             background-color: white;
             color: #da3f0b;
         }
+
+        /* Custom styles for radio buttons */
+        .peer:checked~.radio-check {
+            border-color: #da3f0b;
+        }
+        .peer:checked~.radio-check .radio-dot {
+            transform: scale(1);
+            background-color: #da3f0b;
+        }
+        .peer:checked~.radio-label {
+            color: #da3f0b;
+        }
     </style>
 </head>
 <body class="bg-gray-50 min-h-screen flex flex-col">
@@ -166,7 +191,7 @@
 <pattern id="pattern0_4986_183" patternContentUnits="objectBoundingBox" width="1" height="1">
 <use xlink:href="#image0_4986_183" transform="scale(0.00694444 0.00689655)"/>
 </pattern>
-<image id="image0_4986_183" width="144" height="145" preserveAspectRatio="none" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJAAAACRCAMAAAAbxMEvAAAAAXNSR0IB2cksfwAAAAlwSFlzAAAOxAAADsQBlSsOGwAAATJQTFRFAAAA2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8L2j8LTXydTgAAAGZ0Uk5TAAcXSIzv//2VPxYJAR28ryDpEVkxLxByO7O4dmZKG6zUQxMDHlCPCzIrOeWe3AYUUshUmQJh4YEODBldGveoKF+/BHkPPXzYCjfzRgUIIS0pJMM0ZEyhbYlqQSOGElfLfnAmk8+k1TGl7QAACxVJREFUeJztnOl3FEUQwGdDCAILJFyBhHCFM0CCsCAoIAmBoBIVuRG8nv5VPi8eAl54AIII4VAR8eCQwyt48FARPDiVARJnZ3e6qrqrrwUffkh9CLM9PT2/memurqquJhX8zyR1uwFk6QCySQeQTTqAbNIBZJObBUrFQn5dvl1A6VTqH/5M14ttBbdaKFCp7UW09/ijoIYLAupz0a1ez3P+bfsD9Tvv03yv3zyb9wUq/9PzgqD3r17V/YAG/u5VPS9lZzwq+wBVFNAlctLvtHNVd6BBvr2BSPkpx4quQIP9egIjA35yquYINOQX/bmKSDu3Js1Vp0Jd1T6GNjyBul/TnRma+porHnOSrV185dYAjW3ly0ccNzVc861aOOrorQAqYUtHp44wpXWp1LHc0bizPboytw9vHojlmfC5UpRJHba2FUlnyxxoA2K7z8QDCk2ngy40WbFobgvQtC+YwskfSwV3f+ZKk5UpHxUO1P8vtaztulQwQ3lfFjF2bSMQxzNMGuejv/fEiWSc4fuagKarPVfuk+k7P/HniXrC3kKAUp3VMmnU3iv3JlfRGwB6oDSjMqSiyV8qNcrLkHrqX3NYN8iHMGrTAsTon9Bc456L3GgrKmabH/ydJ5CVp+FDetYwm3OdMajiJyQd0JwPlKJr7fiXNAJn7dDixMKYvvwsogFinune9/UVrjv4YfN2OxFpgNQPVv8e/jW/Bf2YudOOk5XO0s3mbHUGsnWgDJ7px3DTPiu9L9Hfk/Y7AvW9oBRR2woDWw0K3YX8tRxQhnlkcilqtu/PPjyRavgU/1LmRR7ofnXEzMB9BvkfDiagJA+QsaEYDhwQZ0zgF4RMpIE/+vIEwX1kCCgfjQFienTJJfZ86ip/zwWpc8GR6hKNldT1Bvox/x0rkDwUsoKf46GtbHFeqq9if7J99p8MFQmeyG2oQMwLuv8t9nytfLOFW9RrI8YTckk9shmn77EAcXMhfgp4PMk7Ts/bzOHENwnbaYFBbShAzAsiNj2cJy2lr5qN4W5k6sOmTfMbRqA6eL/TEj2K5/FhIo5BRuxiuW+qQqbfJW/DMX1FMhB6Qc2bmCvYF1T7lRVH345kGemBBtcmfYK9NXptVa4BKeSS4a5KXpEENAW8zzBhm70dzi8V4w1aGeo+e9wFVhZ6RSYgqFZdmlg8Uz9kzkNMjHf9ddKwLX+ADLyFr2iBqmEkh8s35o+wuhF3b0o6WBdpRAcjLyR2fqbygBqTHJREajSviAKB4Tp7ewlTHeI+SeEd1FYsKpb1vDL+ep3N/YumTD0QUM9o4YBAxeYL6UzZhQ2oy75t4gHBzRattwOFYBSFzPnK3E3IeO/0N4eTlW7U7MlfXFwEd9MArXw9OSo7AwF7DijvUeMOXcJMykKGkbjwkpezf5EfpQOC9qtaVyQa/Y4LTIVcC4s2iTO24PiC7fhXbpzgDmIDCoNHErW4dK0WCOqPjfVXpmdwQRsqIj5HfH1PsbqFHkcLJI4ffJ2pEDc4QijrzkEaO4J8b1r1KhzfsysgvR2+GQZaLRRUZCozKlAGMqlEzlebtxuO49mfmxgxUOXZ5ChSzqIyjm8SIH30OpbuVYrzMv4bOA4D2mc5IGILih8VP2iArEtDA/vJHQr5M9nnBLVWKgxfHijU2BkEyGESu+9tqYDOF6BahguFhoCQGRcdTfga/VDai/SQmxEk2/CECKZOGMoICN0hxJMUBxQ90Ug3n0zy/HuA58R/BgSEIiwhtro4oPZrwUzHcGdOLQuBy8YdtACBOd31PA6ZoxgF2G+hSxfKiRROZJUdC/Twu8lRbCOKyjfA02wWQaLaz9wNM6xag6BGmNDVJ0APcEADxMr/3bsD2zAbf93NsI+FDjbU8GMbTEAwIy9eZwUKqjWLaLGsaHuF/CbhdvgSY4aLQw6oU6fkKF6ZYz0wcJanMdEvkKrWJfStsNGKuVuLlQoICMZV7K6AhYYXS117TijNLFgfzRXu/Ky9ynn2DeW8dvabzdvtBpS15XuhSR8bMdDyMvFlOSCwF+NOjQJlyBHiFhxYydabhOJraZQsIwyR8UdxdRkIXIqVL2b/8ibmE+vcgOLpEkdPURtCxzXuUM4ioFIRaM1HMuGb4UiLey8KSFABqTOmDQ4Ihc5yp8EixI+HDGk7EO5HqI1eiknJAakWJTwI606b5dEXpNqL4WMrKxcQzUVA2I/O/TPxuFziQxRqWuWaACtca6BJJQs2Qj12qVoHhNpA+loGgtUbHii5FNk8w9Hc9RC3aqJIcgWnz2QgGDU80PI16oWDUIIJ6FqT5O8PDhkA3XmMrSoBzd6nVMBr8k1oeK0kFoUZCJzWB95MjiYeZ6tKQI171Qo4zQsvSrqsRys9ESL/T60lNVFkTeu5qmXUPuaWjGK5IabEpBH4wKLZRrpwj1YkNUB1YhWJOBdkDRAmYyx9xwiVJW4v2hXBOMnJtEc/UBUak8KGTbrmkAoUMrfHzkpOpDekAwIjFgdIqJ4ndgQNsuQhVCBhOscxhqxIS2A6IPSKVj/HleYuaUJhwzRdUsxmv4rq4m0++pp8Z5qktup5O5Blrnhsz9XK4PDQb4pocTY1BSwmcQD9MCmiRow+6PnMS+KQ9A/H2Sv+IjBxMkNVnZPMQDghhpiGT68J7NIY+xCMa2MBmouX2bSR/GA8mUIdsoTzaUpGZcYCmZYWlm/U1LPnniYxM3EvlGsm93NqmZuAcE0xRvMygU3qTCSTnwjN8e08EImcZPahH6b1MiWhxuBxQA4XxAUNQPovpgCRJVcFQBNWrOgLes4eeZNSjyrpyoNxzZVZl0/TF5yVsstoOgHbrRStl0tAZBa0LQKDVg108fmntkK4s3xkCznHvqAGab7FD42XB1kg+n2xM+Ui4O3mvN/8sfiiMRCxpeRuoQLRpRtpEdsiaLLFN4JlOCXgvpRaag65H167IOBSEjUTxbGuenAbOqWMGwZI8uIe2aBWsfLQG4nyOC0KP7CazsjlIzRJGtG4EsbzgDkfYJc8i0kiWapm44AUBeiShEdtXdLC1EO4GL+gsWpOOJuxoTiCD7/KVSNC/Aj6RBDC20J5sBVoBFIS/BR9qggZCaVkTwr4cNG3r8F5FdxU5JzHKEWbqdSTJHJp/Q7rSvJdm7jAjgZofgtXWsruxpHTmBbSkDAsEDRsIw9aRxL2LECKr5tIz1qC2r2/sg1J3pjELyUE/AfzyxYWsuB8781L1k1ivLJoQLxGf0OgsOSSA49fPrWDDJI24YAKefxZkh+pyV42pcAXQqT0U7SsOgLrW6I5HYEsi7yMqHmoy8R964gOnMvm81mAvInUrPYRmix0w14HY26d154NJvLQ/B5TLzDuorDsfOF2UvAi50fGoumFxonIsjfI7aut/IAbMo2a9yAbrV5ATMClrf1J7Fc/fk4zXlZobM3lZq+8kP1l8fpeuvxMYLCT5E0WQpTcAm8gZuoPetiyLHCWB23MtvndZY9iDbdJZaruFUS+8Wktr3217WZ2cfafyOQHZ07p4yScQVYQkOETBKNOTC/bFXem2vTB5rd01bKi2w5UCJBW57pLu5ved98rXfjW7ViU5HuNeOwmV1WSu0hWpEG89ttzexZdxGffoBeQFBtxlKHaAcGJJxDJkXcS5432efEGiiYNJ0c2lhX7jXFJTgoAiqT7qGP2Su2ZQvZ4FgYUSeaMMfvVL66EpGCg+K5Fh9T/ZaBi1uFLptwii9wUUCzp+p1NbcVXvh+dXj/1yknHyM1/CXSLpQPIJh1ANukAskkHkE3+Ba+7Kb9bzceoAAAAAElFTkSuQmCC"/>
+<image id="image0_4986_183" width="144" height="145" preserveAspectRatio="none" xlink:href="data:image/png;base64,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"/>
 </defs>
 </svg>
 
@@ -283,21 +308,12 @@
             <p class="text-lg md:text-xl mb-8 max-w-2xl mx-auto">
                 Compress PDF files. Reduce file size while optimizing for maximal PDF quality. Upload your file and transform it. Select PDF files.
             </p>
-           <!-- <div class="flex flex-col sm:flex-row justify-center gap-4">
-                <a href="#all-tools" class="btn-primary px-8 py-3 rounded-lg font-semibold text-white inline-flex items-center justify-center">
-                    Start Using for Free <svg class="ml-2 h-4 w-4" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" aria-hidden="true"><title>Arrow Right</title><path d="M438.6 278.6l-160 160C272.4 444.9 264.2 448 256 448s-16.38-3.125-22.62-9.375c-12.5-12.5-12.5-32.75 0-45.25L338.8 288H32C14.33 288 .0016 273.7 .0016 256S14.33 224 32 224h306.8l-105.4-105.4c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0l160 160C451.1 245.9 451.1 266.1 438.6 278.6z"/></svg>
-                </a>
-                <a href="#" class="btn-outline px-8 py-3 rounded-lg font-semibold text-white inline-flex items-center justify-center">
-                    Learn More <svg class="ml-2 h-4 w-4" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" aria-hidden="true"><title>Info Circle</title><path d="M256 0C114.6 0 0 114.6 0 256s114.6 256 256 256s256-114.6 256-256S397.4 0 256 0zM256 128c17.67 0 32 14.33 32 32s-14.33 32-32 32s-32-14.33-32-32S238.3 128 256 128zM296 384h-80C202.7 384 192 373.3 192 360s10.75-24 24-24h16v-64H224c-13.25 0-24-10.75-24-24S210.8 224 224 224h48c13.25 0 24 10.75 24 24v88h16c13.25 0 24 10.75 24 24S309.3 384 296 384z"/></svg>
-                </a>
-            </div> -->
         </div>
     </section>
 
     <!-- TOOL START -->
 
-
-  <div class="min-h-screen flex justify-center pt-8 px-4" font-sans">
+    <div class="min-h-screen flex justify-center pt-8 px-4" font-sans">
         <div class="w-full max-w-2xl mx-auto">
                         <main id="app-container" class="bg-white rounded-xl shadow-md p-6">
                 <!-- Dropzone View -->
@@ -431,276 +447,249 @@
     </div>
 
     <script>
-        // Setup pdf.js worker. It's required for the library to work.
-        if (typeof pdfjsLib !== 'undefined') {
-            pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
+    // Self-executing function to encapsulate the entire application logic.
+    (function() {
+        // --- Pre-flight Checks ---
+        // Ensure critical libraries are loaded before doing anything else.
+        if (typeof PDFLib === 'undefined' || typeof pdfjsLib === 'undefined') {
+            console.error("Critical libraries (PDFLib or PDF.js) failed to load.");
+            const container = document.getElementById('app-container');
+            if (container) {
+                container.innerHTML = `
+                    <div class="p-6 bg-red-50 border border-red-200 rounded-lg">
+                        <h2 class="text-xl font-bold text-red-800">Application Error</h2>
+                        <p class="mt-2 text-red-700">A required library failed to load, which prevents the application from starting. This might be due to a network issue or an ad-blocker.</p>
+                        <p class="mt-2 text-red-600">Please check your internet connection, disable any ad-blockers for this site, and then <a href="#" onclick="window.location.reload(); return false;" class="font-bold underline">refresh the page</a>.</p>
+                    </div>
+                `;
+            }
+            return; // Stop execution if libraries are missing.
         }
 
-        document.addEventListener('DOMContentLoaded', () => {
-            // State
-            let pdfFile = null;
-            let downloadUrl = null;
+        // Setup pdf.js worker.
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
 
-            // DOM Elements
-            const dropzoneView = document.getElementById('dropzone-view');
-            const fileView = document.getElementById('file-view');
-            const processingView = document.getElementById('processing-view');
-            const resultView = document.getElementById('result-view');
-            const errorView = document.getElementById('error-view');
-            
-            const dropzone = document.getElementById('dropzone');
-            const fileInput = document.getElementById('file-input');
-            const fileNameEl = document.getElementById('file-name');
-            const fileSizeEl = document.getElementById('file-size');
-            const errorMessageEl = document.getElementById('error-message');
-            const processingMessageEl = document.getElementById('processing-message');
-            
-            const compressButton = document.getElementById('compress-button');
-            const downloadButton = document.getElementById('download-button');
+        // --- State ---
+        let pdfFile = null;
+        let downloadUrl = null;
 
-            // --- UI Update Logic ---
-            const updateView = (view) => {
-                dropzoneView.classList.toggle('hidden', view !== 'dropzone');
-                fileView.classList.toggle('hidden', view !== 'file');
-                fileView.classList.toggle('flex', view === 'file');
-                processingView.classList.toggle('hidden', view !== 'processing');
-                resultView.classList.toggle('hidden', view !== 'result');
-                errorView.classList.toggle('hidden', !errorMessageEl.textContent);
-            };
+        // --- DOM Elements ---
+        const dropzoneView = document.getElementById('dropzone-view');
+        const fileView = document.getElementById('file-view');
+        const processingView = document.getElementById('processing-view');
+        const resultView = document.getElementById('result-view');
+        const errorView = document.getElementById('error-view');
+        
+        const dropzone = document.getElementById('dropzone');
+        const fileInput = document.getElementById('file-input');
+        const fileNameEl = document.getElementById('file-name');
+        const fileSizeEl = document.getElementById('file-size');
+        const errorMessageEl = document.getElementById('error-message');
+        const processingMessageEl = document.getElementById('processing-message');
+        
+        const compressButton = document.getElementById('compress-button');
+        const downloadButton = document.getElementById('download-button');
 
-            const formatBytes = (bytes, decimals = 2) => {
-                if (bytes === 0) return '0 Bytes';
-                const k = 1024;
-                const dm = decimals < 0 ? 0 : decimals;
-                const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
-                const i = Math.floor(Math.log(bytes) / Math.log(k));
-                return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+        // --- UI Update Logic ---
+        const updateView = (view) => {
+            dropzoneView.classList.toggle('hidden', view !== 'dropzone');
+            fileView.classList.toggle('hidden', view !== 'file');
+            fileView.classList.toggle('flex', view === 'file');
+            processingView.classList.toggle('hidden', view !== 'processing');
+            resultView.classList.toggle('hidden', view !== 'result');
+            errorView.classList.toggle('hidden', !errorMessageEl.textContent);
+        };
+
+        const formatBytes = (bytes, decimals = 2) => {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const dm = decimals < 0 ? 0 : decimals;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+        }
+
+        const resetState = () => {
+            if (downloadUrl) {
+                URL.revokeObjectURL(downloadUrl);
+                downloadUrl = null;
             }
-
-            const resetState = () => {
-                if (downloadUrl) {
-                    URL.revokeObjectURL(downloadUrl);
-                    downloadUrl = null;
-                }
-                pdfFile = null;
-                fileInput.value = '';
-                errorMessageEl.textContent = '';
-                updateView('dropzone');
-            };
-            
-            const showResults = (blob, originalSize) => {
-                const newSize = blob.size;
-                const reduction = Math.round(((originalSize - newSize) / originalSize) * 100);
-                
-                if (downloadUrl) URL.revokeObjectURL(downloadUrl);
-                downloadUrl = URL.createObjectURL(blob);
-                
-                downloadButton.href = downloadUrl;
-                downloadButton.download = `compressed-${pdfFile.name}`;
-
-                document.getElementById('original-size').textContent = formatBytes(originalSize);
-                document.getElementById('new-size').textContent = formatBytes(newSize);
-                
-                const reductionBadge = document.getElementById('reduction-badge');
-                if (reduction > 0) {
-                    reductionBadge.textContent = `${reduction}% smaller`;
-                    reductionBadge.classList.remove('hidden');
-                } else {
-                    reductionBadge.classList.add('hidden');
-                    document.getElementById('new-size').textContent += ' (No significant reduction)';
-                }
-                
-                updateView('result');
-            };
-
-            const showError = (message) => {
-                 errorMessageEl.textContent = message;
-                 updateView(pdfFile ? 'file' : 'dropzone');
-            };
-
-            // --- Event Handlers ---
-            const handleFileSelected = (file) => {
-                if (!file || file.type !== 'application/pdf') {
-                    showError("Please select a valid PDF file.");
-                    return;
-                }
-                pdfFile = file;
-                errorMessageEl.textContent = '';
-                fileNameEl.textContent = pdfFile.name;
-                fileSizeEl.textContent = `Size: ${formatBytes(pdfFile.size)}`;
-                updateView('file');
-            };
-
-            // --- Core Compression Logic ---
-            async function compressPdf(pdfBytes, level, fileName, progressCallback) {
-                const { PDFDocument } = PDFLib;
-
-                let renderDpi, imageQuality;
-                switch (level) {
-                    case 'extreme':
-                        renderDpi = 72;
-                        imageQuality = 0.6;
-                        break;
-                    case 'less':
-                        renderDpi = 220;
-                        imageQuality = 0.9;
-                        break;
-                    case 'recommended':
-                    default:
-                        renderDpi = 150;
-                        imageQuality = 0.75;
-                        break;
-                }
-
-                const newPdfDoc = await PDFDocument.create();
-                const typedarray = new Uint8Array(pdfBytes);
-                const pdfjsDoc = await pdfjsLib.getDocument({ data: typedarray }).promise;
-                const numPages = pdfjsDoc.numPages;
-
-                for (let i = 1; i <= numPages; i++) {
-                    progressCallback(`Processing page ${i} of ${numPages}...`);
-                    
-                    const page = await pdfjsDoc.getPage(i);
-                    const scale = renderDpi / 72;
-                    const viewport = page.getViewport({ scale });
-
-                    const canvas = document.createElement('canvas');
-                    canvas.width = Math.floor(viewport.width);
-                    canvas.height = Math.floor(viewport.height);
-                    const context = canvas.getContext('2d');
-                    
-                    await page.render({ canvasContext: context, viewport: viewport }).promise;
-
-                    const jpgBytes = await new Promise((resolve, reject) => {
-                        canvas.toBlob(blob => {
-                            if (!blob) {
-                                reject(new Error('Canvas to Blob conversion failed'));
-                                return;
-                            }
-                            const reader = new FileReader();
-                            reader.onloadend = () => resolve(new Uint8Array(reader.result));
-                            reader.onerror = reject;
-                            reader.readAsArrayBuffer(blob);
-                        }, 'image/jpeg', imageQuality);
-                    });
-                    
-                    if (jpgBytes.byteLength === 0) continue;
-
-                    const jpgImage = await newPdfDoc.embedJpg(jpgBytes);
-                    const newPage = newPdfDoc.addPage([canvas.width, canvas.height]);
-                    newPage.drawImage(jpgImage, {
-                        x: 0,
-                        y: 0,
-                        width: newPage.getWidth(),
-                        height: newPage.getHeight(),
-                    });
-                }
-                
-                newPdfDoc.setProducer('SimpliConvert PDF Compressor');
-                newPdfDoc.setCreator(fileName);
-
-                return await newPdfDoc.save();
-            }
-            
-            const handleCompress = async () => {
-                if (!pdfFile) return;
-
-                const compressionLevel = document.querySelector('input[name="compression-level"]:checked').value;
-                
-                updateView('processing');
-                processingMessageEl.textContent = 'Preparing for compression...';
-                errorMessageEl.textContent = '';
-                errorView.classList.add('hidden');
-
-                try {
-                    const originalBytes = await pdfFile.arrayBuffer();
-                    
-                    const compressedBytes = await compressPdf(originalBytes, compressionLevel, pdfFile.name, (message) => {
-                        processingMessageEl.textContent = message;
-                    });
-                    
-                    if (!compressedBytes || compressedBytes.byteLength === 0) {
-                         throw new Error("Compression resulted in an empty file. The original PDF might be empty or unreadable.");
-                    }
-
-                    const blob = new Blob([compressedBytes], { type: 'application/pdf' });
-                    showResults(blob, pdfFile.size);
-
-                } catch (e) {
-                    console.error(e);
-                    const message = e instanceof Error ? e.message : 'An unknown error occurred.';
-                    showError(`Failed to process PDF. The file may be corrupt or protected. Details: ${message}`);
-                }
-            };
-            
-            // --- Event Listeners ---
-            dropzone.addEventListener('click', () => fileInput.click());
-            fileInput.addEventListener('change', () => {
-                if(fileInput.files.length > 0) handleFileSelected(fileInput.files[0]);
-            });
-            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => dropzone.addEventListener(eventName, e => {
-                e.preventDefault();
-                e.stopPropagation();
-            }));
-            ['dragenter', 'dragover'].forEach(eventName => dropzone.addEventListener(eventName, () => dropzone.classList.add('border-primary', 'bg-primary/10')));
-            ['dragleave', 'drop'].forEach(eventName => dropzone.addEventListener(eventName, () => dropzone.classList.remove('border-primary', 'bg-primary/10')));
-            dropzone.addEventListener('drop', e => {
-                 if(e.dataTransfer.files.length > 0) handleFileSelected(e.dataTransfer.files[0]);
-            });
-            
-            compressButton.addEventListener('click', handleCompress);
-            document.getElementById('reset-button-list').addEventListener('click', resetState);
-            document.getElementById('reset-button-result').addEventListener('click', resetState);
-            
-            // Initial view
+            pdfFile = null;
+            fileInput.value = '';
+            errorMessageEl.textContent = '';
             updateView('dropzone');
+        };
+        
+        const showResults = (blob, originalSize) => {
+            const newSize = blob.size;
+            const reduction = Math.round(((originalSize - newSize) / originalSize) * 100);
+            
+            if (downloadUrl) URL.revokeObjectURL(downloadUrl);
+            downloadUrl = URL.createObjectURL(blob);
+            
+            downloadButton.href = downloadUrl;
+            downloadButton.download = `compressed-${pdfFile.name}`;
+
+            document.getElementById('original-size').textContent = formatBytes(originalSize);
+            document.getElementById('new-size').textContent = formatBytes(newSize);
+            
+            const reductionBadge = document.getElementById('reduction-badge');
+            if (reduction > 0) {
+                reductionBadge.textContent = `${reduction}% smaller`;
+                reductionBadge.classList.remove('hidden');
+            } else {
+                reductionBadge.classList.add('hidden');
+                document.getElementById('new-size').textContent += ' (No significant reduction)';
+            }
+            
+            updateView('result');
+        };
+
+        const showError = (message) => {
+             errorMessageEl.textContent = message;
+             updateView(pdfFile ? 'file' : 'dropzone');
+        };
+
+        // --- Event Handlers ---
+        const handleFileSelected = (file) => {
+            if (!file || file.type !== 'application/pdf') {
+                showError("Please select a valid PDF file.");
+                return;
+            }
+            pdfFile = file;
+            errorMessageEl.textContent = '';
+            fileNameEl.textContent = pdfFile.name;
+            fileSizeEl.textContent = `Size: ${formatBytes(pdfFile.size)}`;
+            updateView('file');
+        };
+
+        // --- Core Compression Logic ---
+        async function compressPdf(pdfBytes, level, fileName, progressCallback) {
+            const { PDFDocument } = PDFLib;
+
+            let renderDpi, imageQuality;
+            switch (level) {
+                case 'extreme':
+                    renderDpi = 72;
+                    imageQuality = 0.6;
+                    break;
+                case 'less':
+                    renderDpi = 220;
+                    imageQuality = 0.9;
+                    break;
+                case 'recommended':
+                default:
+                    renderDpi = 150;
+                    imageQuality = 0.75;
+                    break;
+            }
+
+            const newPdfDoc = await PDFDocument.create();
+            const typedarray = new Uint8Array(pdfBytes);
+            const pdfjsDoc = await pdfjsLib.getDocument({ data: typedarray }).promise;
+            const numPages = pdfjsDoc.numPages;
+
+            for (let i = 1; i <= numPages; i++) {
+                progressCallback(`Processing page ${i} of ${numPages}...`);
+                
+                const page = await pdfjsDoc.getPage(i);
+                const scale = renderDpi / 72;
+                const viewport = page.getViewport({ scale });
+
+                const canvas = document.createElement('canvas');
+                canvas.width = Math.floor(viewport.width);
+                canvas.height = Math.floor(viewport.height);
+                const context = canvas.getContext('2d');
+                
+                await page.render({ canvasContext: context, viewport: viewport }).promise;
+
+                const jpgBytes = await new Promise((resolve, reject) => {
+                    canvas.toBlob(blob => {
+                        if (!blob) {
+                            reject(new Error('Canvas to Blob conversion failed'));
+                            return;
+                        }
+                        const reader = new FileReader();
+                        reader.onloadend = () => resolve(new Uint8Array(reader.result));
+                        reader.onerror = reject;
+                        reader.readAsArrayBuffer(blob);
+                    }, 'image/jpeg', imageQuality);
+                });
+                
+                if (jpgBytes.byteLength === 0) continue;
+
+                const jpgImage = await newPdfDoc.embedJpg(jpgBytes);
+                const newPage = newPdfDoc.addPage([canvas.width, canvas.height]);
+                newPage.drawImage(jpgImage, {
+                    x: 0,
+                    y: 0,
+                    width: newPage.getWidth(),
+                    height: newPage.getHeight(),
+                });
+            }
+            
+            newPdfDoc.setProducer('SimpliConvert PDF Compressor');
+            newPdfDoc.setCreator(fileName);
+
+            return await newPdfDoc.save();
+        }
+        
+        const handleCompress = async () => {
+            if (!pdfFile) return;
+
+            const compressionLevel = document.querySelector('input[name="compression-level"]:checked').value;
+            
+            updateView('processing');
+            processingMessageEl.textContent = 'Preparing for compression...';
+            errorMessageEl.textContent = '';
+            errorView.classList.add('hidden');
+
+            try {
+                const originalBytes = await pdfFile.arrayBuffer();
+                
+                const compressedBytes = await compressPdf(originalBytes, compressionLevel, pdfFile.name, (message) => {
+                    processingMessageEl.textContent = message;
+                });
+                
+                if (!compressedBytes || compressedBytes.byteLength === 0) {
+                     throw new Error("Compression resulted in an empty file. The original PDF might be empty or unreadable.");
+                }
+
+                const blob = new Blob([compressedBytes], { type: 'application/pdf' });
+                showResults(blob, pdfFile.size);
+
+            } catch (e) {
+                console.error(e);
+                const message = e instanceof Error ? e.message : 'An unknown error occurred.';
+                showError(`Failed to process PDF. The file may be corrupt or protected. Details: ${message}`);
+            }
+        };
+        
+        // --- Event Listeners ---
+        dropzone.addEventListener('click', () => fileInput.click());
+        fileInput.addEventListener('change', () => {
+            if(fileInput.files.length > 0) handleFileSelected(fileInput.files[0]);
         });
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => dropzone.addEventListener(eventName, e => {
+            e.preventDefault();
+            e.stopPropagation();
+        }));
+        ['dragenter', 'dragover'].forEach(eventName => dropzone.addEventListener(eventName, () => dropzone.classList.add('border-primary', 'bg-primary/10')));
+        ['dragleave', 'drop'].forEach(eventName => dropzone.addEventListener(eventName, () => dropzone.classList.remove('border-primary', 'bg-primary/10')));
+        dropzone.addEventListener('drop', e => {
+             if(e.dataTransfer.files.length > 0) handleFileSelected(e.dataTransfer.files[0]);
+        });
+        
+        compressButton.addEventListener('click', handleCompress);
+        document.getElementById('reset-button-list').addEventListener('click', resetState);
+        document.getElementById('reset-button-result').addEventListener('click', resetState);
+        
+        // Initial view
+        updateView('dropzone');
+    })();
     </script>
 
-    
-    
     <!-- TOOL END -->
 
-
-    <!-- JavaScript -->
-    <script>
-        // Mobile menu toggle
-        document.addEventListener('DOMContentLoaded', function() {
-            const mobileMenuButton = document.getElementById('mobile-menu-button');
-            const mobileMenu = document.getElementById('mobile-menu');
-            
-            if (mobileMenuButton && mobileMenu) {
-                const menuIconBars = document.getElementById('menu-icon-bars');
-                const menuIconTimes = document.getElementById('menu-icon-times');
-                
-                mobileMenuButton.addEventListener('click', function() {
-                    mobileMenu.classList.toggle('open');
-                    
-                    if (menuIconBars && menuIconTimes) {
-                        menuIconBars.classList.toggle('hidden');
-                        menuIconTimes.classList.toggle('hidden');
-                    }
-                });
-            }
-            
-            // Smooth scrolling for anchor links
-            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-                anchor.addEventListener('click', function (e) {
-                    e.preventDefault();
-                    
-                    const targetId = this.getAttribute('href');
-                    if (targetId === '#') return;
-                    
-                    const targetElement = document.querySelector(targetId);
-                    if (targetElement) {
-                        targetElement.scrollIntoView({
-                            behavior: 'smooth'
-                        });
-                    }
-                });
-            });
-        });
-    </script>
 </body>
 </html>
-
