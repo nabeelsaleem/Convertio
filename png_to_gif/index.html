@@ -850,6 +850,35 @@
                     }
                 });
             });
+     // FAQ Accordion Logic
+            const faqToggles = document.querySelectorAll('[data-faq-toggle]');
+            faqToggles.forEach(button => {
+                button.addEventListener('click', () => {
+                    const answer = button.nextElementSibling;
+                    const icon = button.querySelector('.faq-icon');
+                    const isOpening = !answer.style.maxHeight;
+
+                    // Close all other open FAQs
+                    faqToggles.forEach(otherButton => {
+                        if (otherButton !== button) {
+                            otherButton.nextElementSibling.style.maxHeight = null;
+                            otherButton.querySelector('.faq-icon').classList.remove('rotate-90');
+                            otherButton.querySelector('.faq-icon').classList.add('-rotate-90');
+                        }
+                    });
+
+                    // Toggle the clicked FAQ
+                    if (isOpening) {
+                        answer.style.maxHeight = answer.scrollHeight + "px";
+                        icon.classList.remove('-rotate-90');
+                        icon.classList.add('rotate-90');
+                    } else {
+                        answer.style.maxHeight = null;
+                        icon.classList.remove('rotate-90');
+                        icon.classList.add('-rotate-90');
+                    }
+                });
+            });
         });
     </script>
 
