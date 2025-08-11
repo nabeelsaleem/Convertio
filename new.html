@@ -1,0 +1,492 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SimpliConvert - Free Online PDF, Image & Document Tools</title>
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            DEFAULT: '#da3f0b',
+                            light: '#f57648',
+                            dark: '#c2380a'
+                        },
+                        secondary: '#111827'
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* Header Scroll Effect */
+        .scrolled-effect {
+            background-color: rgba(255, 255, 255, 0.8) !important;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1) !important;
+            backdrop-filter: blur(8px);
+        }
+
+        /* Mega Menu */
+        #mega-menu {
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-1rem);
+            transition: all 0.3s ease-in-out;
+            pointer-events: none;
+        }
+        #mega-menu.open {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+            pointer-events: auto;
+        }
+        
+        /* Mobile Menu */
+        #mobile-menu {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-in-out;
+        }
+        #mobile-menu.open {
+            max-height: 80vh;
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        }
+        
+        /* Mobile Accordion */
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-in-out;
+        }
+        .accordion-content.open {
+            max-height: 500px; /* Adjust as needed */
+        }
+        .accordion-button.open svg {
+             transform: rotate(180deg);
+        }
+
+    </style>
+</head>
+<body class="bg-gray-50">
+
+    <div class="flex flex-col min-h-screen bg-gray-50 text-gray-800">
+        <!-- Header -->
+        <header id="header" class="sticky top-0 z-50 w-full transition-all duration-300 bg-white/95">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex items-center justify-between h-20">
+                    <!-- Logo -->
+                    <div class="flex-shrink-0">
+                         <a href="/" class="flex items-center gap-2 text-2xl font-bold text-primary">
+                            <svg width="32" height="32" viewBox="0 0 144 145" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                                <rect width="144" height="145" fill="url(#pattern0_header_logo)"/>
+                                <defs>
+                                    <pattern id="pattern0_header_logo" patternContentUnits="objectBoundingBox" width="1" height="1">
+                                        <use xlink:href="#image0_header_logo" transform="scale(0.00694444 0.00689655)"/>
+                                    </pattern>
+                                    <image id="image0_header_logo" width="144" height="145" xlink:href="data:image/png;base64,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"/>
+                                </defs>
+                            </svg>
+                            <span class="mt-1">simpliconvert</span>
+                        </a>
+                    </div>
+
+                    <!-- Desktop Navigation -->
+                    <nav class="hidden lg:flex items-center space-x-2 h-full ml-auto">
+                        <a href="#" class="h-full flex items-center px-4 text-md font-medium text-gray-700 hover:text-primary transition-colors duration-200">Home</a>
+                        <a href="#pdf-tools" class="h-full flex items-center px-4 text-md font-medium text-gray-700 hover:text-primary transition-colors duration-200">PDF Tools</a>
+                        
+                        <!-- All Tools Mega Menu Trigger -->
+                        <div id="mega-menu-trigger" class="relative h-full flex items-center">
+                            <button class="inline-flex items-center gap-2 px-4 h-full text-md font-medium text-gray-700 hover:text-primary transition-colors duration-200 focus:outline-none focus:text-primary">
+                                All Tools
+                                <svg class="h-4 w-4 text-gray-400 transition-transform duration-200" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                </svg>
+                            </button>
+                            <!-- Mega Menu Content -->
+                            <div id="mega-menu" class="absolute top-full right-0 w-auto min-w-[1024px] max-w-7xl mt-2 rounded-xl bg-white shadow-2xl border border-gray-100">
+                                <div class="p-8">
+                                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-8">
+                                        <!-- PDF Tools -->
+                                        <div>
+                                            <h3 class="text-sm font-bold tracking-wider uppercase text-gray-400 mb-4">PDF Tools</h3>
+                                            <ul class="space-y-1">
+                                                <li><a href="#" class="flex items-start gap-4 p-3 -ml-3 rounded-lg hover:bg-primary/5 transition-colors duration-200 group/link"><div class="flex-shrink-0 bg-primary/10 text-primary p-2.5 rounded-lg mt-0.5"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg></div><div><p class="font-semibold text-gray-800 group-hover/link:text-primary">Merge PDF</p><p class="text-sm text-gray-500">Combine multiple PDFs into one.</p></div></a></li>
+                                                <li><a href="#" class="flex items-start gap-4 p-3 -ml-3 rounded-lg hover:bg-primary/5 transition-colors duration-200 group/link"><div class="flex-shrink-0 bg-primary/10 text-primary p-2.5 rounded-lg mt-0.5"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg></div><div><p class="font-semibold text-gray-800 group-hover/link:text-primary">Split PDF</p><p class="text-sm text-gray-500">Extract pages from a PDF.</p></div></a></li>
+                                                <li><a href="#" class="flex items-start gap-4 p-3 -ml-3 rounded-lg hover:bg-primary/5 transition-colors duration-200 group/link"><div class="flex-shrink-0 bg-primary/10 text-primary p-2.5 rounded-lg mt-0.5"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg></div><div><p class="font-semibold text-gray-800 group-hover/link:text-primary">Compress PDF</p><p class="text-sm text-gray-500">Reduce the file size of your PDF.</p></div></a></li>
+                                                <li><a href="#" class="flex items-start gap-4 p-3 -ml-3 rounded-lg hover:bg-primary/5 transition-colors duration-200 group/link"><div class="flex-shrink-0 bg-primary/10 text-primary p-2.5 rounded-lg mt-0.5"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg></div><div><p class="font-semibold text-gray-800 group-hover/link:text-primary">Sign PDF</p><p class="text-sm text-gray-500">Add your signature to a PDF.</p></div></a></li>
+                                                <li><a href="#" class="flex items-start gap-4 p-3 -ml-3 rounded-lg hover:bg-primary/5 transition-colors duration-200 group/link"><div class="flex-shrink-0 bg-primary/10 text-primary p-2.5 rounded-lg mt-0.5"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg></div><div><p class="font-semibold text-gray-800 group-hover/link:text-primary">PDF to Word</p><p class="text-sm text-gray-500">Convert PDF to editable Word docs.</p></div></a></li>
+                                            </ul>
+                                        </div>
+                                        <!-- Image Tools -->
+                                        <div>
+                                            <h3 class="text-sm font-bold tracking-wider uppercase text-gray-400 mb-4">Image Tools</h3>
+                                            <ul class="space-y-1">
+                                                <li><a href="#" class="flex items-start gap-4 p-3 -ml-3 rounded-lg hover:bg-primary/5 transition-colors duration-200 group/link"><div class="flex-shrink-0 bg-primary/10 text-primary p-2.5 rounded-lg mt-0.5"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg></div><div><p class="font-semibold text-gray-800 group-hover/link:text-primary">JPG to PDF</p><p class="text-sm text-gray-500">Convert JPG images to PDF.</p></div></a></li>
+                                                <li><a href="#" class="flex items-start gap-4 p-3 -ml-3 rounded-lg hover:bg-primary/5 transition-colors duration-200 group/link"><div class="flex-shrink-0 bg-primary/10 text-primary p-2.5 rounded-lg mt-0.5"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg></div><div><p class="font-semibold text-gray-800 group-hover/link:text-primary">Image Resizer</p><p class="text-sm text-gray-500">Change the dimensions of images.</p></div></a></li>
+                                                <li><a href="#" class="flex items-start gap-4 p-3 -ml-3 rounded-lg hover:bg-primary/5 transition-colors duration-200 group/link"><div class="flex-shrink-0 bg-primary/10 text-primary p-2.5 rounded-lg mt-0.5"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg></div><div><p class="font-semibold text-gray-800 group-hover/link:text-primary">Compress Image</p><p class="text-sm text-gray-500">Reduce image file size.</p></div></a></li>
+                                                <li><a href="#" class="flex items-start gap-4 p-3 -ml-3 rounded-lg hover:bg-primary/5 transition-colors duration-200 group/link"><div class="flex-shrink-0 bg-primary/10 text-primary p-2.5 rounded-lg mt-0.5"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg></div><div><p class="font-semibold text-gray-800 group-hover/link:text-primary">Image Converter</p><p class="text-sm text-gray-500">Convert between image formats.</p></div></a></li>
+                                            </ul>
+                                        </div>
+                                        <!-- Utilities -->
+                                        <div>
+                                            <h3 class="text-sm font-bold tracking-wider uppercase text-gray-400 mb-4">Utilities</h3>
+                                            <ul class="space-y-1">
+                                                <li><a href="#" class="flex items-start gap-4 p-3 -ml-3 rounded-lg hover:bg-primary/5 transition-colors duration-200 group/link"><div class="flex-shrink-0 bg-primary/10 text-primary p-2.5 rounded-lg mt-0.5"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg></div><div><p class="font-semibold text-gray-800 group-hover/link:text-primary">Markdown Editor</p><p class="text-sm text-gray-500">Write and preview Markdown.</p></div></a></li>
+                                                <li><a href="#" class="flex items-start gap-4 p-3 -ml-3 rounded-lg hover:bg-primary/5 transition-colors duration-200 group/link"><div class="flex-shrink-0 bg-primary/10 text-primary p-2.5 rounded-lg mt-0.5"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg></div><div><p class="font-semibold text-gray-800 group-hover/link:text-primary">HTML Color Picker</p><p class="text-sm text-gray-500">Find the perfect color code.</p></div></a></li>
+                                                <li><a href="#" class="flex items-start gap-4 p-3 -ml-3 rounded-lg hover:bg-primary/5 transition-colors duration-200 group/link"><div class="flex-shrink-0 bg-primary/10 text-primary p-2.5 rounded-lg mt-0.5"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg></div><div><p class="font-semibold text-gray-800 group-hover/link:text-primary">Text Compare</p><p class="text-sm text-gray-500">Compare two text documents.</p></div></a></li>
+                                            </ul>
+                                        </div>
+                                        <!-- Featured -->
+                                        <div>
+                                            <h3 class="text-sm font-bold tracking-wider uppercase text-gray-400 mb-4">Featured</h3>
+                                            <ul class="space-y-1">
+                                                <li><a href="#" class="flex items-start gap-4 p-3 -ml-3 rounded-lg hover:bg-primary/5 transition-colors duration-200 group/link"><div class="flex-shrink-0 bg-primary/10 text-primary p-2.5 rounded-lg mt-0.5"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.007 5.404.433c1.164.093 1.636 1.545.749 2.305l-4.116 3.556a1.25 1.25 0 00-.364 1.118l1.24 5.272c.215 1.137-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-1.001.61-2.178-.285-1.962-1.425l1.24-5.272a1.25 1.25 0 00-.363-1.118L2.17 10.955c-.887-.76-.415-2.212.75-2.305l5.404-.433 2.082-5.007z" clip-rule="evenodd"></path></svg></div><div><p class="font-semibold text-gray-800 group-hover/link:text-primary">AI Document Summarizer</p><p class="text-sm text-gray-500">Use AI to summarize long documents.</p></div></a></li>
+                                                <li><a href="#" class="flex items-start gap-4 p-3 -ml-3 rounded-lg hover:bg-primary/5 transition-colors duration-200 group/link"><div class="flex-shrink-0 bg-primary/10 text-primary p-2.5 rounded-lg mt-0.5"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.007 5.404.433c1.164.093 1.636 1.545.749 2.305l-4.116 3.556a1.25 1.25 0 00-.364 1.118l1.24 5.272c.215 1.137-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-1.001.61-2.178-.285-1.962-1.425l1.24-5.272a1.25 1.25 0 00-.363-1.118L2.17 10.955c-.887-.76-.415-2.212.75-2.305l5.404-.433 2.082-5.007z" clip-rule="evenodd"></path></svg></div><div><p class="font-semibold text-gray-800 group-hover/link:text-primary">Animated GIF Maker</p><p class="text-sm text-gray-500">Create animated GIFs from videos.</p></div></a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="bg-gradient-to-r from-primary/5 via-orange-50 to-amber-50 p-6 rounded-b-xl border-t border-gray-200/50">
+                                    <div class="flex items-center justify-between gap-4">
+                                        <div>
+                                            <h4 class="font-bold text-lg text-primary-dark">Discover our new AI Suite</h4>
+                                            <p class="text-gray-600 text-sm">Summarize documents and enhance your workflow with the power of AI.</p>
+                                        </div>
+                                        <a href="#" class="bg-primary text-white font-semibold px-5 py-2.5 rounded-lg shadow-md hover:bg-primary-dark transition-all duration-300 transform hover:-translate-y-0.5 whitespace-nowrap">
+                                            Explore AI Tools
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <a href="#utilities" class="h-full flex items-center px-4 text-md font-medium text-gray-700 hover:text-primary transition-colors duration-200">Utilities</a>
+                        <a href="#pricing" class="h-full flex items-center px-4 text-md font-medium text-gray-700 hover:text-primary transition-colors duration-200">Pricing</a>
+                    </nav>
+
+                    <!-- Mobile menu button -->
+                    <div class="lg:hidden ml-auto">
+                        <button id="mobile-menu-button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-600 hover:text-primary hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary" aria-label="Toggle menu">
+                             <svg id="mobile-menu-icon-open" class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" /></svg>
+                             <svg id="mobile-menu-icon-close" class="h-6 w-6 hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+             <!-- Mobile menu -->
+             <div id="mobile-menu" class="lg:hidden bg-white">
+                <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3 border-t">
+                    <a href="#" class="block px-4 py-3 text-base font-medium text-gray-700 hover:text-primary transition-colors duration-200">Home</a>
+                    <a href="#pdf-tools" class="block px-4 py-3 text-base font-medium text-gray-700 hover:text-primary transition-colors duration-200">PDF Tools</a>
+                    
+                    <!-- Mobile Accordion -->
+                    <div>
+                         <button class="accordion-button w-full flex justify-between items-center px-4 py-3 text-base font-medium text-gray-700 hover:text-primary transition-colors duration-200">
+                            <span>All Tools</span>
+                             <svg class="h-5 w-5 transform transition-transform" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                            </svg>
+                         </button>
+                         <div class="accordion-content pl-4 border-l-2 border-primary/20">
+                            <div class="py-2">
+                                 <h4 class="px-4 py-2 font-semibold text-gray-500">PDF Tools</h4>
+                                 <a href="#" class="block px-4 py-2 text-gray-600 hover:text-primary hover:bg-primary/5 rounded-md">Merge PDF</a>
+                                 <a href="#" class="block px-4 py-2 text-gray-600 hover:text-primary hover:bg-primary/5 rounded-md">Split PDF</a>
+                                 <a href="#" class="block px-4 py-2 text-gray-600 hover:text-primary hover:bg-primary/5 rounded-md">Compress PDF</a>
+                                 <a href="#" class="block px-4 py-2 text-gray-600 hover:text-primary hover:bg-primary/5 rounded-md">Sign PDF</a>
+                                 <a href="#" class="block px-4 py-2 text-gray-600 hover:text-primary hover:bg-primary/5 rounded-md">PDF to Word</a>
+                            </div>
+                            <div class="py-2">
+                                 <h4 class="px-4 py-2 font-semibold text-gray-500">Image Tools</h4>
+                                 <a href="#" class="block px-4 py-2 text-gray-600 hover:text-primary hover:bg-primary/5 rounded-md">JPG to PDF</a>
+                                 <a href="#" class="block px-4 py-2 text-gray-600 hover:text-primary hover:bg-primary/5 rounded-md">Image Resizer</a>
+                                 <a href="#" class="block px-4 py-2 text-gray-600 hover:text-primary hover:bg-primary/5 rounded-md">Compress Image</a>
+                                 <a href="#" class="block px-4 py-2 text-gray-600 hover:text-primary hover:bg-primary/5 rounded-md">Image Converter</a>
+                            </div>
+                         </div>
+                    </div>
+                    
+                    <a href="#utilities" class="block px-4 py-3 text-base font-medium text-gray-700 hover:text-primary transition-colors duration-200">Utilities</a>
+                    <a href="#pricing" class="block px-4 py-3 text-base font-medium text-gray-700 hover:text-primary transition-colors duration-200">Pricing</a>
+                </div>
+            </div>
+        </header>
+
+        <main class="flex-grow">
+            <!-- Hero Section -->
+            <section class="bg-gradient-to-br from-primary via-primary-light to-orange-400 text-white relative">
+                <div class="container mx-auto px-6 text-center py-20 md:py-32">
+                    <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold mb-4 leading-tight tracking-tight">
+                        Instant File Tools for Modern Work
+                    </h1>
+                    <p class="text-lg md:text-xl max-w-3xl mx-auto mb-8 text-white/90">
+                        Free all-in-one toolbox for PDFs, images, documents, and more. No installs, no sign-ups. Just fast, simple, and secure tools in your browser.
+                    </p>
+                    <div class="flex flex-col sm:flex-row justify-center items-center gap-4">
+                        <a href="#pdf-tools" class="w-full sm:w-auto bg-white text-primary px-8 py-3 rounded-full font-bold text-lg shadow-lg hover:bg-gray-100 transition-all duration-300 transform hover:scale-105 inline-flex items-center justify-center">
+                            Explore All Tools
+                        </a>
+                        <a href="#" class="w-full sm:w-auto border-2 border-white/50 text-white px-8 py-3 rounded-full font-semibold text-lg hover:bg-white/20 hover:border-white transition-all duration-300 inline-flex items-center justify-center">
+                            How It Works
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2" viewBox="0 0 20 20" fill="currentColor">
+                              <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Popular PDF Tools Section -->
+            <section id="pdf-tools" class="py-20 bg-gray-50">
+                <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="text-center mb-16">
+                        <h2 class="text-3xl md:text-4xl font-extrabold text-gray-900 tracking-tight">Our Most Popular PDF Tools</h2>
+                        <p class="mt-4 max-w-2xl mx-auto text-lg text-gray-600">Everything you need to work with PDFs in one place, right in your browser.</p>
+                    </div>
+                    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
+                        <a href="#" class="block text-center p-6 bg-white rounded-xl shadow-sm border border-gray-200 hover:shadow-lg hover:border-primary hover:-translate-y-1 transition-all duration-300 group"><div class="inline-block p-4 bg-primary/10 rounded-xl mb-4"><svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 13h6m-3-3v6m5 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg></div><h3 class="font-semibold text-gray-800 mb-1">Merge PDF</h3><p class="text-sm text-gray-500">Combine multiple PDFs into one.</p></a>
+                        <a href="#" class="block text-center p-6 bg-white rounded-xl shadow-sm border border-gray-200 hover:shadow-lg hover:border-primary hover:-translate-y-1 transition-all duration-300 group"><div class="inline-block p-4 bg-primary/10 rounded-xl mb-4"><svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M14.121 14.121L19 19m-7-7l7-7m-7 7l-2.879 2.879M12 12L9.121 9.121M12 12l2.879-2.879M12 12L19 5M4.929 4.929l2.121 2.121m-2.121 0l2.121-2.121m0 0L19 19"></path></svg></div><h3 class="font-semibold text-gray-800 mb-1">Split PDF</h3><p class="text-sm text-gray-500">Extract pages from a PDF file.</p></a>
+                        <a href="#" class="block text-center p-6 bg-white rounded-xl shadow-sm border border-gray-200 hover:shadow-lg hover:border-primary hover:-translate-y-1 transition-all duration-300 group"><div class="inline-block p-4 bg-primary/10 rounded-xl mb-4"><svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg></div><h3 class="font-semibold text-gray-800 mb-1">Compress PDF</h3><p class="text-sm text-gray-500">Reduce the file size of your PDFs.</p></a>
+                        <a href="#" class="block text-center p-6 bg-white rounded-xl shadow-sm border border-gray-200 hover:shadow-lg hover:border-primary hover:-translate-y-1 transition-all duration-300 group"><div class="inline-block p-4 bg-primary/10 rounded-xl mb-4"><svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg></div><h3 class="font-semibold text-gray-800 mb-1">PDF to Word</h3><p class="text-sm text-gray-500">Convert PDF to an editable Word doc.</p></a>
+                        <a href="#" class="block text-center p-6 bg-white rounded-xl shadow-sm border border-gray-200 hover:shadow-lg hover:border-primary hover:-translate-y-1 transition-all duration-300 group"><div class="inline-block p-4 bg-primary/10 rounded-xl mb-4"><svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg></div><h3 class="font-semibold text-gray-800 mb-1">Word to PDF</h3><p class="text-sm text-gray-500">Convert Word documents to PDF.</p></a>
+                        <a href="#" class="block text-center p-6 bg-white rounded-xl shadow-sm border border-gray-200 hover:shadow-lg hover:border-primary hover:-translate-y-1 transition-all duration-300 group"><div class="inline-block p-4 bg-primary/10 rounded-xl mb-4"><svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg></div><h3 class="font-semibold text-gray-800 mb-1">Sign PDF</h3><p class="text-sm text-gray-500">Add your signature to a document.</p></a>
+                        <a href="#" class="block text-center p-6 bg-white rounded-xl shadow-sm border border-gray-200 hover:shadow-lg hover:border-primary hover:-translate-y-1 transition-all duration-300 group"><div class="inline-block p-4 bg-primary/10 rounded-xl mb-4"><svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M8 11V7a4 4 0 118 0m-4 8v3m-6 4h12a2 2 0 002-2v-3a2 2 0 00-2-2H6a2 2 0 00-2 2v3a2 2 0 002 2z"></path></svg></div><h3 class="font-semibold text-gray-800 mb-1">Unlock PDF</h3><p class="text-sm text-gray-500">Remove password from a PDF.</p></a>
+                        <a href="#" class="block text-center p-6 bg-white rounded-xl shadow-sm border border-gray-200 hover:shadow-lg hover:border-primary hover:-translate-y-1 transition-all duration-300 group"><div class="inline-block p-4 bg-primary/10 rounded-xl mb-4"><svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg></div><h3 class="font-semibold text-gray-800 mb-1">Protect PDF</h3><p class="text-sm text-gray-500">Add a password to secure a PDF.</p></a>
+                        <a href="#" class="block text-center p-6 bg-white rounded-xl shadow-sm border border-gray-200 hover:shadow-lg hover:border-primary hover:-translate-y-1 transition-all duration-300 group"><div class="inline-block p-4 bg-primary/10 rounded-xl mb-4"><svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg></div><h3 class="font-semibold text-gray-800 mb-1">JPG to PDF</h3><p class="text-sm text-gray-500">Convert JPG images into a PDF.</p></a>
+                        <a href="#" class="block text-center p-6 bg-white rounded-xl shadow-sm border border-gray-200 hover:shadow-lg hover:border-primary hover:-translate-y-1 transition-all duration-300 group"><div class="inline-block p-4 bg-primary/10 rounded-xl mb-4"><svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path><path stroke-linecap="round" stroke-linejoin="round" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path></svg></div><h3 class="font-semibold text-gray-800 mb-1">PDF to JPG</h3><p class="text-sm text-gray-500">Convert PDF pages to JPG images.</p></a>
+                        <a href="#" class="block text-center p-6 bg-white rounded-xl shadow-sm border border-gray-200 hover:shadow-lg hover:border-primary hover:-translate-y-1 transition-all duration-300 group"><div class="inline-block p-4 bg-primary/10 rounded-xl mb-4"><svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h5M20 20v-5h-5M4 20h5v-5M20 4h-5v5"></path></svg></div><h3 class="font-semibold text-gray-800 mb-1">Rotate PDF</h3><p class="text-sm text-gray-500">Rotate all or specific pages in a PDF.</p></a>
+                        <a href="#" class="block text-center p-6 bg-white rounded-xl shadow-sm border border-gray-200 hover:shadow-lg hover:border-primary hover:-translate-y-1 transition-all duration-300 group"><div class="inline-block p-4 bg-primary/10 rounded-xl mb-4"><svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg></div><h3 class="font-semibold text-gray-800 mb-1">Organize PDF</h3><p class="text-sm text-gray-500">Reorder, add, or remove pages.</p></a>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Essential Utilities Section -->
+            <section id="utilities" class="py-20 bg-white">
+                <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="text-center mb-16">
+                        <h2 class="text-3xl md:text-4xl font-extrabold text-gray-900 tracking-tight">Essential Daily Utilities</h2>
+                        <p class="mt-4 max-w-2xl mx-auto text-lg text-gray-600">A collection of handy tools to simplify your everyday digital tasks.</p>
+                    </div>
+                    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
+                        <a href="#" class="block text-center p-6 bg-white rounded-xl shadow-sm border border-gray-200 hover:shadow-lg hover:border-primary hover:-translate-y-1 transition-all duration-300 group"><div class="inline-block p-4 bg-primary/10 rounded-xl mb-4"><svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"></path></svg></div><h3 class="font-semibold text-gray-800 mb-1">Markdown Editor</h3><p class="text-sm text-gray-500">Write & preview markdown text.</p></a>
+                        <a href="#" class="block text-center p-6 bg-white rounded-xl shadow-sm border border-gray-200 hover:shadow-lg hover:border-primary hover:-translate-y-1 transition-all duration-300 group"><div class="inline-block p-4 bg-primary/10 rounded-xl mb-4"><svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"></path></svg></div><h3 class="font-semibold text-gray-800 mb-1">Color Picker</h3><p class="text-sm text-gray-500">Find the perfect HEX color code.</p></a>
+                        <a href="#" class="block text-center p-6 bg-white rounded-xl shadow-sm border border-gray-200 hover:shadow-lg hover:border-primary hover:-translate-y-1 transition-all duration-300 group"><div class="inline-block p-4 bg-primary/10 rounded-xl mb-4"><svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7v3m4-3v3m4-3v3M3 21h18M3 18h18M3 15h18M3 12h18M3 9h18M3 6h18M3 3h18"></path></svg></div><h3 class="font-semibold text-gray-800 mb-1">Text Compare</h3><p class="text-sm text-gray-500">Compare two text documents.</p></a>
+                        <a href="#" class="block text-center p-6 bg-white rounded-xl shadow-sm border border-gray-200 hover:shadow-lg hover:border-primary hover:-translate-y-1 transition-all duration-300 group"><div class="inline-block p-4 bg-primary/10 rounded-xl mb-4"><svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg></div><h3 class="font-semibold text-gray-800 mb-1">Lorem Ipsum</h3><p class="text-sm text-gray-500">Generate placeholder text.</p></a>
+                        <a href="#" class="block text-center p-6 bg-white rounded-xl shadow-sm border border-gray-200 hover:shadow-lg hover:border-primary hover:-translate-y-1 transition-all duration-300 group"><div class="inline-block p-4 bg-primary/10 rounded-xl mb-4"><svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5v4m0 0h-4m4 0l-5-5"></path></svg></div><h3 class="font-semibold text-gray-800 mb-1">Image Resizer</h3><p class="text-sm text-gray-500">Change image dimensions easily.</p></a>
+                        <a href="#" class="block text-center p-6 bg-white rounded-xl shadow-sm border border-gray-200 hover:shadow-lg hover:border-primary hover:-translate-y-1 transition-all duration-300 group"><div class="inline-block p-4 bg-primary/10 rounded-xl mb-4"><svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg></div><h3 class="font-semibold text-gray-800 mb-1">Image Compressor</h3><p class="text-sm text-gray-500">Reduce image file sizes.</p></a>
+                        <a href="#" class="block text-center p-6 bg-white rounded-xl shadow-sm border border-gray-200 hover:shadow-lg hover:border-primary hover:-translate-y-1 transition-all duration-300 group"><div class="inline-block p-4 bg-primary/10 rounded-xl mb-4"><svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path></svg></div><h3 class="font-semibold text-gray-800 mb-1">Image Converter</h3><p class="text-sm text-gray-500">Convert between image formats.</p></a>
+                        <a href="#" class="block text-center p-6 bg-white rounded-xl shadow-sm border border-gray-200 hover:shadow-lg hover:border-primary hover:-translate-y-1 transition-all duration-300 group"><div class="inline-block p-4 bg-primary/10 rounded-xl mb-4"><svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v1m6 11h2m-6.598 5.996l.707.707M4 12H2m13.402-7.996l-.707-.707M12 20.001v-1M4.598 5.004l.707.707M19.402 18.996l.707.707M18 12a6 6 0 11-12 0 6 6 0 0112 0z"></path></svg></div><h3 class="font-semibold text-gray-800 mb-1">QR Code Generator</h3><p class="text-sm text-gray-500">Create custom QR codes.</p></a>
+                        <a href="#" class="block text-center p-6 bg-white rounded-xl shadow-sm border border-gray-200 hover:shadow-lg hover:border-primary hover:-translate-y-1 transition-all duration-300 group"><div class="inline-block p-4 bg-primary/10 rounded-xl mb-4"><svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H5v-2H3v-2H1v-4a1 1 0 011-1h2l1.657-1.657a6 6 0 118.486 0L15 7z"></path></svg></div><h3 class="font-semibold text-gray-800 mb-1">Password Generator</h3><p class="text-sm text-gray-500">Generate secure passwords.</p></a>
+                        <a href="#" class="block text-center p-6 bg-white rounded-xl shadow-sm border border-gray-200 hover:shadow-lg hover:border-primary hover:-translate-y-1 transition-all duration-300 group"><div class="inline-block p-4 bg-primary/10 rounded-xl mb-4"><svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M3 4h13M3 8h9m-9 4h6m4 0l4-4m0 0l4 4m-4-4v12"></path></svg></div><h3 class="font-semibold text-gray-800 mb-1">Case Converter</h3><p class="text-sm text-gray-500">Change text to upper or lower case.</p></a>
+                        <a href="#" class="block text-center p-6 bg-white rounded-xl shadow-sm border border-gray-200 hover:shadow-lg hover:border-primary hover:-translate-y-1 transition-all duration-300 group"><div class="inline-block p-4 bg-primary/10 rounded-xl mb-4"><svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 7h6m0 10v-3m-3 3h3m-3-10h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg></div><h3 class="font-semibold text-gray-800 mb-1">Word Counter</h3><p class="text-sm text-gray-500">Count words and characters.</p></a>
+                        <a href="#" class="block text-center p-6 bg-white rounded-xl shadow-sm border border-gray-200 hover:shadow-lg hover:border-primary hover:-translate-y-1 transition-all duration-300 group"><div class="inline-block p-4 bg-primary/10 rounded-xl mb-4"><svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg></div><h3 class="font-semibold text-gray-800 mb-1">Watermark Image</h3><p class="text-sm text-gray-500">Add a watermark to your images.</p></a>
+                    </div>
+                </div>
+            </section>
+            
+             <div id="pricing" class="py-20 bg-gray-50">
+                <div class="container mx-auto px-4 text-center">
+                    <h2 class="text-3xl font-bold mb-4">Pricing Section</h2>
+                    <p class="text-lg text-gray-600">More content would go here.</p>
+                </div>
+            </div>
+        </main>
+        
+        <!-- Footer -->
+        <footer class="bg-white border-t border-gray-200">
+            <div class="container mx-auto px-6 lg:px-8 py-16">
+                <!-- Links Section -->
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+                    <div>
+                        <h3 class="text-sm font-semibold text-gray-900 tracking-wider uppercase mb-4">PDF Tools</h3>
+                        <ul class="space-y-3">
+                            <li><a href="#" class="text-gray-500 hover:text-primary transition-colors duration-200">Merge PDF</a></li>
+                            <li><a href="#" class="text-gray-500 hover:text-primary transition-colors duration-200">Split PDF</a></li>
+                            <li><a href="#" class="text-gray-500 hover:text-primary transition-colors duration-200">Compress PDF</a></li>
+                            <li><a href="#" class="text-gray-500 hover:text-primary transition-colors duration-200">PDF to Word</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 class="text-sm font-semibold text-gray-900 tracking-wider uppercase mb-4">Utilities</h3>
+                        <ul class="space-y-3">
+                            <li><a href="#" class="text-gray-500 hover:text-primary transition-colors duration-200">Markdown Editor</a></li>
+                            <li><a href="#" class="text-gray-500 hover:text-primary transition-colors duration-200">HTML Color Picker</a></li>
+                            <li><a href="#" class="text-gray-500 hover:text-primary transition-colors duration-200">Text Compare</a></li>
+                            <li><a href="#" class="text-gray-500 hover:text-primary transition-colors duration-200">Lorem Ipsum Generator</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 class="text-sm font-semibold text-gray-900 tracking-wider uppercase mb-4">Image Tools</h3>
+                        <ul class="space-y-3">
+                            <li><a href="#" class="text-gray-500 hover:text-primary transition-colors duration-200">JPG to PDF</a></li>
+                            <li><a href="#" class="text-gray-500 hover:text-primary transition-colors duration-200">Image Resizer</a></li>
+                            <li><a href="#" class="text-gray-500 hover:text-primary transition-colors duration-200">Compress Image</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 class="text-sm font-semibold text-gray-900 tracking-wider uppercase mb-4">Company</h3>
+                        <ul class="space-y-3">
+                            <li><a href="#" class="text-gray-500 hover:text-primary transition-colors duration-200">About Us</a></li>
+                            <li><a href="#" class="text-gray-500 hover:text-primary transition-colors duration-200">Blog</a></li>
+                            <li><a href="#" class="text-gray-500 hover:text-primary transition-colors duration-200">Careers</a></li>
+                            <li><a href="#" class="text-gray-500 hover:text-primary transition-colors duration-200">Contact Us</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Subscription and Company Info -->
+                <div class="mt-16 pt-12 border-t border-gray-200 flex flex-col items-center text-center">
+                    <div class="max-w-md w-full">
+                        <a href="/" class="flex items-center justify-center gap-2 text-2xl font-bold text-primary mb-4">
+                             <svg width="32" height="32" viewBox="0 0 144 145" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                                <rect width="144" height="145" fill="url(#pattern0_footer_logo_white)"/>
+                                <defs>
+                                    <pattern id="pattern0_footer_logo_white" patternContentUnits="objectBoundingBox" width="1" height="1">
+                                        <use xlink:href="#image0_footer_logo_white" transform="scale(0.00694444 0.00689655)"/>
+                                    </pattern>
+                                    <image id="image0_footer_logo_white" width="144" height="145" xlink:href="data:image/png;base64,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"/>
+                                </defs>
+                            </svg>
+                            <span class="mt-1">simpliconvert</span>
+                        </a>
+                        <h3 class="font-semibold text-xl text-gray-800 mb-2">Subscribe to our newsletter</h3>
+                        <p class="text-gray-500 mb-6">Get the latest news, articles, and resources, sent to your inbox weekly.</p>
+                        <form class="flex flex-col sm:flex-row gap-2">
+                            <input type="email" placeholder="Enter your email" class="flex-grow px-4 py-2.5 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary/50 focus:border-primary focus:outline-none transition-shadow text-center sm:text-left" />
+                            <button type="submit" class="bg-primary text-white font-medium px-5 py-2.5 rounded-md shadow-sm hover:bg-primary-dark transition-colors transform hover:-translate-y-0.5">Subscribe</button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Copyright -->
+                <div class="border-t border-gray-200 pt-8 mt-16">
+                    <div class="flex flex-col sm:flex-row justify-between items-center text-sm text-gray-500">
+                        <p class="mb-4 sm:mb-0">&copy; <span id="current-year"></span> simpliconvert. All rights reserved.</p>
+                        <div class="flex items-center space-x-4">
+                           <a href="#" class="text-gray-400 hover:text-primary transition-colors duration-300"><svg role="img" viewBox="0 0 24 24" class="h-5 w-5 fill-current" xmlns="http://www.w3.org/2000/svg"><title>X</title><path d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z"></path></svg></a>
+                           <a href="#" class="text-gray-400 hover:text-primary transition-colors duration-300"><svg role="img" viewBox="0 0 24 24" class="h-5 w-5 fill-current" xmlns="http://www.w3.org/2000/svg"><title>GitHub</title><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"></path></svg></a>
+                           <a href="#" class="text-gray-400 hover:text-primary transition-colors duration-300"><svg role="img" viewBox="0 0 24 24" class="h-5 w-5 fill-current" xmlns="http://www.w3.org/2000/svg"><title>LinkedIn</title><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.225 0z"></path></svg></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set Current Year in Footer
+            document.getElementById('current-year').textContent = new Date().getFullYear();
+
+            // Header Scroll Effect
+            const header = document.getElementById('header');
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 10) {
+                    header.classList.add('scrolled-effect');
+                } else {
+                    header.classList.remove('scrolled-effect');
+                }
+            });
+
+            // Mobile Menu Toggle
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            const mobileMenuIconOpen = document.getElementById('mobile-menu-icon-open');
+            const mobileMenuIconClose = document.getElementById('mobile-menu-icon-close');
+            
+            mobileMenuButton.addEventListener('click', () => {
+                mobileMenu.classList.toggle('open');
+                mobileMenuIconOpen.classList.toggle('hidden');
+                mobileMenuIconClose.classList.toggle('hidden');
+            });
+            
+            // Mobile Accordion Toggle
+            const accordionButton = document.querySelector('.accordion-button');
+            const accordionContent = document.querySelector('.accordion-content');
+            
+            if (accordionButton && accordionContent) {
+                accordionButton.addEventListener('click', () => {
+                     accordionButton.classList.toggle('open');
+                     accordionContent.classList.toggle('open');
+                });
+            }
+
+            // Desktop Mega Menu
+            const megaMenuTrigger = document.getElementById('mega-menu-trigger');
+            const megaMenu = document.getElementById('mega-menu');
+            let megaMenuTimeout;
+            
+            if(megaMenuTrigger && megaMenu) {
+                megaMenuTrigger.addEventListener('mouseenter', () => {
+                    clearTimeout(megaMenuTimeout);
+                    megaMenu.classList.add('open');
+                });
+
+                megaMenuTrigger.addEventListener('mouseleave', () => {
+                    megaMenuTimeout = setTimeout(() => {
+                        megaMenu.classList.remove('open');
+                    }, 200);
+                });
+
+                megaMenu.addEventListener('mouseenter', () => {
+                    clearTimeout(megaMenuTimeout);
+                });
+
+                megaMenu.addEventListener('mouseleave', () => {
+                    megaMenuTimeout = setTimeout(() => {
+                        megaMenu.classList.remove('open');
+                    }, 200);
+                });
+            }
+            
+             // Smooth scrolling for anchor links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    const href = this.getAttribute('href');
+                    if (href === '#' || href === "") return;
+
+                    e.preventDefault();
+                    
+                    const targetElement = document.querySelector(href);
+                    if (targetElement) {
+                         const headerOffset = document.getElementById('header').offsetHeight;
+                         const elementPosition = targetElement.getBoundingClientRect().top;
+                         const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+                    
+                        window.scrollTo({
+                            top: offsetPosition,
+                            behavior: 'smooth'
+                        });
+
+                        // Close mobile menu if open after clicking a link
+                        if (mobileMenu.classList.contains('open')) {
+                            mobileMenuButton.click();
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
