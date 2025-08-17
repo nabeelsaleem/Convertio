@@ -18,35 +18,49 @@ export interface Shot {
   notes: string;
 }
 
-// Types for PDF signing functionality
 
-export interface PdfPage {
-  getViewport: (options: { scale: number }) => { width: number; height: number };
-  render: (options: { canvasContext: CanvasRenderingContext2D; viewport: any }) => { promise: Promise<void> };
-}
+/*
+  NOTE: The types below are for unused PDF signing components and can be considered for cleanup.
+  They are included here to resolve compilation errors.
+*/
 
-export interface PdfDocument {
-  numPages: number;
-  getPage: (pageNumber: number) => Promise<PdfPage>;
-}
-
+/**
+ * A signature created by the user (drawn, typed, or uploaded)
+ */
 export interface Signature {
   id: string;
   type: 'draw' | 'type' | 'upload';
   dataUrl: string;
 }
 
+/**
+ * A signature that has been placed on a PDF page
+ */
 export interface RenderedSignature extends Signature {
+  pageIndex: number;
   x: number;
   y: number;
   width: number;
   height: number;
-  pageIndex: number;
 }
 
+/**
+ * Represents an uploaded PDF file with its thumbnail and rotation state
+ */
 export interface PdfFile {
   id: string;
   file: File;
   thumbnailUrl: string;
   rotation: number;
+}
+
+/**
+ * Represents a PDF document loaded by pdf.js
+ */
+export interface PdfDocument {
+  getPage: (pageNumber: number) => Promise<{
+    getViewport: (options: { scale: number }) => { width: number, height: number };
+    render: (options: { canvasContext: CanvasRenderingContext2D, viewport: any }) => { promise: Promise<void> };
+  }>;
+  numPages: number;
 }
