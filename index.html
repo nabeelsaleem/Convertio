@@ -757,179 +757,112 @@
     <!-- JavaScript -->
 
 
-        
-<script>
-    function initializeHeaderScripts() {
-        // Header Scroll Effect
-        const header = document.getElementById('header');
-        if (header) {
-            window.addEventListener('scroll', () => {
-                if (window.scrollY > 10) {
-                    header.classList.add('scrolled-effect');
-                } else {
-                    header.classList.remove('scrolled-effect');
-                }
-            });
-        }
-
-        // Mobile Menu Toggle
-        const mobileMenuButton = document.getElementById('mobile-menu-button');
-        const mobileMenu = document.getElementById('mobile-menu');
-        const mobileMenuIconOpen = document.getElementById('mobile-menu-icon-open');
-        const mobileMenuIconClose = document.getElementById('mobile-menu-icon-close');
-        
-        if (mobileMenuButton && mobileMenu && mobileMenuIconOpen && mobileMenuIconClose) {
-            mobileMenuButton.addEventListener('click', () => {
-                mobileMenu.classList.toggle('open');
-                mobileMenuIconOpen.classList.toggle('hidden');
-                mobileMenuIconClose.classList.toggle('hidden');
-            });
-        }
-        
-        // Mobile Accordion Toggle
-        const accordionButton = document.querySelector('.accordion-button');
-        const accordionContent = document.querySelector('.accordion-content');
-        
-        if (accordionButton && accordionContent) {
-            accordionButton.addEventListener('click', () => {
-                accordionButton.classList.toggle('open');
-                accordionContent.classList.toggle('open');
-            });
-        }
-    }
-
-    async function loadComponent(url, elementId, callback) {
-        try {
-            const response = await fetch(url);
-            if (!response.ok) {
-                throw new Error(`Failed to load component from ${url}. Status: ${response.status}`);
+    
+    <script>
+        function initializeHeaderScripts() {
+            // Header Scroll Effect
+            const header = document.getElementById('header');
+            if (header) {
+                window.addEventListener('scroll', () => {
+                    if (window.scrollY > 10) {
+                        header.classList.add('scrolled-effect');
+                    } else {
+                        header.classList.remove('scrolled-effect');
+                    }
+                });
             }
-            const text = await response.text();
-            const element = document.getElementById(elementId);
-            if (element) {
-                element.innerHTML = text;
-                if (callback) {
-                    callback();
-                }
-            } else {
-                console.error(`Element with id '${elementId}' not found.`);
-            }
-        } catch (error) {
-            console.error('Error loading component:', error);
-            const element = document.getElementById(elementId);
-            if(element) element.innerHTML = `<p class="text-center text-red-500">Error: Could not load navigation bar.</p>`;
-        }
-    }
 
-    document.addEventListener('DOMContentLoaded', function() {
-        // Set Current Year in Footer
-        const yearSpan = document.getElementById('current-year');
-        if(yearSpan) {
-            yearSpan.textContent = new Date().getFullYear();
-        }
-
-        // Load Header and initialize its scripts
-        loadComponent('components/navbar.html', 'navbar', initializeHeaderScripts);
-
-        // Extra Header Scroll Effect (from second script)
-        const header = document.getElementById('header');
-        window.addEventListener('scroll', () => {
-            if (window.scrollY > 10) {
-                header.classList.add('scrolled-effect');
-            } else {
-                header.classList.remove('scrolled-effect');
-            }
-        });
-
-        // Mobile Menu Toggle (merged from both scripts)
-        const mobileMenuButton = document.getElementById('mobile-menu-button');
-        const mobileMenu = document.getElementById('mobile-menu');
-        const menuIconBars = document.getElementById('menu-icon-bars');
-        const menuIconTimes = document.getElementById('menu-icon-times');
-        const mobileMenuIconOpen = document.getElementById('mobile-menu-icon-open');
-        const mobileMenuIconClose = document.getElementById('mobile-menu-icon-close');
-
-        if (mobileMenuButton && mobileMenu) {
-            mobileMenuButton.addEventListener('click', function() {
-                mobileMenu.classList.toggle('open');
-                if (menuIconBars && menuIconTimes) {
-                    menuIconBars.classList.toggle('hidden');
-                    menuIconTimes.classList.toggle('hidden');
-                }
-                if (mobileMenuIconOpen && mobileMenuIconClose) {
+            // Mobile Menu Toggle
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            const mobileMenuIconOpen = document.getElementById('mobile-menu-icon-open');
+            const mobileMenuIconClose = document.getElementById('mobile-menu-icon-close');
+            
+            if (mobileMenuButton && mobileMenu && mobileMenuIconOpen && mobileMenuIconClose) {
+                mobileMenuButton.addEventListener('click', () => {
+                    mobileMenu.classList.toggle('open');
                     mobileMenuIconOpen.classList.toggle('hidden');
                     mobileMenuIconClose.classList.toggle('hidden');
-                }
-            });
-        }
-
-        // Mobile Accordion Toggle
-        const accordionButton = document.querySelector('.accordion-button');
-        const accordionContent = document.querySelector('.accordion-content');
-        if (accordionButton && accordionContent) {
-            accordionButton.addEventListener('click', () => {
-                accordionButton.classList.toggle('open');
-                accordionContent.classList.toggle('open');
-            });
-        }
-
-        // Desktop Mega Menu
-        const megaMenuTrigger = document.getElementById('mega-menu-trigger');
-        const megaMenu = document.getElementById('mega-menu');
-        let megaMenuTimeout;
-        if (megaMenuTrigger && megaMenu) {
-            megaMenuTrigger.addEventListener('mouseenter', () => {
-                clearTimeout(megaMenuTimeout);
-                megaMenu.classList.add('open');
-            });
-
-            megaMenuTrigger.addEventListener('mouseleave', () => {
-                megaMenuTimeout = setTimeout(() => {
-                    megaMenu.classList.remove('open');
-                }, 200);
-            });
-
-            megaMenu.addEventListener('mouseenter', () => {
-                clearTimeout(megaMenuTimeout);
-            });
-
-            megaMenu.addEventListener('mouseleave', () => {
-                megaMenuTimeout = setTimeout(() => {
-                    megaMenu.classList.remove('open');
-                }, 200);
-            });
-        }
-
-        // Smooth scrolling for anchor links (merged logic)
-        document.addEventListener('click', function (e) {
-            const anchor = e.target.closest('a[href^="#"]');
-            if (!anchor) return;
-
-            const href = anchor.getAttribute('href');
-            if (href === '#' || href === "") return;
-
-            e.preventDefault();
-            
-            const targetElement = document.querySelector(href);
-            if (targetElement) {
-                const headerOffset = header ? header.offsetHeight : 80; // Default offset if header not yet loaded
-                const elementPosition = targetElement.getBoundingClientRect().top;
-                const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
-
-                window.scrollTo({
-                    top: offsetPosition,
-                    behavior: 'smooth'
                 });
-
-                // Close mobile menu if open after clicking a link
-                if (mobileMenu && mobileMenu.classList.contains('open')) {
-                    if(mobileMenuButton) mobileMenuButton.click();
-                }
             }
+            
+            // Mobile Accordion Toggle
+            const accordionButton = document.querySelector('.accordion-button');
+            const accordionContent = document.querySelector('.accordion-content');
+            
+            if (accordionButton && accordionContent) {
+                accordionButton.addEventListener('click', () => {
+                     accordionButton.classList.toggle('open');
+                     accordionContent.classList.toggle('open');
+                });
+            }
+        }
+
+        async function loadComponent(url, elementId, callback) {
+            try {
+                const response = await fetch(url);
+                if (!response.ok) {
+                    throw new Error(`Failed to load component from ${url}. Status: ${response.status}`);
+                }
+                const text = await response.text();
+                const element = document.getElementById(elementId);
+                if (element) {
+                    element.innerHTML = text;
+                    if (callback) {
+                        callback();
+                    }
+                } else {
+                    console.error(`Element with id '${elementId}' not found.`);
+                }
+            } catch (error) {
+                console.error('Error loading component:', error);
+                const element = document.getElementById(elementId);
+                if(element) element.innerHTML = `<p class="text-center text-red-500">Error: Could not load navigation bar.</p>`;
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set Current Year in Footer
+            const yearSpan = document.getElementById('current-year');
+            if(yearSpan) {
+                yearSpan.textContent = new Date().getFullYear();
+            }
+
+            // Load Header and initialize its scripts
+            loadComponent('components/navbar.html', 'navbar', initializeHeaderScripts);
+            
+            // Event delegation for smooth scrolling
+            document.addEventListener('click', function (e) {
+                const anchor = e.target.closest('a[href^="#"]');
+                if (!anchor) return;
+
+                const href = anchor.getAttribute('href');
+                if (href === '#' || href === "") return;
+
+                e.preventDefault();
+                
+                const targetElement = document.querySelector(href);
+                if (targetElement) {
+                     const header = document.getElementById('header');
+                     const headerOffset = header ? header.offsetHeight : 80; // Default offset if header not yet loaded
+                     const elementPosition = targetElement.getBoundingClientRect().top;
+                     const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+                
+                    window.scrollTo({
+                        top: offsetPosition,
+                        behavior: 'smooth'
+                    });
+
+                    // Close mobile menu if open after clicking a link
+                    const mobileMenu = document.getElementById('mobile-menu');
+                    if (mobileMenu && mobileMenu.classList.contains('open')) {
+                        const mobileMenuButton = document.getElementById('mobile-menu-button');
+                        if(mobileMenuButton) mobileMenuButton.click();
+                    }
+                }
+            });
         });
-    });
-</script>
-
+    </script>
         
 
         
@@ -939,9 +872,9 @@
 
         
 
-<!-- JavaScript 
+
 <div id="footer"></div>
-
+<!-- JavaScript 
 <script>
   async function includeHTML(id, file) {
     const res = await fetch(file);
