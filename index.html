@@ -719,110 +719,113 @@
         </div>
     </section>
 
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Set Current Year in Footer
-        const currentYearEl = document.getElementById('current-year');
-        if (currentYearEl) {
-            currentYearEl.textContent = new Date().getFullYear();
-        }
 
-        // Header Scroll Effect
-        const header = document.getElementById('header');
-        window.addEventListener('scroll', () => {
-            if (window.scrollY > 10) {
-                header.classList.add('scrolled-effect');
-            } else {
-                header.classList.remove('scrolled-effect');
+    <!-- JavaScript -->
+  <script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Set Current Year in Footer
+    const currentYearEl = document.getElementById('current-year');
+    if (currentYearEl) {
+        currentYearEl.textContent = new Date().getFullYear();
+    }
+
+    // Header Scroll Effect
+    const header = document.getElementById('header');
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > 10) {
+            header.classList.add('scrolled-effect');
+        } else {
+            header.classList.remove('scrolled-effect');
+        }
+    });
+
+    // Mobile Menu Toggle (Merged from both scripts)
+    const mobileMenuButton = document.getElementById('mobile-menu-button');
+    const mobileMenu = document.getElementById('mobile-menu');
+    const menuIconBars = document.getElementById('menu-icon-bars');
+    const menuIconTimes = document.getElementById('menu-icon-times');
+    const mobileMenuIconOpen = document.getElementById('mobile-menu-icon-open');
+    const mobileMenuIconClose = document.getElementById('mobile-menu-icon-close');
+
+    if (mobileMenuButton && mobileMenu) {
+        mobileMenuButton.addEventListener('click', function() {
+            mobileMenu.classList.toggle('open');
+            if (menuIconBars && menuIconTimes) {
+                menuIconBars.classList.toggle('hidden');
+                menuIconTimes.classList.toggle('hidden');
+            }
+            if (mobileMenuIconOpen && mobileMenuIconClose) {
+                mobileMenuIconOpen.classList.toggle('hidden');
+                mobileMenuIconClose.classList.toggle('hidden');
             }
         });
+    }
 
-        // Mobile Menu Toggle
-        const mobileMenuButton = document.getElementById('mobile-menu-button');
-        const mobileMenu = document.getElementById('mobile-menu');
-        const menuIconBars = document.getElementById('menu-icon-bars');
-        const menuIconTimes = document.getElementById('menu-icon-times');
-        const mobileMenuIconOpen = document.getElementById('mobile-menu-icon-open');
-        const mobileMenuIconClose = document.getElementById('mobile-menu-icon-close');
+    // Mobile Accordion Toggle
+    const accordionButton = document.querySelector('.accordion-button');
+    const accordionContent = document.querySelector('.accordion-content');
+    if (accordionButton && accordionContent) {
+        accordionButton.addEventListener('click', () => {
+            accordionButton.classList.toggle('open');
+            accordionContent.classList.toggle('open');
+        });
+    }
 
-        if (mobileMenuButton && mobileMenu) {
-            mobileMenuButton.addEventListener('click', function() {
-                mobileMenu.classList.toggle('open');
-                if (menuIconBars && menuIconTimes) {
-                    menuIconBars.classList.toggle('hidden');
-                    menuIconTimes.classList.toggle('hidden');
+    // Desktop Mega Menu
+    const megaMenuTrigger = document.getElementById('mega-menu-trigger');
+    const megaMenu = document.getElementById('mega-menu');
+    let megaMenuTimeout;
+    if (megaMenuTrigger && megaMenu) {
+        megaMenuTrigger.addEventListener('mouseenter', () => {
+            clearTimeout(megaMenuTimeout);
+            megaMenu.classList.add('open');
+        });
+
+        megaMenuTrigger.addEventListener('mouseleave', () => {
+            megaMenuTimeout = setTimeout(() => {
+                megaMenu.classList.remove('open');
+            }, 200);
+        });
+
+        megaMenu.addEventListener('mouseenter', () => {
+            clearTimeout(megaMenuTimeout);
+        });
+
+        megaMenu.addEventListener('mouseleave', () => {
+            megaMenuTimeout = setTimeout(() => {
+                megaMenu.classList.remove('open');
+            }, 200);
+        });
+    }
+
+    // Smooth scrolling for anchor links (merged logic)
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            const href = this.getAttribute('href');
+            if (href === '#' || href === "") return;
+            e.preventDefault();
+
+            const targetElement = document.querySelector(href);
+            if (targetElement) {
+                const headerOffset = header ? header.offsetHeight : 0;
+                const elementPosition = targetElement.getBoundingClientRect().top;
+                const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
+                window.scrollTo({
+                    top: offsetPosition,
+                    behavior: 'smooth'
+                });
+
+                // Close mobile menu if open after clicking a link
+                if (mobileMenu && mobileMenu.classList.contains('open')) {
+                    mobileMenuButton.click();
                 }
-                if (mobileMenuIconOpen && mobileMenuIconClose) {
-                    mobileMenuIconOpen.classList.toggle('hidden');
-                    mobileMenuIconClose.classList.toggle('hidden');
-                }
-            });
-        }
-
-        // Mobile Accordion Toggle
-        const accordionButton = document.querySelector('.accordion-button');
-        const accordionContent = document.querySelector('.accordion-content');
-        if (accordionButton && accordionContent) {
-            accordionButton.addEventListener('click', () => {
-                accordionButton.classList.toggle('open');
-                accordionContent.classList.toggle('open');
-            });
-        }
-
-        // Desktop Mega Menu
-        const megaMenuTrigger = document.getElementById('mega-menu-trigger');
-        const megaMenu = document.getElementById('mega-menu');
-        let megaMenuTimeout;
-        if (megaMenuTrigger && megaMenu) {
-            megaMenuTrigger.addEventListener('mouseenter', () => {
-                clearTimeout(megaMenuTimeout);
-                megaMenu.classList.add('open');
-            });
-
-            megaMenuTrigger.addEventListener('mouseleave', () => {
-                megaMenuTimeout = setTimeout(() => {
-                    megaMenu.classList.remove('open');
-                }, 200);
-            });
-
-            megaMenu.addEventListener('mouseenter', () => {
-                clearTimeout(megaMenuTimeout);
-            });
-
-            megaMenu.addEventListener('mouseleave', () => {
-                megaMenuTimeout = setTimeout(() => {
-                    megaMenu.classList.remove('open');
-                }, 200);
-            });
-        }
-
-        // Smooth scrolling for anchor links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function(e) {
-                const href = this.getAttribute('href');
-                if (href === '#' || href === "") return;
-                e.preventDefault();
-
-                const targetElement = document.querySelector(href);
-                if (targetElement) {
-                    const headerOffset = header ? header.offsetHeight : 0;
-                    const elementPosition = targetElement.getBoundingClientRect().top;
-                    const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
-
-                    window.scrollTo({
-                        top: offsetPosition,
-                        behavior: 'smooth'
-                    });
-
-                    // Close mobile menu if open after clicking a link
-                    if (mobileMenu && mobileMenu.classList.contains('open')) {
-                        mobileMenuButton.click();
-                    }
-                }
-            });
+            }
         });
     });
+});
 </script>
+
 
 
 <div id="footer"></div>
