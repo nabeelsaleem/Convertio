@@ -81,78 +81,143 @@
     </script>
     
     <!-- Custom CSS -->
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-        }
-        
-        .nav-dropdown {
-            opacity: 0;
-            visibility: hidden;
-            transform: translateY(15px);
-            transition: all 0.3s ease;
-        }
-        
-        .nav-item:hover .nav-dropdown {
-            opacity: 1;
-            visibility: visible;
-            transform: translateY(0);
-        }
-        
-        .tool-card {
-            transition: all 0.3s ease;
-            height: 100%;
-        }
-        
-        .tool-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-        }
-        
-        .feature-card:hover .feature-icon {
-            background-color: rgba(218, 63, 11, 0.1);
-        }
-        
-        .footer-link:hover {
-            background-color: rgba(255,255,255,0.1);
-        }
-        
-        .mobile-menu {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.3s ease-out;
-        }
-        
-        .mobile-menu.open {
-            max-height: 1000px;
-        }
-        
-        .hero-gradient {
-            background: linear-gradient(135deg, #da3f0b 0%, #f57648 100%);
-        }
-        
-        .btn-primary {
-            background-color: #da3f0b;
-            transition: all 0.3s ease;
-        }
-        
-        .btn-primary:hover {
-            background-color: #c2380a;
-            transform: translateY(-2px);
-        }
-        
-        .btn-outline {
-            border: 2px solid white;
-            transition: all 0.3s ease;
-        }
-        
-        .btn-outline:hover {
-            background-color: white;
-            color: #da3f0b;
-        }
-    </style>
+   <style>
+    body {
+        font-family: 'Inter', sans-serif;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* Header Scroll Effect */
+    .scrolled-effect {
+        background-color: rgba(255, 255, 255, 0.8) !important;
+        box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1) !important;
+        backdrop-filter: blur(8px);
+    }
+
+    /* Mega Menu */
+    #mega-menu {
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(-1rem);
+        transition: all 0.3s ease-in-out;
+        pointer-events: none;
+        right: 0;
+        left: auto;
+        transform-origin: top right;
+        min-width: 800px;
+        width: auto;
+        position: absolute;
+        top: 100%;
+        z-index: 1000;
+    }
+    #mega-menu-trigger:hover > #mega-menu,
+    #mega-menu:hover {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+        pointer-events: auto;
+    }
+    #mega-menu-trigger {
+        position: relative;
+    }
+    
+    /* Mobile Menu */
+    #mobile-menu {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease-in-out;
+    }
+    #mobile-menu.open {
+        max-height: 80vh;
+        box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+    }
+
+    /* Mobile Accordion */
+    .accordion-content {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease-in-out;
+    }
+    .accordion-content.open {
+        max-height: 500px;
+    }
+    .accordion-button.open svg {
+        transform: rotate(180deg);
+    }
+
+    /* Navigation Dropdown */
+    .nav-dropdown {
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(15px);
+        transition: all 0.3s ease;
+    }
+    .nav-item:hover .nav-dropdown {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+    }
+
+    /* Tool Card */
+    .tool-card {
+        transition: all 0.3s ease;
+        height: 100%;
+    }
+    .tool-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    }
+
+    /* Feature Card */
+    .feature-card:hover .feature-icon {
+        background-color: rgba(218, 63, 11, 0.1);
+    }
+
+    /* Footer Link */
+    .footer-link:hover {
+        background-color: rgba(255,255,255,0.1);
+    }
+
+    /* Mobile Menu (alt) - Keeping both as they might be used differently */
+    .mobile-menu {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease-out;
+    }
+    .mobile-menu.open {
+        max-height: 1000px;
+    }
+
+    /* Hero Gradient */
+    .hero-gradient {
+        background: linear-gradient(135deg, #da3f0b 0%, #f57648 100%);
+    }
+
+    /* Buttons */
+    .btn-primary {
+        background-color: #da3f0b;
+        transition: all 0.3s ease;
+    }
+    .btn-primary:hover {
+        background-color: #c2380a;
+        transform: translateY(-2px);
+    }
+    .btn-outline {
+        border: 2px solid white;
+        transition: all 0.3s ease;
+    }
+    .btn-outline:hover {
+        background-color: white;
+        color: #da3f0b;
+    }
+</style>
+    
+
 </head>
 <body class="bg-gray-50 min-h-screen flex flex-col">
+
+    
     <!-- Main Navigation -->
 
    <div id="navbar"></div>
@@ -755,22 +820,328 @@
 
     </script>
 
+<section class="bg-white py-12 sm:py-16">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="prose prose-lg max-w-none prose-h2:text-gray-800 prose-p:text-gray-700">
+            <h2 class="text-3xl font-bold text-gray-900 mb-4">Split PDF – Free Online Tool to Split PDF Pages Instantly</h2>
+            <p class="mb-6 leading-relaxed">
+                Separate and organize your PDF documents effortlessly with our powerful <strong>split pdf</strong> tool that works seamlessly online.  
+                Whether you need to <strong>split pdf online</strong> for work documents, academic papers, or personal files, our comprehensive solution handles all your needs.  
+                Perfect for those looking for a free alternative to <strong>adobe split pdf</strong> or other premium tools, our <strong>split pdf online free</strong> 
+                platform offers advanced features without the cost. Discover the easiest way to <strong>split pdf pages</strong>, <strong>split pdf in half</strong>, 
+                or <strong>split pdf files into multiple files</strong> with our intuitive <strong>split pdf free</strong> tool that also allows you to 
+                <strong>extract pages from pdf</strong> or <strong>delete pages from pdf</strong> with precision.
+            </p>
+            
+            <h2 class="text-2xl font-bold mt-8 mb-4">Why Use Our Split PDF Tool?</h2>
+            <p class="mb-6 leading-relaxed">
+                Manually separating PDF files can be frustrating and time-consuming. Our sophisticated <strong>split pdf</strong> tool simplifies the entire process 
+                with just a few clicks. Whether you need to <strong>split pdf online free</strong> for business reports or personal documents, our solution works 
+                seamlessly across all platforms. The question of "<strong>how to split pdf into multiple files</strong>" becomes effortless with our intuitive interface 
+                that allows you to <strong>split pdf files into multiple files online free</strong> without any watermarks or limitations. Perfect for professionals, 
+                students, businesses, and anyone who regularly works with PDF documents and needs a reliable alternative to <strong>adobe split pdf</strong> or 
+                <strong>split pdf i love pdf</strong> services.
+            </p>
+            
+            <h2 class="text-2xl font-bold mt-8 mb-4">Key Features of Our Split PDF Tool</h2>
+            <p class="mb-6 leading-relaxed">
+                - <strong>Advanced page splitting</strong> with our comprehensive <strong>split pdf pages</strong> functionality<br>
+                - <strong>Multiple splitting methods</strong> including <strong>split pdf in half</strong> and custom page ranges<br>
+                - <strong>Extraction capabilities</strong> to <strong>extract pages from pdf</strong> for specific needs<br>
+                - <strong>Deletion features</strong> to <strong>delete pages from pdf</strong> quickly and easily<br>
+                - <strong>Bulk processing</strong> for <strong>split pdf files into multiple files</strong> efficiently<br>
+                - <strong>No cost involved</strong> with our completely <strong>split pdf free</strong> service<br>
+                - <strong>Online convenience</strong> with our <strong>split pdf online</strong> platform accessible anywhere
+            </p>
+            
+            <h2 class="text-2xl font-bold mt-8 mb-4">How to Split PDF Files - Simple Steps</h2>
+            <p class="leading-relaxed">
+                1. <strong>Upload your PDF file</strong> to our <strong>split pdf online</strong> tool<br>
+                2. <strong>Choose your splitting method</strong> - whether to <strong>split pdf in half</strong>, by page ranges, or extract specific pages<br>
+                3. <strong>Select pages to extract</strong> or <strong>delete pages from pdf</strong> as needed<br>
+                4. <strong>Process your split</strong> to <strong>split pdf files into multiple files</strong> seamlessly<br>
+                5. <strong>Download your separated PDFs</strong> - perfect for organizing documents, creating presentations, or managing archives<br>
+                6. <strong>Use repeatedly</strong> with our <strong>split pdf online free</strong> service for all your PDF management needs
+            </p>
+        </div>
+    </div>
+</section>
+<!-- FAQ Section -->
+<section class="bg-gray-50 py-12 sm:py-16">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <h2 class="text-3xl font-bold text-center text-gray-900 mb-8">Split PDF FAQs</h2>
+        <div class="space-y-4">
+            <!-- FAQ 1 -->
+            <div class="bg-white rounded-lg shadow-sm">
+                <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-primary">
+                    <span>How to split pdf into multiple files?</span>
+                    <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                    </svg>
+                </button>
+                <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                    <p class="p-5 pt-0 text-gray-600">
+                        Splitting PDF into multiple files is simple with our <strong>split pdf</strong> tool. Just upload your document, 
+                        choose how you want to <strong>split pdf pages</strong> - whether by individual pages, specific ranges, or splitting 
+                        the document <strong>in half</strong>. Our <strong>split pdf online free</strong> tool processes everything instantly, 
+                        allowing you to <strong>split pdf files into multiple files</strong> seamlessly. You can also use our tool to 
+                        <strong>extract pages from pdf</strong> or <strong>delete pages from pdf</strong> as needed.
+                    </p>
+                </div>
+            </div>
+            
+            <!-- FAQ 2 -->
+            <div class="bg-white rounded-lg shadow-sm">
+                <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-primary">
+                    <span>How to split pdf pages effectively?</span>
+                    <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                    </svg>
+                </button>
+                <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                    <p class="p-5 pt-0 text-gray-600">
+                        Our <strong>split pdf</strong> tool offers multiple methods to <strong>split pdf pages</strong> effectively. 
+                        You can split by individual pages, page ranges, or even <strong>split pdf in half</strong> for balanced separation. 
+                        The tool also allows you to <strong>extract pages from pdf</strong> selectively or <strong>delete pages from pdf</strong> 
+                        before splitting. This flexibility makes it easy to <strong>split pdf files into multiple files</strong> exactly how you need them, 
+                        whether you're using our <strong>split pdf online</strong> service or comparing it to <strong>adobe split pdf</strong> alternatives.
+                    </p>
+                </div>
+            </div>
+            
+            <!-- FAQ 3 -->
+            <div class="bg-white rounded-lg shadow-sm">
+                <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-primary">
+                    <span>Is this split PDF tool completely free?</span>
+                    <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                    </svg>
+                </button>
+                <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                    <p class="p-5 pt-0 text-gray-600">
+                        Yes! Our <strong>split pdf free</strong> tool is 100% free with no hidden costs or premium tiers. 
+                        You can <strong>split pdf online</strong> as many files as you need without watermarks, usage limits, or registration requirements. 
+                        This makes it an excellent alternative to paid services like <strong>adobe split pdf</strong> or <strong>split pdf i love pdf</strong>. 
+                        Enjoy complete <strong>split pdf files into multiple files online free</strong> capabilities whenever you need them.
+                    </p>
+                </div>
+            </div>
+            
+            <!-- FAQ 4 -->
+            <div class="bg-white rounded-lg shadow-sm">
+                <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-primary">
+                    <span>Can I extract specific pages from a PDF?</span>
+                    <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                    </svg>
+                </button>
+                <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                    <p class="p-5 pt-0 text-gray-600">
+                        Absolutely! Our <strong>split pdf</strong> tool includes powerful extraction features that allow you to 
+                        <strong>extract pages from pdf</strong> documents with precision. Whether you need a single page or multiple 
+                        specific pages, our <strong>split pdf online</strong> service makes it easy. You can also use this feature to 
+                        effectively <strong>delete pages from pdf</strong> by extracting only the pages you want to keep. This functionality 
+                        is perfect for creating custom documents from larger files or preparing specific content for presentations.
+                    </p>
+                </div>
+            </div>
+
+            <!-- FAQ 5 -->
+            <div class="bg-white rounded-lg shadow-sm">
+                <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-primary">
+                    <span>How does your tool compare to Adobe Split PDF?</span>
+                    <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                    </svg>
+                </button>
+                <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                    <p class="p-5 pt-0 text-gray-600">
+                        Our <strong>split pdf</strong> tool offers several advantages over <strong>adobe split pdf</strong>. While Adobe requires 
+                        expensive software subscriptions, our service is completely <strong>split pdf free</strong>. We provide the same 
+                        professional capabilities to <strong>split pdf pages</strong>, <strong>extract pages from pdf</strong>, and 
+                        <strong>split pdf files into multiple files</strong> without any cost. Unlike <strong>split pdf i love pdf</strong> 
+                        which may have limitations, our <strong>split pdf online free</strong> tool offers unlimited use with no watermarks 
+                        or file size restrictions.
+                    </p>
+                </div>
+            </div>
+            
+            <!-- FAQ 6 -->
+            <div class="bg-white rounded-lg shadow-sm">
+                <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-primary">
+                    <span>Can I split a PDF file in half?</span>
+                    <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                    </svg>
+                </button>
+                <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                    <p class="p-5 pt-0 text-gray-600">
+                        Yes! Our tool includes a specific feature to <strong>split pdf in half</strong> seamlessly. This is perfect for 
+                        dividing large documents into more manageable sections or creating two separate files from a single document. 
+                        Whether you need to <strong>split pdf files into multiple files</strong> by equal halves or custom divisions, 
+                        our <strong>split pdf online</strong> tool provides precise control. This functionality, combined with our ability to 
+                        <strong>extract pages from pdf</strong> and <strong>delete pages from pdf</strong>, makes our comprehensive 
+                        <strong>split pdf free</strong> service ideal for all your PDF separation needs.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 
 
 
+       <!-- Footer Placeholder -->
+    <div id="footer"></div>
 
 
-<div id="footer"></div>
+    <!-- Footer -->
+    <script>
+    function initializeHeaderScripts() {
+        // Header Scroll Effect
+        const header = document.getElementById('header');
+        if (header) {
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 10) {
+                    header.classList.add('scrolled-effect');
+                } else {
+                    header.classList.remove('scrolled-effect');
+                }
+            });
+        }
 
-<script>
-  async function includeHTML(id, file) {
-    const res = await fetch(file);
-    const html = await res.text();
-    document.getElementById(id).innerHTML = html;
-  }
+        // Mobile Menu Toggle (supports both icon sets)
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const menuIconBars = document.getElementById('menu-icon-bars');
+        const menuIconTimes = document.getElementById('menu-icon-times');
+        const mobileMenuIconOpen = document.getElementById('mobile-menu-icon-open');
+        const mobileMenuIconClose = document.getElementById('mobile-menu-icon-close');
+        
+        if (mobileMenuButton && mobileMenu) {
+            mobileMenuButton.addEventListener('click', () => {
+                mobileMenu.classList.toggle('open');
+                
+                if (menuIconBars && menuIconTimes) {
+                    menuIconBars.classList.toggle('hidden');
+                    menuIconTimes.classList.toggle('hidden');
+                }
+                if (mobileMenuIconOpen && mobileMenuIconClose) {
+                    mobileMenuIconOpen.classList.toggle('hidden');
+                    mobileMenuIconClose.classList.toggle('hidden');
+                }
+            });
+        }
 
-  includeHTML('navbar', '/components/navbar.html');
-  includeHTML('footer', '/components/footer.html');
+        // Mobile Accordion Toggle
+        const accordionButton = document.querySelector('.accordion-button');
+        const accordionContent = document.querySelector('.accordion-content');
+        
+        if (accordionButton && accordionContent) {
+            accordionButton.addEventListener('click', () => {
+                accordionButton.classList.toggle('open');
+                accordionContent.classList.toggle('open');
+            });
+        }
+    }
+    
+    function initializeFooterScripts() {
+        // Set Current Year in Footer
+        const yearSpan = document.getElementById('current-year');
+        if(yearSpan) {
+            yearSpan.textContent = new Date().getFullYear();
+        }
+    }
+
+    async function loadComponent(url, elementId, callback) {
+        try {
+            const response = await fetch(url);
+            if (!response.ok) {
+                throw new Error(`Failed to load component from ${url}. Status: ${response.status}`);
+            }
+            const text = await response.text();
+            const element = document.getElementById(elementId);
+            if (element) {
+                element.innerHTML = text;
+                if (callback) {
+                    callback();
+                }
+            } else {
+                console.error(`Element with id '${elementId}' not found.`);
+            }
+        } catch (error) {
+            console.error('Error loading component:', error);
+            const element = document.getElementById(elementId);
+            if(element) element.innerHTML = `<p class="text-center text-red-500">Error: Could not load component.</p>`;
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        // Load Header and Footer components
+        loadComponent('/components/navbar.html', 'navbar', initializeHeaderScripts);
+        loadComponent('/components/footer.html', 'footer', initializeFooterScripts);
+        
+        // Smooth scrolling for anchor links
+        document.addEventListener('click', function (e) {
+            const anchor = e.target.closest('a[href^="#"]');
+            if (!anchor) return;
+
+            const href = anchor.getAttribute('href');
+            if (href === '#' || href === "") return;
+
+            e.preventDefault();
+            
+            const targetElement = document.querySelector(href);
+            if (targetElement) {
+                const header = document.getElementById('header');
+                const headerOffset = header ? header.offsetHeight : 80; // Default offset if header not yet loaded
+                const elementPosition = targetElement.getBoundingClientRect().top;
+                const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+            
+                window.scrollTo({
+                    top: offsetPosition,
+                    behavior: 'smooth'
+                });
+
+                // Close mobile menu if open after clicking a link
+                const mobileMenu = document.getElementById('mobile-menu');
+                if (mobileMenu && mobileMenu.classList.contains('open')) {
+                    const mobileMenuButton = document.getElementById('mobile-menu-button');
+                    if(mobileMenuButton) mobileMenuButton.click();
+                }
+            }
+        });
+
+        // FAQ Accordion Logic
+        const faqToggles = document.querySelectorAll('[data-faq-toggle]');
+        faqToggles.forEach(button => {
+            button.addEventListener('click', () => {
+                const answer = button.nextElementSibling;
+                const icon = button.querySelector('.faq-icon');
+                const isOpening = !answer.style.maxHeight;
+
+                // Close all other open FAQs
+                faqToggles.forEach(otherButton => {
+                    if (otherButton !== button) {
+                        otherButton.nextElementSibling.style.maxHeight = null;
+                        otherButton.querySelector('.faq-icon').classList.remove('rotate-90');
+                        otherButton.querySelector('.faq-icon').classList.add('-rotate-90');
+                    }
+                });
+
+                // Toggle the clicked FAQ
+                if (isOpening) {
+                    answer.style.maxHeight = answer.scrollHeight + "px";
+                    icon.classList.remove('-rotate-90');
+                    icon.classList.add('rotate-90');
+                } else {
+                    answer.style.maxHeight = null;
+                    icon.classList.remove('rotate-90');
+                    icon.classList.add('-rotate-90');
+                }
+            });
+        });
+    });
 </script>
 
 
@@ -778,44 +1149,6 @@
 
 
 
-    <!-- JavaScript -->
-    <script>
-        // Mobile menu toggle
-        document.addEventListener('DOMContentLoaded', function() {
-            const mobileMenuButton = document.getElementById('mobile-menu-button');
-            const mobileMenu = document.getElementById('mobile-menu');
-            
-            if (mobileMenuButton && mobileMenu) {
-                const menuIconBars = document.getElementById('menu-icon-bars');
-                const menuIconTimes = document.getElementById('menu-icon-times');
-                
-                mobileMenuButton.addEventListener('click', function() {
-                    mobileMenu.classList.toggle('open');
-                    
-                    if (menuIconBars && menuIconTimes) {
-                        menuIconBars.classList.toggle('hidden');
-                        menuIconTimes.classList.toggle('hidden');
-                    }
-                });
-            }
-            
-            // Smooth scrolling for anchor links
-            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-                anchor.addEventListener('click', function (e) {
-                    e.preventDefault();
-                    
-                    const targetId = this.getAttribute('href');
-                    if (targetId === '#') return;
-                    
-                    const targetElement = document.querySelector(targetId);
-                    if (targetElement) {
-                        targetElement.scrollIntoView({
-                            behavior: 'smooth'
-                        });
-                    }
-                });
-            });
-        });
-    </script>
 </body>
 </html>
+
