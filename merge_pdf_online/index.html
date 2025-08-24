@@ -93,207 +93,155 @@
     </script>
     
     <!-- Custom CSS -->
+
+
+
     <style>
-        body {
-            font-family: 'Inter', sans-serif;
-        }
-        
-        .nav-dropdown {
-            opacity: 0;
-            visibility: hidden;
-            transform: translateY(15px);
-            transition: all 0.3s ease;
-        }
-        
-        .nav-item:hover .nav-dropdown {
-            opacity: 1;
-            visibility: visible;
-            transform: translateY(0);
-        }
-        
-        .tool-card {
-            transition: all 0.3s ease;
-            height: 100%;
-        }
-        
-        .tool-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-        }
-        
-        .feature-card:hover .feature-icon {
-            background-color: rgba(218, 63, 11, 0.1);
-        }
-        
-        .footer-link:hover {
-            background-color: rgba(255,255,255,0.1);
-        }
-        
-        .mobile-menu {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.3s ease-out;
-        }
-        
-        .mobile-menu.open {
-            max-height: 1000px;
-        }
-        
-        .hero-gradient {
-            background: linear-gradient(135deg, #da3f0b 0%, #f57648 100%);
-        }
-        
-        .btn-primary {
-            background-color: #da3f0b;
-            transition: all 0.3s ease;
-        }
-        
-        .btn-primary:hover {
-            background-color: #c2380a;
-            transform: translateY(-2px);
-        }
-        
-        .btn-outline {
-            border: 2px solid white;
-            transition: all 0.3s ease;
-        }
-        
-        .btn-outline:hover {
-            background-color: white;
-            color: #da3f0b;
-        }
-    </style>
+    body {
+        font-family: 'Inter', sans-serif;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* Header Scroll Effect */
+    .scrolled-effect {
+        background-color: rgba(255, 255, 255, 0.8) !important;
+        box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1) !important;
+        backdrop-filter: blur(8px);
+    }
+
+    /* Mega Menu */
+    #mega-menu {
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(-1rem);
+        transition: all 0.3s ease-in-out;
+        pointer-events: none;
+        right: 0;
+        left: auto;
+        transform-origin: top right;
+        min-width: 800px;
+        width: auto;
+        position: absolute;
+        top: 100%;
+        z-index: 1000;
+    }
+    #mega-menu-trigger:hover > #mega-menu,
+    #mega-menu:hover {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+        pointer-events: auto;
+    }
+    #mega-menu-trigger {
+        position: relative;
+    }
+    
+    /* Mobile Menu */
+    #mobile-menu {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease-in-out;
+    }
+    #mobile-menu.open {
+        max-height: 80vh;
+        box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+    }
+
+    /* Mobile Accordion */
+    .accordion-content {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease-in-out;
+    }
+    .accordion-content.open {
+        max-height: 500px;
+    }
+    .accordion-button.open svg {
+        transform: rotate(180deg);
+    }
+
+    /* Navigation Dropdown */
+    .nav-dropdown {
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(15px);
+        transition: all 0.3s ease;
+    }
+    .nav-item:hover .nav-dropdown {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+    }
+
+    /* Tool Card */
+    .tool-card {
+        transition: all 0.3s ease;
+        height: 100%;
+    }
+    .tool-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    }
+
+    /* Feature Card */
+    .feature-card:hover .feature-icon {
+        background-color: rgba(218, 63, 11, 0.1);
+    }
+
+    /* Footer Link */
+    .footer-link:hover {
+        background-color: rgba(255,255,255,0.1);
+    }
+
+    /* Mobile Menu (alt) - Keeping both as they might be used differently */
+    .mobile-menu {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease-out;
+    }
+    .mobile-menu.open {
+        max-height: 1000px;
+    }
+
+    /* Hero Gradient */
+    .hero-gradient {
+        background: linear-gradient(135deg, #da3f0b 0%, #f57648 100%);
+    }
+
+    /* Buttons */
+    .btn-primary {
+        background-color: #da3f0b;
+        transition: all 0.3s ease;
+    }
+    .btn-primary:hover {
+        background-color: #c2380a;
+        transform: translateY(-2px);
+    }
+    .btn-outline {
+        border: 2px solid white;
+        transition: all 0.3s ease;
+    }
+    .btn-outline:hover {
+        background-color: white;
+        color: #da3f0b;
+    }
+</style>
+    
+
+
 </head>
 <body class="bg-gray-50 min-h-screen flex flex-col">
     <!-- Main Navigation -->
-    <header class="bg-white shadow-sm sticky top-0 z-50 w-full">
-        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-16">
-                <!-- Logo -->
-                <div class="flex-shrink-0">
-                    <a href="/" class="text-2xl font-bold text-primary flex items-center">
-                        <svg width="40" height="45" viewBox="0 0 164 145" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-<rect width="144" height="145" fill="url(#pattern0_4986_183)"/>
-<defs>
-<pattern id="pattern0_4986_183" patternContentUnits="objectBoundingBox" width="1" height="1">
-<use xlink:href="#image0_4986_183" transform="scale(0.00694444 0.00689655)"/>
-</pattern>
-<image id="image0_4986_183" width="144" height="145" preserveAspectRatio="none" xlink:href="data:image/png;base64,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"/>
-</defs>
-</svg>
+    <div id="navbar"></div>
 
-                        simpliconvert
-                    </a>
-                </div>
-
-                <!-- Desktop Navigation -->
-                <div class="hidden md:flex items-center space-x-6">
-                    <div class="relative nav-item group">
-                        <a href="/merge_pdf_online/" class="flex items-center font-medium text-gray-800 hover:text-primary transition px-3 py-2">
-                            Merge PDF
-                        </a>
-                    </div>
-
-                    <div class="relative nav-item group">
-                        <a href="/compress_pdf/" class="flex items-center font-medium text-gray-800 hover:text-primary transition px-3 py-2">
-                            Compress PDF
-                        </a>    
-                    </div>
-
-                    <div class="relative nav-item group">
-                        <a href="/split_pdf/" class="flex items-center font-medium text-gray-800 hover:text-primary transition px-3 py-2">
-                            Split PDF
-                        </a>
-                    </div>
-
-                    <div class="relative nav-item group">
-                        <a href="/sign_pdf/" class="flex items-center font-medium text-gray-800 hover:text-primary transition px-3 py-2">
-                            Sign PDF
-                        </a>
-                    </div>
-                    
-                    <div class="relative nav-item group">
-                        <button class="flex items-center font-medium text-gray-800 hover:text-primary transition px-1 py-4">
-                           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#DA3F0B" class="size-6">
-  <path fill-rule="evenodd" d="M1.5 6a2.25 2.25 0 0 1 2.25-2.25h16.5A2.25 2.25 0 0 1 22.5 6v12a2.25 2.25 0 0 1-2.25 2.25H3.75A2.25 2.25 0 0 1 1.5 18V6ZM3 16.06V18c0 .414.336.75.75.75h16.5A.75.75 0 0 0 21 18v-1.94l-2.69-2.689a1.5 1.5 0 0 0-2.12 0l-.88.879.97.97a.75.75 0 1 1-1.06 1.06l-5.16-5.159a1.5 1.5 0 0 0-2.12 0L3 16.061Zm10.125-7.81a1.125 1.125 0 1 1 2.25 0 1.125 1.125 0 0 1-2.25 0Z" clip-rule="evenodd" />
-</svg>
-
-                            Image Tools 
-                          <svg class="ml-2 text-xs h-3 w-3" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" aria-hidden="true"><title>Chevron Down</title><path d="M143 352.3L7 216.3c-9.4-9.4-9.4-24.6 0-33.9l22.6-22.6c9.4-9.4 24.6-9.4 33.9 0l80.7 80.7L258.1 159.8c9.4-9.4 24.6-9.4 33.9 0l22.6 22.6c9.4 9.4 9.4 24.6 0 33.9l-136 136c-9.4 9.5-24.6 9.5-34 .1z"/></svg>
-                        </button>
-                        <div class="nav-dropdown absolute left-7 mt-2 w-64 bg-white rounded-lg shadow-xl p-4 z-50 border border-gray-100">
-                            <div class="grid grid-cols-1 gap-2">
-                                <a href="/jpg_to_pdf/" class="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-50 hover:text-primary rounded-lg transition">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="#DA3F0B" d="M17.5 6h3.9a.25.25 0 0 0 .17-.43L16.43.43A.25.25 0 0 0 16 .6v3.9A1.5 1.5 0 0 0 17.5 6M12 13.12h-.62a.26.26 0 0 0-.26.26v1.24a.26.26 0 0 0 .26.26H12a.88.88 0 0 0 0-1.76"/><path fill="#DA3F0B" d="M21.75 7H17.5A2.5 2.5 0 0 1 15 4.5V.25a.25.25 0 0 0-.25-.25H4a2 2 0 0 0-2 2v20a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V7.25a.25.25 0 0 0-.25-.25M9.12 17a2.12 2.12 0 1 1-4.24 0a.62.62 0 1 1 1.24 0a.88.88 0 1 0 1.76 0v-4.5a.62.62 0 0 1 1.24 0Zm2.75-.88h-.49a.26.26 0 0 0-.26.26v2.12a.62.62 0 1 1-1.24 0v-6a.61.61 0 0 1 .62-.62H12a2.12 2.12 0 0 1 2.11 2.34a2.2 2.2 0 0 1-2.24 1.9m7.25-1.62a.62.62 0 1 1-1.24 0V14a.88.88 0 0 0-1.76 0v3a.88.88 0 0 0 1.65.42c.05-.09.12-.3-.09-.3h-.18a.62.62 0 1 1 0-1.24h1a.62.62 0 0 1 .62.62v.5a2.12 2.12 0 0 1-4.24 0v-3a2.12 2.12 0 0 1 4.24 0Z"/></svg>
-                                    <div>
-                                        <h4 class="font-medium">JPG to PDF</h4>
-                                        <p class="text-xs text-gray-500">Convert JPG images to PDF in seconds</p>
-                                    </div>
-                                </a>
-                                <a href="/resize_image/" class="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-50 hover:text-primary rounded-lg transition">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 20 20"><path fill="#DA3F0B" d="M5.25 2A3.25 3.25 0 0 0 2 5.25v3a.75.75 0 0 0 1.5 0v-3c0-.966.784-1.75 1.75-1.75h3a.75.75 0 0 0 0-1.5zm6.5 0a.75.75 0 0 0 0 1.5h3c.966 0 1.75.784 1.75 1.75v3a.75.75 0 0 0 1.5 0v-3A3.25 3.25 0 0 0 14.75 2zM18 11.75a.75.75 0 0 0-1.5 0v3a1.75 1.75 0 0 1-1.75 1.75h-3a.75.75 0 0 0 0 1.5h3A3.25 3.25 0 0 0 18 14.75zM1 12.5A2.5 2.5 0 0 1 3.5 10h4a2.5 2.5 0 0 1 2.5 2.5v4c0 .51-.152.983-.414 1.379L6.56 14.854a1.5 1.5 0 0 0-2.122 0l-3.025 3.025A2.5 2.5 0 0 1 1 16.5zm7 .25a.75.75 0 1 0-1.5 0a.75.75 0 0 0 1.5 0m-5.879 5.836c.396.262.87.414 1.379.414h4c.51 0 .983-.152 1.379-.414L5.854 15.56a.5.5 0 0 0-.708 0z"/></svg>
-                                    <div>
-                                        <h4 class="font-medium">Resize Image</h4>
-                                        <p class="text-xs text-gray-500">Adjust image dimensions</p>
-                                    </div>
-                                </a>
-                                <a href="/compress_image" class="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-50 hover:text-primary rounded-lg transition">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 448 512"><path fill="#DA3F0B" d="M4.686 427.314L104 328l-32.922-31.029C55.958 281.851 66.666 256 88.048 256h112C213.303 256 224 266.745 224 280v112c0 21.382-25.803 32.09-40.922 16.971L152 376l-99.314 99.314c-6.248 6.248-16.379 6.248-22.627 0L4.686 449.941c-6.248-6.248-6.248-16.379 0-22.627M443.314 84.686L344 184l32.922 31.029c15.12 15.12 4.412 40.971-16.97 40.971h-112C234.697 256 224 245.255 224 232V120c0-21.382 25.803-32.09 40.922-16.971L296 136l99.314-99.314c6.248-6.248 16.379-6.248 22.627 0l25.373 25.373c6.248 6.248 6.248 16.379 0 22.627"/></svg>
-                                    <div>
-                                        <h4 class="font-medium">Compress Image</h4>
-                                        <p class="text-xs text-gray-500">Reduce image file size</p>
-                                    </div>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Mobile menu button -->
-                <div class="md:hidden flex items-center">
-                    <button id="mobile-menu-button" class="text-gray-800 hover:text-primary focus:outline-none" aria-label="Toggle menu">
-                        <svg id="menu-icon-bars" class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-                        </svg>
-                        <svg id="menu-icon-times" class="h-6 w-6 hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                        </svg>
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Mobile menu -->
-        <div id="mobile-menu" class="mobile-menu md:hidden bg-white shadow-lg">
-            <div class="px-4 py-3 space-y-2">
-                <a href="/merge_pdf_online/" class="block px-3 py-2 text-gray-800 hover:text-primary hover:bg-gray-50 rounded-md transition">Merge PDF</a>
-                <a href="/compress_pdf/" class="block px-3 py-2 text-gray-800 hover:text-primary hover:bg-gray-50 rounded-md transition">Compress PDF</a>
-                <a href="/split_pdf/" class="block px-3 py-2 text-gray-800 hover:text-primary hover:bg-gray-50 rounded-md transition">Split PDF</a>
-                <a href="/sign_pdf/" class="block px-3 py-2 text-gray-800 hover:text-primary hover:bg-gray-50 rounded-md transition">Sign PDF</a>
-                
-                <div class="pt-2 border-t border-gray-100">
-                    <button class="flex items-center justify-between w-full px-3 py-2 text-gray-800 hover:text-primary rounded-md transition">
-                        <span class="flex items-center">
-                            <svg class="mr-2 text-primary h-5 w-5" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" aria-hidden="true"><title>Image</title><path d="M448 80H64C28.7 80 0 108.7 0 144v224c0 35.3 28.7 64 64 64h384c35.3 0 64-28.7 64-64V144c0-35.3-28.7-64-64-64zM64 368V144h384v224H64zM256 192c-35.3 0-64 28.7-64 64s28.7 64 64 64 64-28.7 64-64-28.7-64-64-64z"/></svg> Image Tools
-                        </span>
-                        <svg class="text-xs h-3 w-3" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" aria-hidden="true"><title>Chevron Down</title><path d="M143 352.3L7 216.3c-9.4-9.4-9.4-24.6 0-33.9l22.6-22.6c9.4-9.4 24.6-9.4 33.9 0l80.7 80.7L258.1 159.8c9.4-9.4 24.6-9.4 33.9 0l22.6 22.6c9.4 9.4 9.4 24.6 0 33.9l-136 136c-9.4 9.5-24.6 9.5-34 .1z"/></svg>
-                    </button>
-                    <div class="pl-6 mt-1 space-y-1">
-                        <a href="/jpg_to_pdf/" class="block px-3 py-2 text-sm text-gray-700 hover:text-primary hover:bg-gray-50 rounded-md transition">JPG to PDF</a>
-                        <a href="/resize_image/" class="block px-3 py-2 text-sm text-gray-700 hover:text-primary hover:bg-gray-50 rounded-md transition">Resize Image</a>
-                        <a href="/compress_image/" class="block px-3 py-2 text-sm text-gray-700 hover:text-primary hover:bg-gray-50 rounded-md transition">Compress Image</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </header>
 
     <!-- Hero Section -->
     <section class="hero-white text-black py-2 md:py-10">
         <div class="container mx-auto px-4 text-center">
-            <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-2">Merge PDF</h1>
+            <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-2">Merge PDF Online Free</h1>
             <p class="text-lg md:text-xl max-w-3x1 mx-auto mb-2">
-                Drag to reorder, then rotate, and merge your PDF files with ease.
+                Merge PDF Online Free Unlimited, No Signup, Without Email. Drag to reorder, then rotate, and merge your PDF files with ease.
             </p>
            <!-- <div class="flex flex-col sm:flex-row justify-center gap-4">
                 <a href="#all-tools" class="btn-primary px-8 py-3 rounded-lg font-semibold text-white inline-flex items-center justify-center">
@@ -307,10 +255,6 @@
     </section>
 
     <!-- TOOL START -->
-
-
-
-    <!-- TOOL END -->
 
 <script>
     // Inline critical Tailwind configuration
@@ -703,122 +647,340 @@
 
 
 
-    <!-- Footer -->
-    <footer class="bg-gray-800 text-white pt-16 pb-8">
-        <div class="container mx-auto px-4">
-            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8 mb-12">
-                <!-- Company Info -->
-                <div class="col-span-2 lg:col-span-1">
-                    <h3 class="text-xl font-bold mb-6 flex items-center">
-                       <svg width="44" height="45" viewBox="0 0 164 145" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-<rect width="144" height="145" fill="url(#pattern0_4986_183)"/>
-<defs>
-<pattern id="pattern0_4986_183" patternContentUnits="objectBoundingBox" width="1" height="1">
-<use xlink:href="#image0_4986_183" transform="scale(0.00694444 0.00689655)"/>
-</pattern>
-<image id="image0_4986_183" width="144" height="145" preserveAspectRatio="none" xlink:href="data:image/png;base64,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"/>
-</defs>
-</svg>
- simpliconvert
-                    </h3>
-                    <p class="text-gray-300 mb-4">Simpliconvert offers 100% free tools to convert, edit, and manage files.</p>
+<section class="bg-white py-12 sm:py-16">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="prose prose-lg max-w-none prose-h2:text-gray-800 prose-p:text-gray-700">
+            <h2 class="text-3xl font-bold text-gray-900 mb-4">Merge PDF Online – Free Tool to Combine PDF Files Instantly</h2>
+            <p class="mb-6 leading-relaxed">
+                Combine multiple PDF documents seamlessly with our powerful <strong>merge pdf online</strong> tool that works perfectly on any device.  
+                Whether you need to <strong>merge pdf online combine pdf files for free</strong> for work documents, academic papers, or personal files, 
+                our comprehensive solution handles all your needs. Perfect for <strong>merge pdf on iphone</strong> mobile users, desktop users, 
+                or anyone needing a reliable <strong>pdf editor merge online</strong> solution. Discover the easiest way to <strong>how do i combine two pdf into one</strong> 
+                or <strong>how to merge 4 pdfs into 1</strong> with our advanced <strong>merge pdf online free tool</strong> that offers <strong>pdf merge without limit</strong> 
+                and <strong>merge pdf online without watermark</strong> for professional results.
+            </p>
+            
+            <h2 class="text-2xl font-bold mt-8 mb-4">Why Use Our Merge PDF Online Tool?</h2>
+            <p class="mb-6 leading-relaxed">
+                Manually combining PDF files can be frustrating and time-consuming. Our sophisticated <strong>merge pdf online</strong> tool simplifies the entire process 
+                with just a few clicks. Whether you need to <strong>merge pdf online combine pdf files for free</strong> for business reports or personal documents, 
+                our solution works seamlessly across all platforms. The question of "<strong>how to merge pdf files online</strong>" becomes effortless with our intuitive interface 
+                that allows you to <strong>merge pdf online without watermark</strong> and enjoy <strong>pdf merge without limit</strong>. Perfect for professionals, 
+                students, businesses, and anyone who regularly works with PDF documents and needs a reliable <strong>pdf editor merge online</strong> solution.
+            </p>
+            
+            <h2 class="text-2xl font-bold mt-8 mb-4">Key Features of Our Merge PDF Online Tool</h2>
+            <p class="mb-6 leading-relaxed">
+                - <strong>Unlimited merging capability</strong> with our <strong>pdf merge without limit</strong> feature<br>
+                - <strong>Complete mobile compatibility</strong> for <strong>merge pdf on iphone</strong> and Android devices<br>
+                - <strong>No watermark guarantee</strong> with our <strong>merge pdf online without watermark</strong> promise<br>
+                - <strong>Advanced editing features</strong> through our <strong>pdf editor merge online</strong> functionality<br>
+                - <strong>Multiple file combination</strong> from <strong>how do i combine two pdf into one</strong> to dozens of files<br>
+                - <strong>Secure processing</strong> with military-grade encryption for all your documents<br>
+                - 100% free <strong>merge pdf online free tool</strong> with no registration or hidden costs
+            </p>
+            
+            <h2 class="text-2xl font-bold mt-8 mb-4">How to Merge PDF Files Online - Simple Steps</h2>
+            <p class="leading-relaxed">
+                1. <strong>Upload your PDF files</strong> to our <strong>merge pdf online</strong> tool<br>
+                2. <strong>Arrange your documents</strong> in the desired order for your combined PDF<br>
+                3. <strong>Edit if needed</strong> using our <strong>pdf editor merge online</strong> features<br>
+                4. <strong>Process your merge</strong> whether you need to <strong>how do i combine two pdf into one</strong> or multiple files<br>
+                5. <strong>Download your merged PDF</strong> - perfect for presentations, submissions, or archives<br>
+                6. <strong>Use on any device</strong> including <strong>merge pdf on iphone</strong> for mobile convenience
+            </p>
+        </div>
+    </div>
+</section>
+<!-- FAQ Section -->
+<section class="bg-gray-50 py-12 sm:py-16">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <h2 class="text-3xl font-bold text-center text-gray-900 mb-8">Merge PDF Online FAQs</h2>
+        <div class="space-y-4">
+            <!-- FAQ 1 -->
+            <div class="bg-white rounded-lg shadow-sm">
+                <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-primary">
+                    <span>How to merge pdf files online?</span>
+                    <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                    </svg>
+                </button>
+                <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                    <p class="p-5 pt-0 text-gray-600">
+                        Merging PDF files online is simple with our <strong>merge pdf online</strong> tool. Just upload your documents, 
+                        arrange them in your preferred order, and click merge. Our <strong>merge pdf online free tool</strong> processes 
+                        everything instantly, allowing you to <strong>how do i combine two pdf into one</strong> or multiple files seamlessly. 
+                        You can also use our <strong>pdf editor merge online</strong> features to make adjustments before finalizing your merged document.
+                    </p>
                 </div>
-
-                <!-- PDF Tools -->
-                <div>
-                    <h3 class="text-lg font-semibold mb-6">PDF Tools</h3>
-                    <ul class="space-y-3">
-                        <li><a href="#" class="flex items-center text-gray-300 hover:text-white p-2 rounded-lg transition duration-300">Merge PDF</a></li>
-                        <li><a href="#" class="flex items-center text-gray-300 hover:text-white p-2 rounded-lg transition duration-300">Split PDF</a></li>
-                        <li><a href="#" class="flex items-center text-gray-300 hover:text-white p-2 rounded-lg transition duration-300">Compress PDF</a></li>
-                        <li><a href="#" class="flex items-center text-gray-300 hover:text-white p-2 rounded-lg transition duration-300">PDF to Word</a></li>
-                    </ul>
+            </div>
+            
+            <!-- FAQ 2 -->
+            <div class="bg-white rounded-lg shadow-sm">
+                <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-primary">
+                    <span>How to merge scanned documents into one pdf online?</span>
+                    <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                    </svg>
+                </button>
+                <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                    <p class="p-5 pt-0 text-gray-600">
+                        Our <strong>merge pdf online</strong> tool perfectly handles scanned documents. Whether you have multiple scanned 
+                        pages or documents, you can easily <strong>merge pdf online combine pdf files for free</strong> into a single PDF. 
+                        The process is identical to regular PDF merging - upload your scanned PDFs, arrange them in order, and our tool 
+                        will create a unified document. This is ideal for digitizing paperwork, creating portfolios, or organizing records 
+                        with our <strong>merge pdf online without watermark</strong> guarantee.
+                    </p>
                 </div>
-                <div>
-                    <h3 class="text-lg font-semibold mb-6">PDF Tools</h3>
-                    <ul class="space-y-3">
-                        <li><a href="#" class="flex items-center text-gray-300 hover:text-white p-2 rounded-lg transition duration-300">Merge PDF</a></li>
-                        <li><a href="#" class="flex items-center text-gray-300 hover:text-white p-2 rounded-lg transition duration-300">Split PDF</a></li>
-                        <li><a href="#" class="flex items-center text-gray-300 hover:text-white p-2 rounded-lg transition duration-300">Compress PDF</a></li>
-                        <li><a href="#" class="flex items-center text-gray-300 hover:text-white p-2 rounded-lg transition duration-300">PDF to Word</a></li>
-                    </ul>
+            </div>
+            
+            <!-- FAQ 3 -->
+            <div class="bg-white rounded-lg shadow-sm">
+                <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-primary">
+                    <span>Is online pdf merging secure?</span>
+                    <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                    </svg>
+                </button>
+                <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                    <p class="p-5 pt-0 text-gray-600">
+                        Absolutely. Our <strong>merge pdf online</strong> tool uses bank-level encryption to ensure complete security. 
+                        All file processing happens securely, and we automatically delete your files from our servers after processing. 
+                        This makes our <strong>merge pdf online free tool</strong> completely safe for sensitive documents, business contracts, 
+                        personal records, and any other files you need to merge. Enjoy <strong>pdf merge without limit</strong> with complete peace of mind.
+                    </p>
                 </div>
-
-                <!-- Image Tools -->
-                <div>
-                    <h3 class="text-lg font-semibold mb-6">Image Tools</h3>
-                    <ul class="space-y-3">
-                        <li><a href="#" class="flex items-center text-gray-300 hover:text-white p-2 rounded-lg transition duration-300">JPG to PDF</a></li>
-                        <li><a href="#" class="flex items-center text-gray-300 hover:text-white p-2 rounded-lg transition duration-300">Resize Image</a></li>
-                        <li><a href="#" class="flex items-center text-gray-300 hover:text-white p-2 rounded-lg transition duration-300">Compress Image</a></li>
-                    </ul>
-                </div>
-                
-                <!-- Company -->
-                <div>
-                    <h3 class="text-lg font-semibold mb-6">Company</h3>
-                    <ul class="space-y-3">
-                        <li><a href="#" class="text-gray-300 hover:text-white transition duration-300">About Us</a></li>
-                        <li><a href="#" class="text-gray-300 hover:text-white transition duration-300">Blog</a></li>
-                        <li><a href="#" class="text-gray-300 hover:text-white transition duration-300">Careers</a></li>
-                        <li><a href="#" class="text-gray-300 hover:text-white transition duration-300">Contact</a></li>
-                    </ul>
+            </div>
+            
+            <!-- FAQ 4 -->
+            <div class="bg-white rounded-lg shadow-sm">
+                <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-primary">
+                    <span>Can I merge PDF files on my iPhone?</span>
+                    <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="transform rotate-90" d="M15 19l-7-7 7-7" />
+                    </svg>
+                </button>
+                <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                    <p class="p-5 pt-0 text-gray-600">
+                        Yes! Our tool is perfectly optimized for <strong>merge pdf on iphone</strong> and other mobile devices. 
+                        The mobile-friendly interface makes it easy to <strong>how to merge 4 pdfs into 1</strong> directly from your iPhone. 
+                        Whether you're using Safari, Chrome, or any other mobile browser, our <strong>merge pdf online</strong> tool works flawlessly, 
+                        providing the same features as the desktop version including <strong>merge pdf online without watermark</strong> and 
+                        <strong>pdf merge without limit</strong> capabilities.
+                    </p>
                 </div>
             </div>
 
-            <!-- Copyright -->
-            <div class="border-t border-gray-700 pt-8">
-                <div class="flex flex-col md:flex-row justify-between items-center text-sm text-gray-400">
-                    <div class="mb-4 md:mb-0">&copy; 2025 simpliconvert. All rights reserved.</div>
-                    <div class="flex flex-wrap justify-center gap-4">
-                        <a href="/terms_of_services/" class="hover:text-white transition">Terms of Service</a>
-                        <a href="/privacy_policy/" class="hover:text-white transition">Privacy Policy</a>
-                        <a href="/cookie_policy/" class="hover:text-white transition">Cookie Policy</a>
-                    </div>
+            <!-- FAQ 5 -->
+            <div class="bg-white rounded-lg shadow-sm">
+                <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-primary">
+                    <span>Is there a limit to how many PDFs I can merge?</span>
+                    <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                    </svg>
+                </button>
+                <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                    <p class="p-5 pt-0 text-gray-600">
+                        No! Our tool offers complete <strong>pdf merge without limit</strong>. You can merge as many PDF files as you need 
+                        in a single session. Whether you need to <strong>how do i combine two pdf into one</strong> or merge dozens of documents, 
+                        our <strong>merge pdf online free tool</strong> handles it effortlessly. This makes it perfect for large projects, 
+                        extensive reports, or compiling multiple documents without any restrictions or page limits.
+                    </p>
+                </div>
+            </div>
+            
+            <!-- FAQ 6 -->
+            <div class="bg-white rounded-lg shadow-sm">
+                <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-primary">
+                    <span>How does your merge tool compare to I Love PDF?</span>
+                    <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                    </svg>
+                </button>
+                <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                    <p class="p-5 pt-0 text-gray-600">
+                        Our <strong>merge pdf online</strong> tool offers several advantages over alternatives like <strong>merge pdf online i love pdf</strong>. 
+                        We provide true <strong>pdf merge without limit</strong>, complete <strong>merge pdf online without watermark</strong>, 
+                        and advanced <strong>pdf editor merge online</strong> capabilities. Unlike some services that restrict free users, 
+                        our <strong>merge pdf online free tool</strong> offers all features without premium paywalls. Plus, our mobile optimization 
+                        for <strong>merge pdf on iphone</strong> is superior, making us the best choice for comprehensive PDF merging needs.
+                    </p>
                 </div>
             </div>
         </div>
-    </footer>
+    </div>
+</section>
 
-    <!-- JavaScript -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   <!-- Footer Placeholder -->
+    <div id="footer"></div>
+
+
+    <!-- Footer -->
     <script>
-        // Mobile menu toggle
-        document.addEventListener('DOMContentLoaded', function() {
-            const mobileMenuButton = document.getElementById('mobile-menu-button');
-            const mobileMenu = document.getElementById('mobile-menu');
-            
-            if (mobileMenuButton && mobileMenu) {
-                const menuIconBars = document.getElementById('menu-icon-bars');
-                const menuIconTimes = document.getElementById('menu-icon-times');
+    function initializeHeaderScripts() {
+        // Header Scroll Effect
+        const header = document.getElementById('header');
+        if (header) {
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 10) {
+                    header.classList.add('scrolled-effect');
+                } else {
+                    header.classList.remove('scrolled-effect');
+                }
+            });
+        }
+
+        // Mobile Menu Toggle (supports both icon sets)
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const menuIconBars = document.getElementById('menu-icon-bars');
+        const menuIconTimes = document.getElementById('menu-icon-times');
+        const mobileMenuIconOpen = document.getElementById('mobile-menu-icon-open');
+        const mobileMenuIconClose = document.getElementById('mobile-menu-icon-close');
+        
+        if (mobileMenuButton && mobileMenu) {
+            mobileMenuButton.addEventListener('click', () => {
+                mobileMenu.classList.toggle('open');
                 
-                mobileMenuButton.addEventListener('click', function() {
-                    mobileMenu.classList.toggle('open');
-                    
-                    if (menuIconBars && menuIconTimes) {
-                        menuIconBars.classList.toggle('hidden');
-                        menuIconTimes.classList.toggle('hidden');
-                    }
-                });
+                if (menuIconBars && menuIconTimes) {
+                    menuIconBars.classList.toggle('hidden');
+                    menuIconTimes.classList.toggle('hidden');
+                }
+                if (mobileMenuIconOpen && mobileMenuIconClose) {
+                    mobileMenuIconOpen.classList.toggle('hidden');
+                    mobileMenuIconClose.classList.toggle('hidden');
+                }
+            });
+        }
+
+        // Mobile Accordion Toggle
+        const accordionButton = document.querySelector('.accordion-button');
+        const accordionContent = document.querySelector('.accordion-content');
+        
+        if (accordionButton && accordionContent) {
+            accordionButton.addEventListener('click', () => {
+                accordionButton.classList.toggle('open');
+                accordionContent.classList.toggle('open');
+            });
+        }
+    }
+    
+    function initializeFooterScripts() {
+        // Set Current Year in Footer
+        const yearSpan = document.getElementById('current-year');
+        if(yearSpan) {
+            yearSpan.textContent = new Date().getFullYear();
+        }
+    }
+
+    async function loadComponent(url, elementId, callback) {
+        try {
+            const response = await fetch(url);
+            if (!response.ok) {
+                throw new Error(`Failed to load component from ${url}. Status: ${response.status}`);
             }
+            const text = await response.text();
+            const element = document.getElementById(elementId);
+            if (element) {
+                element.innerHTML = text;
+                if (callback) {
+                    callback();
+                }
+            } else {
+                console.error(`Element with id '${elementId}' not found.`);
+            }
+        } catch (error) {
+            console.error('Error loading component:', error);
+            const element = document.getElementById(elementId);
+            if(element) element.innerHTML = `<p class="text-center text-red-500">Error: Could not load component.</p>`;
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        // Load Header and Footer components
+        loadComponent('/components/navbar.html', 'navbar', initializeHeaderScripts);
+        loadComponent('/components/footer.html', 'footer', initializeFooterScripts);
+        
+        // Smooth scrolling for anchor links
+        document.addEventListener('click', function (e) {
+            const anchor = e.target.closest('a[href^="#"]');
+            if (!anchor) return;
+
+            const href = anchor.getAttribute('href');
+            if (href === '#' || href === "") return;
+
+            e.preventDefault();
             
-            // Smooth scrolling for anchor links
-            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-                anchor.addEventListener('click', function (e) {
-                    e.preventDefault();
-                    
-                    const targetId = this.getAttribute('href');
-                    if (targetId === '#') return;
-                    
-                    const targetElement = document.querySelector(targetId);
-                    if (targetElement) {
-                        targetElement.scrollIntoView({
-                            behavior: 'smooth'
-                        });
+            const targetElement = document.querySelector(href);
+            if (targetElement) {
+                const header = document.getElementById('header');
+                const headerOffset = header ? header.offsetHeight : 80; // Default offset if header not yet loaded
+                const elementPosition = targetElement.getBoundingClientRect().top;
+                const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+            
+                window.scrollTo({
+                    top: offsetPosition,
+                    behavior: 'smooth'
+                });
+
+                // Close mobile menu if open after clicking a link
+                const mobileMenu = document.getElementById('mobile-menu');
+                if (mobileMenu && mobileMenu.classList.contains('open')) {
+                    const mobileMenuButton = document.getElementById('mobile-menu-button');
+                    if(mobileMenuButton) mobileMenuButton.click();
+                }
+            }
+        });
+
+        // FAQ Accordion Logic
+        const faqToggles = document.querySelectorAll('[data-faq-toggle]');
+        faqToggles.forEach(button => {
+            button.addEventListener('click', () => {
+                const answer = button.nextElementSibling;
+                const icon = button.querySelector('.faq-icon');
+                const isOpening = !answer.style.maxHeight;
+
+                // Close all other open FAQs
+                faqToggles.forEach(otherButton => {
+                    if (otherButton !== button) {
+                        otherButton.nextElementSibling.style.maxHeight = null;
+                        otherButton.querySelector('.faq-icon').classList.remove('rotate-90');
+                        otherButton.querySelector('.faq-icon').classList.add('-rotate-90');
                     }
                 });
+
+                // Toggle the clicked FAQ
+                if (isOpening) {
+                    answer.style.maxHeight = answer.scrollHeight + "px";
+                    icon.classList.remove('-rotate-90');
+                    icon.classList.add('rotate-90');
+                } else {
+                    answer.style.maxHeight = null;
+                    icon.classList.remove('rotate-90');
+                    icon.classList.add('-rotate-90');
+                }
             });
         });
-    </script>
-</body>
-</html>
+    });
+</script>
+
+
+
 
