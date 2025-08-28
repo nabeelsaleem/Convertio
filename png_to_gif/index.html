@@ -91,76 +91,139 @@
     </script>
     
     <!-- Custom CSS -->
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-        }
-        
-        .nav-dropdown {
-            opacity: 0;
-            visibility: hidden;
-            transform: translateY(15px);
-            transition: all 0.3s ease;
-        }
-        
-        .nav-item:hover .nav-dropdown {
-            opacity: 1;
-            visibility: visible;
-            transform: translateY(0);
-        }
-        
-        .tool-card {
-            transition: all 0.3s ease;
-            height: 100%;
-        }
-        
-        .tool-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-        }
-        
-        .feature-card:hover .feature-icon {
-            background-color: rgba(218, 63, 11, 0.1);
-        }
-        
-        .footer-link:hover {
-            background-color: rgba(255,255,255,0.1);
-        }
-        
-        .mobile-menu {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.3s ease-out;
-        }
-        
-        .mobile-menu.open {
-            max-height: 1000px;
-        }
-        
-        .hero-gradient {
-            background: linear-gradient(135deg, #da3f0b 0%, #f57648 100%);
-        }
-        
-        .btn-primary {
-            background-color: #da3f0b;
-            transition: all 0.3s ease;
-        }
-        
-        .btn-primary:hover {
-            background-color: #c2380a;
-            transform: translateY(-2px);
-        }
-        
-        .btn-outline {
-            border: 2px solid white;
-            transition: all 0.3s ease;
-        }
-        
-        .btn-outline:hover {
-            background-color: white;
-            color: #da3f0b;
-        }
-    </style>
+   <style>
+    body {
+        font-family: 'Inter', sans-serif;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* Header Scroll Effect */
+    .scrolled-effect {
+        background-color: rgba(255, 255, 255, 0.8) !important;
+        box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1) !important;
+        backdrop-filter: blur(8px);
+    }
+
+    /* Mega Menu */
+    #mega-menu {
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(-1rem);
+        transition: all 0.3s ease-in-out;
+        pointer-events: none;
+        right: 0;
+        left: auto;
+        transform-origin: top right;
+        min-width: 800px;
+        width: auto;
+        position: absolute;
+        top: 100%;
+        z-index: 1000;
+    }
+    #mega-menu-trigger:hover > #mega-menu,
+    #mega-menu:hover {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+        pointer-events: auto;
+    }
+    #mega-menu-trigger {
+        position: relative;
+    }
+    
+    /* Mobile Menu */
+    #mobile-menu {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease-in-out;
+    }
+    #mobile-menu.open {
+        max-height: 80vh;
+        box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+    }
+
+    /* Mobile Accordion */
+    .accordion-content {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease-in-out;
+    }
+    .accordion-content.open {
+        max-height: 500px;
+    }
+    .accordion-button.open svg {
+        transform: rotate(180deg);
+    }
+
+    /* Navigation Dropdown */
+    .nav-dropdown {
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(15px);
+        transition: all 0.3s ease;
+    }
+    .nav-item:hover .nav-dropdown {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+    }
+
+    /* Tool Card */
+    .tool-card {
+        transition: all 0.3s ease;
+        height: 100%;
+    }
+    .tool-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    }
+
+    /* Feature Card */
+    .feature-card:hover .feature-icon {
+        background-color: rgba(218, 63, 11, 0.1);
+    }
+
+    /* Footer Link */
+    .footer-link:hover {
+        background-color: rgba(255,255,255,0.1);
+    }
+
+    /* Mobile Menu (alt) - Keeping both as they might be used differently */
+    .mobile-menu {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease-out;
+    }
+    .mobile-menu.open {
+        max-height: 1000px;
+    }
+
+    /* Hero Gradient */
+    .hero-gradient {
+        background: linear-gradient(135deg, #da3f0b 0%, #f57648 100%);
+    }
+
+    /* Buttons */
+    .btn-primary {
+        background-color: #da3f0b;
+        transition: all 0.3s ease;
+    }
+    .btn-primary:hover {
+        background-color: #c2380a;
+        transform: translateY(-2px);
+    }
+    .btn-outline {
+        border: 2px solid white;
+        transition: all 0.3s ease;
+    }
+    .btn-outline:hover {
+        background-color: white;
+        color: #da3f0b;
+    }
+</style>
+    
+
 </head>
 <body class="bg-gray-50 min-h-screen flex flex-col">
     <!-- Main Navigation -->
@@ -175,12 +238,6 @@
             <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-2">PNG to GIF Converter & Animator</h1>
             <p class="text-lg md:text-xl max-w-3x1 mx-auto mb-2">
                 PNG to GIF Converter: Create animated GIFs from PNG images quickly and easily. Adjust the frame delay to control animation speed, set custom dimensions to resize your GIF. Our free, browser-based tool requires no registration and works entirely offline for maximum privacy.
-
-
-
-
-
-
 
 
             </p>
@@ -810,92 +867,159 @@
 
 
 
+   <!-- Footer Placeholder -->
+    <div id="footer"></div>
+
 
     <!-- Footer -->
-    
-    <!-- JavaScript -->
     <script>
-        // Mobile menu toggle
-        document.addEventListener('DOMContentLoaded', function() {
-            const mobileMenuButton = document.getElementById('mobile-menu-button');
-            const mobileMenu = document.getElementById('mobile-menu');
-            
-            if (mobileMenuButton && mobileMenu) {
-                const menuIconBars = document.getElementById('menu-icon-bars');
-                const menuIconTimes = document.getElementById('menu-icon-times');
-                
-                mobileMenuButton.addEventListener('click', function() {
-                    mobileMenu.classList.toggle('open');
-                    
-                    if (menuIconBars && menuIconTimes) {
-                        menuIconBars.classList.toggle('hidden');
-                        menuIconTimes.classList.toggle('hidden');
-                    }
-                });
-            }
-            
-            // Smooth scrolling for anchor links
-            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-                anchor.addEventListener('click', function (e) {
-                    e.preventDefault();
-                    
-                    const targetId = this.getAttribute('href');
-                    if (targetId === '#') return;
-                    
-                    const targetElement = document.querySelector(targetId);
-                    if (targetElement) {
-                        targetElement.scrollIntoView({
-                            behavior: 'smooth'
-                        });
-                    }
-                });
+    function initializeHeaderScripts() {
+        // Header Scroll Effect
+        const header = document.getElementById('header');
+        if (header) {
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 10) {
+                    header.classList.add('scrolled-effect');
+                } else {
+                    header.classList.remove('scrolled-effect');
+                }
             });
-     // FAQ Accordion Logic
-            const faqToggles = document.querySelectorAll('[data-faq-toggle]');
-            faqToggles.forEach(button => {
-                button.addEventListener('click', () => {
-                    const answer = button.nextElementSibling;
-                    const icon = button.querySelector('.faq-icon');
-                    const isOpening = !answer.style.maxHeight;
+        }
 
-                    // Close all other open FAQs
-                    faqToggles.forEach(otherButton => {
-                        if (otherButton !== button) {
-                            otherButton.nextElementSibling.style.maxHeight = null;
-                            otherButton.querySelector('.faq-icon').classList.remove('rotate-90');
-                            otherButton.querySelector('.faq-icon').classList.add('-rotate-90');
-                        }
-                    });
+        // Mobile Menu Toggle (supports both icon sets)
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const menuIconBars = document.getElementById('menu-icon-bars');
+        const menuIconTimes = document.getElementById('menu-icon-times');
+        const mobileMenuIconOpen = document.getElementById('mobile-menu-icon-open');
+        const mobileMenuIconClose = document.getElementById('mobile-menu-icon-close');
+        
+        if (mobileMenuButton && mobileMenu) {
+            mobileMenuButton.addEventListener('click', () => {
+                mobileMenu.classList.toggle('open');
+                
+                if (menuIconBars && menuIconTimes) {
+                    menuIconBars.classList.toggle('hidden');
+                    menuIconTimes.classList.toggle('hidden');
+                }
+                if (mobileMenuIconOpen && mobileMenuIconClose) {
+                    mobileMenuIconOpen.classList.toggle('hidden');
+                    mobileMenuIconClose.classList.toggle('hidden');
+                }
+            });
+        }
 
-                    // Toggle the clicked FAQ
-                    if (isOpening) {
-                        answer.style.maxHeight = answer.scrollHeight + "px";
-                        icon.classList.remove('-rotate-90');
-                        icon.classList.add('rotate-90');
-                    } else {
-                        answer.style.maxHeight = null;
-                        icon.classList.remove('rotate-90');
-                        icon.classList.add('-rotate-90');
+        // Mobile Accordion Toggle
+        const accordionButton = document.querySelector('.accordion-button');
+        const accordionContent = document.querySelector('.accordion-content');
+        
+        if (accordionButton && accordionContent) {
+            accordionButton.addEventListener('click', () => {
+                accordionButton.classList.toggle('open');
+                accordionContent.classList.toggle('open');
+            });
+        }
+    }
+    
+    function initializeFooterScripts() {
+        // Set Current Year in Footer
+        const yearSpan = document.getElementById('current-year');
+        if(yearSpan) {
+            yearSpan.textContent = new Date().getFullYear();
+        }
+    }
+
+    async function loadComponent(url, elementId, callback) {
+        try {
+            const response = await fetch(url);
+            if (!response.ok) {
+                throw new Error(`Failed to load component from ${url}. Status: ${response.status}`);
+            }
+            const text = await response.text();
+            const element = document.getElementById(elementId);
+            if (element) {
+                element.innerHTML = text;
+                if (callback) {
+                    callback();
+                }
+            } else {
+                console.error(`Element with id '${elementId}' not found.`);
+            }
+        } catch (error) {
+            console.error('Error loading component:', error);
+            const element = document.getElementById(elementId);
+            if(element) element.innerHTML = `<p class="text-center text-red-500">Error: Could not load component.</p>`;
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        // Load Header and Footer components
+        loadComponent('/components/navbar.html', 'navbar', initializeHeaderScripts);
+        loadComponent('/components/footer.html', 'footer', initializeFooterScripts);
+        
+        // Smooth scrolling for anchor links
+        document.addEventListener('click', function (e) {
+            const anchor = e.target.closest('a[href^="#"]');
+            if (!anchor) return;
+
+            const href = anchor.getAttribute('href');
+            if (href === '#' || href === "") return;
+
+            e.preventDefault();
+            
+            const targetElement = document.querySelector(href);
+            if (targetElement) {
+                const header = document.getElementById('header');
+                const headerOffset = header ? header.offsetHeight : 80; // Default offset if header not yet loaded
+                const elementPosition = targetElement.getBoundingClientRect().top;
+                const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+            
+                window.scrollTo({
+                    top: offsetPosition,
+                    behavior: 'smooth'
+                });
+
+                // Close mobile menu if open after clicking a link
+                const mobileMenu = document.getElementById('mobile-menu');
+                if (mobileMenu && mobileMenu.classList.contains('open')) {
+                    const mobileMenuButton = document.getElementById('mobile-menu-button');
+                    if(mobileMenuButton) mobileMenuButton.click();
+                }
+            }
+        });
+
+        // FAQ Accordion Logic
+        const faqToggles = document.querySelectorAll('[data-faq-toggle]');
+        faqToggles.forEach(button => {
+            button.addEventListener('click', () => {
+                const answer = button.nextElementSibling;
+                const icon = button.querySelector('.faq-icon');
+                const isOpening = !answer.style.maxHeight;
+
+                // Close all other open FAQs
+                faqToggles.forEach(otherButton => {
+                    if (otherButton !== button) {
+                        otherButton.nextElementSibling.style.maxHeight = null;
+                        otherButton.querySelector('.faq-icon').classList.remove('rotate-90');
+                        otherButton.querySelector('.faq-icon').classList.add('-rotate-90');
                     }
                 });
+
+                // Toggle the clicked FAQ
+                if (isOpening) {
+                    answer.style.maxHeight = answer.scrollHeight + "px";
+                    icon.classList.remove('-rotate-90');
+                    icon.classList.add('rotate-90');
+                } else {
+                    answer.style.maxHeight = null;
+                    icon.classList.remove('rotate-90');
+                    icon.classList.add('-rotate-90');
+                }
             });
         });
-    </script>
-
-
-
-<div id="footer"></div>
-
-<script>
-  async function includeHTML(id, file) {
-    const res = await fetch(file);
-    const html = await res.text();
-    document.getElementById(id).innerHTML = html;
-  }
-
-  includeHTML('navbar', '/components/navbar.html');
-  includeHTML('footer', '/components/footer.html');
+    });
 </script>
+
 
 
 
@@ -903,4 +1027,5 @@
     
 </body>
 </html>
+
 
