@@ -17,21 +17,57 @@ jobs:
         run: |
           echo '<?xml version="1.0" encoding="UTF-8"?>' > sitemap.xml
           echo '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' >> sitemap.xml
-          echo "  <url><loc>https://simpliconvert.com/</loc><lastmod>$(date +%Y-%m-%d)</lastmod></url>" >> sitemap.xml
-          find . -name "*.html" | while read file; do
-            if [[ "$file" != "./index.html" ]]; then
-              path="${file#./}"
-              url="https://simpliconvert.com/${path// /%20}"
+
+          # Root homepage
+          echo "  <url>" >> sitemap.xml
+          echo "    <loc>https://simpliconvert.com/</loc>" >> sitemap.xml
+          echo "    <lastmod>$(date +%Y-%m-%d)</lastmod>" >> sitemap.xml
+          echo "    <changefreq>daily</changefreq>" >> sitemap.xml
+          echo "    <priority>1.0</priority>" >> sitemap.xml
+          echo "  </url>" >> sitemap.xml
+
+          # Find all index.html files, exclude root and components
+          find . -type f -name "index.html" | while read file; do
+            if [[ "$file" != "./index.html" && "$file" != ./components/* ]]; then
+              dir=$(dirname "${file#./}")
+              url="https://simpliconvert.com/${dir}/"
               mod_date=$(date -r "$file" +%Y-%m-%d)
-              echo "  <url><loc>$url</loc><lastmod>$mod_date</lastmod></url>" >> sitemap.xml
+
+              if [[ "$dir" == blog ]]; then
+                # Blog homepage
+                echo "  <url>" >> sitemap.xml
+                echo "    <loc>$url</loc>" >> sitemap.xml
+                echo "    <lastmod>$mod_date</lastmod>" >> sitemap.xml
+                echo "    <changefreq>weekly</changefreq>" >> sitemap.xml
+                echo "    <priority>0.7</priority>" >> sitemap.xml
+                echo "  </url>" >> sitemap.xml
+              elif [[ "$dir" == blog/* ]]; then
+                # Blog posts
+                echo "  <url>" >> sitemap.xml
+                echo "    <loc>$url</loc>" >> sitemap.xml
+                echo "    <lastmod>$mod_date</lastmod>" >> sitemap.xml
+                echo "    <changefreq>monthly</changefreq>" >> sitemap.xml
+                echo "    <priority>0.6</priority>" >> sitemap.xml
+                echo "  </url>" >> sitemap.xml
+              else
+                # Normal tools
+                echo "  <url>" >> sitemap.xml
+                echo "    <loc>$url</loc>" >> sitemap.xml
+                echo "    <lastmod>$mod_date</lastmod>" >> sitemap.xml
+                echo "    <changefreq>weekly</changefreq>" >> sitemap.xml
+                echo "    <priority>0.8</priority>" >> sitemap.xml
+                echo "  </url>" >> sitemap.xml
+              fi
             fi
           done
+
           echo '</urlset>' >> sitemap.xml
 
       - name: Generate robots.txt
         run: |
           echo "User-agent: *" > robots.txt
           echo "Allow: /" >> robots.txt
+          echo "Disallow: /components/" >> robots.txt
           echo "Sitemap: https://simpliconvert.com/sitemap.xml" >> robots.txt
 
       - name: Commit and push changes
@@ -39,5 +75,5 @@ jobs:
           git config --global user.name "GitHub Actions"
           git config --global user.email "actions@github.com"
           git add sitemap.xml robots.txt
-          git commit -m "Auto-update sitemap & robots.txt [skip ci]"
+          git commit -m "Auto-update sitemap & robots.txt [skip ci]" || echo "No changes to commit"
           git push
