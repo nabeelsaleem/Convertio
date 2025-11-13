@@ -320,6 +320,41 @@ meta tag generator for WordPress without plugin
     const TITLE_LIMIT = 60;
     const DESC_LIMIT = 160;
 
+    const presets = {
+      blog: {
+        ...initialFormData,
+        title: '10 Tips for an Amazing Blog Post | Blog Name',
+        description: 'Discover 10 expert tips to make your blog posts more engaging, shareable, and SEO-friendly. A must-read for content creators.',
+        keywords: 'blogging, content creation, seo, tips',
+        ogType: 'article',
+        author: 'John Doe',
+        publisher: 'My Awesome Blog',
+        canonicalUrl: 'https://example.com/blog/10-tips',
+        ogUrl: 'https://example.com/blog/10-tips'
+      },
+      ecommerce: {
+        ...initialFormData,
+        title: 'Premium Quality T-Shirt - My Store',
+        description: 'Shop our premium quality 100% cotton t-shirt. Available in various colors and sizes. Free shipping on orders over $50.',
+        keywords: 't-shirt, apparel, buy online, e-commerce',
+        ogType: 'product',
+        ogImage: 'https://example.com/product.jpg',
+        ogImageAlt: 'A premium quality t-shirt shown on a model.',
+        canonicalUrl: 'https://example.com/products/premium-t-shirt',
+        ogUrl: 'https://example.com/products/premium-t-shirt'
+      },
+      business: {
+        ...initialFormData,
+        title: 'Best Local Plumber in Anytown | Speedy Plumbing',
+        description: 'Speedy Plumbing offers reliable and affordable plumbing services in Anytown. 24/7 emergency service available. Call us today!',
+        keywords: 'plumber, anytown, plumbing services, emergency plumber',
+        ogType: 'website',
+        publisher: 'Speedy Plumbing',
+        canonicalUrl: 'https://example.com/services/plumbing',
+        ogUrl: 'https://example.com/services/plumbing'
+      }
+    };
+
     // Component definitions moved outside of the main App component to prevent re-creation on each render
     const Input = ({ name, label, value, error, handleChange, ...props }) => (
       <div className="mb-4">
@@ -333,7 +368,7 @@ meta tag generator for WordPress without plugin
       <div className="mb-4">
         <div className="flex justify-between items-center mb-1">
           <label htmlFor={name} className="block text-sm font-medium text-gray-700">{label}</label>
-          {limit && <span className={`text-xs font-medium ${(value || '').length > limit ? 'limit-exceeded' : 'text-gray-500'}`}>{(value || '').length} / {limit}</span>}
+          {limit && <span className={`char-counter text-xs font-medium ${(value || '').length > limit ? 'limit-exceeded' : 'text-gray-500'}`}>{(value || '').length} / {limit}</span>}
         </div>
         <textarea id={name} name={name} value={value} onChange={handleChange} {...props} className={`w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none transition ${error ? 'border-red-500 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:ring-blue-500 focus:border-blue-500'}`} rows={4}/>
         {error && <p className="mt-1 text-xs text-red-600">{error}</p>}
@@ -364,6 +399,10 @@ meta tag generator for WordPress without plugin
       const [copied, setCopied] = useState(false);
       const [errors, setErrors] = useState({});
       
+      const [savedTemplates, setSavedTemplates] = useState([]);
+      const [templateName, setTemplateName] = useState('');
+      const [selectedTemplate, setSelectedTemplate] = useState('');
+
       const ogTitle = formData.useBasicForOG ? formData.title : formData.ogTitle;
       const ogDescription = formData.useBasicForOG ? formData.description : formData.ogDescription;
       // Simplified logic: Twitter always uses the same Title/Description as OG tags as there are no separate input fields.
@@ -378,6 +417,27 @@ meta tag generator for WordPress without plugin
       const facebookShareUrl = `https://www.facebook.com/sharer/sharer.php?u=${shareUrl}`;
       const twitterShareUrl = `https://twitter.com/intent/tweet?url=${shareUrl}&text=${shareText}`;
       const linkedinShareUrl = `https://www.linkedin.com/shareArticle?mini=true&url=${shareUrl}&title=${shareTitle}&summary=${shareText}`;
+      
+      // Load templates from localStorage on mount
+      useEffect(() => {
+        try {
+          const templatesFromStorage = localStorage.getItem('meta-templates');
+          if (templatesFromStorage) {
+            setSavedTemplates(JSON.parse(templatesFromStorage));
+          }
+        } catch (error) {
+          console.error("Could not load templates from localStorage", error);
+        }
+      }, []);
+
+      // Save templates to localStorage when they change
+      useEffect(() => {
+        try {
+          localStorage.setItem('meta-templates', JSON.stringify(savedTemplates));
+        } catch (error) {
+          console.error("Could not save templates to localStorage", error);
+        }
+      }, [savedTemplates]);
       
       const isValidAbsoluteUrl = (string) => {
         if (!string) return true; // Don't validate empty fields
@@ -484,7 +544,6 @@ meta tag generator for WordPress without plugin
 
       const getHostnameSafe = (url) => {
         try {
-          // Use a default protocol if none is specified to help the URL constructor
           const fullUrl = url.startsWith('http') ? url : `https://${url}`;
           return new URL(fullUrl).hostname.replace(/^www\./, '');
         } catch (error) {
@@ -492,6 +551,46 @@ meta tag generator for WordPress without plugin
           return match ? match[1] : 'yourwebsite.com';
         }
       };
+      
+      const handleLoadPreset = (presetKey) => {
+        setFormData(presets[presetKey]);
+      };
+
+      const handleSaveTemplate = () => {
+        const name = templateName.trim();
+        if (!name) {
+          alert('Please enter a name for the template.');
+          return;
+        }
+        const isOverwrite = savedTemplates.some(t => t.name === name);
+        if (isOverwrite) {
+          if (!confirm(`A template named "${name}" already exists. Overwrite it?`)) {
+            return;
+          }
+        }
+        const otherTemplates = savedTemplates.filter(t => t.name !== name);
+        setSavedTemplates([...otherTemplates, { name: name, data: formData }]);
+        setTemplateName('');
+        setSelectedTemplate(name);
+        alert(`Template "${name}" saved!`);
+      };
+      
+      const handleLoadTemplate = () => {
+        if (!selectedTemplate) return;
+        const templateToLoad = savedTemplates.find(t => t.name === selectedTemplate);
+        if (templateToLoad) {
+          setFormData(templateToLoad.data);
+        }
+      };
+
+      const handleDeleteTemplate = () => {
+        if (!selectedTemplate) return;
+        if (confirm(`Are you sure you want to delete the "${selectedTemplate}" template?`)) {
+          setSavedTemplates(savedTemplates.filter(t => t.name !== selectedTemplate));
+          setSelectedTemplate('');
+        }
+      };
+
 
       return (
         <div className="min-h-screen p-4 sm:p-6 lg:p-8">
@@ -518,6 +617,35 @@ meta tag generator for WordPress without plugin
             <main className="grid grid-cols-1 lg:grid-cols-2 gap-8 p-6">
               {/* Left Column: Controls */}
               <div className="lg:pr-4">
+                <div className="border border-gray-200 rounded-lg p-4 mb-6 bg-gray-50">
+                  <h3 className="font-bold text-lg mb-3 text-gray-800">Templates</h3>
+                  <div className="mb-4">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Load a Preset</label>
+                    <div className="flex flex-wrap gap-2">
+                      <button onClick={() => handleLoadPreset('blog')} className="py-1.5 px-3 text-sm font-medium rounded-md bg-white border border-gray-300 text-gray-800 hover:bg-gray-100 transition">Blog Post</button>
+                      <button onClick={() => handleLoadPreset('ecommerce')} className="py-1.5 px-3 text-sm font-medium rounded-md bg-white border border-gray-300 text-gray-800 hover:bg-gray-100 transition">E-commerce Product</button>
+                      <button onClick={() => handleLoadPreset('business')} className="py-1.5 px-3 text-sm font-medium rounded-md bg-white border border-gray-300 text-gray-800 hover:bg-gray-100 transition">Local Business</button>
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Manage Custom Templates</label>
+                    <div className="flex gap-2 mb-2">
+                      <input type="text" value={templateName} onChange={(e) => setTemplateName(e.target.value)} placeholder="New template name..." className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm"/>
+                      <button onClick={handleSaveTemplate} className="py-2 px-4 text-sm font-semibold rounded-md bg-blue-500 text-white hover:bg-blue-600 transition disabled:opacity-50 disabled:cursor-not-allowed">Save</button>
+                    </div>
+                    {savedTemplates.length > 0 && (
+                      <div className="flex gap-2 items-center">
+                        <select value={selectedTemplate} onChange={(e) => setSelectedTemplate(e.target.value)} className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 transition bg-white text-sm">
+                          <option value="">-- Load a saved template --</option>
+                          {savedTemplates.map(t => <option key={t.name} value={t.name}>{t.name}</option>)}
+                        </select>
+                        <button onClick={handleLoadTemplate} disabled={!selectedTemplate} className="py-2 px-3 text-sm font-semibold rounded-md bg-gray-200 text-gray-700 hover:bg-gray-300 transition disabled:opacity-50 disabled:cursor-not-allowed">Load</button>
+                        <button onClick={handleDeleteTemplate} disabled={!selectedTemplate} title="Delete Template" className="p-2 h-9 w-9 text-sm font-semibold rounded-md bg-red-100 text-red-700 hover:bg-red-200 transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"><i className="fas fa-trash-alt"></i></button>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
                 <nav className="flex space-x-2 bg-gray-100 p-1 rounded-lg mb-6">
                   {['basic', 'social', 'advanced', 'favicons'].map(tab => (
                     <button key={tab} onClick={() => setActiveTab(tab)} className={`tab-button w-full py-2 px-4 rounded-md text-sm font-semibold capitalize ${activeTab === tab ? 'active' : 'text-gray-600 hover:bg-gray-200'}`}>{tab}</button>
@@ -658,11 +786,15 @@ meta tag generator for WordPress without plugin
                   <div className="relative">
                     <textarea value={generatedCode} readOnly className="w-full h-64 p-3 font-mono text-sm bg-gray-900 text-gray-200 rounded-lg border border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Your generated meta tags will appear here..."></textarea>
                     <div className="absolute top-3 right-3 flex space-x-2">
+                       <a href="https://search.google.com/test/rich-results" target="_blank" rel="noopener noreferrer" title="Test with Google Rich Results" className="py-1 px-3 text-xs font-semibold rounded bg-blue-600 text-white hover:bg-blue-500 transition flex items-center">
+                        <i className="fab fa-google mr-1.5"></i> Test
+                      </a>
                       <button onClick={handleCopy} className={`py-1 px-3 text-xs font-semibold rounded ${copied ? 'bg-green-500 text-white' : 'bg-gray-500 text-gray-200 hover:bg-gray-400'} transition`}>
                         {copied ? 'Copied!' : 'Copy'}
                       </button>
                        <button onClick={handleClearAll} className="py-1 px-3 text-xs font-semibold rounded bg-red-600 text-white hover:bg-red-500 transition">Clear All</button>
                     </div>
+                    <p className="text-xs text-gray-500 text-right pr-1 pt-1">Copy code before testing with Google.</p>
                   </div>
                 </div>
 
