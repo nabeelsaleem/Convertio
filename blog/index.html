@@ -1,430 +1,491 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>PDF to Image Converter</title>
-    <meta name="description" content="Convert PDF pages to images (PNG, JPG, WebP) directly in your browser. Select pages, rotate, flip, and download as a ZIP file. No uploads required.">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        primary: {
-                            DEFAULT: '#da3f0b',
-                            '600': '#c23207',
-                            '700': '#a52a05'
-                        }
-                    },
-                    keyframes: {
-                       'spin': {
-                           'from': { transform: 'rotate(0deg)' },
-                           'to': { transform: 'rotate(360deg)' },
-                       },
-                       'fade-in': {
-                           'from': { opacity: '0' },
-                           'to': { opacity: '1' },
-                       },
-                    },
-                    animation: {
-                        'spin-slow': 'spin 1.5s linear infinite',
-                        'fade-in': 'fade-in 0.5s ease-out forwards',
-                    },
-                }
-            }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <!-- SEO Meta Tags -->
+  <title>SimpliConvert Blog | Business Tools & Digital Marketing Insights</title>
+  <meta name="description" content="Discover practical tips, guides, and insights on QR codes, business tools, and digital marketing strategies to grow your business.">
+  <meta name="keywords" content="business blog, qr codes, digital marketing, business tools, conversion optimization">
+  <meta name="author" content="SimpliConvert Team">
+  <link rel="canonical" href="https://simpliconvert.com/blog/">
+  
+  <!-- Open Graph -->
+  <meta property="og:title" content="SimpliConvert Blog">
+  <meta property="og:description" content="Practical business insights, tools, and strategies to help you grow.">
+  <meta property="og:image" content="https://simpliconvert.com/images/blog-header.jpg">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://simpliconvert.com/blog/">
+  
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="SimpliConvert Blog">
+  <meta name="twitter:description" content="Practical business insights, tools, and strategies to help you grow.">
+  <meta name="twitter:image" content="https://simpliconvert.com/images/blog-header.jpg">
+  
+  <!-- Fonts & Styles -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#da3f0b',
+            primaryLight: '#f57648',
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+          },
         }
-    </script>
-    <!-- PDF.js and JSZip libraries -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.3.136/pdf.min.mjs" type="module"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-    <style>
-        body {
-            font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-        }
-        .page-card-checkbox:checked + .page-card-content {
-            box-shadow: 0 0 0 3px #da3f0b;
-        }
-        .group:hover .page-actions {
-            opacity: 1;
-        }
-    </style>
+      }
+    }
+  </script>
+  
+  <style>
+    /* Custom styles for interactive elements */
+    .faq-item[open] .faq-icon {
+      transform: rotate(180deg);
+    }
+    
+    body {
+      font-family: 'Inter', sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* Header Scroll Effect */
+    .scrolled-effect {
+      background-color: rgba(255, 255, 255, 0.8) !important;
+      box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1) !important;
+      backdrop-filter: blur(8px);
+    }
+
+    /* Mega Menu & Mobile Styles */
+    #mega-menu { opacity: 0; visibility: hidden; transform: translateY(-1rem); transition: all 0.3s ease-in-out; pointer-events: none; right: 0; left: auto; transform-origin: top right; min-width: 800px; width: auto; position: absolute; top: 100%; z-index: 1000; }
+    #mega-menu-trigger:hover > #mega-menu, #mega-menu:hover { opacity: 1; visibility: visible; transform: translateY(0); pointer-events: auto; }
+    #mega-menu-trigger { position: relative; }
+    #mobile-menu { max-height: 0; overflow: hidden; transition: max-height 0.3s ease-in-out; }
+    #mobile-menu.open { max-height: 80vh; box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1); }
+    .accordion-content { max-height: 0; overflow: hidden; transition: max-height 0.3s ease-in-out; }
+    .accordion-content.open { max-height: 500px; }
+    .accordion-button.open svg { transform: rotate(180deg); }
+    .nav-dropdown { opacity: 0; visibility: hidden; transform: translateY(15px); transition: all 0.3s ease; }
+    .nav-item:hover .nav-dropdown { opacity: 1; visibility: visible; transform: translateY(0); }
+    .footer-link:hover { background-color: rgba(255,255,255,0.1); }
+
+    /* Hero Gradient */
+    .hero-gradient { background: linear-gradient(135deg, #da3f0b 0%, #f57648 100%); }
+    
+    /* Blog Card Hover Effects */
+    .blog-card {
+      transition: all 0.3s ease;
+    }
+    
+    .blog-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+    }
+    
+    .blog-card img {
+      transition: transform 0.3s ease;
+    }
+    
+    .blog-card:hover img {
+      transform: scale(1.05);
+    }
+  </style>
 </head>
-<body class="bg-slate-100 text-slate-800">
+<body class="bg-gray-50 font-sans text-gray-900">
+  
+  <!-- Main Navigation -->
+  <div id="navbar"></div>
 
-    <div id="app-container" class="min-h-screen flex flex-col items-center justify-center p-4">
-        
-        <!-- Uploader View -->
-        <div id="uploader-view" class="w-full max-w-xl">
-            <div class="bg-white rounded-xl shadow-md text-center p-8 lg:p-12 border-2 border-dashed border-slate-300 hover:border-primary transition-colors duration-300">
-                <div id="drop-zone" class="flex flex-col items-center justify-center space-y-4">
-                    <svg class="w-16 h-16 text-slate-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                      <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m.75 12 3 3m0 0 3-3m-3 3v-6m-1.5-9H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
-                    </svg>
-                    <h2 class="text-2xl font-bold text-slate-700">Drop your PDF here</h2>
-                    <p class="text-slate-500">or</p>
-                    <button id="file-select-btn" type="button" class="bg-primary text-white font-semibold px-6 py-3 rounded-lg hover:bg-primary-600 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary">
-                        Select a file
-                    </button>
-                    <input type="file" id="file-input" class="hidden" accept=".pdf">
-                    <p class="text-xs text-slate-400 pt-4">All processing is done in your browser. No files are uploaded.</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Editor View -->
-        <div id="editor-view" class="hidden w-full max-w-7xl animate-fade-in">
-             <!-- Controls Header -->
-            <header class="bg-white rounded-xl shadow-md p-4 mb-6 sticky top-4 z-10">
-                <div class="flex flex-wrap items-center justify-between gap-4">
-                    <button id="reset-btn" class="text-sm font-medium text-slate-600 hover:text-primary transition-colors"> &larr; Convert another file</button>
-                    
-                    <div class="flex flex-wrap items-center gap-x-4 gap-y-2">
-                        <div>
-                           <label for="format-select" class="text-xs font-medium text-slate-500">Format</label>
-                           <select id="format-select" class="text-sm rounded-md border-slate-300 focus:ring-primary focus:border-primary bg-white p-1 pr-7">
-                               <option value="image/png">PNG</option>
-                               <option value="image/jpeg">JPG</option>
-                               <option value="image/webp">WEBP</option>
-                           </select>
-                        </div>
-                        <div id="quality-control" class="hidden">
-                           <label for="quality-slider" class="text-xs font-medium text-slate-500">Quality: <span id="quality-value">0.92</span></label>
-                           <input id="quality-slider" type="range" min="0.1" max="1" step="0.01" value="0.92" class="w-24 h-1 align-middle accent-primary">
-                        </div>
-                         <div>
-                           <label for="scale-select" class="text-xs font-medium text-slate-500">Resolution</label>
-                           <select id="scale-select" class="text-sm rounded-md border-slate-300 focus:ring-primary focus:border-primary bg-white p-1 pr-7">
-                               <option value="1">1x (Normal)</option>
-                               <option value="1.5">1.5x (High)</option>
-                               <option value="2">2x (Ultra)</option>
-                           </select>
-                        </div>
-                    </div>
-
-                    <div class="flex items-center gap-2">
-                         <button id="download-selected-btn" disabled class="text-sm font-semibold text-primary border border-primary px-4 py-2 rounded-lg hover:bg-primary/10 disabled:opacity-50 disabled:cursor-not-allowed transition">Download Selected</button>
-                         <button id="download-all-btn" disabled class="text-sm font-semibold bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary-600 disabled:opacity-50 disabled:cursor-not-allowed transition">Download All</button>
-                    </div>
-                </div>
-            </header>
-
-            <!-- Page Previews -->
-            <div id="pages-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
-                <!-- Page cards will be injected here -->
-            </div>
-        </div>
-
-        <!-- Loader Overlay -->
-        <div id="loader-overlay" class="hidden fixed inset-0 bg-slate-900/50 flex flex-col items-center justify-center z-50 transition-opacity">
-            <div class="bg-white rounded-lg shadow-xl p-6 flex items-center gap-4">
-                <svg class="animate-spin-slow h-8 w-8 text-primary" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
-                <span id="loader-text" class="text-slate-600 font-medium">Processing PDF...</span>
-            </div>
-        </div>
+  <!-- Hero Section -->
+  <section class="hero-gradient text-white py-20">
+    <div class="container mx-auto px-4 text-center">
+      <h1 class="text-5xl md:text-6xl font-bold mb-6">SimpliConvert Blog</h1>
+      <p class="text-xl md:text-2xl mb-8 max-w-3xl mx-auto opacity-90">
+        Practical insights, tools, and strategies to help your business grow in the digital age
+      </p>
+      <div class="flex flex-wrap justify-center gap-3">
+        <span class="bg-white/20 backdrop-blur-sm px-4 py-2 rounded-full text-sm">QR Codes</span>
+        <span class="bg-white/20 backdrop-blur-sm px-4 py-2 rounded-full text-sm">Business Tools</span>
+        <span class="bg-white/20 backdrop-blur-sm px-4 py-2 rounded-full text-sm">Marketing</span>
+        <span class="bg-white/20 backdrop-blur-sm px-4 py-2 rounded-full text-sm">Conversion Tips</span>
+      </div>
     </div>
+  </section>
 
-    <!-- Template for a single page card -->
-    <template id="page-card-template">
-        <div class="page-card group relative aspect-[_8.5_/_11_] animate-fade-in" data-page-num="">
-            <label class="cursor-pointer">
-                <input type="checkbox" class="page-card-checkbox absolute top-2 left-2 z-10 h-5 w-5 rounded border-slate-400 text-primary focus:ring-primary" checked>
-                <div class="page-card-content bg-white rounded-lg shadow-md overflow-hidden h-full border-2 border-transparent">
-                     <img src="" alt="Page Preview" class="w-full h-full object-contain transition-transform duration-300">
-                </div>
-            </label>
-            <div class="page-actions absolute bottom-0 left-0 right-0 bg-black/60 flex justify-around items-center p-1 rounded-b-lg opacity-0 transition-opacity duration-300">
-                <button title="Rotate Left" data-action="rotate-left" class="page-action-btn"><svg class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 15l-6 6m0 0l-6-6m6 6V9a6 6 0 0112 0v3" /></svg></button>
-                <button title="Rotate Right" data-action="rotate-right" class="page-action-btn"><svg class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 15l6 6m0 0l6-6m-6 6V9a6 6 0 00-12 0v3" /></svg></button>
-                <button title="Flip Horizontal" data-action="flip-horizontal" class="page-action-btn"><svg class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 16V8m-4 4h8m4 0l-3-3m3 3l-3 3M4 12l3-3m-3 3l3 3" /></svg></button>
-            </div>
-            <div class="absolute bottom-2 right-2 text-xs bg-black/50 text-white px-1.5 py-0.5 rounded">
-                <span class="page-number-display"></span>
-            </div>
+  <main class="container mx-auto px-4 py-12 max-w-7xl">
+    
+    <!-- Featured Post -->
+    <section class="mb-16">
+      <h2 class="text-3xl font-bold mb-8">Featured Article</h2>
+      <article class="blog-card bg-white rounded-xl shadow-lg overflow-hidden grid md:grid-cols-2 gap-0">
+        <div class="overflow-hidden">
+          <img src="https://simpliconvert.com/images/qr-code-generator-restaurant-story.jpg" 
+               alt="Featured blog post" 
+               class="w-full h-full object-cover"
+               loading="lazy">
         </div>
-    </template>
+        <div class="p-8 flex flex-col justify-center">
+          <div class="flex items-center text-sm text-gray-500 mb-4 space-x-2">
+            <time datetime="2025-12-01">December 1, 2025</time>
+            <span>•</span>
+            <span>8 min read</span>
+          </div>
+          <h3 class="text-3xl font-bold mb-4 leading-tight">
+            <a href="/blog/the_qr_code_generator_that_saved_my_restaurant/" class="hover:text-primary transition-colors">
+              The QR Code That Saved My Restaurant
+            </a>
+          </h3>
+          <p class="text-gray-600 mb-6 leading-relaxed">
+            A health inspection panic turned into a revelation about how QR codes have evolved from gimmicks to essential business tools—and why most companies are still using them wrong.
+          </p>
+          <div class="flex items-center justify-between">
+            <div class="flex items-center">
+              <img src="/images/author-avatar.jpg" alt="Alex Martinez" class="w-10 h-10 rounded-full mr-3">
+              <div>
+                <p class="font-semibold text-sm">Alex Martinez</p>
+                <p class="text-xs text-gray-500">Business Tech Expert</p>
+              </div>
+            </div>
+            <a href="/blog/the_qr_code_generator_that_saved_my_restaurant/" class="text-primary font-semibold hover:text-primaryLight transition-colors">
+              Read More →
+            </a>
+          </div>
+        </div>
+      </article>
+    </section>
 
-    <script type="module">
-        // --- PDF.js setup ---
-        const { pdfjsLib } = globalThis;
-        pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.3.136/pdf.worker.min.mjs`;
-
-        // --- DOM ELEMENTS ---
-        const dom = {
-            uploaderView: document.getElementById('uploader-view'),
-            editorView: document.getElementById('editor-view'),
-            dropZone: document.getElementById('drop-zone'),
-            fileSelectBtn: document.getElementById('file-select-btn'),
-            fileInput: document.getElementById('file-input'),
-            resetBtn: document.getElementById('reset-btn'),
-            pagesGrid: document.getElementById('pages-grid'),
-            pageCardTemplate: document.getElementById('page-card-template'),
-            loaderOverlay: document.getElementById('loader-overlay'),
-            loaderText: document.getElementById('loader-text'),
-            // Controls
-            formatSelect: document.getElementById('format-select'),
-            qualityControl: document.getElementById('quality-control'),
-            qualitySlider: document.getElementById('quality-slider'),
-            qualityValue: document.getElementById('quality-value'),
-            scaleSelect: document.getElementById('scale-select'),
-            downloadSelectedBtn: document.getElementById('download-selected-btn'),
-            downloadAllBtn: document.getElementById('download-all-btn'),
-        };
-
-        // --- STATE ---
-        let appState = {
-            pdfDoc: null,
-            pages: new Map(), // pageNum -> { canvas, rotation, scaleX }
-            isProcessing: false,
-        };
+    <!-- Latest Posts Grid -->
+    <section class="mb-16">
+      <h2 class="text-3xl font-bold mb-8">Latest Articles</h2>
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
         
-        // --- UI TOGGLE ---
-        const showLoader = (text) => {
-            dom.loaderText.textContent = text;
-            dom.loaderOverlay.classList.remove('hidden');
-        };
+        <!-- Blog Post 1 -->
+        <article class="blog-card bg-white rounded-xl shadow-lg overflow-hidden flex flex-col">
+          <div class="overflow-hidden h-48">
+            <img src="https://via.placeholder.com/400x300/da3f0b/ffffff?text=QR+Best+Practices" 
+                 alt="QR Code Best Practices" 
+                 class="w-full h-full object-cover">
+          </div>
+          <div class="p-6 flex flex-col flex-grow">
+            <div class="flex items-center text-sm text-gray-500 mb-3 space-x-2">
+              <time datetime="2025-11-28">Nov 28, 2025</time>
+              <span>•</span>
+              <span>6 min read</span>
+            </div>
+            <h3 class="text-xl font-bold mb-3 leading-tight">
+              <a href="/blog/qr-code-best-practices/" class="hover:text-primary transition-colors">
+                10 QR Code Best Practices Every Business Should Know
+              </a>
+            </h3>
+            <p class="text-gray-600 mb-4 flex-grow">
+              From sizing to placement, discover the essential guidelines that separate scannable QR codes from frustrating ones.
+            </p>
+            <a href="/blog/qr-code-best-practices/" class="text-primary font-semibold hover:text-primaryLight transition-colors">
+              Read More →
+            </a>
+          </div>
+        </article>
 
-        const hideLoader = () => {
-            dom.loaderOverlay.classList.add('hidden');
-        };
+        <!-- Blog Post 2 -->
+        <article class="blog-card bg-white rounded-xl shadow-lg overflow-hidden flex flex-col">
+          <div class="overflow-hidden h-48">
+            <img src="https://via.placeholder.com/400x300/f57648/ffffff?text=Dynamic+QR" 
+                 alt="Dynamic vs Static QR Codes" 
+                 class="w-full h-full object-cover">
+          </div>
+          <div class="p-6 flex flex-col flex-grow">
+            <div class="flex items-center text-sm text-gray-500 mb-3 space-x-2">
+              <time datetime="2025-11-25">Nov 25, 2025</time>
+              <span>•</span>
+              <span>5 min read</span>
+            </div>
+            <h3 class="text-xl font-bold mb-3 leading-tight">
+              <a href="/blog/dynamic-vs-static-qr-codes/" class="hover:text-primary transition-colors">
+                Dynamic vs Static QR Codes: Which One Do You Need?
+              </a>
+            </h3>
+            <p class="text-gray-600 mb-4 flex-grow">
+              Understanding the critical differences between dynamic and static QR codes can save you thousands in reprinting costs.
+            </p>
+            <a href="/blog/dynamic-vs-static-qr-codes/" class="text-primary font-semibold hover:text-primaryLight transition-colors">
+              Read More →
+            </a>
+          </div>
+        </article>
 
-        const showEditor = () => {
-            dom.uploaderView.classList.add('hidden');
-            dom.editorView.classList.remove('hidden');
-        };
+        <!-- Blog Post 3 -->
+        <article class="blog-card bg-white rounded-xl shadow-lg overflow-hidden flex flex-col">
+          <div class="overflow-hidden h-48">
+            <img src="https://via.placeholder.com/400x300/da3f0b/ffffff?text=Design+Tips" 
+                 alt="QR Code Design" 
+                 class="w-full h-full object-cover">
+          </div>
+          <div class="p-6 flex flex-col flex-grow">
+            <div class="flex items-center text-sm text-gray-500 mb-3 space-x-2">
+              <time datetime="2025-11-22">Nov 22, 2025</time>
+              <span>•</span>
+              <span>7 min read</span>
+            </div>
+            <h3 class="text-xl font-bold mb-3 leading-tight">
+              <a href="/blog/qr-code-design-tips/" class="hover:text-primary transition-colors">
+                How to Design QR Codes That Actually Get Scanned
+              </a>
+            </h3>
+            <p class="text-gray-600 mb-4 flex-grow">
+              Brand colors, logos, and creative designs—learn what works and what kills scannability in QR code design.
+            </p>
+            <a href="/blog/qr-code-design-tips/" class="text-primary font-semibold hover:text-primaryLight transition-colors">
+              Read More →
+            </a>
+          </div>
+        </article>
 
-        const resetUI = () => {
-            dom.uploaderView.classList.remove('hidden');
-            dom.editorView.classList.add('hidden');
-            dom.pagesGrid.innerHTML = '';
-            dom.fileInput.value = '';
-            appState.pdfDoc = null;
-            appState.pages.clear();
-            updateDownloadButtons();
-        };
+        <!-- Blog Post 4 -->
+        <article class="blog-card bg-white rounded-xl shadow-lg overflow-hidden flex flex-col">
+          <div class="overflow-hidden h-48">
+            <img src="https://via.placeholder.com/400x300/f57648/ffffff?text=Restaurant+Tech" 
+                 alt="Restaurant Technology" 
+                 class="w-full h-full object-cover">
+          </div>
+          <div class="p-6 flex flex-col flex-grow">
+            <div class="flex items-center text-sm text-gray-500 mb-3 space-x-2">
+              <time datetime="2025-11-20">Nov 20, 2025</time>
+              <span>•</span>
+              <span>9 min read</span>
+            </div>
+            <h3 class="text-xl font-bold mb-3 leading-tight">
+              <a href="/blog/restaurant-technology-guide/" class="hover:text-primary transition-colors">
+                The Complete Restaurant Technology Guide for 2025
+              </a>
+            </h3>
+            <p class="text-gray-600 mb-4 flex-grow">
+              From contactless menus to loyalty programs, discover the tech stack modern restaurants need to succeed.
+            </p>
+            <a href="/blog/restaurant-technology-guide/" class="text-primary font-semibold hover:text-primaryLight transition-colors">
+              Read More →
+            </a>
+          </div>
+        </article>
 
-        // --- FILE HANDLING ---
-        const handleFileSelect = (file) => {
-            if (!file || file.type !== 'application/pdf') {
-                alert('Please select a valid PDF file.');
-                return;
-            }
-            processPdf(file);
-        };
-        
-        const processPdf = async (file) => {
-            if (appState.isProcessing) return;
-            appState.isProcessing = true;
-            showLoader('Reading PDF...');
-            
-            const fileReader = new FileReader();
-            fileReader.onload = async (e) => {
-                const typedarray = new Uint8Array(e.target.result);
-                try {
-                    const pdfDoc = await pdfjsLib.getDocument({ data: typedarray }).promise;
-                    appState.pdfDoc = pdfDoc;
-                    showEditor();
-                    await renderAllPages();
-                } catch (error) {
-                    alert(`Error processing PDF: ${error.message}`);
-                    resetUI();
-                } finally {
-                    hideLoader();
-                    appState.isProcessing = false;
-                }
-            };
-            fileReader.readAsArrayBuffer(file);
-        };
-        
-        const renderAllPages = async () => {
-            if (!appState.pdfDoc) return;
-            const numPages = appState.pdfDoc.numPages;
-            showLoader(`Rendering ${numPages} pages...`);
+        <!-- Blog Post 5 -->
+        <article class="blog-card bg-white rounded-xl shadow-lg overflow-hidden flex flex-col">
+          <div class="overflow-hidden h-48">
+            <img src="https://via.placeholder.com/400x300/da3f0b/ffffff?text=Marketing+ROI" 
+                 alt="Marketing ROI" 
+                 class="w-full h-full object-cover">
+          </div>
+          <div class="p-6 flex flex-col flex-grow">
+            <div class="flex items-center text-sm text-gray-500 mb-3 space-x-2">
+              <time datetime="2025-11-18">Nov 18, 2025</time>
+              <span>•</span>
+              <span>8 min read</span>
+            </div>
+            <h3 class="text-xl font-bold mb-3 leading-tight">
+              <a href="/blog/measuring-qr-code-roi/" class="hover:text-primary transition-colors">
+                How to Measure QR Code ROI: A Data-Driven Approach
+              </a>
+            </h3>
+            <p class="text-gray-600 mb-4 flex-grow">
+              Stop guessing and start tracking. Learn how to measure the real impact of your QR code campaigns with analytics.
+            </p>
+            <a href="/blog/measuring-qr-code-roi/" class="text-primary font-semibold hover:text-primaryLight transition-colors">
+              Read More →
+            </a>
+          </div>
+        </article>
 
-            const scale = parseFloat(dom.scaleSelect.value);
+        <!-- Blog Post 6 -->
+        <article class="blog-card bg-white rounded-xl shadow-lg overflow-hidden flex flex-col">
+          <div class="overflow-hidden h-48">
+            <img src="https://via.placeholder.com/400x300/f57648/ffffff?text=Privacy+Guide" 
+                 alt="QR Code Privacy" 
+                 class="w-full h-full object-cover">
+          </div>
+          <div class="p-6 flex flex-col flex-grow">
+            <div class="flex items-center text-sm text-gray-500 mb-3 space-x-2">
+              <time datetime="2025-11-15">Nov 15, 2025</time>
+              <span>•</span>
+              <span>6 min read</span>
+            </div>
+            <h3 class="text-xl font-bold mb-3 leading-tight">
+              <a href="/blog/qr-code-privacy-security/" class="hover:text-primary transition-colors">
+                QR Code Privacy & Security: What You Need to Know
+              </a>
+            </h3>
+            <p class="text-gray-600 mb-4 flex-grow">
+              Protect your customers and your business with these essential QR code security best practices.
+            </p>
+            <a href="/blog/qr-code-privacy-security/" class="text-primary font-semibold hover:text-primaryLight transition-colors">
+              Read More →
+            </a>
+          </div>
+        </article>
 
-            for (let i = 1; i <= numPages; i++) {
-                dom.loaderText.textContent = `Rendering page ${i} of ${numPages}...`;
-                const canvas = await renderPageToCanvas(i, scale);
-                
-                const card = dom.pageCardTemplate.content.cloneNode(true);
-                const pageCard = card.querySelector('.page-card');
-                const img = card.querySelector('img');
-                const pageNumDisplay = card.querySelector('.page-number-display');
-                
-                pageCard.dataset.pageNum = i;
-                img.src = canvas.toDataURL();
-                pageNumDisplay.textContent = i;
-                
-                dom.pagesGrid.appendChild(card);
-                
-                appState.pages.set(i, { canvas, rotation: 0, scaleX: 1 });
-            }
-            updateDownloadButtons();
-            hideLoader();
-        };
-        
-        const renderPageToCanvas = async (pageNum, scale) => {
-            const page = await appState.pdfDoc.getPage(pageNum);
-            const viewport = page.getViewport({ scale });
-            const canvas = document.createElement('canvas');
-            const context = canvas.getContext('2d');
-            canvas.height = viewport.height;
-            canvas.width = viewport.width;
-            
-            await page.render({ canvasContext: context, viewport: viewport }).promise;
-            return canvas;
-        };
+      </div>
+    </section>
 
-        // --- PAGE ACTIONS ---
-        const handlePageAction = (e) => {
-            const button = e.target.closest('.page-action-btn');
-            if (!button) return;
-            
-            const card = e.target.closest('.page-card');
-            const pageNum = parseInt(card.dataset.pageNum, 10);
-            const action = button.dataset.action;
-            const pageData = appState.pages.get(pageNum);
-            if (!pageData) return;
+    <!-- Categories Section -->
+    <section class="mb-16">
+      <h2 class="text-3xl font-bold mb-8">Browse by Category</h2>
+      <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <a href="/blog/category/qr-codes/" class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow text-center">
+          <div class="text-4xl mb-3">📱</div>
+          <h3 class="font-bold text-lg mb-2">QR Codes</h3>
+          <p class="text-sm text-gray-600">Tips, guides & best practices</p>
+        </a>
+        <a href="/blog/category/business-tools/" class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow text-center">
+          <div class="text-4xl mb-3">🛠️</div>
+          <h3 class="font-bold text-lg mb-2">Business Tools</h3>
+          <p class="text-sm text-gray-600">Productivity & automation</p>
+        </a>
+        <a href="/blog/category/marketing/" class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow text-center">
+          <div class="text-4xl mb-3">📊</div>
+          <h3 class="font-bold text-lg mb-2">Marketing</h3>
+          <p class="text-sm text-gray-600">Strategies & campaigns</p>
+        </a>
+        <a href="/blog/category/case-studies/" class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow text-center">
+          <div class="text-4xl mb-3">💼</div>
+          <h3 class="font-bold text-lg mb-2">Case Studies</h3>
+          <p class="text-sm text-gray-600">Real business success stories</p>
+        </a>
+      </div>
+    </section>
 
-            if (action === 'rotate-left') pageData.rotation = (pageData.rotation - 90) % 360;
-            if (action === 'rotate-right') pageData.rotation = (pageData.rotation + 90) % 360;
-            if (action === 'flip-horizontal') pageData.scaleX *= -1;
-            
-            updatePreviewTransform(card, pageData);
-        };
-        
-        const updatePreviewTransform = (card, pageData) => {
-            const img = card.querySelector('img');
-            img.style.transform = `rotate(${pageData.rotation}deg) scaleX(${pageData.scaleX})`;
-        };
-        
-        // --- UI CONTROLS & UPDATES ---
-        const updateDownloadButtons = () => {
-            const anyPageExists = appState.pages.size > 0;
-            dom.downloadAllBtn.disabled = !anyPageExists;
-            
-            const anySelected = dom.pagesGrid.querySelector('.page-card-checkbox:checked');
-            dom.downloadSelectedBtn.disabled = !anySelected;
-        };
-        
-        const handleFormatChange = () => {
-            const format = dom.formatSelect.value;
-            dom.qualityControl.classList.toggle('hidden', format === 'image/png');
-        };
+    <!-- CTA Section -->
+    <aside class="bg-gradient-to-r from-primary to-primaryLight text-white p-12 rounded-xl text-center my-12">
+      <h3 class="text-3xl font-bold mb-4">Ready to Create Smart QR Codes?</h3>
+      <p class="text-lg mb-6 opacity-90 max-w-2xl mx-auto">
+        Generate privacy-first QR codes that work for your business. No redirects, no tracking, no watermarks.
+      </p>
+      <a href="https://simpliconvert.com/qr_code_generator/" class="bg-white text-primary px-8 py-4 rounded-lg font-bold hover:bg-gray-100 transition-colors inline-block text-lg">
+        Try Our Free QR Generator →
+      </a>
+    </aside>
 
-        // --- DOWNLOAD LOGIC ---
-        const handleDownload = async (all = false) => {
-            if (appState.isProcessing) return;
-            appState.isProcessing = true;
-            
-            const selectedPages = all 
-                ? Array.from(appState.pages.keys())
-                : [...dom.pagesGrid.querySelectorAll('.page-card-checkbox:checked')].map(cb => parseInt(cb.closest('.page-card').dataset.pageNum, 10));
+  </main>
 
-            if (selectedPages.length === 0) {
-                alert('No pages selected for download.');
-                appState.isProcessing = false;
-                return;
-            }
+  <!-- Footer Placeholder -->
+  <div id="footer"></div>
 
-            showLoader('Preparing ZIP file...');
-            
-            const zip = new JSZip();
-            const format = dom.formatSelect.value;
-            const quality = parseFloat(dom.qualitySlider.value);
-            const extension = format.split('/')[1];
-
-            for (const pageNum of selectedPages) {
-                dom.loaderText.textContent = `Processing page ${pageNum}...`;
-                const pageData = appState.pages.get(pageNum);
-                
-                const tempCanvas = document.createElement('canvas');
-                const tempCtx = tempCanvas.getContext('2d');
-                
-                const { canvas, rotation, scaleX } = pageData;
-                
-                const w = canvas.width;
-                const h = canvas.height;
-                
-                const rotated = (rotation % 180 !== 0);
-                tempCanvas.width = rotated ? h : w;
-                tempCanvas.height = rotated ? w : h;
-
-                tempCtx.translate(tempCanvas.width / 2, tempCanvas.height / 2);
-                tempCtx.rotate(rotation * Math.PI / 180);
-                tempCtx.scale(scaleX, 1);
-                
-                tempCtx.drawImage(canvas, -w / 2, -h / 2);
-
-                const blob = await new Promise(resolve => tempCanvas.toBlob(resolve, format, quality));
-                zip.file(`page-${pageNum}.${extension}`, blob);
-            }
-            
-            showLoader('Generating download...');
-            const zipBlob = await zip.generateAsync({ type: 'blob' });
-            
-            const link = document.createElement('a');
-            link.href = URL.createObjectURL(zipBlob);
-            link.download = `converted-pages_${Date.now()}.zip`;
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            
-            hideLoader();
-            appState.isProcessing = false;
-        };
-        
-        // --- EVENT LISTENERS ---
-        const setupEventListeners = () => {
-            // Uploader
-            dom.fileSelectBtn.addEventListener('click', () => dom.fileInput.click());
-            dom.fileInput.addEventListener('change', (e) => handleFileSelect(e.target.files[0]));
-            
-            // Drag and Drop
-            const dropZone = dom.dropZone;
-            dropZone.addEventListener('dragover', (e) => {
-                e.preventDefault();
-                dropZone.classList.add('border-primary', 'bg-primary/5');
-            });
-            dropZone.addEventListener('dragleave', (e) => {
-                e.preventDefault();
-                dropZone.classList.remove('border-primary', 'bg-primary/5');
-            });
-            dropZone.addEventListener('drop', (e) => {
-                e.preventDefault();
-                dropZone.classList.remove('border-primary', 'bg-primary/5');
-                handleFileSelect(e.dataTransfer.files[0]);
-            });
-
-            // Controls
-            dom.resetBtn.addEventListener('click', resetUI);
-            dom.formatSelect.addEventListener('change', handleFormatChange);
-            dom.qualitySlider.addEventListener('input', () => dom.qualityValue.textContent = dom.qualitySlider.value);
-            dom.downloadSelectedBtn.addEventListener('click', () => handleDownload(false));
-            dom.downloadAllBtn.addEventListener('click', () => handleDownload(true));
-            
-            // Event delegation for dynamic content
-            dom.pagesGrid.addEventListener('click', (e) => {
-                if (e.target.matches('.page-card-checkbox')) {
-                    updateDownloadButtons();
+  <script>
+    function initializeHeaderScripts() {
+        // Header Scroll Effect
+        const header = document.getElementById('header');
+        if (header) {
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 10) {
+                    header.classList.add('scrolled-effect');
                 } else {
-                    handlePageAction(e);
+                    header.classList.remove('scrolled-effect');
                 }
             });
+        }
+
+        // Mobile Menu Toggle
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const menuIconBars = document.getElementById('menu-icon-bars');
+        const menuIconTimes = document.getElementById('menu-icon-times');
+        
+        if (mobileMenuButton && mobileMenu) {
+            mobileMenuButton.addEventListener('click', () => {
+                mobileMenu.classList.toggle('open');
+                
+                if (menuIconBars && menuIconTimes) {
+                    menuIconBars.classList.toggle('hidden');
+                    menuIconTimes.classList.toggle('hidden');
+                }
+            });
+        }
+
+        // Mobile Accordion Toggle
+        const accordionButton = document.querySelector('.accordion-button');
+        const accordionContent = document.querySelector('.accordion-content');
+        
+        if (accordionButton && accordionContent) {
+            accordionButton.addEventListener('click', () => {
+                accordionButton.classList.toggle('open');
+                accordionContent.classList.toggle('open');
+            });
+        }
+    }
+    
+    function initializeFooterScripts() {
+        // Set Current Year in Footer
+        const yearSpan = document.getElementById('current-year');
+        if(yearSpan) {
+            yearSpan.textContent = new Date().getFullYear();
+        }
+    }
+
+    async function loadComponent(url, elementId, callback) {
+        try {
+            const response = await fetch(url);
+            if (!response.ok) {
+                throw new Error(`Failed to load component from ${url}. Status: ${response.status}`);
+            }
+            const text = await response.text();
+            const element = document.getElementById(elementId);
+            if (element) {
+                element.innerHTML = text;
+                if (callback) {
+                    callback();
+                }
+            } else {
+                console.error(`Element with id '${elementId}' not found.`);
+            }
+        } catch (error) {
+            console.error('Error loading component:', error);
+            const element = document.getElementById(elementId);
+            if(element) element.innerHTML = `<p class="text-center text-red-500">Error: Could not load component.</p>`;
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        // Load Header and Footer components
+        loadComponent('/components/navbar.html', 'navbar', initializeHeaderScripts);
+        loadComponent('/components/footer.html', 'footer', initializeFooterScripts);
+        
+        // Smooth scrolling for anchor links
+        document.addEventListener('click', function (e) {
+            const anchor = e.target.closest('a[href^="#"]');
+            if (!anchor) return;
+
+            const href = anchor.getAttribute('href');
+            if (href === '#' || href === "") return;
+
+            e.preventDefault();
             
-            // Re-render pages if scale is changed (optional, can be complex)
-            // For simplicity, this is not implemented. User should choose scale before loading.
-        };
+            const targetElement = document.querySelector(href);
+            if (targetElement) {
+                const header = document.getElementById('header');
+                const headerOffset = header ? header.offsetHeight : 80;
+                const elementPosition = targetElement.getBoundingClientRect().top;
+                const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+            
+                window.scrollTo({
+                    top: offsetPosition,
+                    behavior: 'smooth'
+                });
 
-        // --- INITIALIZATION ---
-        document.addEventListener('DOMContentLoaded', () => {
-            setupEventListeners();
+                // Close mobile menu if open after clicking a link
+                const mobileMenu = document.getElementById('mobile-menu');
+                if (mobileMenu && mobileMenu.classList.contains('open')) {
+                    const mobileMenuButton = document.getElementById('mobile-menu-button');
+                    if(mobileMenuButton) mobileMenuButton.click();
+                }
+            }
         });
-
-    </script>
+    });
+  </script>
 </body>
 </html>
