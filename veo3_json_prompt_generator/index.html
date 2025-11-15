@@ -243,924 +243,575 @@ Free Veo3 JSON Prompt Generator. Build structured prompts, explore advanced JSON
                   </div>
     </section>
 
-    <div id="root"></div>
-
-
     <!-- TOOL START -->
 
 
-<script type="text/babel">
-        // Destructure React hooks for easier use
-        const { useState, useMemo, useCallback } = React;
 
-        // --- FROM utils.ts ---
-        const createDefaultShot = () => ({
-            scene: "",
-            negativePrompt: "",
-            notes: "",
-            config: {
-                camera: {
-                    angle: "Wide",
-                    movement: "Static",
-                },
-                lighting: "Natural",
-                technical: {
-                    aspectRatio: "16:9",
-                    duration: 5,
-                    fps: 24,
-                },
-                style: {
-                    contrast: 1.0,
-                    saturation: 1.0,
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom styles for a better look and feel */
+        body {
+            background-color: #f9fafb; /* bg-gray-50 */
+        }
+        /* Custom slider track */
+        input[type="range"]::-webkit-slider-runnable-track {
+            background: #e5e7eb; /* bg-gray-200 */
+            height: 8px;
+            border-radius: 9999px;
+        }
+        /* Custom slider thumb */
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #da3f0b;
+            cursor: pointer;
+            margin-top: -6px; /* Center thumb on track */
+            border: 2px solid white;
+            box-shadow: 0 0 5px rgba(0,0,0,0.2);
+        }
+        input[type="range"]::-moz-range-track {
+            background: #e5e7eb;
+            height: 8px;
+            border-radius: 9999px;
+        }
+        input[type="range"]::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #da3f0b;
+            cursor: pointer;
+            border: 2px solid white;
+            box-shadow: 0 0 5px rgba(0,0,0,0.2);
+        }
+        /* Style for draggable shots */
+        .shot-tab.dragging {
+            opacity: 0.5;
+            background: #fed7aa;
+        }
+    </style>
+</head>
+<body class="p-4 md:p-6">
+
+<main id="app" class="container mx-auto grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <!-- Left Column: Inputs -->
+    <div class="flex flex-col gap-6">
+        <!-- Multi-Shot UI -->
+        <div class="bg-white p-4 rounded-xl shadow-md">
+            <h2 class="text-lg font-bold text-gray-800 mb-3">Shot Sequence</h2>
+            <div id="shots-container" class="flex flex-wrap gap-2 mb-3 border-b pb-3">
+                <!-- Shot tabs will be injected here -->
+            </div>
+            <button id="add-shot-btn" class="w-full text-center px-4 py-2 border-2 border-dashed border-gray-300 text-gray-600 font-semibold rounded-lg hover:bg-gray-100 hover:border-gray-400 transition-colors">
+                + Add Shot
+            </button>
+        </div>
+
+        <!-- Scene Setting -->
+        <div class="bg-white p-6 rounded-xl shadow-md">
+            <h2 class="text-lg font-bold text-gray-800 mb-4">1. Scene Setting</h2>
+            <textarea id="scene-input" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#da3f0b] focus:border-[#da3f0b] transition" rows="4" placeholder="e.g., A futuristic city with flying cars, cinematic lighting"></textarea>
+            <div class="mt-4">
+                <h3 class="font-semibold text-gray-700 mb-2">Presets:</h3>
+                <div class="flex flex-wrap gap-2" id="presets-container">
+                    <button class="preset-btn px-3 py-1.5 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition text-sm">Noir City</button>
+                    <button class="preset-btn px-3 py-1.5 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition text-sm">Product Macro</button>
+                    <button class="preset-btn px-3 py-1.5 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition text-sm">Travel Reel</button>
+                    <button class="preset-btn px-3 py-1.5 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition text-sm">Anime Action</button>
+                    <button class="preset-btn px-3 py-1.5 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition text-sm">Vintage 1920s</button>
+                    <button class="preset-btn px-3 py-1.5 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition text-sm">Neolithic Fireside (10k BP)</button>
+                    <button class="preset-btn px-3 py-1.5 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition text-sm">Paleolithic Cave Ritual</button>
+                    <button class="preset-btn px-3 py-1.5 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition text-sm">Ice Age Tundra</button>
+                    <button class="preset-btn px-3 py-1.5 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition text-sm">Bronze Age Sunrise (5k BP)</button>
+                    <button class="preset-btn px-3 py-1.5 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition text-sm">Ancient Nile Riverbank</button>
+                    <button class="preset-btn px-3 py-1.5 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition text-sm">Mesopotamian Ziggurat Dawn</button>
+                    <button class="preset-btn px-3 py-1.5 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition text-sm">Stonehenge Solstice</button>
+                    <button class="preset-btn px-3 py-1.5 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition text-sm">Ancient Market Dust</button>
+                    <button class="preset-btn px-3 py-1.5 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition text-sm">Lost Desert Ruins</button>
+                    <button class="preset-btn px-3 py-1.5 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition text-sm">Cave Wall Paintings</button>
+                    <button class="preset-btn px-3 py-1.5 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition text-sm">Prehistoric Coast Fog</button>
+                    <button class="preset-btn px-3 py-1.5 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition text-sm">Steppe Horse Riders</button>
+                    <button class="preset-btn px-3 py-1.5 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition text-sm">Early Temple Candlelit</button>
+                    <button class="preset-btn px-3 py-1.5 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition text-sm">Glacial Blue Ice Cave</button>
+                </div>
+            </div>
+            <div class="mt-4 pt-4 border-t border-gray-200">
+                <h3 class="font-semibold text-gray-700 mb-2">Preset Manager:</h3>
+                <div class="flex gap-2">
+                    <button id="save-preset-btn" class="flex-1 text-center px-4 py-2 border border-gray-300 text-gray-600 font-semibold rounded-lg hover:bg-gray-100 transition-colors text-sm">Save Preset</button>
+                    <button id="import-preset-btn" class="flex-1 text-center px-4 py-2 border border-gray-300 text-gray-600 font-semibold rounded-lg hover:bg-gray-100 transition-colors text-sm">Import Preset</button>
+                    <input type="file" id="preset-file-input" class="hidden" accept=".json">
+                </div>
+            </div>
+        </div>
+
+        <!-- Negative Prompts -->
+        <div class="bg-white p-6 rounded-xl shadow-md">
+            <h2 class="text-lg font-bold text-gray-800 mb-4">2. Negative Prompts</h2>
+            <textarea id="negative-prompt-input" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#da3f0b] focus:border-[#da3f0b] transition" rows="3" placeholder="e.g., blurry, distorted faces, watermark"></textarea>
+            <button id="add-safety-negatives-btn" class="mt-3 w-full text-center px-4 py-2 border border-gray-300 text-gray-600 font-semibold rounded-lg hover:bg-gray-100 transition-colors">Add Default Safety Negatives</button>
+        </div>
+
+        <!-- Shot Configuration -->
+        <div class="bg-white p-6 rounded-xl shadow-md">
+            <h2 class="text-lg font-bold text-gray-800 mb-4">3. Shot Configuration</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <!-- Dropdowns -->
+                <div>
+                    <label for="camera-angle" class="block text-sm font-medium text-gray-700">Camera Angle</label>
+                    <select id="camera-angle" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-[#da3f0b] focus:border-[#da3f0b] sm:text-sm">
+                        <option>Wide</option><option>POV</option><option>Drone</option><option>Close-up</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="camera-movement" class="block text-sm font-medium text-gray-700">Camera Movement</label>
+                    <select id="camera-movement" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-[#da3f0b] focus:border-[#da3f0b] sm:text-sm">
+                        <option>Static</option><option>Pan</option><option>Dolly</option><option>Tilt</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="lighting" class="block text-sm font-medium text-gray-700">Lighting</label>
+                    <select id="lighting" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-[#da3f0b] focus:border-[#da3f0b] sm:text-sm">
+                        <option>Natural</option><option>Cinematic</option><option>Neon</option><option>Softbox</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="aspect-ratio" class="block text-sm font-medium text-gray-700">Aspect Ratio</label>
+                    <select id="aspect-ratio" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-[#da3f0b] focus:border-[#da3f0b] sm:text-sm">
+                        <option>16:9</option><option>9:16</option><option>1:1</option><option>4:3</option>
+                    </select>
+                </div>
+                <!-- Sliders -->
+                <div class="md:col-span-2 pt-2">
+                    <label for="duration" class="flex justify-between text-sm font-medium text-gray-700">Duration <span id="duration-value">5s</span></label>
+                    <input id="duration" type="range" min="1" max="15" value="5" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
+                </div>
+                <div class="md:col-span-2">
+                    <label for="frame-rate" class="flex justify-between text-sm font-medium text-gray-700">Frame Rate <span id="frame-rate-value">24fps</span></label>
+                    <input id="frame-rate" type="range" min="12" max="60" value="24" step="1" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
+                </div>
+                <div class="md:col-span-2">
+                    <label for="contrast" class="flex justify-between text-sm font-medium text-gray-700">Contrast <span id="contrast-value">1.0</span></label>
+                    <input id="contrast" type="range" min="0.5" max="1.5" value="1.0" step="0.1" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
+                </div>
+                <div class="md:col-span-2">
+                    <label for="saturation" class="flex justify-between text-sm font-medium text-gray-700">Saturation <span id="saturation-value">1.0</span></label>
+                    <input id="saturation" type="range" min="0.5" max="1.5" value="1.0" step="0.1" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
+                </div>
+            </div>
+        </div>
+        
+        <!-- Shot Notes -->
+        <div class="bg-white p-6 rounded-xl shadow-md">
+            <h2 class="text-lg font-bold text-gray-800 mb-4">4. Shot Notes (not included in JSON)</h2>
+            <textarea id="shot-notes" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#da3f0b] focus:border-[#da3f0b] transition" rows="3" placeholder="e.g., Client wants warmer tones for this shot."></textarea>
+        </div>
+    </div>
+
+    <!-- Right Column: Output -->
+    <div class="flex flex-col gap-6 lg:sticky lg:top-6 h-max">
+        <!-- Template & Validation -->
+        <div class="bg-white p-6 rounded-xl shadow-md">
+            <h2 class="text-lg font-bold text-gray-800 mb-4">5. Template & Validation</h2>
+            <div class="flex gap-2" id="template-selector">
+                <button data-template="video" class="template-btn flex-1 text-center px-4 py-2 rounded-lg font-semibold transition-colors bg-[#da3f0b] text-white">Video Schema</button>
+                <button data-template="image" class="template-btn flex-1 text-center px-4 py-2 rounded-lg font-semibold transition-colors bg-gray-200 text-gray-700 hover:bg-gray-300">Image Schema</button>
+            </div>
+            <div id="validation-message" class="mt-4 text-sm text-yellow-700 bg-yellow-100 p-3 rounded-md hidden"></div>
+        </div>
+        
+        <!-- Live JSON Preview -->
+        <div class="bg-gray-800 p-6 rounded-xl shadow-md flex-grow flex flex-col">
+            <h2 class="text-lg font-bold text-gray-100 mb-4">6. Live JSON Preview</h2>
+            <div class="relative flex-grow">
+                <pre id="json-preview" class="w-full h-full text-sm text-green-300 bg-gray-900 p-4 rounded-lg overflow-auto whitespace-pre-wrap break-all"></pre>
+                <button id="copy-json-btn" class="absolute top-3 right-3 px-3 py-1 bg-[#da3f0b] text-white font-bold rounded-lg shadow-md hover:bg-[#c3370a] transition text-xs">Copy</button>
+            </div>
+            <button id="download-json-btn" class="mt-4 w-full flex items-center justify-center px-6 py-3 bg-[#da3f0b] text-white font-bold rounded-lg shadow-md hover:bg-[#c3370a] transition-all duration-300 transform hover:scale-105">
+                Download as .json
+            </button>
+        </div>
+    </div>
+</main>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const defaultShot = () => ({
+        scene: "",
+        negativePrompt: "",
+        notes: "",
+        config: {
+            camera: {
+                angle: "Wide",
+                movement: "Static",
+            },
+            lighting: "Natural",
+            technical: {
+                aspectRatio: "16:9",
+                duration: 5,
+                fps: 24,
+            },
+            style: {
+                contrast: 1.0,
+                saturation: 1.0,
+            }
+        }
+    });
+
+    let state = {
+        template: 'video', // 'video' or 'image'
+        activeShotIndex: 0,
+        shots: [defaultShot()],
+    };
+
+    const presets = {
+        'Noir City': 'in the style of a noir film, black and white, heavy shadows, rainy streets, cinematic, high contrast',
+        'Product Macro': 'macro shot, clean background, studio lighting, detailed texture, sharp focus, product photography',
+        'Travel Reel': 'fast cuts, vibrant colors, drone shots, energetic music, travel vlog style, cinematic',
+        'Anime Action': 'dynamic action scene, speed lines, dramatic angles, vibrant cel-shaded style, anime aesthetic',
+        'Vintage 1920s': 'sepia tone, film grain, art deco style, 1920s fashion, vintage cars, silent film aesthetic',
+        'Neolithic Fireside (10k BP)': 'flickering firelight, primitive stone tools, animal hides, shadowy figures, ancient storytelling, neolithic settlement',
+        'Paleolithic Cave Ritual': 'torchlit cave, ancient cave paintings, ritualistic dance, shamanic figures, deep shadows, prehistoric',
+        'Ice Age Tundra': 'vast icy plains, woolly mammoths, distant glaciers, harsh sunlight, sparse vegetation, survival theme',
+        'Bronze Age Sunrise (5k BP)': 'early morning mist, rising sun over a bronze age hillfort, simple bronze tools, dew on grass, awakening village',
+        'Ancient Nile Riverbank': 'papyrus reeds, felucca boats sailing, pyramids in the distance, bustling river life, Egyptian gods aesthetic',
+        'Mesopotamian Ziggurat Dawn': 'sun rising over a massive ziggurat, early city-state, clay tablets, irrigation canals, ancient Sumerian life',
+        'Stonehenge Solstice': 'dramatic sunrise at Stonehenge, druidic figures, megalithic stones, long shadows, mystical atmosphere',
+        'Ancient Market Dust': 'sunbeams through a dusty ancient marketplace, vibrant spices, clay pottery, bartering merchants, chaotic and lively',
+        'Lost Desert Ruins': 'sand-swept ruins of an ancient city, crumbling pillars, harsh desert sun, sense of discovery and mystery',
+        'Cave Wall Paintings': 'a hand painting bison on a cave wall by torchlight, ochre and charcoal pigments, flickering shadows, prehistoric art',
+        'Prehistoric Coast Fog': 'dense fog rolling in over a rugged prehistoric coastline, silhouettes of ancient sea creatures, mysterious and primal',
+        'Steppe Horse Riders': 'nomadic riders on the vast Eurasian steppe, galloping horses, traditional yurts, wide open sky, sense of freedom',
+        'Early Temple Candlelit': 'interior of an early stone temple, hundreds of flickering candles, carved idols, hushed reverence, spiritual atmosphere',
+        'Glacial Blue Ice Cave': 'sunlight filtering through deep blue glacial ice, crystalline walls, ethereal glow, sense of cold and beauty'
+    };
+
+
+    // --- DOM Elements ---
+    const getEl = id => document.getElementById(id);
+    const sceneInput = getEl('scene-input');
+    const negativePromptInput = getEl('negative-prompt-input');
+    const shotNotes = getEl('shot-notes');
+    const cameraAngle = getEl('camera-angle');
+    const cameraMovement = getEl('camera-movement');
+    const lighting = getEl('lighting');
+    const aspectRatio = getEl('aspect-ratio');
+    const duration = getEl('duration');
+    const frameRate = getEl('frame-rate');
+    const contrast = getEl('contrast');
+    const saturation = getEl('saturation');
+    const durationValue = getEl('duration-value');
+    const frameRateValue = getEl('frame-rate-value');
+    const contrastValue = getEl('contrast-value');
+    const saturationValue = getEl('saturation-value');
+    const jsonPreview = getEl('json-preview');
+    const validationMessage = getEl('validation-message');
+    const shotsContainer = getEl('shots-container');
+
+    // --- State Management & Rendering ---
+
+    const renderUI = () => {
+        const activeShot = state.shots[state.activeShotIndex];
+        if (!activeShot) return;
+
+        sceneInput.value = activeShot.scene;
+        negativePromptInput.value = activeShot.negativePrompt;
+        shotNotes.value = activeShot.notes;
+        cameraAngle.value = activeShot.config.camera.angle;
+        cameraMovement.value = activeShot.config.camera.movement;
+        lighting.value = activeShot.config.lighting;
+        aspectRatio.value = activeShot.config.technical.aspectRatio;
+        
+        duration.value = activeShot.config.technical.duration;
+        durationValue.textContent = `${activeShot.config.technical.duration}s`;
+        
+        frameRate.value = activeShot.config.technical.fps;
+        frameRateValue.textContent = `${activeShot.config.technical.fps}fps`;
+
+        contrast.value = activeShot.config.style.contrast;
+        contrastValue.textContent = activeShot.config.style.contrast.toFixed(1);
+        
+        saturation.value = activeShot.config.style.saturation;
+        saturationValue.textContent = activeShot.config.style.saturation.toFixed(1);
+
+        renderShotTabs();
+        renderJsonPreview();
+        validate();
+    };
+
+    const renderShotTabs = () => {
+        shotsContainer.innerHTML = '';
+        state.shots.forEach((shot, index) => {
+            const tab = document.createElement('div');
+            tab.className = `shot-tab cursor-pointer flex items-center gap-2 px-4 py-2 rounded-lg border-2 transition-colors ${index === state.activeShotIndex ? 'border-[#da3f0b] bg-orange-50' : 'border-gray-300 bg-white hover:bg-gray-50'}`;
+            tab.dataset.index = index;
+            tab.draggable = true;
+
+            const text = document.createElement('span');
+            text.className = 'font-semibold';
+            text.textContent = `Shot ${index + 1}`;
+            tab.appendChild(text);
+            
+            if (state.shots.length > 1) {
+                const deleteBtn = document.createElement('button');
+                deleteBtn.textContent = '✕';
+                deleteBtn.className = 'text-red-500 hover:text-red-700 font-bold text-xs';
+                deleteBtn.onclick = (e) => {
+                    e.stopPropagation();
+                    removeShot(index);
+                };
+                tab.appendChild(deleteBtn);
+            }
+
+            tab.addEventListener('click', () => selectShot(index));
+
+            // Drag and Drop
+            tab.addEventListener('dragstart', (e) => {
+                e.target.classList.add('dragging');
+                e.dataTransfer.setData('text/plain', index);
+            });
+            tab.addEventListener('dragend', (e) => e.target.classList.remove('dragging'));
+            tab.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                const dragging = document.querySelector('.dragging');
+                if (dragging !== e.currentTarget) {
+                    const rect = e.currentTarget.getBoundingClientRect();
+                    const offset = e.clientX - rect.left - rect.width / 2;
+                    if (offset < 0) {
+                        e.currentTarget.parentNode.insertBefore(dragging, e.currentTarget);
+                    } else {
+                        e.currentTarget.parentNode.insertBefore(dragging, e.currentTarget.nextSibling);
+                    }
                 }
+            });
+
+            shotsContainer.appendChild(tab);
+        });
+    };
+
+    const reorderShots = () => {
+        const newOrder = Array.from(shotsContainer.children).map(tab => parseInt(tab.dataset.index));
+        const reorderedShots = newOrder.map(i => state.shots[i]);
+        state.shots = reorderedShots;
+        state.activeShotIndex = state.shots.indexOf(state.shots.find((_, i) => newOrder[i] === state.activeShotIndex));
+        if (state.activeShotIndex < 0 && state.shots.length > 0) state.activeShotIndex = 0;
+        
+        renderUI();
+    };
+    
+    shotsContainer.addEventListener('drop', (e) => {
+        e.preventDefault();
+        reorderShots();
+    });
+
+
+    const renderJsonPreview = () => {
+        let outputObject = {};
+        const shotsToRender = state.shots.map(shot => {
+            const shotCopy = JSON.parse(JSON.stringify(shot));
+            delete shotCopy.notes; // Remove notes from output
+            if (state.template === 'image') {
+                delete shotCopy.config.technical.duration;
+                delete shotCopy.config.technical.fps;
+            }
+            return shotCopy;
+        });
+
+        if (shotsToRender.length === 1) {
+            outputObject = shotsToRender[0];
+        } else {
+            outputObject = { sequence: shotsToRender };
+        }
+        
+        jsonPreview.textContent = JSON.stringify(outputObject, null, 2);
+    };
+
+    const updateState = (path, value) => {
+        const keys = path.split('.');
+        let current = state.shots[state.activeShotIndex];
+        for (let i = 0; i < keys.length - 1; i++) {
+            current = current[keys[i]];
+        }
+        current[keys[keys.length - 1]] = value;
+        renderJsonPreview();
+        validate();
+    };
+
+    const validate = () => {
+        const activeShot = state.shots[state.activeShotIndex];
+        if (!activeShot.scene || activeShot.scene.trim() === "") {
+            sceneInput.classList.add('border-red-500', 'ring-red-500');
+            validationMessage.textContent = "Scene description is required.";
+            validationMessage.classList.remove('hidden');
+        } else {
+            sceneInput.classList.remove('border-red-500', 'ring-red-500');
+            validationMessage.classList.add('hidden');
+        }
+    };
+
+    const addShot = () => {
+        state.shots.push(defaultShot());
+        state.activeShotIndex = state.shots.length - 1;
+        renderUI();
+    };
+    
+    const removeShot = (index) => {
+        if (state.shots.length <= 1) return;
+        state.shots.splice(index, 1);
+        if (state.activeShotIndex >= index) {
+            state.activeShotIndex = Math.max(0, state.activeShotIndex - 1);
+        }
+        renderUI();
+    };
+
+    const selectShot = (index) => {
+        state.activeShotIndex = index;
+        renderUI();
+    };
+
+    // --- Event Listeners ---
+    const setupListeners = () => {
+        sceneInput.addEventListener('input', (e) => updateState('scene', e.target.value));
+        negativePromptInput.addEventListener('input', (e) => updateState('negativePrompt', e.target.value));
+        shotNotes.addEventListener('input', (e) => updateState('notes', e.target.value));
+
+        cameraAngle.addEventListener('change', (e) => updateState('config.camera.angle', e.target.value));
+        cameraMovement.addEventListener('change', (e) => updateState('config.camera.movement', e.target.value));
+        lighting.addEventListener('change', (e) => updateState('config.lighting', e.target.value));
+        aspectRatio.addEventListener('change', (e) => updateState('config.technical.aspectRatio', e.target.value));
+        
+        duration.addEventListener('input', (e) => {
+            const val = parseInt(e.target.value, 10);
+            durationValue.textContent = `${val}s`;
+            updateState('config.technical.duration', val);
+        });
+        frameRate.addEventListener('input', (e) => {
+            const val = parseInt(e.target.value, 10);
+            frameRateValue.textContent = `${val}fps`;
+            updateState('config.technical.fps', val);
+        });
+        contrast.addEventListener('input', (e) => {
+            const val = parseFloat(e.target.value);
+            contrastValue.textContent = val.toFixed(1);
+            updateState('config.style.contrast', val);
+        });
+        saturation.addEventListener('input', (e) => {
+            const val = parseFloat(e.target.value);
+            saturationValue.textContent = val.toFixed(1);
+            updateState('config.style.saturation', val);
+        });
+
+        // Template Selector
+        getEl('template-selector').addEventListener('click', (e) => {
+            if (e.target.matches('.template-btn')) {
+                state.template = e.target.dataset.template;
+                document.querySelectorAll('.template-btn').forEach(btn => {
+                    btn.classList.remove('bg-[#da3f0b]', 'text-white');
+                    btn.classList.add('bg-gray-200', 'text-gray-700', 'hover:bg-gray-300');
+                });
+                e.target.classList.add('bg-[#da3f0b]', 'text-white');
+                e.target.classList.remove('bg-gray-200', 'text-gray-700', 'hover:bg-gray-300');
+                
+                // Show/hide duration based on template
+                const durationContainer = duration.parentElement;
+                if(state.template === 'image'){
+                    durationContainer.style.display = 'none';
+                } else {
+                    durationContainer.style.display = 'block';
+                }
+                renderJsonPreview();
+            }
+        });
+        
+        // Presets
+        getEl('presets-container').addEventListener('click', (e) => {
+            if (e.target.matches('.preset-btn')) {
+                const presetName = e.target.textContent;
+                const presetValue = presets[presetName];
+                const currentUserInput = sceneInput.value.split(',').filter(s => !Object.values(presets).some(p => p.includes(s.trim()))).join(', ').trim();
+                const mergedValue = currentUserInput ? `${currentUserInput}, ${presetValue}` : presetValue;
+                updateState('scene', mergedValue);
+                sceneInput.value = mergedValue; // Update UI immediately
+            }
+        });
+        
+        getEl('save-preset-btn').addEventListener('click', () => {
+            const presetBlob = new Blob([JSON.stringify(state.shots[state.activeShotIndex], null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(presetBlob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'veo3_preset.json';
+            a.click();
+            URL.revokeObjectURL(url);
+        });
+        
+        getEl('import-preset-btn').addEventListener('click', () => getEl('preset-file-input').click());
+        getEl('preset-file-input').addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    try {
+                        const importedPreset = JSON.parse(event.target.result);
+                        // Simple validation
+                        if (importedPreset.scene && importedPreset.config) {
+                            state.shots[state.activeShotIndex] = importedPreset;
+                            renderUI();
+                        } else {
+                            alert('Invalid preset file format.');
+                        }
+                    } catch (err) {
+                        alert('Error reading preset file.');
+                    }
+                };
+                reader.readAsText(file);
             }
         });
 
-        // --- FROM constants.ts ---
-        const cinematicCyberpunkShot = createDefaultShot();
-        cinematicCyberpunkShot.scene = "A vast, sprawling cyberpunk city at night, neon signs reflecting on rain-slicked streets, flying vehicles weaving between towering skyscrapers, cinematic, Blade Runner aesthetic, ultra-detailed, 8k";
-        cinematicCyberpunkShot.config.lighting = "Neon";
-        cinematicCyberpunkShot.config.camera.angle = "Drone";
-        cinematicCyberpunkShot.config.camera.movement = "Dolly";
-        cinematicCyberpunkShot.config.technical.duration = 8;
+        // Add Shot
+        getEl('add-shot-btn').addEventListener('click', addShot);
 
-        const desertDiscoveryShot = createDefaultShot();
-        desertDiscoveryShot.scene = "An epic drone shot pulling back to reveal ancient, sand-swept ruins in a vast desert, golden hour lighting, long shadows, a lone explorer standing at the entrance, sense of mystery and adventure, National Geographic style";
-        desertDiscoveryShot.config.camera.angle = "Drone";
-        desertDiscoveryShot.config.camera.movement = "Dolly";
-        desertDiscoveryShot.config.technical.duration = 10;
-        desertDiscoveryShot.config.lighting = "Golden Hour";
-        desertDiscoveryShot.config.style.saturation = 1.2;
+        // Safety Negatives
+        getEl('add-safety-negatives-btn').addEventListener('click', () => {
+            const safetyPrompts = ["low resolution", "watermark", "blurry", "distorted", "jpeg artifacts"];
+            const currentPrompts = negativePromptInput.value.split(',').map(p => p.trim()).filter(p => p);
+            
+            const promptsToAdd = safetyPrompts.filter(p => !currentPrompts.includes(p));
 
-        const enchantedForestShot = createDefaultShot();
-        enchantedForestShot.scene = "A magical, enchanted forest with bioluminescent mushrooms casting an ethereal glow, sunbeams piercing the dense canopy, a mystical creature peeking from behind an ancient tree, fantasy, cinematic, volumetric lighting";
-        enchantedForestShot.config.lighting = "Volumetric";
-        enchantedForestShot.config.camera.angle = "Wide";
-        enchantedForestShot.config.camera.movement = "Pan";
-        enchantedForestShot.config.technical.duration = 7;
-        enchantedForestShot.config.style.contrast = 1.1;
-
-        const productMacroShot = createDefaultShot();
-        productMacroShot.scene = "Extreme close-up macro shot of a luxury watch, gears turning smoothly, light glinting off polished metal, clean studio background, sharp focus, detailed texture, commercial product photography";
-        productMacroShot.negativePrompt = "blurry, dust, scratches, reflections of camera";
-        productMacroShot.config.lighting = "Softbox";
-        productMacroShot.config.camera.angle = "Close-up";
-        productMacroShot.config.technical.duration = 6;
-        productMacroShot.config.technical.aspectRatio = "1:1";
-
-        const animeActionShot = createDefaultShot();
-        animeActionShot.scene = "A dynamic anime action scene, a samurai deflecting an energy blast with his katana, speed lines, dramatic angles, vibrant cel-shaded style, intense facial expression, impact frames";
-        animeActionShot.config.lighting = "Cinematic";
-        animeActionShot.config.camera.movement = "Static";
-        animeActionShot.config.technical.fps = 30;
-        animeActionShot.config.style.saturation = 1.3;
-        animeActionShot.config.style.contrast = 1.2;
-
-        const underwaterWorldShot = createDefaultShot();
-        underwaterWorldShot.scene = "A vibrant coral reef teeming with colorful fish, a majestic sea turtle gliding gracefully, sunlight filtering through the water creating dancing rays, documentary style, underwater photography, David Attenborough";
-        underwaterWorldShot.config.camera.angle = "Wide";
-        underwaterWorldShot.config.camera.movement = "Dolly";
-        underwaterWorldShot.config.technical.duration = 10;
-
-
-        const newPrompts = [
-            {
-                id: 'ferrari-reveal',
-                title: 'Luxury Car Reveal (Ferrari)',
-                category: 'Product Ad',
-                description: 'A cinematic reveal of a LaFerrari from a high-tech crate, forming from a wireframe silhouette.',
-                imageUrl: 'https://picsum.photos/seed/ferrari/600/400',
-                shots: (() => {
-                    const shot = createDefaultShot();
-                    shot.scene = "Cinematic shot of a sleek red Ferrari crate with a glowing prancing horse emblem. The crate opens smoothly, and arcs of red energy project upward, sketching a wireframe silhouette of a LaFerrari. The wireframe rapidly fills with photorealistic red metal and glass. Showroom lights flicker on, illuminating a minimalist, high-tech showroom around the car.";
-                    shot.config.lighting = "Cinematic";
-                    shot.config.technical.duration = 10;
-                    return [shot];
-                })(),
-            },
-            {
-                id: 'tech-product-reveal',
-                title: 'Tech Product Reveal (Apple Style)',
-                category: 'Product Ad',
-                description: 'A minimalist, futuristic reveal of a tech product, Apple-style, with seamless transitions.',
-                imageUrl: 'https://picsum.photos/seed/tech/600/400',
-                shots: (() => {
-                    const shot = createDefaultShot();
-                    shot.scene = "The brand logo floats in a soft, gradient-lit void. The camera glides toward a headset's front, showing macro-level detail. Subtle volumetric beams pass through the headset lens as it gently rotates. The product rests in the center, perfectly lit, against a clean white fade.";
-                    shot.config.lighting = "Softbox";
-                    shot.config.camera.angle = "Close-up";
-                    shot.config.camera.movement = "Dolly";
-                    return [shot];
-                })(),
-            },
-            {
-                id: 'nutella-explosion',
-                title: 'Dynamic Food Ad (Nutella)',
-                category: 'Product Ad',
-                description: "A cozy breakfast scene where a Nutella jar's contents burst out to create a beautiful breakfast board.",
-                imageUrl: 'https://picsum.photos/seed/nutella/600/400',
-                shots: (() => {
-                    const shot = createDefaultShot();
-                    shot.scene = "A sealed Nutella jar on a cozy breakfast nook table with morning sunlight. The jar shakes, the lid pops off, and thick chocolate ribbons erupt upward with roasted hazelnuts orbiting it. Toasted bread slices fly in, and fruit slices rain down, assembling into a beautiful breakfast board.";
-                    shot.config.lighting = "Golden Hour";
-                    shot.config.style.saturation = 1.2;
-                    return [shot];
-                })(),
-            },
-            {
-                id: 'pepsi-city-transform',
-                title: 'Vibrant Beverage Ad (Pepsi)',
-                category: 'Product Ad',
-                description: 'A can of Pepsi triggers a high-energy, holographic party transformation of a futuristic city.',
-                imageUrl: 'https://picsum.photos/seed/pepsi/600/400',
-                shots: (() => {
-                    const shot = createDefaultShot();
-                    shot.scene = "Extreme close-up on a condensation-covered Pepsi can. The tab is pulled, triggering a burst of liquid light. A quiet futuristic plaza transforms into a high-energy city-scale holographic party with LED skyscrapers and virtual fireworks.";
-                    shot.config.lighting = "Neon";
-                    shot.config.technical.duration = 8;
-                    return [shot];
-                })(),
-            },
-            {
-                id: 'pikachu-room-transform',
-                title: 'Pikachu-Themed Room Transformation',
-                category: 'Viral Social',
-                description: 'A Poké Ball bursts to magically assemble a complete Pikachu-themed bedroom.',
-                imageUrl: 'https://picsum.photos/seed/pikachu/600/400',
-                shots: (() => {
-                    const shot = createDefaultShot();
-                    shot.scene = "An empty pastel-yellow bedroom. A large Pikachu-themed Poké Ball in the center wiggles and sparks. With a bright flash, it bursts open. Furniture and decorations fly out in streams of yellow energy, assembling themselves perfectly in the room.";
-                    shot.config.lighting = "Natural";
-                    return [shot];
-                })(),
-            },
-            {
-                id: 'time-travel-detective',
-                title: 'Time-Traveling Detective',
-                category: 'Cinematic',
-                description: 'A futuristic film noir scene with a detective overlooking a neon-lit city.',
-                imageUrl: 'https://picsum.photos/seed/detective/600/400',
-                shots: (() => {
-                    const shot = createDefaultShot();
-                    shot.scene = "A dark-haired detective in a futuristic trench coat stands on a rooftop, looking over a neon-lit futuristic city.";
-                    shot.config.camera.angle = "Wide";
-                    shot.config.camera.movement = "Dolly";
-                    shot.config.lighting = "Neon";
-                    return [shot];
-                })(),
-            },
-            {
-                id: 'tokyo-street-style',
-                title: 'Tokyo Street Style',
-                category: 'Cinematic',
-                description: 'A stylish woman walks down a quiet Tokyo street in the morning, captured with a smooth tracking shot.',
-                imageUrl: 'https://picsum.photos/seed/tokyo/600/400',
-                shots: (() => {
-                    const shot = createDefaultShot();
-                    shot.scene = "A young stylish woman in a vintage denim jacket, vibrant red beanie, and chunky sneakers walks rhythmically down a quiet, wet Tokyo street, singing to herself. The morning sun creates a golden light.";
-                    shot.config.camera.angle = "Medium Shot";
-                    shot.config.camera.movement = "Dolly";
-                    shot.config.lighting = "Golden Hour";
-                    return [shot];
-                })(),
-            },
-            {
-                id: 'astronaut-on-mars',
-                title: 'Astronaut on Mars',
-                category: 'Cinematic',
-                description: 'A lone astronaut on Mars gazes at a distant Earth in this cinematic, sci-fi scene.',
-                imageUrl: 'https://picsum.photos/seed/mars/600/400',
-                shots: (() => {
-                    const shot = createDefaultShot();
-                    shot.scene = "A lone astronaut stands on the Martian surface, gazing at a small, distant Earth.";
-                    shot.config.camera.angle = "Wide";
-                    shot.config.camera.movement = "Zoom";
-                    shot.config.lighting = "Cinematic";
-                    return [shot];
-                })(),
-            },
-            {
-                id: 'bigfoot-gym',
-                title: "Bigfoot's Gym Motivation",
-                category: 'Viral Social',
-                description: 'A humorous motivational clip featuring Bigfoot working out.',
-                imageUrl: 'https://picsum.photos/seed/bigfoot/600/400',
-                shots: [createDefaultShot()].map(shot => {
-                    shot.scene = "Medium shot of Bigfoot in a home gym, lifting comically large wooden weights. He grunts and says: 'The only missing link is your commitment.'";
-                    shot.config.camera.angle = "Medium Shot";
-                    return shot;
-                }),
-            },
-            {
-                id: 'yeti-cooking',
-                title: 'Yeti Cooking Show',
-                category: 'Viral Social',
-                description: "A close-up of a Yeti's furry hands delicately plating a gourmet meal.",
-                imageUrl: 'https://picsum.photos/seed/yeti/600/400',
-                shots: [createDefaultShot()].map(shot => {
-                    shot.scene = "Close-up of a Yeti's furry hands delicately plating a gourmet meal of colorful berries and snow. He says in a deep voice: 'The secret is high-altitude ingredients.'";
-                    shot.config.camera.angle = "Close-up";
-                    return shot;
-                }),
-            },
-            {
-                id: 'stormtrooper-review',
-                title: 'Stormtrooper Tech Review',
-                category: 'Viral Social',
-                description: 'A Stormtrooper provides a humorous review of a standard-issue blaster.',
-                imageUrl: 'https://picsum.photos/seed/stormtrooper/600/400',
-                shots: [createDefaultShot()].map(shot => {
-                    shot.scene = "A Stormtrooper unboxes a new blaster. He taps it, and it falls apart. He looks at the camera and says: 'Standard issue. Top quality.'";
-                    return shot;
-                }),
-            },
-            {
-                id: 'wizard-life-advice',
-                title: 'Wizard Life Advice',
-                category: 'Viral Social',
-                description: 'A wise wizard offers a cryptic piece of life advice while stirring a cauldron.',
-                imageUrl: 'https://picsum.photos/seed/wizard/600/400',
-                shots: [createDefaultShot()].map(shot => {
-                    shot.scene = "A wise wizard stirs a glowing cauldron and says: 'Do not mistake a short-term potion for a long-term spell.'";
-                    shot.config.lighting = "Cinematic";
-                    return shot;
-                }),
-            },
-            {
-                id: 'chef-masterclass',
-                title: 'Chef Masterclass',
-                category: 'Viral Social',
-                description: "A top chef intensely inspects a single grain of rice, demonstrating perfection.",
-                imageUrl: 'https://picsum.photos/seed/chef/600/400',
-                shots: [createDefaultShot()].map(shot => {
-                    shot.scene = "A top chef intensely inspects a single grain of rice. 'Perfection.' he whispers. Classical music plays.";
-                    shot.config.camera.angle = "Close-up";
-                    shot.config.lighting = "Softbox";
-                    return shot;
-                }),
-            },
-            {
-                id: 'vampire-routine',
-                title: "Vampire's Nightly Routine",
-                category: 'Viral Social',
-                description: 'A vampire demonstrates the importance of self-care in a gothic bathroom.',
-                imageUrl: 'https://picsum.photos/seed/vampire/600/400',
-                shots: [createDefaultShot()].map(shot => {
-                    shot.scene = "A vampire in a silk robe files his fangs in a gothic bathroom. 'It's all about self-care,' he says to the mirror.";
-                    return shot;
-                }),
-            },
-            {
-                id: 'problem-solution-story',
-                title: 'Problem-Solution Story',
-                category: 'Ad Format',
-                description: 'A classic split-screen ad format showing a problem and its solution with your product.',
-                imageUrl: 'https://picsum.photos/seed/solution/600/400',
-                shots: [createDefaultShot()].map(shot => {
-                    shot.scene = "Split-screen: left side shows a stressed person failing at a task. Right side shows the same person easily succeeding using a specific product.";
-                    return shot;
-                }),
-            },
-            {
-                id: 'abstract-swirl-food',
-                title: 'Abstract Food Swirl',
-                category: 'Ad Format',
-                description: 'An extreme macro shot perfect for showcasing food ingredients like chocolate and caramel.',
-                imageUrl: 'https://picsum.photos/seed/swirl/600/400',
-                shots: [createDefaultShot()].map(shot => {
-                    shot.scene = "Extreme macro shot of chocolate and caramel swirling together in slow motion. Style: hyper-realistic, bokeh lighting.";
-                    shot.config.camera.angle = "Close-up";
-                    shot.config.lighting = "Softbox";
-                    return shot;
-                }),
-            },
-            {
-                id: 'product-in-nature',
-                title: 'Product-in-Nature Shot',
-                category: 'Ad Format',
-                description: 'A serene shot placing a product in a beautiful, natural setting.',
-                imageUrl: 'https://picsum.photos/seed/nature/600/400',
-                shots: [createDefaultShot()].map(shot => {
-                    shot.scene = "A bottle of lotion rests on a mossy stone next to a clear waterfall. Slow dolly-in, shallow depth of field.";
-                    shot.config.camera.movement = "Dolly";
-                    return shot;
-                }),
-            },
-            {
-                id: 'ignition-shot',
-                title: 'The Ignition Shot',
-                category: 'Ad Format',
-                description: "A sleek, high-contrast shot of a car's ignition sequence.",
-                imageUrl: 'https://picsum.photos/seed/ignition/600/400',
-                shots: [createDefaultShot()].map(shot => {
-                    shot.scene = "Extreme close-up on a car's push-to-start button. A finger presses it. Headlights flash on, engine roars.";
-                    shot.config.camera.angle = "Close-up";
-                    shot.config.style.contrast = 1.3;
-                    return shot;
-                }),
-            },
-            {
-                id: 'athlete-training-montage',
-                title: 'Athlete Training Montage',
-                category: 'Ad Format',
-                description: 'A gritty, high-energy montage of an athlete training.',
-                imageUrl: 'https://picsum.photos/seed/athlete/600/400',
-                shots: [createDefaultShot()].map(shot => {
-                    shot.scene = "Dynamic quick-cuts: runner's feet on pavement, sweat on face, sunrise over a stadium. Style: gritty, high-energy, fast-paced.";
-                    shot.config.technical.duration = 10;
-                    return shot;
-                }),
-            },
-            {
-                id: 'time-lapse-build',
-                title: 'Time-Lapse Build (Furniture)',
-                category: 'Ad Format',
-                description: 'A cheerful, stop-motion style video of furniture assembling itself.',
-                imageUrl: 'https://picsum.photos/seed/build/600/400',
-                shots: [createDefaultShot()].map(shot => {
-                    shot.scene = "A flat-pack box opens, and IKEA furniture assembles itself in a room. Style: stop-motion, cheerful, bright lighting.";
-                    return shot;
-                }),
-            },
-            {
-                id: 'holographic-interface',
-                title: 'Holographic Interface (Tech)',
-                category: 'Ad Format',
-                description: 'A futuristic shot of a person interacting with a floating holographic user interface.',
-                imageUrl: 'https://picsum.photos/seed/hologram/600/400',
-                shots: [createDefaultShot()].map(shot => {
-                    shot.scene = "A person swipes their hand in the air, manipulating a floating holographic UI. Style: futuristic, neon, high-tech.";
-                    shot.config.lighting = "Neon";
-                    return shot;
-                }),
-            },
-            {
-                id: 'drone-reveal-travel',
-                title: 'Drone Reveal (Travel)',
-                category: 'Ad Format',
-                description: 'A breathtaking drone shot that reveals a stunning, vast landscape at sunrise.',
-                imageUrl: 'https://picsum.photos/seed/travel/600/400',
-                shots: [createDefaultShot()].map(shot => {
-                    shot.scene = "Drone shot starts low, moving through a narrow canyon, then rises up to reveal a stunning, vast landscape at sunrise.";
-                    shot.config.camera.angle = "Drone";
-                    shot.config.camera.movement = "Crane";
-                    shot.config.lighting = "Golden Hour";
-                    return shot;
-                }),
-            },
-            {
-                id: 'wes-anderson-style',
-                title: 'Wes Anderson Style',
-                category: 'Stylistic',
-                description: 'A prompt template for creating a scene with the signature Wes Anderson aesthetic.',
-                imageUrl: 'https://picsum.photos/seed/wesanderson/600/400',
-                shots: [createDefaultShot()].map(shot => {
-                    shot.scene = "A perfectly symmetrical shot of a quirky character in the center of a room with pastel-colored walls. They are performing a mundane task with intense focus.";
-                    shot.config.camera.movement = "Static";
-                    shot.config.style.saturation = 0.9;
-                    shot.config.style.contrast = 0.9;
-                    return shot;
-                }),
-            },
-            {
-                id: 'film-noir-style',
-                title: 'Film Noir Style',
-                category: 'Stylistic',
-                description: 'A template for a classic film noir scene with high-contrast lighting and a mysterious mood.',
-                imageUrl: 'https://picsum.photos/seed/noir/600/400',
-                shots: [createDefaultShot()].map(shot => {
-                    shot.scene = "A detective in a trench coat stands under a single streetlamp on a rainy city street. Deep shadows obscure his face. Style: Chiaroscuro lighting, black and white.";
-                    shot.config.camera.angle = "Dutch Angle";
-                    shot.config.lighting = "Cinematic";
-                    return shot;
-                }),
-            },
-            {
-                id: 'gothic-horror-style',
-                title: 'Gothic Horror Style',
-                category: 'Stylistic',
-                description: 'A template for creating a suspenseful gothic horror scene with atmospheric lighting.',
-                imageUrl: 'https://picsum.photos/seed/horror/600/400',
-                shots: [createDefaultShot()].map(shot => {
-                    shot.scene = "A slow dolly shot moves down a dark, cobweb-filled hallway in a gothic mansion. A single candle flickers in the distance. Low-light, cool blue tones, dramatic shadows.";
-                    shot.config.camera.movement = "Dolly";
-                    shot.config.lighting = "Volumetric";
-                    shot.config.technical.duration = 12;
-                    return shot;
-                }),
+            if (promptsToAdd.length > 0) {
+                const newPromptString = [...currentPrompts, ...promptsToAdd].join(', ');
+                negativePromptInput.value = newPromptString;
+                updateState('negativePrompt', newPromptString);
             }
-        ];
+        });
 
-        const PROMPT_LIBRARY = [
-            {
-                id: 'cyberpunk-city',
-                title: 'Cinematic Cyberpunk City',
-                category: 'Cinematic',
-                description: 'A classic, neon-drenched cityscape perfect for sci-fi intros or establishing shots. Rain, reflections, and flying cars included.',
-                imageUrl: 'https://picsum.photos/seed/cyberpunk/600/400',
-                shots: [cinematicCyberpunkShot],
-            },
-            {
-                id: 'desert-discovery',
-                title: 'Desert Ruins Discovery',
-                category: 'Cinematic',
-                description: 'Create a sense of adventure and mystery with this epic drone shot revealing ancient ruins during golden hour.',
-                imageUrl: 'https://picsum.photos/seed/desert/600/400',
-                shots: [desertDiscoveryShot],
-            },
-            {
-                id: 'enchanted-forest',
-                title: 'Enchanted Forest',
-                category: 'Cinematic',
-                description: 'A magical and ethereal forest scene with bioluminescent plants and mystical creatures. Ideal for fantasy settings.',
-                imageUrl: 'https://picsum.photos/seed/forest/600/400',
-                shots: [enchantedForestShot],
-            },
-            {
-                id: 'product-macro',
-                title: 'Luxury Product Macro',
-                category: 'Product Ad',
-                description: 'A sharp, detailed, and clean macro shot perfect for showcasing high-end products like watches or jewelry.',
-                imageUrl: 'https://picsum.photos/seed/product/600/400',
-                shots: [productMacroShot],
-            },
-            {
-                id: 'anime-action',
-                title: 'Anime Action Scene',
-                category: 'Stylistic',
-                description: 'A high-energy, cel-shaded action shot that captures the dynamic and vibrant style of Japanese animation.',
-                imageUrl: 'https://picsum.photos/seed/anime/600/400',
-                shots: [animeActionShot],
-            },
-            {
-                id: 'underwater-world',
-                title: 'Vibrant Underwater World',
-                category: 'Cinematic',
-                description: 'A beautiful and serene underwater documentary shot, perfect for showcasing marine life on a coral reef.',
-                imageUrl: 'https://picsum.photos/seed/underwater/600/400',
-                shots: [underwaterWorldShot],
-            },
-            ...newPrompts
-        ];
+        // Copy/Download
+        getEl('copy-json-btn').addEventListener('click', (e) => {
+            navigator.clipboard.writeText(jsonPreview.textContent).then(() => {
+                const originalText = e.target.textContent;
+                e.target.textContent = 'Copied!';
+                setTimeout(() => { e.target.textContent = originalText; }, 2000);
+            });
+        });
 
-        const PRESET_SCENES = {
-            'Noir City': 'in the style of a noir film, black and white, heavy shadows, rainy streets, cinematic, high contrast',
-            'Travel Reel': 'fast cuts, vibrant colors, drone shots, energetic music, travel vlog style, cinematic',
-            'Vintage 1920s': 'sepia tone, film grain, art deco style, 1920s fashion, vintage cars, silent film aesthetic',
-            'Neolithic Fireside': 'flickering firelight, primitive stone tools, animal hides, shadowy figures, ancient storytelling, neolithic settlement',
-            'Paleolithic Cave': 'torchlit cave, ancient cave paintings, ritualistic dance, shamanic figures, deep shadows, prehistoric',
-            'Ice Age Tundra': 'vast icy plains, woolly mammoths, distant glaciers, harsh sunlight, sparse vegetation, survival theme',
-            'Bronze Age Sunrise': 'early morning mist, rising sun over a bronze age hillfort, simple bronze tools, dew on grass, awakening village',
-            'Stonehenge Solstice': 'dramatic sunrise at Stonehenge, druidic figures, megalithic stones, long shadows, mystical atmosphere',
-        };
+        getEl('download-json-btn').addEventListener('click', () => {
+            const jsonBlob = new Blob([jsonPreview.textContent], { type: 'application/json' });
+            const url = URL.createObjectURL(jsonBlob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'veo3_prompt.json';
+            a.click();
+            URL.revokeObjectURL(url);
+        });
+    };
 
-        const SAFETY_NEGATIVES = ["low resolution", "watermark", "blurry", "distorted", "jpeg artifacts", "ugly", "bad anatomy"];
-
-
-        // --- FROM components/icons/*.tsx ---
-        const CopyIcon = (props) => (
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
-                <rect width="14" height="14" x="8" y="8" rx="2" ry="2" />
-                <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" />
-            </svg>
-        );
-
-        const DownloadIcon = (props) => (
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
-                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                <polyline points="7 10 12 15 17 10" />
-                <line x1="12" x2="12" y1="15" y2="3" />
-            </svg>
-        );
-
-        const PlusIcon = (props) => (
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
-                <path d="M5 12h14" />
-                <path d="M12 5v14" />
-            </svg>
-        );
-
-        const TrashIcon = (props) => (
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
-                <path d="M3 6h18" />
-                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6" />
-                <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
-            </svg>
-        );
-
-
-        // --- FROM components/PromptLibrary.tsx ---
-        const PromptLibrary = ({ onSelectPrompt }) => {
-            const [activeCategory, setActiveCategory] = useState('All');
-            const [searchTerm, setSearchTerm] = useState('');
-
-            const categories = useMemo(() => 
-                ['All', ...[...new Set(PROMPT_LIBRARY.map(p => p.category))].sort()], 
-            []);
-
-            const filteredPrompts = useMemo(() => {
-                return PROMPT_LIBRARY.filter(prompt => {
-                    const matchesCategory = activeCategory === 'All' || prompt.category === activeCategory;
-                    const matchesSearch = searchTerm === '' || 
-                                          prompt.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
-                                          prompt.description.toLowerCase().includes(searchTerm.toLowerCase());
-                    return matchesCategory && matchesSearch;
-                });
-            }, [activeCategory, searchTerm]);
-
-            return (
-                <div className="bg-white p-6 rounded-xl shadow-md">
-                    <div className="flex flex-col md:flex-row gap-4 justify-between items-center mb-6">
-                        <h2 className="text-2xl font-bold text-gray-800">Prompt Library</h2>
-                        <div className="relative w-full md:w-72">
-                             <input 
-                                type="text"
-                                placeholder="Search prompts..."
-                                value={searchTerm}
-                                onChange={(e) => setSearchTerm(e.target.value)}
-                                className="w-full pl-4 pr-10 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#da3f0b] focus:border-[#da3f0b] transition"
-                            />
-                            <svg className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-                        </div>
-                    </div>
-                    
-                    <div className="flex flex-wrap gap-2 mb-8 border-b border-gray-200 pb-4">
-                        {categories.map(category => (
-                            <button
-                                key={category}
-                                onClick={() => setActiveCategory(category)}
-                                className={`px-4 py-2 text-sm font-semibold rounded-full transition-colors ${
-                                    activeCategory === category
-                                        ? 'bg-[#da3f0b] text-white'
-                                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                                }`}
-                            >
-                                {category}
-                            </button>
-                        ))}
-                    </div>
-
-                    {filteredPrompts.length > 0 ? (
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                            {filteredPrompts.map((item) => (
-                                <div key={item.id} className="bg-gray-50 rounded-lg shadow-sm overflow-hidden flex flex-col border border-gray-200 hover:shadow-lg hover:border-[#da3f0b] transition-all duration-300">
-                                    <img src={item.imageUrl} alt={item.title} className="w-full h-48 object-cover"/>
-                                    <div className="p-4 flex flex-col flex-grow">
-                                        <h3 className="text-lg font-bold text-gray-900 mb-2">{item.title}</h3>
-                                        <p className="text-gray-600 text-sm flex-grow mb-4">{item.description}</p>
-                                        <button 
-                                            onClick={() => onSelectPrompt(item.shots)}
-                                            className="mt-auto w-full px-4 py-2 bg-[#da3f0b] text-white font-bold rounded-lg shadow-md hover:bg-[#c3370a] transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#da3f0b]"
-                                        >
-                                            Use Prompt
-                                        </button>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    ) : (
-                        <div className="text-center py-12 text-gray-500">
-                            <h3 className="text-xl font-semibold">No Prompts Found</h3>
-                            <p className="mt-2">Try adjusting your search or category filter.</p>
-                        </div>
-                    )}
-                </div>
-            );
-        };
-
-
-        // --- FROM components/PromptEditor.tsx ---
-        const PromptEditor = ({ shots, setShots, activeShotIndex, setActiveShotIndex }) => {
-            const [template, setTemplate] = useState('video');
-            const [copyButtonText, setCopyButtonText] = useState('Copy');
-            const [draggedIndex, setDraggedIndex] = useState(null);
-
-            const activeShot = shots[activeShotIndex] || createDefaultShot();
-            
-            const updateActiveShot = useCallback((updateFn) => {
-                const newShots = [...shots];
-                const draft = JSON.parse(JSON.stringify(newShots[activeShotIndex]));
-                updateFn(draft);
-                newShots[activeShotIndex] = draft;
-                setShots(newShots);
-            }, [shots, activeShotIndex, setShots]);
-
-
-            const jsonOutput = useMemo(() => {
-                const shotsToRender = shots.map(shot => {
-                    const shotCopy = JSON.parse(JSON.stringify(shot));
-                    delete shotCopy.notes;
-                    if (template === 'image') {
-                        delete shotCopy.config.technical.duration;
-                        delete shotCopy.config.technical.fps;
-                    }
-                    return shotCopy;
-                });
-                const outputObject = shotsToRender.length === 1 ? shotsToRender[0] : { sequence: shotsToRender };
-                return JSON.stringify(outputObject, null, 2);
-            }, [shots, template]);
-
-            const handleAddShot = () => {
-                const newShots = [...shots, createDefaultShot()];
-                setShots(newShots);
-                setActiveShotIndex(newShots.length - 1);
-            };
-
-            const handleRemoveShot = (index) => {
-                if (shots.length <= 1) return;
-                const newShots = shots.filter((_, i) => i !== index);
-                setShots(newShots);
-                if (activeShotIndex >= index) {
-                    setActiveShotIndex(Math.max(0, activeShotIndex - 1));
-                }
-            };
-
-            const handleCopyJson = () => {
-                navigator.clipboard.writeText(jsonOutput).then(() => {
-                    setCopyButtonText('Copied!');
-                    setTimeout(() => setCopyButtonText('Copy'), 2000);
-                });
-            };
-
-            const handleDownloadJson = () => {
-                const blob = new Blob([jsonOutput], { type: 'application/json' });
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = 'veo3_prompt.json';
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-                URL.revokeObjectURL(url);
-            };
-
-            const handleAddSafetyNegatives = () => {
-                const currentPrompts = activeShot.negativePrompt.split(',').map(p => p.trim()).filter(Boolean);
-                const promptsToAdd = SAFETY_NEGATIVES.filter(p => !currentPrompts.includes(p));
-                if (promptsToAdd.length > 0) {
-                    const newPromptString = [...currentPrompts, ...promptsToAdd].join(', ');
-                    updateActiveShot(draft => { draft.negativePrompt = newPromptString; });
-                }
-            };
-            
-            const handleDragStart = (e, index) => {
-                setDraggedIndex(index);
-                e.dataTransfer.effectAllowed = 'move';
-            };
-
-            const handleDragOver = (e, index) => {
-                e.preventDefault();
-                if (draggedIndex === null || draggedIndex === index) return;
-
-                const reorderedShots = [...shots];
-                const [draggedItem] = reorderedShots.splice(draggedIndex, 1);
-                reorderedShots.splice(index, 0, draggedItem);
-
-                setShots(reorderedShots);
-                setActiveShotIndex(index);
-                setDraggedIndex(index);
-            };
-
-            const handleDragEnd = () => {
-                setDraggedIndex(null);
-            };
-
-            return (
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    {/* Left Column: Inputs */}
-                    <div className="flex flex-col gap-6">
-                        {/* Multi-Shot UI */}
-                        <div className="bg-white p-4 rounded-xl shadow-md">
-                            <h2 className="text-lg font-bold text-gray-800 mb-3">Shot Sequence</h2>
-                            <div className="flex flex-wrap gap-2 mb-3 border-b pb-3 min-h-[56px]">
-                                {shots.map((_, index) => (
-                                    <div
-                                        key={index}
-                                        draggable
-                                        onDragStart={(e) => handleDragStart(e, index)}
-                                        onDragOver={(e) => handleDragOver(e, index)}
-                                        onDragEnd={handleDragEnd}
-                                        onClick={() => setActiveShotIndex(index)}
-                                        className={`cursor-pointer flex items-center gap-2 px-4 py-2 rounded-lg border-2 transition-all ${
-                                            index === activeShotIndex ? 'border-[#da3f0b] bg-orange-50' : 'border-gray-300 bg-white hover:bg-gray-50'
-                                        } ${draggedIndex === index ? 'opacity-50' : 'opacity-100'}`}
-                                    >
-                                        <span className="font-semibold">Shot {index + 1}</span>
-                                        {shots.length > 1 && (
-                                            <button
-                                                onClick={(e) => { e.stopPropagation(); handleRemoveShot(index); }}
-                                                className="text-red-500 hover:text-red-700 font-bold"
-                                            >
-                                              <TrashIcon className="w-4 h-4" />
-                                            </button>
-                                        )}
-                                    </div>
-                                ))}
-                            </div>
-                            <button onClick={handleAddShot} className="w-full flex items-center justify-center gap-2 px-4 py-2 border-2 border-dashed border-gray-300 text-gray-600 font-semibold rounded-lg hover:bg-gray-100 hover:border-gray-400 transition-colors">
-                                <PlusIcon className="w-5 h-5" /> Add Shot
-                            </button>
-                        </div>
-                        
-                        {/* Scene Setting */}
-                        <div className="bg-white p-6 rounded-xl shadow-md">
-                            <h2 className="text-lg font-bold text-gray-800 mb-4">1. Scene Setting</h2>
-                            <textarea 
-                                value={activeShot.scene}
-                                onChange={(e) => updateActiveShot(draft => { draft.scene = e.target.value; })}
-                                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#da3f0b] focus:border-[#da3f0b] transition" 
-                                rows={4} 
-                                placeholder="e.g., A futuristic city with flying cars, cinematic lighting"
-                            />
-                            <div className="mt-4">
-                                <h3 className="font-semibold text-gray-700 mb-2">Style Presets:</h3>
-                                <div className="flex flex-wrap gap-2">
-                                  {Object.entries(PRESET_SCENES).map(([name, value]) => (
-                                        <button
-                                            key={name}
-                                            onClick={() => updateActiveShot(draft => {
-                                                const currentScene = draft.scene.trim();
-                                                draft.scene = currentScene ? `${currentScene}, ${value}` : value;
-                                            })}
-                                            className="px-3 py-1.5 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition text-sm"
-                                        >
-                                            {name}
-                                        </button>
-                                  ))}
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* Negative Prompts */}
-                        <div className="bg-white p-6 rounded-xl shadow-md">
-                            <h2 className="text-lg font-bold text-gray-800 mb-4">2. Negative Prompts</h2>
-                            <textarea 
-                                value={activeShot.negativePrompt}
-                                onChange={(e) => updateActiveShot(draft => { draft.negativePrompt = e.target.value; })}
-                                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#da3f0b] focus:border-[#da3f0b] transition" 
-                                rows={3} 
-                                placeholder="e.g., blurry, distorted faces, watermark"
-                            />
-                            <button onClick={handleAddSafetyNegatives} className="mt-3 w-full text-center px-4 py-2 border border-gray-300 text-gray-600 font-semibold rounded-lg hover:bg-gray-100 transition-colors">Add Default Safety Negatives</button>
-                        </div>
-
-                        {/* Shot Configuration */}
-                        <div className="bg-white p-6 rounded-xl shadow-md">
-                            <h2 className="text-lg font-bold text-gray-800 mb-4">3. Shot Configuration</h2>
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                {/* Dropdowns */}
-                                <div>
-                                    <label htmlFor="camera-angle" className="block text-sm font-medium text-gray-700">Camera Angle</label>
-                                    <select id="camera-angle" value={activeShot.config.camera.angle} onChange={(e) => updateActiveShot(draft => { draft.config.camera.angle = e.target.value; })} className="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-[#da3f0b] focus:border-[#da3f0b] sm:text-sm">
-                                        <option>Wide</option><option>POV</option><option>Drone</option><option>Close-up</option><option>Medium Shot</option><option>Dutch Angle</option>
-                                    </select>
-                                </div>
-                                <div>
-                                    <label htmlFor="camera-movement" className="block text-sm font-medium text-gray-700">Camera Movement</label>
-                                    <select id="camera-movement" value={activeShot.config.camera.movement} onChange={(e) => updateActiveShot(draft => { draft.config.camera.movement = e.target.value; })} className="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-[#da3f0b] focus:border-[#da3f0b] sm:text-sm">
-                                        <option>Static</option><option>Pan</option><option>Dolly</option><option>Tilt</option><option>Zoom</option><option>Crane</option>
-                                    </select>
-                                </div>
-                                <div>
-                                    <label htmlFor="lighting" className="block text-sm font-medium text-gray-700">Lighting</label>
-                                    <select id="lighting" value={activeShot.config.lighting} onChange={(e) => updateActiveShot(draft => { draft.config.lighting = e.target.value; })} className="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-[#da3f0b] focus:border-[#da3f0b] sm:text-sm">
-                                        <option>Natural</option><option>Cinematic</option><option>Neon</option><option>Softbox</option><option>Golden Hour</option><option>Volumetric</option>
-                                    </select>
-                                </div>
-                                <div>
-                                    <label htmlFor="aspect-ratio" className="block text-sm font-medium text-gray-700">Aspect Ratio</label>
-                                    <select id="aspect-ratio" value={activeShot.config.technical.aspectRatio} onChange={(e) => updateActiveShot(draft => { draft.config.technical.aspectRatio = e.target.value; })} className="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-[#da3f0b] focus:border-[#da3f0b] sm:text-sm">
-                                        <option>16:9</option><option>9:16</option><option>1:1</option><option>4:3</option><option>21:9</option>
-                                    </select>
-                                </div>
-                                {/* Sliders */}
-                                <div className={`md:col-span-2 pt-2 ${template === 'image' ? 'hidden' : ''}`}>
-                                    <label htmlFor="duration" className="flex justify-between text-sm font-medium text-gray-700">Duration <span>{activeShot.config.technical.duration}s</span></label>
-                                    <input id="duration" type="range" min="1" max="15" value={activeShot.config.technical.duration} onChange={(e) => updateActiveShot(draft => { draft.config.technical.duration = parseInt(e.target.value); })} className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer" />
-                                </div>
-                                <div className={`md:col-span-2 ${template === 'image' ? 'hidden' : ''}`}>
-                                    <label htmlFor="frame-rate" className="flex justify-between text-sm font-medium text-gray-700">Frame Rate <span>{activeShot.config.technical.fps}fps</span></label>
-                                    <input id="frame-rate" type="range" min="12" max="60" value={activeShot.config.technical.fps} step="1" onChange={(e) => updateActiveShot(draft => { draft.config.technical.fps = parseInt(e.target.value); })} className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer" />
-                                </div>
-                                <div className="md:col-span-2">
-                                    <label htmlFor="contrast" className="flex justify-between text-sm font-medium text-gray-700">Contrast <span>{activeShot.config.style.contrast.toFixed(1)}</span></label>
-                                    <input id="contrast" type="range" min="0.5" max="1.5" value={activeShot.config.style.contrast} step="0.1" onChange={(e) => updateActiveShot(draft => { draft.config.style.contrast = parseFloat(e.target.value); })} className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer" />
-                                </div>
-                                <div className="md:col-span-2">
-                                    <label htmlFor="saturation" className="flex justify-between text-sm font-medium text-gray-700">Saturation <span>{activeShot.config.style.saturation.toFixed(1)}</span></label>
-                                    <input id="saturation" type="range" min="0.5" max="1.5" value={activeShot.config.style.saturation} step="0.1" onChange={(e) => updateActiveShot(draft => { draft.config.style.saturation = parseFloat(e.target.value); })} className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer" />
-                                </div>
-                            </div>
-                        </div>
-                        {/* Shot Notes */}
-                        <div className="bg-white p-6 rounded-xl shadow-md">
-                            <h2 className="text-lg font-bold text-gray-800 mb-4">4. Shot Notes <span className="text-sm font-normal text-gray-500">(Not included in JSON)</span></h2>
-                            <textarea 
-                                value={activeShot.notes}
-                                onChange={(e) => updateActiveShot(draft => { draft.notes = e.target.value; })}
-                                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#da3f0b] focus:border-[#da3f0b] transition" 
-                                rows={3} 
-                                placeholder="e.g., Client wants warmer tones for this shot."
-                            />
-                        </div>
-                    </div>
-
-                    {/* Right Column: Output */}
-                    <div className="flex flex-col gap-6 lg:sticky lg:top-8 h-max">
-                        <div className="bg-white p-6 rounded-xl shadow-md">
-                            <h2 className="text-lg font-bold text-gray-800 mb-4">5. Output Schema</h2>
-                            <div className="flex gap-2">
-                                <button onClick={() => setTemplate('video')} className={`flex-1 text-center px-4 py-2 rounded-lg font-semibold transition-colors ${template === 'video' ? 'bg-[#da3f0b] text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}`}>Video Schema</button>
-                                <button onClick={() => setTemplate('image')} className={`flex-1 text-center px-4 py-2 rounded-lg font-semibold transition-colors ${template === 'image' ? 'bg-[#da3f0b] text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}`}>Image Schema</button>
-                            </div>
-                        </div>
-                        
-                        <div className="bg-gray-800 p-6 rounded-xl shadow-md flex-grow flex flex-col min-h-[400px]">
-                            <h2 className="text-lg font-bold text-gray-100 mb-4">6. Live JSON Preview</h2>
-                            <div className="relative flex-grow">
-                                <pre className="w-full h-full text-sm text-green-300 bg-gray-900 p-4 rounded-lg overflow-auto whitespace-pre-wrap break-all absolute inset-0">{jsonOutput}</pre>
-                                <button onClick={handleCopyJson} className="absolute top-3 right-3 px-3 py-1 bg-[#da3f0b] text-white font-bold rounded-lg shadow-md hover:bg-[#c3370a] transition text-xs flex items-center gap-1.5">
-                                    <CopyIcon className="w-3.5 h-3.5" />
-                                    {copyButtonText}
-                                </button>
-                            </div>
-                            <button onClick={handleDownloadJson} className="mt-4 w-full flex items-center justify-center gap-2 px-6 py-3 bg-[#da3f0b] text-white font-bold rounded-lg shadow-md hover:bg-[#c3370a] transition-all duration-300 transform hover:scale-105">
-                                <DownloadIcon className="w-5 h-5" />
-                                Download as .json
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            );
-        };
-
-
-        // --- FROM App.tsx ---
-        const App = () => {
-            const [activeTab, setActiveTab] = useState('editor');
-            const [shots, setShots] = useState([createDefaultShot()]);
-            const [activeShotIndex, setActiveShotIndex] = useState(0);
-
-            const handleLoadPrompt = useCallback((promptShots) => {
-                setShots(promptShots);
-                setActiveShotIndex(0);
-                setActiveTab('editor');
-            }, []);
-
-            const TabButton = ({ tabName, label }) => {
-                const isActive = activeTab === tabName;
-                return (
-                    <button
-                        onClick={() => setActiveTab(tabName)}
-                        className={`px-6 py-2 text-sm font-semibold rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#da3f0b] ${
-                            isActive
-                                ? 'bg-[#da3f0b] text-white shadow'
-                                : 'bg-white text-gray-600 hover:bg-gray-50'
-                        }`}
-                    >
-                        {label}
-                    </button>
-                );
-            };
-
-            return (
-                <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
-                    <h1 className="text-3xl md:text-4xl font-bold mb-6 text-center text-gray-800">Veo3 Prompt Studio</h1>
-                    
-                    <div className="flex justify-center mb-8">
-                        <nav className="flex space-x-2 p-1 bg-gray-200 rounded-lg shadow-inner" aria-label="Tabs">
-                            <TabButton tabName="editor" label="Prompt Editor" />
-                            <TabButton tabName="library" label="Prompt Library" />
-                        </nav>
-                    </div>
-
-                    <div id="tab-content">
-                        {activeTab === 'editor' && (
-                            <PromptEditor 
-                                shots={shots}
-                                setShots={setShots}
-                                activeShotIndex={activeShotIndex}
-                                setActiveShotIndex={setActiveShotIndex}
-                            />
-                        )}
-                        {activeTab === 'library' && (
-                            <PromptLibrary onSelectPrompt={handleLoadPrompt} />
-                        )}
-                    </div>
-                </main>
-            );
-        };
-        
-        // --- FROM index.tsx ---
-        const rootElement = document.getElementById('root');
-        const root = ReactDOM.createRoot(rootElement);
-        root.render(
-          <React.StrictMode>
-            <App />
-          </React.StrictMode>
-        );
-
-    </script>
+    // --- Initial Load ---
+    setupListeners();
+    renderUI();
+});
+</script>
 
     <!-- TOOL END -->
 
@@ -1488,6 +1139,5 @@ Free Veo3 JSON Prompt Generator. Build structured prompts, explore advanced JSON
 </body>
 
 </html>
-
 
 
