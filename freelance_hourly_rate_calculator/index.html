@@ -63,32 +63,47 @@
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 <style>
     :root {
-      --primary-color: #059669; /* emerald-600 */
-      --primary-color-hover: #047857; /* emerald-700 */
-      --background-color: #f3f4f6; /* gray-100 */
-      --card-background: #ffffff;
-      --text-dark: #1f2937; /* gray-800 */
+      --primary: #da3f0b;
+      --primary-hover: #b53409;
+      --primary-light: #fff5f2;
+      --primary-border: #ffd1c4;
+      --bg: #f8fafc;
+      --text-dark: #0f172a;
+      --text-muted: #64748b;
     }
 
     body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-      background-color: var(--background-color);
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg);
       color: var(--text-dark);
     }
 
     .tab-button {
-      transition: all 0.2s ease-in-out;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     }
     
     .tab-button.active {
-      background-color: var(--primary-color);
+      background-color: var(--primary);
       color: white;
-      box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+      box-shadow: 0 4px 12px rgba(218, 63, 11, 0.2);
     }
 
-    .result-card {
-      background: linear-gradient(135deg, #ecfdf5 0%, #ffffff 100%);
-      border: 1px solid #d1fae5;
+    .hero-card {
+      background: white;
+      border: 1px solid #f1f5f9;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background-color: var(--primary);
     }
 
     /* Custom Range Slider */
@@ -96,7 +111,7 @@
       height: 6px;
       -webkit-appearance: none;
       width: 100%;
-      background: #e5e7eb;
+      background: #e2e8f0;
       border-radius: 8px;
       outline: none;
     }
@@ -106,12 +121,15 @@
       width: 18px;
       height: 18px;
       border-radius: 50%;
-      background: var(--primary-color);
+      background: var(--primary);
       cursor: pointer;
-      transition: background .15s ease-in-out;
+      border: 2px solid white;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      transition: all 0.1s ease;
     }
     input[type=range]::-webkit-slider-thumb:hover {
-      background: var(--primary-color-hover);
+      transform: scale(1.1);
+      background: var(--primary-hover);
     }
 
     /* Tooltip styling */
@@ -121,22 +139,22 @@
     }
     .tooltip-text {
       visibility: hidden;
-      width: 200px;
-      background-color: #1f2937;
+      width: 220px;
+      background-color: #1e293b;
       color: #fff;
       text-align: center;
-      border-radius: 6px;
-      padding: 8px;
+      border-radius: 8px;
+      padding: 10px;
       position: absolute;
       z-index: 50;
       bottom: 125%;
       left: 50%;
-      margin-left: -100px;
+      margin-left: -110px;
       opacity: 0;
-      transition: opacity 0.3s;
+      transition: opacity 0.2s;
       font-size: 0.75rem;
-      font-weight: normal;
-      line-height: 1.2;
+      font-weight: 400;
+      line-height: 1.4;
       pointer-events: none;
       box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
     }
@@ -152,9 +170,26 @@
       margin-left: -5px;
       border-width: 5px;
       border-style: solid;
-      border-color: #1f2937 transparent transparent transparent;
+      border-color: #1e293b transparent transparent transparent;
     }
-</style>
+
+    .animate-fade {
+      animation: fadeIn 0.3s ease-out;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Custom scrollbar for dropdowns */
+    select::-webkit-scrollbar {
+      width: 8px;
+    }
+    select::-webkit-scrollbar-thumb {
+      background-color: #e2e8f0;
+      border-radius: 4px;
+    }
+  </style>
 
 
     
@@ -187,23 +222,28 @@
 
   <!-- tool start -->  
 
-  <script type="text/babel">
+
+<script type="text/babel">
     const { useState, useEffect, useMemo } = React;
 
     const currencies = [
-      { code: 'USD', symbol: '$', locale: 'en-US', name: 'USD' },
-      { code: 'EUR', symbol: '€', locale: 'de-DE', name: 'EUR' },
-      { code: 'GBP', symbol: '£', locale: 'en-GB', name: 'GBP' },
-      { code: 'CAD', symbol: 'C$', locale: 'en-CA', name: 'CAD' },
-      { code: 'AUD', symbol: 'A$', locale: 'en-AU', name: 'AUD' },
-      { code: 'JPY', symbol: '¥', locale: 'ja-JP', name: 'JPY' },
-      { code: 'INR', symbol: '₹', locale: 'en-IN', name: 'INR' },
-      { code: 'BRL', symbol: 'R$', locale: 'pt-BR', name: 'BRL' }
+      { code: 'USD', symbol: '$', locale: 'en-US', name: 'US Dollar' },
+      { code: 'EUR', symbol: '€', locale: 'de-DE', name: 'Euro' },
+      { code: 'GBP', symbol: '£', locale: 'en-GB', name: 'British Pound' },
+      { code: 'CAD', symbol: 'C$', locale: 'en-CA', name: 'Canadian Dollar' },
+      { code: 'AUD', symbol: 'A$', locale: 'en-AU', name: 'Australian Dollar' },
+      { code: 'INR', symbol: '₹', locale: 'en-IN', name: 'Indian Rupee' },
+      { code: 'JPY', symbol: '¥', locale: 'ja-JP', name: 'Japanese Yen' },
+      { code: 'CHF', symbol: 'Fr.', locale: 'de-CH', name: 'Swiss Franc' },
+      { code: 'CNY', symbol: '¥', locale: 'zh-CN', name: 'Chinese Yuan' },
+      { code: 'BRL', symbol: 'R$', locale: 'pt-BR', name: 'Brazilian Real' },
+      { code: 'MXN', symbol: '$', locale: 'es-MX', name: 'Mexican Peso' },
+      { code: 'SGD', symbol: 'S$', locale: 'en-SG', name: 'Singapore Dollar' }
     ];
 
     const presets = {
       starter: {
-        name: 'Side Hustle / Starter',
+        name: 'Starter / Side-Hustle',
         incomeGoal: 30000,
         taxRate: 20,
         profitMargin: 5,
@@ -211,7 +251,7 @@
         time: { hoursPerWeek: 20, billablePercent: 85, weeksOff: 2 }
       },
       fulltime: {
-        name: 'Full-Time Freelancer',
+        name: 'Full-Time Pro',
         incomeGoal: 75000,
         taxRate: 25,
         profitMargin: 15,
@@ -219,7 +259,7 @@
         time: { hoursPerWeek: 40, billablePercent: 75, weeksOff: 4 }
       },
       senior: {
-        name: 'Senior Consultant',
+        name: 'Senior / Consultant',
         incomeGoal: 150000,
         taxRate: 30,
         profitMargin: 25,
@@ -229,28 +269,28 @@
     };
 
     const Tooltip = ({ text }) => (
-      <div className="tooltip-container ml-1.5">
-        <i className="fas fa-info-circle text-gray-400 hover:text-emerald-500 cursor-help text-xs"></i>
+      <span className="tooltip-container ml-2">
+        <i className="fas fa-info-circle text-slate-300 hover:text-[#da3f0b] cursor-help text-xs transition-colors"></i>
         <span className="tooltip-text">{text}</span>
-      </div>
+      </span>
     );
 
     const InputGroup = ({ label, prefix, suffix, tooltip, children, className = "" }) => (
-      <div className={`mb-4 ${className}`}>
-        <label className="flex items-center text-sm font-medium text-gray-700 mb-1">
-          {label}
+      <div className={`mb-5 ${className}`}>
+        <div className="flex items-center text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">
+          <label>{label}</label>
           {tooltip && <Tooltip text={tooltip} />}
-        </label>
-        <div className="relative rounded-md shadow-sm">
+        </div>
+        <div className="relative rounded-xl shadow-sm">
           {prefix && (
-            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <span className="text-gray-500 sm:text-sm">{prefix}</span>
+            <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+              <span className="text-slate-400 font-semibold">{prefix}</span>
             </div>
           )}
           {children}
           {suffix && (
-            <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-              <span className="text-gray-500 sm:text-sm">{suffix}</span>
+            <div className="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none">
+              <span className="text-slate-400 font-semibold">{suffix}</span>
             </div>
           )}
         </div>
@@ -260,7 +300,7 @@
     const NumberInput = ({ value, onChange, prefix, suffix, ...props }) => (
       <input
         type="number"
-        className={`block w-full rounded-md border-gray-300 border py-2 focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm transition ${prefix ? 'pl-7' : 'pl-3'} ${suffix ? 'pr-12' : 'pr-3'}`}
+        className={`block w-full rounded-xl border-slate-200 border py-3 focus:ring-4 focus:ring-[#da3f0b20] focus:border-[#da3f0b] sm:text-sm font-semibold text-slate-800 transition-all ${prefix ? 'pl-9' : 'pl-4'} ${suffix ? 'pr-12' : 'pr-4'} bg-white`}
         value={value}
         onChange={(e) => onChange(parseFloat(e.target.value) || 0)}
         onFocus={(e) => e.target.select()}
@@ -269,13 +309,13 @@
     );
 
     const SliderInput = ({ label, value, min, max, step, onChange, unit, tooltip }) => (
-      <div className="mb-5">
-        <div className="flex justify-between items-center mb-2">
-          <label className="flex items-center text-sm font-medium text-gray-700">
+      <div className="mb-6">
+        <div className="flex justify-between items-center mb-3">
+          <div className="flex items-center text-xs font-bold text-slate-500 uppercase tracking-widest">
             {label}
             {tooltip && <Tooltip text={tooltip} />}
-          </label>
-          <span className="text-sm font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded">{value}{unit}</span>
+          </div>
+          <span className="text-sm font-bold text-[#da3f0b] bg-[#da3f0b10] px-3 py-1 rounded-full">{value}{unit}</span>
         </div>
         <input
           type="range"
@@ -289,19 +329,27 @@
       </div>
     );
 
-    const StatCard = ({ label, value, subtext, icon, tooltip, colorClass = "text-gray-800" }) => (
-      <div className="bg-white p-4 rounded-lg border border-gray-100 shadow-sm flex items-start space-x-3">
-        <div className={`p-2 rounded-lg bg-opacity-10 ${icon ? 'bg-emerald-500' : 'hidden'}`}>
-          <i className={`${icon} text-emerald-600`}></i>
-        </div>
-        <div className="flex-1">
-          <p className="text-xs font-medium text-gray-500 uppercase tracking-wide flex items-center">
-            {label}
-            {tooltip && <Tooltip text={tooltip} />}
-          </p>
-          <p className={`text-xl font-bold ${colorClass}`}>{value}</p>
-          {subtext && <p className="text-xs text-gray-400 mt-0.5">{subtext}</p>}
-        </div>
+    const StatCard = ({ label, value, subtext, icon, tooltip, isMain = false }) => (
+      <div className={`${isMain ? 'hero-card p-8' : 'bg-white p-5 rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-shadow'} flex flex-col items-center text-center`}>
+        {isMain ? (
+          <>
+            <p className="text-xs font-black text-[#da3f0b] uppercase tracking-[0.2em] mb-4">Minimum Hourly Rate</p>
+            <div className="flex items-center justify-center">
+              <span className="text-6xl font-black text-slate-900 tracking-tighter leading-none">{value}</span>
+              <span className="text-2xl text-slate-300 font-semibold ml-2 mt-4">/hr</span>
+            </div>
+            {subtext && <p className="text-sm text-slate-400 font-medium mt-4">{subtext}</p>}
+          </>
+        ) : (
+          <div className="w-full">
+            <div className="text-[10px] font-black text-slate-400 uppercase tracking-widest flex items-center justify-center mb-1">
+              {label}
+              {tooltip && <Tooltip text={tooltip} />}
+            </div>
+            <p className="text-xl font-extrabold text-slate-800">{value}</p>
+            {subtext && <p className="text-[10px] text-slate-400 font-medium mt-1 uppercase tracking-tight">{subtext}</p>}
+          </div>
+        )}
       </div>
     );
 
@@ -332,7 +380,6 @@
         const hourlyRate = billableHoursPerYear > 0 ? grossRevenueNeeded / billableHoursPerYear : 0;
         
         return {
-          workingWeeks,
           billableHoursPerYear,
           monthlyExpensesSum,
           annualExpenses,
@@ -352,10 +399,6 @@
         }).format(amount);
       };
 
-      const handlePresetChange = (key) => {
-        setData(presets[key]);
-      };
-
       const updateExpense = (key, val) => {
         setData(prev => ({
           ...prev,
@@ -370,76 +413,93 @@
         }));
       };
 
+      const handleReset = () => {
+        const confirmed = window.confirm("Are you sure you want to reset all values? This will revert everything to the default 'Full-Time Pro' settings.");
+        if (confirmed) {
+          setData(presets.fulltime);
+        }
+      };
+
       return (
-        <div className="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-200">
-          <header className="bg-gray-50 border-b border-gray-200 p-6 sm:px-8 flex flex-col sm:flex-row justify-between items-center gap-4">
-            <div>
-              <h1 className="text-2xl font-bold text-gray-800 flex items-center gap-2">
-                <i className="fas fa-calculator text-emerald-600"></i>
-                Freelance Rate Calculator
+        <div className="bg-white rounded-[2rem] shadow-2xl overflow-hidden border border-slate-100">
+          <header className="bg-slate-50/50 border-b border-slate-100 p-8 flex flex-col lg:flex-row justify-between items-center gap-6">
+            <div className="text-center lg:text-left">
+              <h1 className="text-3xl font-black text-slate-800 tracking-tight flex items-center justify-center lg:justify-start gap-3">
+                <span className="bg-[#da3f0b] text-white p-2 rounded-xl text-xl shadow-lg shadow-[#da3f0b30]">
+                  <i className="fas fa-calculator"></i>
+                </span>
+                Rate Studio
               </h1>
-              <p className="text-gray-500 text-sm mt-1">Find out exactly what you need to charge to meet your lifestyle goals.</p>
+              <p className="text-slate-400 text-sm font-medium mt-2">Determine your professional worth with financial precision.</p>
             </div>
             
-            <div className="flex flex-col sm:flex-row items-end sm:items-center gap-3">
-              <div className="relative">
+            <div className="flex flex-col sm:flex-row items-center gap-4">
+              <div className="relative group">
                 <select 
                   value={currency.code}
                   onChange={(e) => setCurrency(currencies.find(c => c.code === e.target.value))}
-                  className="appearance-none bg-white border border-gray-300 text-gray-700 py-1.5 pl-3 pr-8 rounded-lg text-xs font-medium focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 shadow-sm cursor-pointer hover:border-emerald-400 transition-colors"
+                  className="appearance-none bg-white border border-slate-200 text-slate-700 py-2.5 pl-4 pr-10 rounded-xl text-xs font-bold focus:outline-none focus:ring-4 focus:ring-[#da3f0b15] focus:border-[#da3f0b] shadow-sm cursor-pointer transition-all hover:border-[#da3f0b40]"
                 >
                   {currencies.map(c => (
-                    <option key={c.code} value={c.code}>{c.name} - {c.symbol}</option>
+                    <option key={c.code} value={c.code}>{c.code} ({c.symbol}) - {c.name}</option>
                   ))}
                 </select>
-                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-500">
-                  <i className="fas fa-chevron-down text-xs"></i>
+                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-slate-400 group-hover:text-[#da3f0b]">
+                  <i className="fas fa-chevron-down text-[10px]"></i>
                 </div>
               </div>
 
-              <div className="flex items-center space-x-2 bg-white p-1.5 rounded-lg border shadow-sm">
+              <div className="flex bg-slate-100 p-1 rounded-xl">
                 {Object.keys(presets).map(key => (
                   <button
                     key={key}
-                    onClick={() => handlePresetChange(key)}
-                    className={`px-3 py-1.5 text-xs font-medium rounded-md transition ${data.name === presets[key].name ? 'bg-emerald-100 text-emerald-700' : 'text-gray-600 hover:bg-gray-50'}`}
+                    onClick={() => setData(presets[key])}
+                    className={`px-4 py-2 text-[10px] font-black uppercase tracking-widest rounded-lg transition-all ${data.name === presets[key].name ? 'bg-white text-[#da3f0b] shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
                   >
                     {presets[key].name.split(' ')[0]}
                   </button>
                 ))}
               </div>
+
+              <button
+                onClick={handleReset}
+                className="p-2.5 rounded-xl bg-white border border-slate-200 text-slate-400 hover:text-[#da3f0b] hover:border-[#da3f0b] transition-all shadow-sm active:scale-95"
+                title="Reset to Default (Full-Time Pro)"
+              >
+                <i className="fas fa-rotate-left"></i>
+              </button>
             </div>
           </header>
 
-          <main className="flex flex-col lg:flex-row h-full">
-            {/* Left Column: Inputs */}
-            <div className="lg:w-1/2 p-6 sm:p-8 bg-white lg:border-r border-gray-200">
-              <div className="flex space-x-1 bg-gray-100 p-1 rounded-lg mb-6">
+          <main className="flex flex-col lg:flex-row min-h-[600px]">
+            {/* Left Panel: Inputs */}
+            <div className="lg:w-[55%] p-8 lg:p-12 border-r border-slate-100">
+              <div className="flex space-x-2 bg-slate-100/50 p-1.5 rounded-2xl mb-10">
                 {[
-                  { id: 'income', label: 'Income & Profit', icon: 'fa-money-bill-wave' },
-                  { id: 'expenses', label: 'Expenses', icon: 'fa-credit-card' },
-                  { id: 'time', label: 'Time & Schedule', icon: 'fa-clock' }
+                  { id: 'income', label: 'Income & Profit', icon: 'fa-wallet' },
+                  { id: 'expenses', label: 'Business Costs', icon: 'fa-receipt' },
+                  { id: 'time', label: 'Availability', icon: 'fa-calendar-check' }
                 ].map(tab => (
                   <button
                     key={tab.id}
                     onClick={() => setActiveTab(tab.id)}
-                    className={`tab-button flex-1 py-2.5 px-3 rounded-md text-sm font-semibold flex items-center justify-center gap-2 ${activeTab === tab.id ? 'active' : 'text-gray-600 hover:bg-gray-200'}`}
+                    className={`tab-button flex-1 py-3 px-4 rounded-xl text-xs font-bold uppercase tracking-widest flex items-center justify-center gap-3 ${activeTab === tab.id ? 'active' : 'text-slate-500 hover:text-slate-700 hover:bg-slate-200/50'}`}
                   >
-                    <i className={`fas ${tab.icon}`}></i>
+                    <i className={`fas ${tab.icon} text-[14px]`}></i>
                     <span className="hidden sm:inline">{tab.label}</span>
                   </button>
                 ))}
               </div>
 
-              <div className="min-h-[400px]">
+              <div className="min-h-[420px]">
                 {activeTab === 'income' && (
-                  <div className="space-y-6 animate-fade-in">
-                    <div className="bg-emerald-50 p-4 rounded-lg border border-emerald-100">
+                  <div className="animate-fade space-y-8">
+                    <div className="bg-[#da3f0b08] p-6 rounded-2xl border border-[#da3f0b15]">
                       <InputGroup 
                         label="Desired Annual Net Income" 
                         prefix={currency.symbol} 
                         className="mb-0"
-                        tooltip="Your final 'take-home' pay after all taxes and business costs. Increasing this will raise your required hourly rate."
+                        tooltip="Your final 'take-home' pay after all taxes and business costs. This is the foundation of your hourly rate."
                       >
                         <NumberInput 
                           value={data.incomeGoal} 
@@ -447,18 +507,16 @@
                           prefix 
                         />
                       </InputGroup>
-                      <p className="text-xs text-gray-500 mt-2">The actual amount you want to take home after taxes and expenses.</p>
                     </div>
                     
-                    <div>
-                      <h3 className="font-semibold text-gray-800 mb-4">Tax & Profit</h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-6 pt-4">
                       <SliderInput 
-                        label="Estimated Tax Rate" 
+                        label="Tax Rate" 
                         value={data.taxRate} 
                         min={0} max={50} step={1} 
                         unit="%" 
                         onChange={(val) => setData({...data, taxRate: val})}
-                        tooltip="The percentage of your profit that goes to the government. Higher taxes mean you need to charge more per hour."
+                        tooltip="Percentage of profit paid in income tax. Higher rates require a higher hourly charge to maintain net pay."
                       />
                       
                       <SliderInput 
@@ -467,219 +525,190 @@
                         min={0} max={50} step={1} 
                         unit="%" 
                         onChange={(val) => setData({...data, profitMargin: val})}
-                        tooltip="Extra revenue for business savings, scaling, or unexpected costs. A 10-20% margin is standard for sustainability."
+                        tooltip="Buffer for reinvestment, hardware upgrades, and business savings. 15-20% is recommended for long-term safety."
                       />
-                      <p className="text-xs text-gray-500 -mt-3 mb-2">
-                        A buffer for business savings, reinvestment, or scaling.
-                      </p>
                     </div>
 
-                    <div className="border-t pt-4 space-y-2">
-                      <div className="flex justify-between items-center">
-                         <span className="text-sm text-gray-600 flex items-center">
-                           Personal Pre-Tax Needed
-                           <Tooltip text="The gross personal salary you need before income tax is deducted." />
-                         </span>
-                         <span className="font-bold text-gray-800">{formatMoney(calculations.preTaxPersonalIncome)}</span>
+                    <div className="border-t border-slate-100 pt-8 space-y-4">
+                      <div className="flex justify-between items-center px-2">
+                         <div className="text-xs font-bold text-slate-400 uppercase tracking-widest flex items-center">
+                           Gross Pay Required
+                           <Tooltip text="The salary you need to pay yourself before personal income tax." />
+                         </div>
+                         <span className="font-extrabold text-slate-800">{formatMoney(calculations.preTaxPersonalIncome)}</span>
                       </div>
-                      <div className="flex justify-between items-center">
-                         <span className="text-sm text-gray-600 flex items-center">
+                      <div className="flex justify-between items-center px-2">
+                         <div className="text-xs font-bold text-slate-400 uppercase tracking-widest flex items-center">
                            Business Profit Buffer
-                           <Tooltip text="Funds left in the business after you've paid yourself and covered all your expenses." />
-                         </span>
-                         <span className="font-bold text-indigo-600">{formatMoney(calculations.businessProfit)}</span>
+                           <Tooltip text="Annual funds remaining in your business account after your salary and all expenses." />
+                         </div>
+                         <span className="font-extrabold text-[#da3f0b]">{formatMoney(calculations.businessProfit)}</span>
                       </div>
                     </div>
                   </div>
                 )}
 
                 {activeTab === 'expenses' && (
-                  <div className="space-y-4 animate-fade-in">
+                  <div className="animate-fade space-y-8">
                     <div className="flex justify-between items-center mb-2">
-                      <h3 className="font-semibold text-gray-800">Monthly Business Costs</h3>
-                      <span className="text-sm font-bold text-gray-600">Total: {formatMoney(calculations.monthlyExpensesSum)}/mo</span>
+                      <h3 className="text-xs font-black text-slate-400 uppercase tracking-[0.2em]">Monthly Breakdown</h3>
+                      <span className="text-sm font-black text-slate-800">Total: {formatMoney(calculations.monthlyExpensesSum)}/mo</span>
                     </div>
                     
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      <InputGroup label="Software" prefix={currency.symbol} tooltip="Tools like Adobe CC, Slack, hosting, and project management apps.">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-6">
+                      <InputGroup label="Software & Tools" prefix={currency.symbol} tooltip="CRM, Hosting, Adobe CC, Figma, AI tools, etc.">
                         <NumberInput value={data.expenses.software} onChange={(v) => updateExpense('software', v)} prefix />
                       </InputGroup>
-                      <InputGroup label="Internet & Phone" prefix={currency.symbol} tooltip="Your work-related connectivity costs.">
-                        <NumberInput value={data.expenses.internet} onChange={(v) => updateExpense('internet', v)} prefix />
-                      </InputGroup>
-                      <InputGroup label="Health Insurance" prefix={currency.symbol} tooltip="Crucial for freelancers as it's a major out-of-pocket fixed cost.">
+                      <InputGroup label="Health Insurance" prefix={currency.symbol} tooltip="Critical fixed cost for independent professionals.">
                         <NumberInput value={data.expenses.insurance} onChange={(v) => updateExpense('insurance', v)} prefix />
                       </InputGroup>
-                      <InputGroup label="Marketing" prefix={currency.symbol} tooltip="Costs for ads, website maintenance, or sales materials.">
-                        <NumberInput value={data.expenses.marketing} onChange={(v) => updateExpense('marketing', v)} prefix />
-                      </InputGroup>
-                      <InputGroup label="Office Space" prefix={currency.symbol} tooltip="Coworking memberships or a portion of home office costs.">
+                      <InputGroup label="Office / Co-working" prefix={currency.symbol} tooltip="Desk space or allocated portion of home office costs.">
                         <NumberInput value={data.expenses.rent} onChange={(v) => updateExpense('rent', v)} prefix />
                       </InputGroup>
-                      <InputGroup label="Other Costs" prefix={currency.symbol} tooltip="Hardware, legal/accounting fees, and miscellaneous supplies.">
+                      <InputGroup label="Connectivity" prefix={currency.symbol} tooltip="Phone, High-speed Fiber, VPN, etc.">
+                        <NumberInput value={data.expenses.internet} onChange={(v) => updateExpense('internet', v)} prefix />
+                      </InputGroup>
+                      <InputGroup label="Marketing" prefix={currency.symbol} tooltip="Ad spend, website maintenance, job board fees.">
+                        <NumberInput value={data.expenses.marketing} onChange={(v) => updateExpense('marketing', v)} prefix />
+                      </InputGroup>
+                      <InputGroup label="Misc / Savings" prefix={currency.symbol} tooltip="Legal, Hardware savings, Accounting fees.">
                         <NumberInput value={data.expenses.other} onChange={(v) => updateExpense('other', v)} prefix />
                       </InputGroup>
                     </div>
 
-                    <div className="bg-orange-50 p-4 rounded-lg border border-orange-100 mt-4">
-                      <div className="flex justify-between items-center">
-                         <span className="text-sm font-medium text-orange-800 flex items-center">
-                           Annual Expense Overhead
-                           <Tooltip text="Total yearly cost to run your business. This must be earned before you make any profit." />
-                         </span>
-                         <span className="font-bold text-orange-900">{formatMoney(calculations.annualExpenses)}</span>
-                      </div>
-                      <p className="text-xs text-orange-700 mt-1">This amount must be earned before you start making profit.</p>
+                    <div className="bg-orange-50/50 p-6 rounded-2xl border border-orange-100 mt-6 flex justify-between items-center">
+                       <div>
+                         <p className="text-xs font-black text-orange-900 uppercase tracking-widest mb-1">Annual Overhead</p>
+                         <p className="text-[11px] text-orange-700 font-medium">Total business costs before profit.</p>
+                       </div>
+                       <span className="text-xl font-black text-orange-900">{formatMoney(calculations.annualExpenses)}</span>
                     </div>
                   </div>
                 )}
 
                 {activeTab === 'time' && (
-                  <div className="space-y-6 animate-fade-in">
-                    <div className="bg-blue-50 p-4 rounded-lg border border-blue-100 mb-6">
-                      <div className="flex justify-between items-center mb-1">
-                        <span className="text-sm font-medium text-blue-900 flex items-center">
-                          Total Billable Hours / Year
-                          <Tooltip text="The actual number of hours you can charge to clients after accounting for non-billable time and time off." />
-                        </span>
-                        <span className="text-lg font-bold text-blue-900">{Math.round(calculations.billableHoursPerYear).toLocaleString()} hrs</span>
+                  <div className="animate-fade space-y-10">
+                    <div className="bg-slate-900 p-8 rounded-[1.5rem] shadow-xl shadow-slate-200 flex justify-between items-center text-white relative overflow-hidden">
+                      <div className="absolute top-0 right-0 w-32 h-32 bg-[#da3f0b] opacity-10 blur-3xl -mr-16 -mt-16"></div>
+                      <div>
+                        <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2">Target Billable Hours</p>
+                        <p className="text-3xl font-black tracking-tight">{Math.round(calculations.billableHoursPerYear).toLocaleString()} <span className="text-sm font-bold text-slate-500 uppercase tracking-widest ml-1">hrs/year</span></p>
                       </div>
-                      <p className="text-xs text-blue-700">This is the actual time you get paid for.</p>
+                      <div className="text-right">
+                         <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2">Working Weeks</p>
+                         <p className="text-xl font-black">{52 - data.time.weeksOff} <span className="text-[10px] text-slate-500 font-bold ml-1">wks</span></p>
+                      </div>
                     </div>
 
-                    <SliderInput 
-                      label="Hours Worked Per Week" 
-                      value={data.time.hoursPerWeek} 
-                      min={5} max={80} step={1} 
-                      unit=" hrs" 
-                      onChange={(v) => updateTime('hoursPerWeek', v)}
-                      tooltip="Total time you dedicate to your business each week (both billable and administrative)."
-                    />
-                    
-                    <SliderInput 
-                      label="Weeks Off Per Year" 
-                      value={data.time.weeksOff} 
-                      min={0} max={20} step={1} 
-                      unit=" weeks" 
-                      onChange={(v) => updateTime('weeksOff', v)}
-                      tooltip="Vacation, public holidays, and sick days. Increasing this requires a higher rate during working weeks."
-                    />
+                    <div className="space-y-10 pt-4">
+                      <SliderInput 
+                        label="Weekly Commitment" 
+                        value={data.time.hoursPerWeek} 
+                        min={5} max={80} step={1} 
+                        unit=" hrs" 
+                        onChange={(v) => updateTime('hoursPerWeek', v)}
+                        tooltip="Total time you dedicate to your freelance business weekly."
+                      />
+                      
+                      <SliderInput 
+                        label="Time-Off Allowance" 
+                        value={data.time.weeksOff} 
+                        min={0} max={16} step={1} 
+                        unit=" weeks" 
+                        onChange={(v) => updateTime('weeksOff', v)}
+                        tooltip="Vacation, sick leave, and public holidays. More time off requires a higher rate."
+                      />
 
-                    <SliderInput 
-                      label="Billable Percentage" 
-                      value={data.time.billablePercent} 
-                      min={10} max={100} step={5} 
-                      unit="%" 
-                      onChange={(v) => updateTime('billablePercent', v)}
-                      tooltip="The portion of your time spent on paid client work vs. unpaid admin, marketing, and sales tasks. Most freelancers land between 50-70%."
-                    />
-                    <p className="text-xs text-gray-500 -mt-3">
-                      Time spent on client work vs admin, sales, marketing.
-                      <br/>Average freelancer is around 60-75%.
-                    </p>
+                      <SliderInput 
+                        label="Billable Efficiency" 
+                        value={data.time.billablePercent} 
+                        min={10} max={100} step={5} 
+                        unit="%" 
+                        onChange={(v) => updateTime('billablePercent', v)}
+                        tooltip="The % of your time spent on paid client work vs unpaid admin, sales, or learning. Most freelancers average 60-70%."
+                      />
+                    </div>
                   </div>
                 )}
               </div>
             </div>
 
-            {/* Right Column: Results */}
-            <div className="lg:w-1/2 bg-gray-50 p-6 sm:p-8 flex flex-col justify-between">
-              <div>
-                <h3 className="font-bold text-gray-800 mb-6 text-lg">Estimated Rates</h3>
-                
-                {/* Main Hero Result */}
-                <div className="result-card rounded-2xl p-8 mb-6 text-center shadow-lg relative overflow-hidden group">
-                  <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-emerald-400 to-teal-500"></div>
-                  <p className="text-sm font-semibold text-emerald-600 uppercase tracking-widest mb-2 flex items-center justify-center">
-                    Minimum Hourly Rate
-                    <Tooltip text="The absolute lowest you should charge to achieve all your income and business goals." />
-                  </p>
-                  <div className="text-6xl font-extrabold text-gray-900 mb-2 tracking-tight group-hover:scale-105 transition-transform duration-300">
-                    {formatMoney(Math.ceil(calculations.hourlyRate))}
-                    <span className="text-2xl text-gray-400 font-medium ml-1">/hr</span>
-                  </div>
-                  <p className="text-gray-500 text-sm">To achieve {formatMoney(data.incomeGoal)} net income + {data.profitMargin}% margin.</p>
-                </div>
+            {/* Right Panel: Results */}
+            <div className="lg:w-[45%] bg-slate-50/50 p-8 lg:p-12 flex flex-col justify-center">
+              <div className="space-y-6">
+                <StatCard 
+                  isMain={true}
+                  value={formatMoney(Math.ceil(calculations.hourlyRate))}
+                  subtext={`Goal: ${formatMoney(calculations.grossRevenueNeeded)} Gross Revenue / yr`}
+                />
 
-                <div className="grid grid-cols-2 gap-4 mb-8">
+                <div className="grid grid-cols-2 gap-4">
                   <StatCard 
-                    label="Daily Rate" 
+                    label="Day Rate" 
                     value={formatMoney(Math.ceil(calculations.hourlyRate * 8))} 
-                    subtext="Based on 8h day"
-                    tooltip="Your target daily revenue. This assumes all 8 hours are billable, which is rare!"
+                    subtext="8h base"
+                    tooltip="Standard full-day rate for project estimates."
                   />
                   <StatCard 
-                    label="Weekly Rate" 
-                    value={formatMoney(Math.ceil(calculations.hourlyRate * (data.time.hoursPerWeek * data.time.billablePercent/100)))} 
-                    subtext="Avg. Billable Week"
-                    tooltip="The total billings you should aim for in a typical work week."
+                    label="Week Rate" 
+                    value={formatMoney(Math.ceil(calculations.hourlyRate * data.time.hoursPerWeek * (data.time.billablePercent/100)))} 
+                    subtext="Avg. billable"
+                    tooltip="Expected weekly billing at current efficiency."
                   />
                   <StatCard 
-                    label="Monthly Gross" 
+                    label="Monthly Target" 
                     value={formatMoney(Math.ceil(calculations.grossRevenueNeeded / 12))} 
-                    subtext="Revenue Goal"
-                    tooltip="Total revenue needed per month before expenses, taxes, or personal pay."
+                    subtext="Gross Revenue"
                   />
                   <StatCard 
-                    label="Annual Gross" 
+                    label="Gross Goal" 
                     value={formatMoney(Math.ceil(calculations.grossRevenueNeeded))} 
-                    subtext="Revenue Goal"
-                    tooltip="The total annual 'top-line' revenue your business needs to generate."
+                    subtext="Annual Total"
                   />
                 </div>
-              </div>
 
-              {/* Breakdown Chart */}
-              <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
-                <h4 className="font-bold text-gray-800 mb-4 text-sm flex items-center">
-                  Revenue Breakdown
-                  <Tooltip text="How every dollar you earn is distributed between your personal pay, the government, and business costs." />
-                </h4>
-                
-                {/* Progress Bar */}
-                <div className="flex h-6 rounded-full overflow-hidden mb-4 text-xs font-bold text-white shadow-inner bg-gray-100">
-                  <div 
-                    style={{ width: `${(data.incomeGoal / calculations.grossRevenueNeeded) * 100}%` }} 
-                    className="bg-emerald-500 flex items-center justify-center hover:bg-emerald-600 transition-colors"
-                    title="Net Income"
-                  ></div>
-                  <div 
-                    style={{ width: `${(calculations.taxAmount / calculations.grossRevenueNeeded) * 100}%` }} 
-                    className="bg-blue-400 flex items-center justify-center hover:bg-blue-500 transition-colors"
-                    title="Taxes"
-                  ></div>
-                  <div 
-                    style={{ width: `${(calculations.annualExpenses / calculations.grossRevenueNeeded) * 100}%` }} 
-                    className="bg-orange-400 flex items-center justify-center hover:bg-orange-500 transition-colors"
-                    title="Expenses"
-                  ></div>
-                   <div 
-                    style={{ width: `${(calculations.businessProfit / calculations.grossRevenueNeeded) * 100}%` }} 
-                    className="bg-indigo-500 flex items-center justify-center hover:bg-indigo-600 transition-colors"
-                    title="Profit"
-                  ></div>
+                <div className="bg-white rounded-[1.5rem] p-8 shadow-sm border border-slate-100">
+                  <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-6 flex items-center justify-center">
+                    Revenue Allocation
+                    <Tooltip text="How your total revenue is distributed between take-home pay, taxes, and overhead." />
+                  </h4>
+                  
+                  <div className="flex h-3 rounded-full overflow-hidden mb-8 shadow-inner bg-slate-100">
+                    <div style={{ width: `${(data.incomeGoal / calculations.grossRevenueNeeded) * 100}%` }} className="bg-[#da3f0b]" title="Net Pay"></div>
+                    <div style={{ width: `${(calculations.taxAmount / calculations.grossRevenueNeeded) * 100}%` }} className="bg-slate-300" title="Taxes"></div>
+                    <div style={{ width: `${(calculations.annualExpenses / calculations.grossRevenueNeeded) * 100}%` }} className="bg-slate-200" title="Expenses"></div>
+                    <div style={{ width: `${(calculations.businessProfit / calculations.grossRevenueNeeded) * 100}%` }} className="bg-slate-100" title="Profit Margin"></div>
+                  </div>
+
+                  <div className="space-y-3 px-1">
+                    <div className="flex justify-between items-center text-[11px] font-bold">
+                      <div className="flex items-center gap-2 text-slate-600">
+                        <div className="w-2.5 h-2.5 rounded-full bg-[#da3f0b]"></div>
+                        Personal Net (Pocket)
+                      </div>
+                      <span className="text-slate-900">{Math.round((data.incomeGoal / calculations.grossRevenueNeeded) * 100)}%</span>
+                    </div>
+                    <div className="flex justify-between items-center text-[11px] font-bold">
+                      <div className="flex items-center gap-2 text-slate-500">
+                        <div className="w-2.5 h-2.5 rounded-full bg-slate-300"></div>
+                        Est. Income Tax
+                      </div>
+                      <span className="text-slate-900">{Math.round((calculations.taxAmount / calculations.grossRevenueNeeded) * 100)}%</span>
+                    </div>
+                    <div className="flex justify-between items-center text-[11px] font-bold">
+                      <div className="flex items-center gap-2 text-slate-500">
+                        <div className="w-2.5 h-2.5 rounded-full bg-slate-200"></div>
+                        Business Overhead
+                      </div>
+                      <span className="text-slate-900">{Math.round((calculations.annualExpenses / calculations.grossRevenueNeeded) * 100)}%</span>
+                    </div>
+                  </div>
                 </div>
 
-                <div className="space-y-2">
-                  <div className="flex justify-between items-center text-sm">
-                    <div className="flex items-center"><div className="w-3 h-3 rounded-full bg-emerald-500 mr-2"></div><span className="text-gray-600">Your Pocket (Net)</span></div>
-                    <span className="font-bold text-emerald-700">{Math.round((data.incomeGoal / calculations.grossRevenueNeeded) * 100)}%</span>
-                  </div>
-                  <div className="flex justify-between items-center text-sm">
-                    <div className="flex items-center"><div className="w-3 h-3 rounded-full bg-blue-400 mr-2"></div><span className="text-gray-600">Taxes</span></div>
-                    <span className="font-bold text-blue-600">{Math.round((calculations.taxAmount / calculations.grossRevenueNeeded) * 100)}%</span>
-                  </div>
-                  <div className="flex justify-between items-center text-sm">
-                    <div className="flex items-center"><div className="w-3 h-3 rounded-full bg-orange-400 mr-2"></div><span className="text-gray-600">Expenses</span></div>
-                    <span className="font-bold text-orange-600">{Math.round((calculations.annualExpenses / calculations.grossRevenueNeeded) * 100)}%</span>
-                  </div>
-                  <div className="flex justify-between items-center text-sm">
-                    <div className="flex items-center"><div className="w-3 h-3 rounded-full bg-indigo-500 mr-2"></div><span className="text-gray-600">Profit Margin</span></div>
-                    <span className="font-bold text-indigo-600">{Math.round((calculations.businessProfit / calculations.grossRevenueNeeded) * 100)}%</span>
-                  </div>
-                </div>
+                <p className="text-center text-[10px] text-slate-400 font-bold uppercase tracking-widest pt-4">
+                  Adjust inputs to see real-time updates
+                </p>
               </div>
-
             </div>
           </main>
         </div>
@@ -688,8 +717,9 @@
 
     const root = ReactDOM.createRoot(document.getElementById('root'));
     root.render(<App />);
-          </script>
+                          </script>
 
+    
 
  <!-- tool end -->  
 
