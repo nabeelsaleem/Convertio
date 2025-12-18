@@ -1,11 +1,60 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>QR Code Generator Pro</title>
-  
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+
+<meta name="title" content="Freelance Hourly Rate Calculator – Calculate Your Ideal Rate | SimpliConvert">
+<meta name="description" content="Stop guessing your prices. Use our free Freelance Hourly Rate Calculator to convert your desired salary into a billable hourly rate. Perfect for developers, designers, and consultants.">
+<meta name="keywords" content="Freelance hourly rate calculator, how to calculate freelance hourly rate, freelance rate calculator for developers, freelance salary to hourly converter, minimum billable hours calculator, freelance rate calculator for graphic designers, freelance pricing guide, hourly rate formula, calculate freelance rate">
+<meta name="author" content="SimpliConvert">
+<meta name="robots" content="index, follow">
+
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://simpliconvert.com/freelance_hourly_rate_calculator/">
+<meta property="og:title" content="Freelance Hourly Rate Calculator – Calculate Your Ideal Rate">
+<meta property="og:description" content="Determine your perfect hourly rate based on your income goals, expenses, and billable hours. A free tool for freelancers to ensure they are profitable.">
+<meta property="og:image" content="https://simpliconvert.com/images/freelance-rate-calculator-og.jpg">
+
+<meta property="twitter:card" content="summary_large_image">
+<meta property="twitter:url" content="https://simpliconvert.com/freelance_hourly_rate_calculator/">
+<meta property="twitter:title" content="Freelance Hourly Rate Calculator – Stop Undercharging">
+<meta property="twitter:description" content="Calculate the exact hourly rate you need to charge to meet your salary goals. Covers taxes, overhead, and non-billable time.">
+<meta property="twitter:image" content="https://simpliconvert.com/images/freelance-rate-calculator-og.jpg">
+
+<link rel="canonical" href="https://simpliconvert.com/freelance_hourly_rate_calculator/">
+<title>Freelance Hourly Rate Calculator – Calculate Your Ideal Rate | SimpliConvert</title>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Freelance Hourly Rate Calculator",
+  "url": "https://simpliconvert.com/freelance_hourly_rate_calculator/",
+  "description": "A free online calculator for freelancers to determine their minimum hourly rate based on desired annual income, business expenses, and billable hours.",
+  "applicationCategory": "FinanceApplication",
+  "operatingSystem": "Web Browser",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "SimpliConvert",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://simpliconvert.com/logo.png"
+    }
+  }
+}
+</script>
+
+
+
+
   <!-- Libraries -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/qr-code-styling@1.6.0/lib/qr-code-styling.js"></script>
@@ -13,355 +62,951 @@
   <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
-  <style>
-    /* --- General & Color Variables --- */
-    :root {
-      --primary-color: #da3f0b;
-      --primary-color-hover: #c3370a;
-      --background-color: #f9fafb;
-      /* gray-50 */
-      --card-background: #ffffff;
-      --text-dark: #1f2937;
-      /* gray-800 */
-      --text-medium: #6b7280;
-      /* gray-500 */
-      --text-light: #ffffff;
-      --border-color: #d1d5db;
-      /* gray-300 */
-      --border-color-hover: #9ca3af;
-      /* gray-400 */
-    }
+<style>
+  body {
+    font-family: 'Inter', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
 
-    body {
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
-      background-color: var(--background-color);
-      color: var(--text-dark);
-    }
-  </style>
+  /* Header Scroll Effect */
+  .scrolled-effect {
+    background-color: rgba(255, 255, 255, 0.8) !important;
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1) !important;
+    backdrop-filter: blur(8px);
+  }
+
+  /* Mega Menu */
+  #mega-menu {
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-1rem);
+    transition: all 0.3s ease-in-out;
+    pointer-events: none;
+    right: 0;
+    left: auto;
+    transform-origin: top right;
+    min-width: 800px;
+    width: auto;
+    position: absolute;
+    top: 100%;
+    z-index: 1000;
+  }
+  #mega-menu-trigger:hover > #mega-menu,
+  #mega-menu:hover {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+  #mega-menu-trigger {
+    position: relative;
+  }
+
+  /* Mobile Menu */
+  #mobile-menu {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-in-out;
+  }
+  #mobile-menu.open {
+    max-height: 80vh;
+    box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  }
+
+  /* Mobile Accordion */
+  .accordion-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-in-out;
+  }
+  .accordion-content.open {
+    max-height: 500px;
+  }
+  .accordion-button.open svg {
+    transform: rotate(180deg);
+  }
+
+  /* Navigation Dropdown */
+  .nav-dropdown {
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(15px);
+    transition: all 0.3s ease;
+  }
+  .nav-item:hover .nav-dropdown {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+
+  /* Tool Card */
+  .tool-card {
+    transition: all 0.3s ease;
+    height: 100%;
+  }
+  .tool-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+  }
+
+  /* Feature Card */
+  .feature-card:hover .feature-icon {
+    background-color: rgba(218, 63, 11, 0.1);
+  }
+
+  /* Footer Link */
+  .footer-link:hover {
+    background-color: rgba(255,255,255,0.1);
+  }
+
+  /* Mobile Menu (alt) - Keeping both as they might be used differently */
+  .mobile-menu {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-out;
+  }
+  .mobile-menu.open {
+    max-height: 1000px;
+  }
+
+  /* Hero Gradient */
+  .hero-gradient {
+    background: linear-gradient(135deg, #da3f0b 0%, #f57648 100%);
+  }
+
+  /* Buttons */
+  .btn-primary {
+    background-color: #da3f0b;
+    transition: all 0.3s ease;
+  }
+  .btn-primary:hover {
+    background-color: #c2380a;
+    transform: translateY(-2px);
+  }
+  .btn-outline {
+    border: 2px solid white;
+    transition: all 0.3s ease;
+  }
+  .btn-outline:hover {
+    background-color: white;
+    color: #da3f0b;
+  }
+</style>
+
+
+    
 </head>
 
-<body class="bg-gray-50">
-  <div id="root"></div>
+
+<body class="bg-gray-50 min-h-screen flex flex-col">
+    <!-- Main Navigation -->
+
+    <div id="navbar"></div>
+
+<!-- Your tool-specific content -->
+  
+    <!-- Hero Section -->
+  <section class="hero-white text-black py-2 md:py-10">
+        <div class="container mx-auto px-4 text-center">
+            <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-2">Freelance Hourly Rate Calculator</h1>
+            <p class="text-lg md:text-xl max-w-3x1 mx-auto mb-2">
+                Stop guessing your prices. Calculate a sustainable freelance hourly rate that covers your expenses, taxes, and desired salary. Perfect for developers, designers, and consultants.
+            </p>
+        </div>
+    </section>
+
+
+<div id="root"></div>
+
+  
+
+
+  <!-- tool start -->  
 
   <script type="text/babel">
-    const { useState, useEffect, useRef } = React;
+    const { useState, useEffect, useMemo } = React;
 
-    // --- SVG Icon Components ---
-    const UploadIcon = () => (
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        className="h-10 w-10 text-[#da3f0b]"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke="currentColor"
-        strokeWidth={2}
-      >
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"
-        />
-      </svg>
+    const currencies = [
+      { code: 'USD', symbol: '$', locale: 'en-US', name: 'USD' },
+      { code: 'EUR', symbol: '€', locale: 'de-DE', name: 'EUR' },
+      { code: 'GBP', symbol: '£', locale: 'en-GB', name: 'GBP' },
+      { code: 'CAD', symbol: 'C$', locale: 'en-CA', name: 'CAD' },
+      { code: 'AUD', symbol: 'A$', locale: 'en-AU', name: 'AUD' },
+      { code: 'JPY', symbol: '¥', locale: 'ja-JP', name: 'JPY' },
+      { code: 'INR', symbol: '₹', locale: 'en-IN', name: 'INR' },
+      { code: 'BRL', symbol: 'R$', locale: 'pt-BR', name: 'BRL' }
+    ];
+
+    const presets = {
+      starter: {
+        name: 'Side Hustle / Starter',
+        incomeGoal: 30000,
+        taxRate: 20,
+        profitMargin: 5,
+        expenses: { rent: 0, software: 20, insurance: 0, marketing: 0, internet: 50, other: 50 },
+        time: { hoursPerWeek: 20, billablePercent: 85, weeksOff: 2 }
+      },
+      fulltime: {
+        name: 'Full-Time Freelancer',
+        incomeGoal: 75000,
+        taxRate: 25,
+        profitMargin: 15,
+        expenses: { rent: 0, software: 100, insurance: 300, marketing: 50, internet: 60, other: 150 },
+        time: { hoursPerWeek: 40, billablePercent: 75, weeksOff: 4 }
+      },
+      senior: {
+        name: 'Senior Consultant',
+        incomeGoal: 150000,
+        taxRate: 30,
+        profitMargin: 25,
+        expenses: { rent: 500, software: 200, insurance: 500, marketing: 200, internet: 100, other: 300 },
+        time: { hoursPerWeek: 35, billablePercent: 60, weeksOff: 6 }
+      }
+    };
+
+    const Tooltip = ({ text }) => (
+      <div className="tooltip-container ml-1.5">
+        <i className="fas fa-info-circle text-gray-400 hover:text-emerald-500 cursor-help text-xs"></i>
+        <span className="tooltip-text">{text}</span>
+      </div>
     );
 
-    const DownloadIcon = () => (
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        className="h-5 w-5 mr-2"
-        viewBox="0 0 20 20"
-        fill="currentColor"
-      >
-        <path
-          fillRule="evenodd"
-          d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z"
-          clipRule="evenodd"
-        />
-      </svg>
-    );
-
-    // --- Control Panel Component ---
-    const ControlInput = ({ label, children }) => (
-        <div className="mb-6">
-            <label className="block text-sm font-bold text-gray-700 mb-2">{label}</label>
-            {children}
+    const InputGroup = ({ label, prefix, suffix, tooltip, children, className = "" }) => (
+      <div className={`mb-4 ${className}`}>
+        <label className="flex items-center text-sm font-medium text-gray-700 mb-1">
+          {label}
+          {tooltip && <Tooltip text={tooltip} />}
+        </label>
+        <div className="relative rounded-md shadow-sm">
+          {prefix && (
+            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <span className="text-gray-500 sm:text-sm">{prefix}</span>
+            </div>
+          )}
+          {children}
+          {suffix && (
+            <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+              <span className="text-gray-500 sm:text-sm">{suffix}</span>
+            </div>
+          )}
         </div>
+      </div>
     );
-    
-    const ControlPanel = ({
-        text,
-        dotColor,
-        backgroundColor,
-        dotType,
-        eyeType,
-        errorCorrectionLevel,
-        onTextChange,
-        onLogoChange,
-        onDotColorChange,
-        onBackgroundColorChange,
-        onDotTypeChange,
-        onEyeTypeChange,
-        onErrorCorrectionLevelChange,
-        onDownloadPNG,
-        onDownloadSVG,
-    }) => {
-        const fileInputRef = React.useRef(null);
 
-        return (
-            <div className="p-4">
-            <h2 className="text-2xl font-bold text-gray-800 mb-6 border-b pb-4">Customize QR Code</h2>
+    const NumberInput = ({ value, onChange, prefix, suffix, ...props }) => (
+      <input
+        type="number"
+        className={`block w-full rounded-md border-gray-300 border py-2 focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm transition ${prefix ? 'pl-7' : 'pl-3'} ${suffix ? 'pr-12' : 'pr-3'}`}
+        value={value}
+        onChange={(e) => onChange(parseFloat(e.target.value) || 0)}
+        onFocus={(e) => e.target.select()}
+        {...props}
+      />
+    );
 
-            <ControlInput label="Text or URL">
-                <textarea
-                value={text}
-                onChange={(e) => onTextChange(e.target.value)}
-                className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#da3f0b]/40 focus:border-[#da3f0b] transition"
-                rows={3}
-                placeholder="Enter URL or text here..."
-                />
-            </ControlInput>
+    const SliderInput = ({ label, value, min, max, step, onChange, unit, tooltip }) => (
+      <div className="mb-5">
+        <div className="flex justify-between items-center mb-2">
+          <label className="flex items-center text-sm font-medium text-gray-700">
+            {label}
+            {tooltip && <Tooltip text={tooltip} />}
+          </label>
+          <span className="text-sm font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded">{value}{unit}</span>
+        </div>
+        <input
+          type="range"
+          min={min}
+          max={max}
+          step={step}
+          value={value}
+          onChange={(e) => onChange(parseFloat(e.target.value))}
+          className="w-full"
+        />
+      </div>
+    );
 
-            <ControlInput label="Upload Logo">
-                <div 
-                    className="w-full p-8 border-4 border-dashed border-gray-300 rounded-xl cursor-pointer transition-all duration-300 text-center flex flex-col items-center justify-center bg-gray-50 hover:border-[#da3f0b] hover:bg-orange-50"
-                    onClick={() => fileInputRef.current?.click()}
-                >
-                    <UploadIcon />
-                    <p className="mt-4 text-sm font-semibold text-gray-600">Click to upload logo</p>
-                    <p className="text-xs text-gray-500">PNG, JPG, SVG</p>
-                    <input
-                        type="file"
-                        ref={fileInputRef}
-                        onChange={onLogoChange}
-                        accept="image/png, image/jpeg, image/svg+xml"
-                        className="hidden"
-                    />
-                </div>
-            </ControlInput>
+    const StatCard = ({ label, value, subtext, icon, tooltip, colorClass = "text-gray-800" }) => (
+      <div className="bg-white p-4 rounded-lg border border-gray-100 shadow-sm flex items-start space-x-3">
+        <div className={`p-2 rounded-lg bg-opacity-10 ${icon ? 'bg-emerald-500' : 'hidden'}`}>
+          <i className={`${icon} text-emerald-600`}></i>
+        </div>
+        <div className="flex-1">
+          <p className="text-xs font-medium text-gray-500 uppercase tracking-wide flex items-center">
+            {label}
+            {tooltip && <Tooltip text={tooltip} />}
+          </p>
+          <p className={`text-xl font-bold ${colorClass}`}>{value}</p>
+          {subtext && <p className="text-xs text-gray-400 mt-0.5">{subtext}</p>}
+        </div>
+      </div>
+    );
 
-            <div className="grid grid-cols-2 gap-4">
-                <ControlInput label="Dot Color">
-                <div className="relative">
-                    <input
-                    type="color"
-                    value={dotColor}
-                    onChange={(e) => onDotColorChange(e.target.value)}
-                    className="w-full h-12 p-1 border border-gray-300 rounded-lg cursor-pointer"
-                    />
-                </div>
-                </ControlInput>
-                <ControlInput label="Background Color">
-                <div className="relative">
-                    <input
-                    type="color"
-                    value={backgroundColor}
-                    onChange={(e) => onBackgroundColorChange(e.target.value)}
-                    className="w-full h-12 p-1 border border-gray-300 rounded-lg cursor-pointer"
-                    />
-                </div>
-                </ControlInput>
-            </div>
-
-            <ControlInput label="Dot Style">
-                <select
-                value={dotType}
-                onChange={(e) => onDotTypeChange(e.target.value)}
-                className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#da3f0b]/40 focus:border-[#da3f0b] transition"
-                >
-                <option value="square">Square</option>
-                <option value="rounded">Rounded</option>
-                <option value="extra-rounded">Extra Rounded</option>
-                </select>
-            </ControlInput>
-
-            <ControlInput label="Corner 'Eye' Style">
-                <select
-                value={eyeType}
-                onChange={(e) => onEyeTypeChange(e.target.value)}
-                className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#da3f0b]/40 focus:border-[#da3f0b] transition"
-                >
-                <option value="square">Square</option>
-                <option value="extra-rounded">Rounded</option>
-                </select>
-            </ControlInput>
-            
-            <ControlInput label="Error Correction Level">
-                <select
-                value={errorCorrectionLevel}
-                onChange={(e) => onErrorCorrectionLevelChange(e.target.value)}
-                className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#da3f0b]/40 focus:border-[#da3f0b] transition"
-                >
-                <option value="L">Low (recovers ~7% of data)</option>
-                <option value="M">Medium (recovers ~15% of data)</option>
-                <option value="Q">Quartile (recovers ~25% of data)</option>
-                <option value="H">High (recovers ~30% of data)</option>
-                </select>
-            </ControlInput>
-
-            <div className="mt-8 pt-6 border-t">
-                <h3 className="text-lg font-bold text-gray-700 mb-4">Download</h3>
-                <div className="flex flex-col sm:flex-row gap-4">
-                    <button
-                        onClick={onDownloadPNG}
-                        className="w-full flex items-center justify-center bg-[#da3f0b] hover:bg-[#c3370a] text-white font-bold py-3 px-6 rounded-lg shadow-md hover:scale-105 transition-all disabled:bg-gray-400 disabled:cursor-not-allowed disabled:opacity-70"
-                        disabled={!text}
-                    >
-                        <DownloadIcon />
-                        Download PNG
-                    </button>
-                    <button
-                        onClick={onDownloadSVG}
-                        className="w-full flex items-center justify-center bg-transparent text-gray-600 border-2 border-gray-300 hover:bg-gray-100 hover:border-gray-400 font-semibold py-3 px-6 rounded-lg transition-all"
-                        disabled={!text}
-                    >
-                        <DownloadIcon />
-                        Download SVG
-                    </button>
-                </div>
-            </div>
-            </div>
-        );
-    };
-
-    // --- Main App Component ---
     const App = () => {
-        const [text, setText] = useState('https://gemini.google.com/');
-        const [logo, setLogo] = useState(undefined);
-        const [dotColor, setDotColor] = useState('#1f2937');
-        const [backgroundColor, setBackgroundColor] = useState('#ffffff');
-        const [dotType, setDotType] = useState('rounded');
-        const [eyeType, setEyeType] = useState('extra-rounded');
-        const [errorCorrectionLevel, setErrorCorrectionLevel] = useState('Q');
-
-        const qrRef = useRef(null);
-        const qrCodeInstance = useRef(null);
-
-        useEffect(() => {
-            if (qrRef.current) {
-            qrCodeInstance.current = new QRCodeStyling({
-                width: 500,
-                height: 500,
-                data: text,
-                image: logo,
-                dotsOptions: {
-                color: dotColor,
-                type: dotType,
-                },
-                backgroundOptions: {
-                color: backgroundColor,
-                },
-                cornersSquareOptions: {
-                type: eyeType,
-                color: dotColor,
-                },
-                cornersDotOptions: {
-                type: 'dot', // Keep inner dots consistent
-                color: dotColor,
-                },
-                qrOptions: {
-                    errorCorrectionLevel: errorCorrectionLevel,
-                },
-                imageOptions: {
-                crossOrigin: 'anonymous',
-                margin: 10,
-                },
-            });
-            // Clear previous QR code before appending a new one
-            qrRef.current.innerHTML = '';
-            qrCodeInstance.current.append(qrRef.current);
-            }
-        }, []); // Run only once on mount to initialize
-
-        useEffect(() => {
-            if (qrCodeInstance.current) {
-            qrCodeInstance.current.update({
-                data: text,
-                image: logo,
-                dotsOptions: {
-                color: dotColor,
-                type: dotType,
-                },
-                backgroundOptions: {
-                color: backgroundColor,
-                },
-                cornersSquareOptions: {
-                    type: eyeType,
-                    color: dotColor,
-                },
-                cornersDotOptions: {
-                    type: 'dot',
-                    color: dotColor,
-                },
-                qrOptions: {
-                    errorCorrectionLevel: errorCorrectionLevel,
-                },
-            });
-            }
-        }, [text, logo, dotColor, backgroundColor, dotType, eyeType, errorCorrectionLevel]);
-
-        const handleLogoChange = (e) => {
-            const file = e.target.files?.[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onloadend = () => {
-                    setLogo(reader.result);
-                };
-                reader.readAsDataURL(file);
-            } else {
-                setLogo(undefined);
-            }
-        };
+      const [activeTab, setActiveTab] = useState('income');
+      const [data, setData] = useState(presets.fulltime);
+      const [currency, setCurrency] = useState(currencies[0]);
+      
+      const calculations = useMemo(() => {
+        const totalWeeks = 52;
+        const workingWeeks = totalWeeks - data.time.weeksOff;
+        const totalHoursPerYear = workingWeeks * data.time.hoursPerWeek;
+        const billableHoursPerYear = totalHoursPerYear * (data.time.billablePercent / 100);
         
-        const handleDownload = (extension) => {
-            if (qrCodeInstance.current) {
-                qrCodeInstance.current.download({
-                    name: 'qr-code',
-                    extension,
-                });
-            }
-        };
+        const monthlyExpensesSum = Object.values(data.expenses).reduce((a, b) => a + b, 0);
+        const annualExpenses = monthlyExpensesSum * 12;
 
-        return (
-            <div className="min-h-screen w-full flex items-center justify-center p-4 sm:p-6 lg:p-8">
-            <div className="w-full max-w-7xl mx-auto bg-white rounded-xl shadow-lg p-4 sm:p-8">
-                <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
-                <div className="lg:col-span-2">
-                    <ControlPanel
-                    text={text}
-                    dotColor={dotColor}
-                    backgroundColor={backgroundColor}
-                    dotType={dotType}
-                    eyeType={eyeType}
-                    errorCorrectionLevel={errorCorrectionLevel}
-                    onTextChange={setText}
-                    onLogoChange={handleLogoChange}
-                    onDotColorChange={setDotColor}
-                    onBackgroundColorChange={setBackgroundColor}
-                    onDotTypeChange={setDotType}
-                    onEyeTypeChange={setEyeType}
-                    onErrorCorrectionLevelChange={setErrorCorrectionLevel}
-                    onDownloadPNG={() => handleDownload('png')}
-                    onDownloadSVG={() => handleDownload('svg')}
+        const preTaxPersonalIncome = data.incomeGoal / (1 - (data.taxRate / 100));
+        const breakEvenRevenue = preTaxPersonalIncome + annualExpenses;
+        
+        const marginDecimal = (data.profitMargin || 0) / 100;
+        const safeMargin = Math.min(marginDecimal, 0.95);
+        const grossRevenueNeeded = breakEvenRevenue / (1 - safeMargin);
+        
+        const businessProfit = grossRevenueNeeded - breakEvenRevenue;
+        const taxAmount = preTaxPersonalIncome - data.incomeGoal;
+
+        const hourlyRate = billableHoursPerYear > 0 ? grossRevenueNeeded / billableHoursPerYear : 0;
+        
+        return {
+          workingWeeks,
+          billableHoursPerYear,
+          monthlyExpensesSum,
+          annualExpenses,
+          preTaxPersonalIncome,
+          taxAmount,
+          businessProfit,
+          grossRevenueNeeded,
+          hourlyRate
+        };
+      }, [data]);
+
+      const formatMoney = (amount) => {
+        return new Intl.NumberFormat(currency.locale, {
+          style: 'currency',
+          currency: currency.code,
+          maximumFractionDigits: 0
+        }).format(amount);
+      };
+
+      const handlePresetChange = (key) => {
+        setData(presets[key]);
+      };
+
+      const updateExpense = (key, val) => {
+        setData(prev => ({
+          ...prev,
+          expenses: { ...prev.expenses, [key]: val }
+        }));
+      };
+
+      const updateTime = (key, val) => {
+        setData(prev => ({
+          ...prev,
+          time: { ...prev.time, [key]: val }
+        }));
+      };
+
+      return (
+        <div className="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-200">
+          <header className="bg-gray-50 border-b border-gray-200 p-6 sm:px-8 flex flex-col sm:flex-row justify-between items-center gap-4">
+            <div>
+              <h1 className="text-2xl font-bold text-gray-800 flex items-center gap-2">
+                <i className="fas fa-calculator text-emerald-600"></i>
+                Freelance Rate Calculator
+              </h1>
+              <p className="text-gray-500 text-sm mt-1">Find out exactly what you need to charge to meet your lifestyle goals.</p>
+            </div>
+            
+            <div className="flex flex-col sm:flex-row items-end sm:items-center gap-3">
+              <div className="relative">
+                <select 
+                  value={currency.code}
+                  onChange={(e) => setCurrency(currencies.find(c => c.code === e.target.value))}
+                  className="appearance-none bg-white border border-gray-300 text-gray-700 py-1.5 pl-3 pr-8 rounded-lg text-xs font-medium focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 shadow-sm cursor-pointer hover:border-emerald-400 transition-colors"
+                >
+                  {currencies.map(c => (
+                    <option key={c.code} value={c.code}>{c.name} - {c.symbol}</option>
+                  ))}
+                </select>
+                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-500">
+                  <i className="fas fa-chevron-down text-xs"></i>
+                </div>
+              </div>
+
+              <div className="flex items-center space-x-2 bg-white p-1.5 rounded-lg border shadow-sm">
+                {Object.keys(presets).map(key => (
+                  <button
+                    key={key}
+                    onClick={() => handlePresetChange(key)}
+                    className={`px-3 py-1.5 text-xs font-medium rounded-md transition ${data.name === presets[key].name ? 'bg-emerald-100 text-emerald-700' : 'text-gray-600 hover:bg-gray-50'}`}
+                  >
+                    {presets[key].name.split(' ')[0]}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </header>
+
+          <main className="flex flex-col lg:flex-row h-full">
+            {/* Left Column: Inputs */}
+            <div className="lg:w-1/2 p-6 sm:p-8 bg-white lg:border-r border-gray-200">
+              <div className="flex space-x-1 bg-gray-100 p-1 rounded-lg mb-6">
+                {[
+                  { id: 'income', label: 'Income & Profit', icon: 'fa-money-bill-wave' },
+                  { id: 'expenses', label: 'Expenses', icon: 'fa-credit-card' },
+                  { id: 'time', label: 'Time & Schedule', icon: 'fa-clock' }
+                ].map(tab => (
+                  <button
+                    key={tab.id}
+                    onClick={() => setActiveTab(tab.id)}
+                    className={`tab-button flex-1 py-2.5 px-3 rounded-md text-sm font-semibold flex items-center justify-center gap-2 ${activeTab === tab.id ? 'active' : 'text-gray-600 hover:bg-gray-200'}`}
+                  >
+                    <i className={`fas ${tab.icon}`}></i>
+                    <span className="hidden sm:inline">{tab.label}</span>
+                  </button>
+                ))}
+              </div>
+
+              <div className="min-h-[400px]">
+                {activeTab === 'income' && (
+                  <div className="space-y-6 animate-fade-in">
+                    <div className="bg-emerald-50 p-4 rounded-lg border border-emerald-100">
+                      <InputGroup 
+                        label="Desired Annual Net Income" 
+                        prefix={currency.symbol} 
+                        className="mb-0"
+                        tooltip="Your final 'take-home' pay after all taxes and business costs. Increasing this will raise your required hourly rate."
+                      >
+                        <NumberInput 
+                          value={data.incomeGoal} 
+                          onChange={(val) => setData({...data, incomeGoal: val})} 
+                          prefix 
+                        />
+                      </InputGroup>
+                      <p className="text-xs text-gray-500 mt-2">The actual amount you want to take home after taxes and expenses.</p>
+                    </div>
+                    
+                    <div>
+                      <h3 className="font-semibold text-gray-800 mb-4">Tax & Profit</h3>
+                      <SliderInput 
+                        label="Estimated Tax Rate" 
+                        value={data.taxRate} 
+                        min={0} max={50} step={1} 
+                        unit="%" 
+                        onChange={(val) => setData({...data, taxRate: val})}
+                        tooltip="The percentage of your profit that goes to the government. Higher taxes mean you need to charge more per hour."
+                      />
+                      
+                      <SliderInput 
+                        label="Profit Margin" 
+                        value={data.profitMargin || 0} 
+                        min={0} max={50} step={1} 
+                        unit="%" 
+                        onChange={(val) => setData({...data, profitMargin: val})}
+                        tooltip="Extra revenue for business savings, scaling, or unexpected costs. A 10-20% margin is standard for sustainability."
+                      />
+                      <p className="text-xs text-gray-500 -mt-3 mb-2">
+                        A buffer for business savings, reinvestment, or scaling.
+                      </p>
+                    </div>
+
+                    <div className="border-t pt-4 space-y-2">
+                      <div className="flex justify-between items-center">
+                         <span className="text-sm text-gray-600 flex items-center">
+                           Personal Pre-Tax Needed
+                           <Tooltip text="The gross personal salary you need before income tax is deducted." />
+                         </span>
+                         <span className="font-bold text-gray-800">{formatMoney(calculations.preTaxPersonalIncome)}</span>
+                      </div>
+                      <div className="flex justify-between items-center">
+                         <span className="text-sm text-gray-600 flex items-center">
+                           Business Profit Buffer
+                           <Tooltip text="Funds left in the business after you've paid yourself and covered all your expenses." />
+                         </span>
+                         <span className="font-bold text-indigo-600">{formatMoney(calculations.businessProfit)}</span>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {activeTab === 'expenses' && (
+                  <div className="space-y-4 animate-fade-in">
+                    <div className="flex justify-between items-center mb-2">
+                      <h3 className="font-semibold text-gray-800">Monthly Business Costs</h3>
+                      <span className="text-sm font-bold text-gray-600">Total: {formatMoney(calculations.monthlyExpensesSum)}/mo</span>
+                    </div>
+                    
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <InputGroup label="Software" prefix={currency.symbol} tooltip="Tools like Adobe CC, Slack, hosting, and project management apps.">
+                        <NumberInput value={data.expenses.software} onChange={(v) => updateExpense('software', v)} prefix />
+                      </InputGroup>
+                      <InputGroup label="Internet & Phone" prefix={currency.symbol} tooltip="Your work-related connectivity costs.">
+                        <NumberInput value={data.expenses.internet} onChange={(v) => updateExpense('internet', v)} prefix />
+                      </InputGroup>
+                      <InputGroup label="Health Insurance" prefix={currency.symbol} tooltip="Crucial for freelancers as it's a major out-of-pocket fixed cost.">
+                        <NumberInput value={data.expenses.insurance} onChange={(v) => updateExpense('insurance', v)} prefix />
+                      </InputGroup>
+                      <InputGroup label="Marketing" prefix={currency.symbol} tooltip="Costs for ads, website maintenance, or sales materials.">
+                        <NumberInput value={data.expenses.marketing} onChange={(v) => updateExpense('marketing', v)} prefix />
+                      </InputGroup>
+                      <InputGroup label="Office Space" prefix={currency.symbol} tooltip="Coworking memberships or a portion of home office costs.">
+                        <NumberInput value={data.expenses.rent} onChange={(v) => updateExpense('rent', v)} prefix />
+                      </InputGroup>
+                      <InputGroup label="Other Costs" prefix={currency.symbol} tooltip="Hardware, legal/accounting fees, and miscellaneous supplies.">
+                        <NumberInput value={data.expenses.other} onChange={(v) => updateExpense('other', v)} prefix />
+                      </InputGroup>
+                    </div>
+
+                    <div className="bg-orange-50 p-4 rounded-lg border border-orange-100 mt-4">
+                      <div className="flex justify-between items-center">
+                         <span className="text-sm font-medium text-orange-800 flex items-center">
+                           Annual Expense Overhead
+                           <Tooltip text="Total yearly cost to run your business. This must be earned before you make any profit." />
+                         </span>
+                         <span className="font-bold text-orange-900">{formatMoney(calculations.annualExpenses)}</span>
+                      </div>
+                      <p className="text-xs text-orange-700 mt-1">This amount must be earned before you start making profit.</p>
+                    </div>
+                  </div>
+                )}
+
+                {activeTab === 'time' && (
+                  <div className="space-y-6 animate-fade-in">
+                    <div className="bg-blue-50 p-4 rounded-lg border border-blue-100 mb-6">
+                      <div className="flex justify-between items-center mb-1">
+                        <span className="text-sm font-medium text-blue-900 flex items-center">
+                          Total Billable Hours / Year
+                          <Tooltip text="The actual number of hours you can charge to clients after accounting for non-billable time and time off." />
+                        </span>
+                        <span className="text-lg font-bold text-blue-900">{Math.round(calculations.billableHoursPerYear).toLocaleString()} hrs</span>
+                      </div>
+                      <p className="text-xs text-blue-700">This is the actual time you get paid for.</p>
+                    </div>
+
+                    <SliderInput 
+                      label="Hours Worked Per Week" 
+                      value={data.time.hoursPerWeek} 
+                      min={5} max={80} step={1} 
+                      unit=" hrs" 
+                      onChange={(v) => updateTime('hoursPerWeek', v)}
+                      tooltip="Total time you dedicate to your business each week (both billable and administrative)."
                     />
-                </div>
-                <div className="lg:col-span-3 flex items-center justify-center bg-gray-100 rounded-lg p-8 min-h-[300px] lg:min-h-0">
-                    <div ref={qrRef} className="w-full h-full max-w-[500px] max-h-[500px] aspect-square" />
-                </div>
-                </div>
+                    
+                    <SliderInput 
+                      label="Weeks Off Per Year" 
+                      value={data.time.weeksOff} 
+                      min={0} max={20} step={1} 
+                      unit=" weeks" 
+                      onChange={(v) => updateTime('weeksOff', v)}
+                      tooltip="Vacation, public holidays, and sick days. Increasing this requires a higher rate during working weeks."
+                    />
+
+                    <SliderInput 
+                      label="Billable Percentage" 
+                      value={data.time.billablePercent} 
+                      min={10} max={100} step={5} 
+                      unit="%" 
+                      onChange={(v) => updateTime('billablePercent', v)}
+                      tooltip="The portion of your time spent on paid client work vs. unpaid admin, marketing, and sales tasks. Most freelancers land between 50-70%."
+                    />
+                    <p className="text-xs text-gray-500 -mt-3">
+                      Time spent on client work vs admin, sales, marketing.
+                      <br/>Average freelancer is around 60-75%.
+                    </p>
+                  </div>
+                )}
+              </div>
             </div>
+
+            {/* Right Column: Results */}
+            <div className="lg:w-1/2 bg-gray-50 p-6 sm:p-8 flex flex-col justify-between">
+              <div>
+                <h3 className="font-bold text-gray-800 mb-6 text-lg">Estimated Rates</h3>
+                
+                {/* Main Hero Result */}
+                <div className="result-card rounded-2xl p-8 mb-6 text-center shadow-lg relative overflow-hidden group">
+                  <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-emerald-400 to-teal-500"></div>
+                  <p className="text-sm font-semibold text-emerald-600 uppercase tracking-widest mb-2 flex items-center justify-center">
+                    Minimum Hourly Rate
+                    <Tooltip text="The absolute lowest you should charge to achieve all your income and business goals." />
+                  </p>
+                  <div className="text-6xl font-extrabold text-gray-900 mb-2 tracking-tight group-hover:scale-105 transition-transform duration-300">
+                    {formatMoney(Math.ceil(calculations.hourlyRate))}
+                    <span className="text-2xl text-gray-400 font-medium ml-1">/hr</span>
+                  </div>
+                  <p className="text-gray-500 text-sm">To achieve {formatMoney(data.incomeGoal)} net income + {data.profitMargin}% margin.</p>
+                </div>
+
+                <div className="grid grid-cols-2 gap-4 mb-8">
+                  <StatCard 
+                    label="Daily Rate" 
+                    value={formatMoney(Math.ceil(calculations.hourlyRate * 8))} 
+                    subtext="Based on 8h day"
+                    tooltip="Your target daily revenue. This assumes all 8 hours are billable, which is rare!"
+                  />
+                  <StatCard 
+                    label="Weekly Rate" 
+                    value={formatMoney(Math.ceil(calculations.hourlyRate * (data.time.hoursPerWeek * data.time.billablePercent/100)))} 
+                    subtext="Avg. Billable Week"
+                    tooltip="The total billings you should aim for in a typical work week."
+                  />
+                  <StatCard 
+                    label="Monthly Gross" 
+                    value={formatMoney(Math.ceil(calculations.grossRevenueNeeded / 12))} 
+                    subtext="Revenue Goal"
+                    tooltip="Total revenue needed per month before expenses, taxes, or personal pay."
+                  />
+                  <StatCard 
+                    label="Annual Gross" 
+                    value={formatMoney(Math.ceil(calculations.grossRevenueNeeded))} 
+                    subtext="Revenue Goal"
+                    tooltip="The total annual 'top-line' revenue your business needs to generate."
+                  />
+                </div>
+              </div>
+
+              {/* Breakdown Chart */}
+              <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
+                <h4 className="font-bold text-gray-800 mb-4 text-sm flex items-center">
+                  Revenue Breakdown
+                  <Tooltip text="How every dollar you earn is distributed between your personal pay, the government, and business costs." />
+                </h4>
+                
+                {/* Progress Bar */}
+                <div className="flex h-6 rounded-full overflow-hidden mb-4 text-xs font-bold text-white shadow-inner bg-gray-100">
+                  <div 
+                    style={{ width: `${(data.incomeGoal / calculations.grossRevenueNeeded) * 100}%` }} 
+                    className="bg-emerald-500 flex items-center justify-center hover:bg-emerald-600 transition-colors"
+                    title="Net Income"
+                  ></div>
+                  <div 
+                    style={{ width: `${(calculations.taxAmount / calculations.grossRevenueNeeded) * 100}%` }} 
+                    className="bg-blue-400 flex items-center justify-center hover:bg-blue-500 transition-colors"
+                    title="Taxes"
+                  ></div>
+                  <div 
+                    style={{ width: `${(calculations.annualExpenses / calculations.grossRevenueNeeded) * 100}%` }} 
+                    className="bg-orange-400 flex items-center justify-center hover:bg-orange-500 transition-colors"
+                    title="Expenses"
+                  ></div>
+                   <div 
+                    style={{ width: `${(calculations.businessProfit / calculations.grossRevenueNeeded) * 100}%` }} 
+                    className="bg-indigo-500 flex items-center justify-center hover:bg-indigo-600 transition-colors"
+                    title="Profit"
+                  ></div>
+                </div>
+
+                <div className="space-y-2">
+                  <div className="flex justify-between items-center text-sm">
+                    <div className="flex items-center"><div className="w-3 h-3 rounded-full bg-emerald-500 mr-2"></div><span className="text-gray-600">Your Pocket (Net)</span></div>
+                    <span className="font-bold text-emerald-700">{Math.round((data.incomeGoal / calculations.grossRevenueNeeded) * 100)}%</span>
+                  </div>
+                  <div className="flex justify-between items-center text-sm">
+                    <div className="flex items-center"><div className="w-3 h-3 rounded-full bg-blue-400 mr-2"></div><span className="text-gray-600">Taxes</span></div>
+                    <span className="font-bold text-blue-600">{Math.round((calculations.taxAmount / calculations.grossRevenueNeeded) * 100)}%</span>
+                  </div>
+                  <div className="flex justify-between items-center text-sm">
+                    <div className="flex items-center"><div className="w-3 h-3 rounded-full bg-orange-400 mr-2"></div><span className="text-gray-600">Expenses</span></div>
+                    <span className="font-bold text-orange-600">{Math.round((calculations.annualExpenses / calculations.grossRevenueNeeded) * 100)}%</span>
+                  </div>
+                  <div className="flex justify-between items-center text-sm">
+                    <div className="flex items-center"><div className="w-3 h-3 rounded-full bg-indigo-500 mr-2"></div><span className="text-gray-600">Profit Margin</span></div>
+                    <span className="font-bold text-indigo-600">{Math.round((calculations.businessProfit / calculations.grossRevenueNeeded) * 100)}%</span>
+                  </div>
+                </div>
+              </div>
+
             </div>
-        );
+          </main>
+        </div>
+      );
     };
 
-    // --- Mount the App to the DOM ---
-    const rootElement = document.getElementById('root');
-    const root = ReactDOM.createRoot(rootElement);
-    root.render(
-      <React.StrictMode>
-        <App />
-      </React.StrictMode>
-    );
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+          </script>
 
-  </script>
+
+ <!-- tool end -->  
+
+
+   <!-- Content and FAQ section starts-->
+
+  <section class="bg-white py-12 sm:py-16">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="prose prose-lg max-w-none prose-h2:text-gray-800 prose-p:text-gray-700">
+            <h2 class="text-3xl font-bold text-gray-900 mb-4">How to Calculate Freelance Hourly Rate the Right Way</h2>
+            <p class="mb-6 leading-relaxed">
+                One of the biggest mistakes new freelancers make is taking their previous full-time salary and dividing it by 2,080 (the standard number of work hours in a year). If you do this, you will effectively be taking a massive pay cut. Unlike an employee, you have to pay for your own health insurance, software subscriptions, self-employment taxes, and retirement savings. Our tool simplifies this process by helping you understand <strong>how to calculate freelance hourly rate</strong> based on your <em>actual</em> financial needs, not just a raw salary number.
+            </p>
+            
+            <h2 class="text-2xl font-bold mt-8 mb-4">Freelance Rate Calculator for Developers and Designers</h2>
+            <p class="mb-6 leading-relaxed">
+                Whether you are looking for a <strong>freelance rate calculator for developers</strong> writing complex backend code, or you need a rate for graphic designers creating brand identities, the financial principles remain the same. While market rates vary by industry—senior developers might charge $150/hr while junior designers start at $50/hr—your <em>personal</em> minimum rate is determined by your expenses. This calculator is industry-agnostic. It ensures that whether you are pushing pixels or pushing code, you aren't paying out of pocket to work for your clients.
+            </p>
+            
+            <h2 class="text-2xl font-bold mt-8 mb-4">The Truth About the Freelance Salary to Hourly Converter</h2>
+            <p class="mb-6 leading-relaxed">
+                A simple <strong>freelance salary to hourly converter</strong> often lies to you because it assumes you are working 40 billable hours a week. In reality, no freelancer bills 100% of their time. You have administrative tasks, marketing, client meetings, and vacation days that are unpaid.
+            </p>
+            <p class="mb-6 leading-relaxed">
+                To convert a salary to a freelance rate accurately, you must factor in "overhead." I usually recommend the "Rule of Thirds": one-third for taxes, one-third for expenses, and one-third for your take-home pay. This tool handles that math for you instantly so you can see exactly what you need to charge to net your target income.
+            </p>
+
+            <h2 class="text-2xl font-bold mt-8 mb-4">Using the Minimum Billable Hours Calculator</h2>
+            <p class="mb-6 leading-relaxed">
+                Capacity planning is the hardest part of scaling a freelance business. You might want to earn $100,000, but if you can only bill 20 hours a week due to other commitments, your rate needs to be significantly higher. This tool acts as a <strong>minimum billable hours calculator</strong>. By inputting your target income and your estimated weekly availability, we work backward to tell you the floor price you cannot go below.
+            </p>
+
+            <h2 class="text-2xl font-bold mt-8 mb-4">Tips for Setting Your Rate</h2>
+            <p class="leading-relaxed">
+                1. <strong>Don't ignore taxes</strong>: Self-employment tax can take a huge bite out of your earnings. Always aim higher to create a buffer.<br>
+                2. <strong>Account for dry spells</strong>: Freelancing is feast or famine. Your hourly rate should be high enough to help you save for the months when clients are quiet.<br>
+                3. <strong>Value-based pricing</strong>: Once you know your minimum hourly rate from this calculator, consider it your "floor." If the project brings high value to the client, feel free to charge more.<br>
+                4. <strong>Re-evaluate annually</strong>: As your skills improve and inflation rises, your rate should go up. Run this calculation at least once a year.
+            </p>
+        </div>
+    </div>
+</section>
+
+<section class="bg-gray-50 py-12 sm:py-16">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <h2 class="text-3xl font-bold text-center text-gray-900 mb-8">Freelance Rate Calculator – FAQs</h2>
+        <div class="space-y-4">
+            <div class="bg-white rounded-lg shadow-sm">
+                <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-primary">
+                    <span>Is this freelance rate calculator free to use?</span>
+                    <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                    </svg>
+                </button>
+                <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                    <p class="p-5 pt-0 text-gray-600">
+                        Yes, this tool is 100% free. You can run as many scenarios as you like to see how changing your billable hours or expense estimates affects your required hourly rate.
+                    </p>
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-lg shadow-sm">
+                <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-primary">
+                    <span>What are "billable hours"?</span>
+                    <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                    </svg>
+                </button>
+                <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                    <p class="p-5 pt-0 text-gray-600">
+                        Billable hours are the hours you actually charge a client for. This excludes time spent on emails, marketing, accounting, or learning new skills. Most successful freelancers only bill about 60-70% of their total working time.
+                    </p>
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-lg shadow-sm">
+                <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-primary">
+                    <span>Should I charge hourly or by the project?</span>
+                    <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                    </svg>
+                </button>
+                <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                    <p class="p-5 pt-0 text-gray-600">
+                        This calculator gives you a baseline hourly rate, which is essential even if you charge by the project. If you quote a fixed price of $500 but it takes you 20 hours, you're earning $25/hr. Knowing your minimum hourly rate helps you estimate profitable fixed-price quotes.
+                    </p>
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-lg shadow-sm">
+                <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-primary">
+                    <span>Why is my freelance rate higher than my employee salary?</span>
+                    <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                    </svg>
+                </button>
+                <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                    <p class="p-5 pt-0 text-gray-600">
+                        Employers pay for benefits, office space, hardware, and payroll taxes on top of your salary. As a freelancer, you bear these costs. To maintain the same standard of living, your hourly rate usually needs to be 1.5x to 2x higher than your equivalent hourly wage as an employee.
+                    </p>
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-lg shadow-sm">
+                <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-primary">
+                    <span>Can I use this for any industry?</span>
+                    <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                    </svg>
+                </button>
+                <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                    <p class="p-5 pt-0 text-gray-600">
+                        Absolutely. While we mention developers and designers often, this math applies to writers, virtual assistants, consultants, photographers, and any other service-based freelance business.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+   <!-- Footer Placeholder -->
+    <div id="footer"></div>
+
+
+    <!-- Footer -->
+    <script>
+    function initializeHeaderScripts() {
+        // Header Scroll Effect
+        const header = document.getElementById('header');
+        if (header) {
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 10) {
+                    header.classList.add('scrolled-effect');
+                } else {
+                    header.classList.remove('scrolled-effect');
+                }
+            });
+        }
+
+        // Mobile Menu Toggle (supports both icon sets)
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const menuIconBars = document.getElementById('menu-icon-bars');
+        const menuIconTimes = document.getElementById('menu-icon-times');
+        const mobileMenuIconOpen = document.getElementById('mobile-menu-icon-open');
+        const mobileMenuIconClose = document.getElementById('mobile-menu-icon-close');
+        
+        if (mobileMenuButton && mobileMenu) {
+            mobileMenuButton.addEventListener('click', () => {
+                mobileMenu.classList.toggle('open');
+                
+                if (menuIconBars && menuIconTimes) {
+                    menuIconBars.classList.toggle('hidden');
+                    menuIconTimes.classList.toggle('hidden');
+                }
+                if (mobileMenuIconOpen && mobileMenuIconClose) {
+                    mobileMenuIconOpen.classList.toggle('hidden');
+                    mobileMenuIconClose.classList.toggle('hidden');
+                }
+            });
+        }
+
+        // Mobile Accordion Toggle
+        const accordionButton = document.querySelector('.accordion-button');
+        const accordionContent = document.querySelector('.accordion-content');
+        
+        if (accordionButton && accordionContent) {
+            accordionButton.addEventListener('click', () => {
+                accordionButton.classList.toggle('open');
+                accordionContent.classList.toggle('open');
+            });
+        }
+    }
+    
+    function initializeFooterScripts() {
+        // Set Current Year in Footer
+        const yearSpan = document.getElementById('current-year');
+        if(yearSpan) {
+            yearSpan.textContent = new Date().getFullYear();
+        }
+    }
+
+    async function loadComponent(url, elementId, callback) {
+        try {
+            const response = await fetch(url);
+            if (!response.ok) {
+                throw new Error(`Failed to load component from ${url}. Status: ${response.status}`);
+            }
+            const text = await response.text();
+            const element = document.getElementById(elementId);
+            if (element) {
+                element.innerHTML = text;
+                if (callback) {
+                    callback();
+                }
+            } else {
+                console.error(`Element with id '${elementId}' not found.`);
+            }
+        } catch (error) {
+            console.error('Error loading component:', error);
+            const element = document.getElementById(elementId);
+            if(element) element.innerHTML = `<p class="text-center text-red-500">Error: Could not load component.</p>`;
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        // Load Header and Footer components
+        loadComponent('/components/navbar.html', 'navbar', initializeHeaderScripts);
+        loadComponent('/components/footer.html', 'footer', initializeFooterScripts);
+        
+        // Smooth scrolling for anchor links
+        document.addEventListener('click', function (e) {
+            const anchor = e.target.closest('a[href^="#"]');
+            if (!anchor) return;
+
+            const href = anchor.getAttribute('href');
+            if (href === '#' || href === "") return;
+
+            e.preventDefault();
+            
+            const targetElement = document.querySelector(href);
+            if (targetElement) {
+                const header = document.getElementById('header');
+                const headerOffset = header ? header.offsetHeight : 80; // Default offset if header not yet loaded
+                const elementPosition = targetElement.getBoundingClientRect().top;
+                const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+            
+                window.scrollTo({
+                    top: offsetPosition,
+                    behavior: 'smooth'
+                });
+
+                // Close mobile menu if open after clicking a link
+                const mobileMenu = document.getElementById('mobile-menu');
+                if (mobileMenu && mobileMenu.classList.contains('open')) {
+                    const mobileMenuButton = document.getElementById('mobile-menu-button');
+                    if(mobileMenuButton) mobileMenuButton.click();
+                }
+            }
+        });
+
+        // FAQ Accordion Logic
+        const faqToggles = document.querySelectorAll('[data-faq-toggle]');
+        faqToggles.forEach(button => {
+            button.addEventListener('click', () => {
+                const answer = button.nextElementSibling;
+                const icon = button.querySelector('.faq-icon');
+                const isOpening = !answer.style.maxHeight;
+
+                // Close all other open FAQs
+                faqToggles.forEach(otherButton => {
+                    if (otherButton !== button) {
+                        otherButton.nextElementSibling.style.maxHeight = null;
+                        otherButton.querySelector('.faq-icon').classList.remove('rotate-90');
+                        otherButton.querySelector('.faq-icon').classList.add('-rotate-90');
+                    }
+                });
+
+                // Toggle the clicked FAQ
+                if (isOpening) {
+                    answer.style.maxHeight = answer.scrollHeight + "px";
+                    icon.classList.remove('-rotate-90');
+                    icon.classList.add('rotate-90');
+                } else {
+                    answer.style.maxHeight = null;
+                    icon.classList.remove('rotate-90');
+                    icon.classList.add('-rotate-90');
+                }
+            });
+        });
+    });
+</script>
+
+
+  
+
+  
 </body>
 
 </html>
+
