@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>QR Code Generator Pro</title>
+  
+  <!-- Libraries -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/qr-code-styling@1.6.0/lib/qr-code-styling.js"></script>
+  <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <style>
+    /* --- General & Color Variables --- */
+    :root {
+      --primary-color: #da3f0b;
+      --primary-color-hover: #c3370a;
+      --background-color: #f9fafb;
+      /* gray-50 */
+      --card-background: #ffffff;
+      --text-dark: #1f2937;
+      /* gray-800 */
+      --text-medium: #6b7280;
+      /* gray-500 */
+      --text-light: #ffffff;
+      --border-color: #d1d5db;
+      /* gray-300 */
+      --border-color-hover: #9ca3af;
+      /* gray-400 */
+    }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+      background-color: var(--background-color);
+      color: var(--text-dark);
+    }
+  </style>
+</head>
+
+<body class="bg-gray-50">
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useState, useEffect, useRef } = React;
+
+    // --- SVG Icon Components ---
+    const UploadIcon = () => (
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        className="h-10 w-10 text-[#da3f0b]"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+        strokeWidth={2}
+      >
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"
+        />
+      </svg>
+    );
+
+    const DownloadIcon = () => (
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        className="h-5 w-5 mr-2"
+        viewBox="0 0 20 20"
+        fill="currentColor"
+      >
+        <path
+          fillRule="evenodd"
+          d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z"
+          clipRule="evenodd"
+        />
+      </svg>
+    );
+
+    // --- Control Panel Component ---
+    const ControlInput = ({ label, children }) => (
+        <div className="mb-6">
+            <label className="block text-sm font-bold text-gray-700 mb-2">{label}</label>
+            {children}
+        </div>
+    );
+    
+    const ControlPanel = ({
+        text,
+        dotColor,
+        backgroundColor,
+        dotType,
+        eyeType,
+        errorCorrectionLevel,
+        onTextChange,
+        onLogoChange,
+        onDotColorChange,
+        onBackgroundColorChange,
+        onDotTypeChange,
+        onEyeTypeChange,
+        onErrorCorrectionLevelChange,
+        onDownloadPNG,
+        onDownloadSVG,
+    }) => {
+        const fileInputRef = React.useRef(null);
+
+        return (
+            <div className="p-4">
+            <h2 className="text-2xl font-bold text-gray-800 mb-6 border-b pb-4">Customize QR Code</h2>
+
+            <ControlInput label="Text or URL">
+                <textarea
+                value={text}
+                onChange={(e) => onTextChange(e.target.value)}
+                className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#da3f0b]/40 focus:border-[#da3f0b] transition"
+                rows={3}
+                placeholder="Enter URL or text here..."
+                />
+            </ControlInput>
+
+            <ControlInput label="Upload Logo">
+                <div 
+                    className="w-full p-8 border-4 border-dashed border-gray-300 rounded-xl cursor-pointer transition-all duration-300 text-center flex flex-col items-center justify-center bg-gray-50 hover:border-[#da3f0b] hover:bg-orange-50"
+                    onClick={() => fileInputRef.current?.click()}
+                >
+                    <UploadIcon />
+                    <p className="mt-4 text-sm font-semibold text-gray-600">Click to upload logo</p>
+                    <p className="text-xs text-gray-500">PNG, JPG, SVG</p>
+                    <input
+                        type="file"
+                        ref={fileInputRef}
+                        onChange={onLogoChange}
+                        accept="image/png, image/jpeg, image/svg+xml"
+                        className="hidden"
+                    />
+                </div>
+            </ControlInput>
+
+            <div className="grid grid-cols-2 gap-4">
+                <ControlInput label="Dot Color">
+                <div className="relative">
+                    <input
+                    type="color"
+                    value={dotColor}
+                    onChange={(e) => onDotColorChange(e.target.value)}
+                    className="w-full h-12 p-1 border border-gray-300 rounded-lg cursor-pointer"
+                    />
+                </div>
+                </ControlInput>
+                <ControlInput label="Background Color">
+                <div className="relative">
+                    <input
+                    type="color"
+                    value={backgroundColor}
+                    onChange={(e) => onBackgroundColorChange(e.target.value)}
+                    className="w-full h-12 p-1 border border-gray-300 rounded-lg cursor-pointer"
+                    />
+                </div>
+                </ControlInput>
+            </div>
+
+            <ControlInput label="Dot Style">
+                <select
+                value={dotType}
+                onChange={(e) => onDotTypeChange(e.target.value)}
+                className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#da3f0b]/40 focus:border-[#da3f0b] transition"
+                >
+                <option value="square">Square</option>
+                <option value="rounded">Rounded</option>
+                <option value="extra-rounded">Extra Rounded</option>
+                </select>
+            </ControlInput>
+
+            <ControlInput label="Corner 'Eye' Style">
+                <select
+                value={eyeType}
+                onChange={(e) => onEyeTypeChange(e.target.value)}
+                className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#da3f0b]/40 focus:border-[#da3f0b] transition"
+                >
+                <option value="square">Square</option>
+                <option value="extra-rounded">Rounded</option>
+                </select>
+            </ControlInput>
+            
+            <ControlInput label="Error Correction Level">
+                <select
+                value={errorCorrectionLevel}
+                onChange={(e) => onErrorCorrectionLevelChange(e.target.value)}
+                className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#da3f0b]/40 focus:border-[#da3f0b] transition"
+                >
+                <option value="L">Low (recovers ~7% of data)</option>
+                <option value="M">Medium (recovers ~15% of data)</option>
+                <option value="Q">Quartile (recovers ~25% of data)</option>
+                <option value="H">High (recovers ~30% of data)</option>
+                </select>
+            </ControlInput>
+
+            <div className="mt-8 pt-6 border-t">
+                <h3 className="text-lg font-bold text-gray-700 mb-4">Download</h3>
+                <div className="flex flex-col sm:flex-row gap-4">
+                    <button
+                        onClick={onDownloadPNG}
+                        className="w-full flex items-center justify-center bg-[#da3f0b] hover:bg-[#c3370a] text-white font-bold py-3 px-6 rounded-lg shadow-md hover:scale-105 transition-all disabled:bg-gray-400 disabled:cursor-not-allowed disabled:opacity-70"
+                        disabled={!text}
+                    >
+                        <DownloadIcon />
+                        Download PNG
+                    </button>
+                    <button
+                        onClick={onDownloadSVG}
+                        className="w-full flex items-center justify-center bg-transparent text-gray-600 border-2 border-gray-300 hover:bg-gray-100 hover:border-gray-400 font-semibold py-3 px-6 rounded-lg transition-all"
+                        disabled={!text}
+                    >
+                        <DownloadIcon />
+                        Download SVG
+                    </button>
+                </div>
+            </div>
+            </div>
+        );
+    };
+
+    // --- Main App Component ---
+    const App = () => {
+        const [text, setText] = useState('https://gemini.google.com/');
+        const [logo, setLogo] = useState(undefined);
+        const [dotColor, setDotColor] = useState('#1f2937');
+        const [backgroundColor, setBackgroundColor] = useState('#ffffff');
+        const [dotType, setDotType] = useState('rounded');
+        const [eyeType, setEyeType] = useState('extra-rounded');
+        const [errorCorrectionLevel, setErrorCorrectionLevel] = useState('Q');
+
+        const qrRef = useRef(null);
+        const qrCodeInstance = useRef(null);
+
+        useEffect(() => {
+            if (qrRef.current) {
+            qrCodeInstance.current = new QRCodeStyling({
+                width: 500,
+                height: 500,
+                data: text,
+                image: logo,
+                dotsOptions: {
+                color: dotColor,
+                type: dotType,
+                },
+                backgroundOptions: {
+                color: backgroundColor,
+                },
+                cornersSquareOptions: {
+                type: eyeType,
+                color: dotColor,
+                },
+                cornersDotOptions: {
+                type: 'dot', // Keep inner dots consistent
+                color: dotColor,
+                },
+                qrOptions: {
+                    errorCorrectionLevel: errorCorrectionLevel,
+                },
+                imageOptions: {
+                crossOrigin: 'anonymous',
+                margin: 10,
+                },
+            });
+            // Clear previous QR code before appending a new one
+            qrRef.current.innerHTML = '';
+            qrCodeInstance.current.append(qrRef.current);
+            }
+        }, []); // Run only once on mount to initialize
+
+        useEffect(() => {
+            if (qrCodeInstance.current) {
+            qrCodeInstance.current.update({
+                data: text,
+                image: logo,
+                dotsOptions: {
+                color: dotColor,
+                type: dotType,
+                },
+                backgroundOptions: {
+                color: backgroundColor,
+                },
+                cornersSquareOptions: {
+                    type: eyeType,
+                    color: dotColor,
+                },
+                cornersDotOptions: {
+                    type: 'dot',
+                    color: dotColor,
+                },
+                qrOptions: {
+                    errorCorrectionLevel: errorCorrectionLevel,
+                },
+            });
+            }
+        }, [text, logo, dotColor, backgroundColor, dotType, eyeType, errorCorrectionLevel]);
+
+        const handleLogoChange = (e) => {
+            const file = e.target.files?.[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onloadend = () => {
+                    setLogo(reader.result);
+                };
+                reader.readAsDataURL(file);
+            } else {
+                setLogo(undefined);
+            }
+        };
+        
+        const handleDownload = (extension) => {
+            if (qrCodeInstance.current) {
+                qrCodeInstance.current.download({
+                    name: 'qr-code',
+                    extension,
+                });
+            }
+        };
+
+        return (
+            <div className="min-h-screen w-full flex items-center justify-center p-4 sm:p-6 lg:p-8">
+            <div className="w-full max-w-7xl mx-auto bg-white rounded-xl shadow-lg p-4 sm:p-8">
+                <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
+                <div className="lg:col-span-2">
+                    <ControlPanel
+                    text={text}
+                    dotColor={dotColor}
+                    backgroundColor={backgroundColor}
+                    dotType={dotType}
+                    eyeType={eyeType}
+                    errorCorrectionLevel={errorCorrectionLevel}
+                    onTextChange={setText}
+                    onLogoChange={handleLogoChange}
+                    onDotColorChange={setDotColor}
+                    onBackgroundColorChange={setBackgroundColor}
+                    onDotTypeChange={setDotType}
+                    onEyeTypeChange={setEyeType}
+                    onErrorCorrectionLevelChange={setErrorCorrectionLevel}
+                    onDownloadPNG={() => handleDownload('png')}
+                    onDownloadSVG={() => handleDownload('svg')}
+                    />
+                </div>
+                <div className="lg:col-span-3 flex items-center justify-center bg-gray-100 rounded-lg p-8 min-h-[300px] lg:min-h-0">
+                    <div ref={qrRef} className="w-full h-full max-w-[500px] max-h-[500px] aspect-square" />
+                </div>
+                </div>
+            </div>
+            </div>
+        );
+    };
+
+    // --- Mount the App to the DOM ---
+    const rootElement = document.getElementById('root');
+    const root = ReactDOM.createRoot(rootElement);
+    root.render(
+      <React.StrictMode>
+        <App />
+      </React.StrictMode>
+    );
+
+  </script>
+</body>
+
+</html>
