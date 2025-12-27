@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="title" content="Instagram Caption Line Break Generator – Clean Spacing Tool | SimpliConvert">
+    <meta name="description" content="Fix your Instagram bio and caption formatting instantly. Add clean line breaks and invisible spaces with our free whitespace generator. No more dots or messy text.">
+    <meta name="keywords" content="Instagram whitespace generator, Instagram caption spacer, line break tool for instagram, invisible character instagram, fix formatting instagram bio, caption spacer tool, clean instagram captions, whitespace copier">
+    <meta name="author" content="SimpliConvert">
+    <meta name="robots" content="index, follow">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://simpliconvert.com/instagram_caption_line_break/">
+    <meta property="og:title" content="Instagram Caption Line Break Generator – Fix Formatting">
+    <meta property="og:description" content="Create clean, readable Instagram captions with perfect line breaks. No more dots. Just paste, convert, and copy.">
+    <meta property="og:image" content="https://simpliconvert.com/images/instagram-caption-spacer-og.jpg">
+
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://simpliconvert.com/instagram_caption_line_break/">
+    <meta property="twitter:title" content="Instagram Caption Spacer – Invisible Line Breaks">
+    <meta property="twitter:description" content="The easiest way to add spaces and line breaks to your Instagram captions and bios.">
+    <meta property="twitter:image" content="https://simpliconvert.com/images/instagram-caption-spacer-og.jpg">
+
+    <link rel="canonical" href="https://simpliconvert.com/instagram_caption_line_break/">
+    <title>Instagram Caption Line Break Generator – Clean Spacing Tool | SimpliConvert</title>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Instagram Caption Line Break Generator",
+      "url": "https://simpliconvert.com/instagram_caption_line_break/",
+      "description": "A free online tool to add invisible line breaks and whitespace to Instagram captions and bios, resolving formatting issues.",
+      "applicationCategory": "SocialNetworkingApplication",
+      "operatingSystem": "Web Browser",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "SimpliConvert",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://simpliconvert.com/logo.png"
+        }
+      }
+    }
+    </script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #da3f0b;
+            --primary-hover: #b53409;
+            --primary-light: #fff5f2;
+            --bg: #f8fafc;
+            --text-dark: #0f172a;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text-dark);
+        }
+
+        .hero-card {
+            background: white;
+            border: 1px solid #f1f5f9;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background-color: var(--primary);
+        }
+
+        /* Tooltip styling */
+        .tooltip-container { position: relative; display: inline-block; }
+        .tooltip-text {
+            visibility: hidden; width: 220px; background-color: #1e293b; color: #fff;
+            text-align: center; border-radius: 8px; padding: 10px; position: absolute;
+            z-index: 50; bottom: 125%; left: 50%; margin-left: -110px; opacity: 0;
+            transition: opacity 0.2s; font-size: 0.75rem; font-weight: 400;
+            pointer-events: none; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+        .tooltip-container:hover .tooltip-text { visibility: visible; opacity: 1; }
+        .tooltip-text::after {
+            content: ""; position: absolute; top: 100%; left: 50%; margin-left: -5px;
+            border-width: 5px; border-style: solid; border-color: #1e293b transparent transparent transparent;
+        }
+
+        .animate-fade { animation: fadeIn 0.3s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+        textarea { resize: none; }
+        textarea:focus { outline: none; }
+    </style>
+</head>
+
+<body class="bg-gray-50 min-h-screen flex flex-col">
+    <div id="navbar"></div>
+
+    <section class="hero-white text-black py-2 md:py-10">
+        <div class="container mx-auto px-4 text-center">
+            <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-2">Instagram Caption Line Break Generator</h1>
+            <p class="text-lg md:text-xl max-w-3x1 mx-auto mb-2">
+                Create perfectly formatted captions with clean whitespace. No more ugly dots or smashed text. Just type, convert, and copy.
+            </p>
+        </div>
+    </section>
+
+    <div id="root" class="w-full max-w-6xl mx-auto p-4 sm:p-6"></div>
+
+    <script type="text/babel">
+    const { useState, useRef, useEffect } = React;
+
+    const App = () => {
+      const [text, setText] = useState('');
+      const [copied, setCopied] = useState(false);
+      const [charCount, setCharCount] = useState(0);
+      const [hashtagCount, setHashtagCount] = useState(0);
+      const [lineCount, setLineCount] = useState(0);
+      const outputRef = useRef(null);
+
+      // Instagram Limits
+      const MAX_CHARS = 2200;
+      const MAX_HASHTAGS = 30;
+
+      useEffect(() => {
+        setCharCount(text.length);
+        
+        // Simple hashtag count (words starting with #)
+        const hashtags = (text.match(/#[^\s#]+/g) || []).length;
+        setHashtagCount(hashtags);
+
+        // Line count
+        const lines = text.split(/\r\n|\r|\n/).length;
+        setLineCount(lines);
+        
+        if (copied) {
+          const timer = setTimeout(() => setCopied(false), 2000);
+          return () => clearTimeout(timer);
+        }
+      }, [text, copied]);
+
+      const handleConvertAndCopy = () => {
+        if (!text) return;
+
+        // The Magic Logic:
+        // 1. Replace regular newlines with the specific invisible separator unicode if needed, 
+        //    but often just ensuring standard \n works if whitespace is preserved.
+        //    However, specifically for IG, we often want to strip trailing spaces on lines 
+        //    to prevent them from collapsing formatting.
+        
+        let processedText = text
+            .split('\n')
+            .map(line => line.trim()) // Remove start/end whitespace from each line to prevent collapsing
+            .join('\n'); // Rejoin with standard newline. 
+            
+        // Some formats benefit from the invisible separator (U+2800) for empty lines
+        // If a line is empty, replace it with invisible braille space pattern to force the gap
+        processedText = processedText.replace(/\n\n/g, '\n⠀\n'); 
+
+        navigator.clipboard.writeText(processedText).then(() => {
+          setCopied(true);
+        });
+      };
+
+      const handleClear = () => {
+        if (window.confirm('Clear all text?')) {
+          setText('');
+        }
+      };
+
+      const handleBold = () => {
+        // Simple bold converter for selected text could go here, 
+        // but for now, let's keep it simple as a formatting spacer tool.
+        alert("Pro formatting coming soon!");
+      };
+
+      return (
+        <div className="bg-white rounded-[2rem] shadow-2xl overflow-hidden border border-slate-100 flex flex-col md:flex-row min-h-[600px]">
+          
+          {/* Input Area */}
+          <div className="w-full md:w-2/3 p-6 md:p-8 flex flex-col border-b md:border-b-0 md:border-r border-slate-100 relative">
+             <div className="flex justify-between items-center mb-4">
+                <div className="flex items-center gap-2">
+                   <div className="bg-[#da3f0b] text-white w-8 h-8 rounded-lg flex items-center justify-center shadow-md shadow-[#da3f0b30]">
+                      <i className="fab fa-instagram text-lg"></i>
+                   </div>
+                   <h2 className="font-bold text-slate-800 tracking-tight">Write Formatting</h2>
+                </div>
+                <button 
+                  onClick={handleClear}
+                  className="text-xs font-bold text-slate-400 hover:text-[#dc2626] uppercase tracking-wider transition-colors"
+                >
+                  Clear
+                </button>
+             </div>
+
+             <div className="flex-grow relative group">
+                <textarea
+                  className="w-full h-full p-4 text-base md:text-lg text-slate-700 placeholder-slate-300 resize-none focus:outline-none bg-slate-50/50 rounded-xl border border-transparent focus:border-slate-200 transition-all font-sans leading-relaxed"
+                  placeholder="Type your caption here...
+                  
+Leave empty lines for breaks.
+We will preserve them magically!
+
+#hashtags #formatting"
+                  value={text}
+                  onChange={(e) => setText(e.target.value)}
+                  spellCheck="false"
+                ></textarea>
+                
+                {/* Character Limit Indicators */}
+                <div className="absolute bottom-4 right-4 flex gap-3 pointer-events-none opacity-50 group-hover:opacity-100 transition-opacity">
+                   <span className={`text-[10px] font-bold px-2 py-1 rounded-full border ${charCount > MAX_CHARS ? 'bg-red-50 text-red-600 border-red-100' : 'bg-white text-slate-400 border-slate-200'}`}>
+                      {charCount} / {MAX_CHARS}
+                   </span>
+                   <span className={`text-[10px] font-bold px-2 py-1 rounded-full border ${hashtagCount > MAX_HASHTAGS ? 'bg-red-50 text-red-600 border-red-100' : 'bg-white text-slate-400 border-slate-200'}`}>
+                      #{hashtagCount} / {MAX_HASHTAGS}
+                   </span>
+                </div>
+             </div>
+          </div>
+
+          {/* Action / Preview Area */}
+          <div className="w-full md:w-1/3 bg-slate-50/80 p-6 md:p-8 flex flex-col justify-center items-center relative overflow-hidden">
+             {/* Decorative Background Elements */}
+             <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-purple-200 to-pink-200 opacity-20 blur-3xl rounded-full -mr-20 -mt-20"></div>
+             <div className="absolute bottom-0 left-0 w-48 h-48 bg-gradient-to-tr from-yellow-200 to-orange-200 opacity-20 blur-3xl rounded-full -ml-10 -mb-10"></div>
+
+             <div className="relative z-10 w-full max-w-sm">
+                
+                {/* Mobile Preview Box */}
+                <div className="bg-white rounded-3xl shadow-xl border border-slate-100 p-4 mb-8 transform transition-transform hover:scale-[1.02] duration-300">
+                   <div className="flex items-center gap-3 mb-4 border-b border-slate-50 pb-3">
+                      <div className="w-8 h-8 rounded-full bg-slate-200 animate-pulse"></div>
+                      <div className="space-y-1">
+                         <div className="w-20 h-2 rounded bg-slate-200 animate-pulse"></div>
+                         <div className="w-12 h-1.5 rounded bg-slate-100 animate-pulse"></div>
+                      </div>
+                   </div>
+                   <div className="space-y-2">
+                      {text ? (
+                        <div className="text-sm text-slate-800 whitespace-pre-line leading-snug break-words font-medium">
+                           {text.length > 150 ? text.substring(0, 150) + '...' : text}
+                        </div>
+                      ) : (
+                        <div className="space-y-2 opacity-30">
+                           <div className="w-full h-2 rounded bg-slate-200"></div>
+                           <div className="w-5/6 h-2 rounded bg-slate-200"></div>
+                           <div className="w-4/6 h-2 rounded bg-slate-200"></div>
+                        </div>
+                      )}
+                      {text.length > 150 && <span className="text-xs text-slate-400">...more</span>}
+                   </div>
+                </div>
+
+                <button
+                  onClick={handleConvertAndCopy}
+                  disabled={!text}
+                  className={`w-full py-4 rounded-xl font-black text-lg shadow-lg shadow-[#da3f0b20] transition-all transform active:scale-95 flex items-center justify-center gap-2
+                    ${copied 
+                      ? 'bg-[#16a34a] text-white ring-4 ring-[#16a34a20]' 
+                      : 'bg-gradient-to-r from-[#da3f0b] to-[#b53409] text-white hover:shadow-xl hover:-translate-y-1 disabled:opacity-50 disabled:cursor-not-allowed'
+                    }`}
+                >
+                  {copied ? (
+                    <>
+                      <i className="fas fa-check"></i> Copied!
+                    </>
+                  ) : (
+                    <>
+                      <i className="fas fa-magic"></i> Convert & Copy
+                    </>
+                  )}
+                </button>
+
+                <p className="text-center text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-4">
+                   Ready to paste into Instagram
+                </p>
+
+             </div>
+          </div>
+
+        </div>
+      );
+    };
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+    </script>
+    <section class="bg-white py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="prose prose-lg max-w-none prose-h2:text-gray-800 prose-p:text-gray-700">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">Why Do Instagram Captions Lose Line Breaks?</h2>
+                <p class="mb-6 leading-relaxed">
+                    It's a frustrating common problem: you type out a beautiful, easy-to-read caption in your notes app, paste it into Instagram, and when you hit post, it turns into a giant, unreadable wall of text. Instagram's algorithm automatically strips out "empty" whitespace at the end of lines to save data. Our <strong>Instagram Caption Line Break Generator</strong> solves this by inserting invisible "Zero Width Space" characters or formatting the text specifically so Instagram recognizes the breaks as legitimate content.
+                </p>
+                
+                <h2 class="text-2xl font-bold mt-8 mb-4">How to Add Spaces to Instagram Captions (The Easy Way)</h2>
+                <p class="mb-6 leading-relaxed">
+                    Gone are the days of using ugly periods, dashes, or emojis just to create space between paragraphs. With this tool, you can create clean, professional-looking "white space" that makes your content more readable and engaging.
+                </p>
+                <ol class="list-decimal pl-6 mb-6 space-y-2 text-gray-700">
+                    <li>Type or paste your caption into the text box above.</li>
+                    <li>Hit "Enter" wherever you want a line break, just like a normal document.</li>
+                    <li>Leave empty lines if you want larger gaps between paragraphs.</li>
+                    <li>Click the <strong>Convert & Copy</strong> button.</li>
+                    <li>Open Instagram and paste directly into your caption or bio.</li>
+                </ol>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Fixing Instagram Bio Formatting</h2>
+                <p class="mb-6 leading-relaxed">
+                    Your bio is your digital business card, but you only get 150 characters. Using standard line breaks often fails in bios too. This <strong>Instagram whitespace generator</strong> works perfectly for bios, allowing you to list your skills, location, and links on separate lines without using valuable character count on bulky symbols.
+                </p>
+                
+                <p class="bg-slate-50 p-4 rounded-lg border-l-4 border-[#da3f0b] text-gray-700">
+                    <strong>Character Count Guide:</strong> Instagram captions are limited to 2,200 characters and 30 hashtags. Our tool tracks both in real-time (look for the counters at the bottom right of the text area) so you never have to guess if your post is too long.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-center text-gray-900 mb-8">Instagram Formatting FAQs</h2>
+            <div class="space-y-4">
+                
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-primary">
+                        <span>What is the invisible character for Instagram?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">
+                            The "magic" space is often a specific Unicode character like the Braille Pattern Blank (U+2800) or a Zero Width Space. These characters act like letters to the computer (preventing the line from collapsing) but appear empty to the human eye. Our tool automatically inserts these for you.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-primary">
+                        <span>Does this work for TikTok and Facebook?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">
+                            Yes! While this tool is optimized for Instagram's aggressive formatting stripping, the clean text it generates works perfectly on TikTok descriptions, Facebook posts, and even LinkedIn bios.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-primary">
+                        <span>Is this tool free?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">
+                            100%. We built this Instagram Caption Spacer to help creators focus on content, not fighting with formatting bugs. There are no limits and no sign-ups required.
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <div id="footer"></div>
+
+    <script>
+    function initializeHeaderScripts() {
+        const header = document.getElementById('header');
+        if (header) {
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 10) {
+                    header.classList.add('scrolled-effect');
+                } else {
+                    header.classList.remove('scrolled-effect');
+                }
+            });
+        }
+    }
+    
+    function initializeFooterScripts() {
+        const yearSpan = document.getElementById('current-year');
+        if(yearSpan) {
+            yearSpan.textContent = new Date().getFullYear();
+        }
+    }
+
+    async function loadComponent(url, elementId, callback) {
+        try {
+            const response = await fetch(url);
+            if (!response.ok) throw new Error('Status: ' + response.status);
+            const text = await response.text();
+            const element = document.getElementById(elementId);
+            if (element) {
+                element.innerHTML = text;
+                if (callback) callback();
+            }
+        } catch (error) {
+            console.error('Error loading component:', error);
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        loadComponent('/components/navbar.html', 'navbar', initializeHeaderScripts);
+        loadComponent('/components/footer.html', 'footer', initializeFooterScripts);
+        
+        // FAQ Accordion Logic
+        const faqToggles = document.querySelectorAll('[data-faq-toggle]');
+        faqToggles.forEach(button => {
+            button.addEventListener('click', () => {
+                const answer = button.nextElementSibling;
+                const icon = button.querySelector('.faq-icon');
+                const isOpening = !answer.style.maxHeight;
+
+                faqToggles.forEach(other => {
+                    if (other !== button) {
+                        other.nextElementSibling.style.maxHeight = null;
+                        other.querySelector('.faq-icon').classList.remove('rotate-90');
+                        other.querySelector('.faq-icon').classList.add('-rotate-90');
+                    }
+                });
+
+                if (isOpening) {
+                    answer.style.maxHeight = answer.scrollHeight + "px";
+                    icon.classList.remove('-rotate-90');
+                    icon.classList.add('rotate-90');
+                } else {
+                    answer.style.maxHeight = null;
+                    icon.classList.remove('rotate-90');
+                    icon.classList.add('-rotate-90');
+                }
+            });
+        });
+    });
+    </script>
+</body>
+</html>
