@@ -1,367 +1,745 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>QR Code Generator Pro</title>
-  
-  <!-- Libraries -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://unpkg.com/qr-code-styling@1.6.0/lib/qr-code-styling.js"></script>
-  <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
-  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
-  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <style>
-    /* --- General & Color Variables --- */
-    :root {
-      --primary-color: #da3f0b;
-      --primary-color-hover: #c3370a;
-      --background-color: #f9fafb;
-      /* gray-50 */
-      --card-background: #ffffff;
-      --text-dark: #1f2937;
-      /* gray-800 */
-      --text-medium: #6b7280;
-      /* gray-500 */
-      --text-light: #ffffff;
-      --border-color: #d1d5db;
-      /* gray-300 */
-      --border-color-hover: #9ca3af;
-      /* gray-400 */
-    }
+    <meta name="title" content="Crypto Profit & Loss Calculator – Calculate ROI & Exit Strategy | SimpliConvert">
+    <meta name="description" content="Calculate your potential crypto profits, losses, and ROI accurately. Factor in trading fees and define your exit strategy with our free Bitcoin and Altcoin profit calculator.">
+    <meta name="keywords" content="Crypto profit calculator, Bitcoin ROI calculator, crypto exit strategy tool, calculate crypto trading fees, Ethereum profit calculator, cryptocurrency investment return, stop loss calculator, crypto gains tax estimator">
+    <meta name="author" content="SimpliConvert">
+    <meta name="robots" content="index, follow">
 
-    body {
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
-      background-color: var(--background-color);
-      color: var(--text-dark);
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://simpliconvert.com/crypto_profit_calculator/">
+    <meta property="og:title" content="Crypto Profit & Loss Calculator – Plan Your Trades">
+    <meta property="og:description" content="Stop guessing your gains. Accurately calculate crypto profit, loss, and fees for Bitcoin, Ethereum, and altcoin trades.">
+    <meta property="og:image" content="https://simpliconvert.com/images/crypto-profit-calculator-og.jpg">
+
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://simpliconvert.com/crypto_profit_calculator/">
+    <meta property="twitter:title" content="Crypto Profit & Loss Calculator – Calculate ROI & Fees">
+    <meta property="twitter:description" content="Free tool to calculate crypto P&L, including exchange fees. Perfect for day traders and long-term holders.">
+    <meta property="twitter:image" content="https://simpliconvert.com/images/crypto-profit-calculator-og.jpg">
+
+    <link rel="canonical" href="https://simpliconvert.com/crypto_profit_calculator/">
+    <title>Crypto Profit & Loss Calculator – Calculate ROI & Exit Strategy | SimpliConvert</title>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Crypto Profit & Loss Calculator",
+      "url": "https://simpliconvert.com/crypto_profit_calculator/",
+      "description": "A free online tool for cryptocurrency traders to calculate profit, loss, return on investment (ROI), and break-even prices, factoring in exchange trading fees.",
+      "applicationCategory": "FinanceApplication",
+      "operatingSystem": "Web Browser",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "SimpliConvert",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://simpliconvert.com/logo.png"
+        }
+      }
     }
-  </style>
+    </script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #da3f0b;
+            --primary-hover: #b53409;
+            --primary-light: #fff5f2;
+            --bg: #f8fafc;
+            --text-dark: #0f172a;
+            --success: #16a34a;
+            --danger: #dc2626;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text-dark);
+        }
+
+        .hero-card {
+            background: white;
+            border: 1px solid #f1f5f9;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background-color: var(--primary);
+        }
+
+        /* Custom Range Slider */
+        input[type=range] {
+            height: 6px;
+            -webkit-appearance: none;
+            width: 100%;
+            background: #e2e8f0;
+            border-radius: 8px;
+            outline: none;
+        }
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: var(--primary);
+            cursor: pointer;
+            border: 2px solid white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: all 0.1s ease;
+        }
+        input[type=range]::-webkit-slider-thumb:hover {
+            transform: scale(1.1);
+            background: var(--primary-hover);
+        }
+
+        /* Tooltip styling */
+        .tooltip-container { position: relative; display: inline-block; }
+        .tooltip-text {
+            visibility: hidden; width: 220px; background-color: #1e293b; color: #fff;
+            text-align: center; border-radius: 8px; padding: 10px; position: absolute;
+            z-index: 50; bottom: 125%; left: 50%; margin-left: -110px; opacity: 0;
+            transition: opacity 0.2s; font-size: 0.75rem; font-weight: 400;
+            pointer-events: none; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+        .tooltip-container:hover .tooltip-text { visibility: visible; opacity: 1; }
+        .tooltip-text::after {
+            content: ""; position: absolute; top: 100%; left: 50%; margin-left: -5px;
+            border-width: 5px; border-style: solid; border-color: #1e293b transparent transparent transparent;
+        }
+
+        .animate-fade { animation: fadeIn 0.3s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Custom scrollbar for dropdowns */
+        select::-webkit-scrollbar { width: 8px; }
+        select::-webkit-scrollbar-thumb { background-color: #e2e8f0; border-radius: 4px; }
+    </style>
 </head>
 
-<body class="bg-gray-50">
-  <div id="root"></div>
+<body class="bg-gray-50 min-h-screen flex flex-col">
+    <div id="navbar"></div>
 
-  <script type="text/babel">
-    const { useState, useEffect, useRef } = React;
-
-    // --- SVG Icon Components ---
-    const UploadIcon = () => (
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        className="h-10 w-10 text-[#da3f0b]"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke="currentColor"
-        strokeWidth={2}
-      >
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"
-        />
-      </svg>
-    );
-
-    const DownloadIcon = () => (
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        className="h-5 w-5 mr-2"
-        viewBox="0 0 20 20"
-        fill="currentColor"
-      >
-        <path
-          fillRule="evenodd"
-          d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z"
-          clipRule="evenodd"
-        />
-      </svg>
-    );
-
-    // --- Control Panel Component ---
-    const ControlInput = ({ label, children }) => (
-        <div className="mb-6">
-            <label className="block text-sm font-bold text-gray-700 mb-2">{label}</label>
-            {children}
+    <section class="hero-white text-black py-2 md:py-10">
+        <div class="container mx-auto px-4 text-center">
+            <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-2">Crypto Profit & Loss Calculator</h1>
+            <p class="text-lg md:text-xl max-w-3x1 mx-auto mb-2">
+                Analyze your trades instantly. Calculate potential profits, ROI, and break-even points for Bitcoin, Ethereum, and altcoins while accounting for exchange fees.
+            </p>
         </div>
-    );
-    
-    const ControlPanel = ({
-        text,
-        dotColor,
-        backgroundColor,
-        dotType,
-        eyeType,
-        errorCorrectionLevel,
-        onTextChange,
-        onLogoChange,
-        onDotColorChange,
-        onBackgroundColorChange,
-        onDotTypeChange,
-        onEyeTypeChange,
-        onErrorCorrectionLevelChange,
-        onDownloadPNG,
-        onDownloadSVG,
-    }) => {
-        const fileInputRef = React.useRef(null);
+    </section>
 
-        return (
-            <div className="p-4">
-            <h2 className="text-2xl font-bold text-gray-800 mb-6 border-b pb-4">Customize QR Code</h2>
+    <div id="root" class="w-full max-w-6xl mx-auto p-4 sm:p-6"></div>
 
-            <ControlInput label="Text or URL">
-                <textarea
-                value={text}
-                onChange={(e) => onTextChange(e.target.value)}
-                className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#da3f0b]/40 focus:border-[#da3f0b] transition"
-                rows={3}
-                placeholder="Enter URL or text here..."
-                />
-            </ControlInput>
+    <script type="text/babel">
+    const { useState, useEffect, useMemo } = React;
 
-            <ControlInput label="Upload Logo">
-                <div 
-                    className="w-full p-8 border-4 border-dashed border-gray-300 rounded-xl cursor-pointer transition-all duration-300 text-center flex flex-col items-center justify-center bg-gray-50 hover:border-[#da3f0b] hover:bg-orange-50"
-                    onClick={() => fileInputRef.current?.click()}
-                >
-                    <UploadIcon />
-                    <p className="mt-4 text-sm font-semibold text-gray-600">Click to upload logo</p>
-                    <p className="text-xs text-gray-500">PNG, JPG, SVG</p>
-                    <input
-                        type="file"
-                        ref={fileInputRef}
-                        onChange={onLogoChange}
-                        accept="image/png, image/jpeg, image/svg+xml"
-                        className="hidden"
-                    />
-                </div>
-            </ControlInput>
+    const currencies = [
+      { code: 'USD', symbol: '$', locale: 'en-US' },
+      { code: 'EUR', symbol: '€', locale: 'de-DE' },
+      { code: 'GBP', symbol: '£', locale: 'en-GB' },
+      { code: 'JPY', symbol: '¥', locale: 'ja-JP' },
+      { code: 'AUD', symbol: 'A$', locale: 'en-AU' },
+      { code: 'CAD', symbol: 'C$', locale: 'en-CA' },
+      { code: 'INR', symbol: '₹', locale: 'en-IN' },
+      { code: 'PKR', symbol: 'Rs', locale: 'en-PK' }
+    ];
 
-            <div className="grid grid-cols-2 gap-4">
-                <ControlInput label="Dot Color">
-                <div className="relative">
-                    <input
-                    type="color"
-                    value={dotColor}
-                    onChange={(e) => onDotColorChange(e.target.value)}
-                    className="w-full h-12 p-1 border border-gray-300 rounded-lg cursor-pointer"
-                    />
-                </div>
-                </ControlInput>
-                <ControlInput label="Background Color">
-                <div className="relative">
-                    <input
-                    type="color"
-                    value={backgroundColor}
-                    onChange={(e) => onBackgroundColorChange(e.target.value)}
-                    className="w-full h-12 p-1 border border-gray-300 rounded-lg cursor-pointer"
-                    />
-                </div>
-                </ControlInput>
-            </div>
-
-            <ControlInput label="Dot Style">
-                <select
-                value={dotType}
-                onChange={(e) => onDotTypeChange(e.target.value)}
-                className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#da3f0b]/40 focus:border-[#da3f0b] transition"
-                >
-                <option value="square">Square</option>
-                <option value="rounded">Rounded</option>
-                <option value="extra-rounded">Extra Rounded</option>
-                </select>
-            </ControlInput>
-
-            <ControlInput label="Corner 'Eye' Style">
-                <select
-                value={eyeType}
-                onChange={(e) => onEyeTypeChange(e.target.value)}
-                className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#da3f0b]/40 focus:border-[#da3f0b] transition"
-                >
-                <option value="square">Square</option>
-                <option value="extra-rounded">Rounded</option>
-                </select>
-            </ControlInput>
-            
-            <ControlInput label="Error Correction Level">
-                <select
-                value={errorCorrectionLevel}
-                onChange={(e) => onErrorCorrectionLevelChange(e.target.value)}
-                className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#da3f0b]/40 focus:border-[#da3f0b] transition"
-                >
-                <option value="L">Low (recovers ~7% of data)</option>
-                <option value="M">Medium (recovers ~15% of data)</option>
-                <option value="Q">Quartile (recovers ~25% of data)</option>
-                <option value="H">High (recovers ~30% of data)</option>
-                </select>
-            </ControlInput>
-
-            <div className="mt-8 pt-6 border-t">
-                <h3 className="text-lg font-bold text-gray-700 mb-4">Download</h3>
-                <div className="flex flex-col sm:flex-row gap-4">
-                    <button
-                        onClick={onDownloadPNG}
-                        className="w-full flex items-center justify-center bg-[#da3f0b] hover:bg-[#c3370a] text-white font-bold py-3 px-6 rounded-lg shadow-md hover:scale-105 transition-all disabled:bg-gray-400 disabled:cursor-not-allowed disabled:opacity-70"
-                        disabled={!text}
-                    >
-                        <DownloadIcon />
-                        Download PNG
-                    </button>
-                    <button
-                        onClick={onDownloadSVG}
-                        className="w-full flex items-center justify-center bg-transparent text-gray-600 border-2 border-gray-300 hover:bg-gray-100 hover:border-gray-400 font-semibold py-3 px-6 rounded-lg transition-all"
-                        disabled={!text}
-                    >
-                        <DownloadIcon />
-                        Download SVG
-                    </button>
-                </div>
-            </div>
-            </div>
-        );
+    const presets = {
+      quickFlip: { label: 'Quick Flip (5%)', multiplier: 1.05 },
+      swingTrade: { label: 'Swing (20%)', multiplier: 1.20 },
+      doubler: { label: '2x Moonshot', multiplier: 2.0 },
+      stopLoss: { label: 'Stop Loss (-5%)', multiplier: 0.95 }
     };
 
-    // --- Main App Component ---
+    const Tooltip = ({ text }) => (
+      <span className="tooltip-container ml-2">
+        <i className="fas fa-info-circle text-slate-300 hover:text-[#da3f0b] cursor-help text-xs transition-colors"></i>
+        <span className="tooltip-text">{text}</span>
+      </span>
+    );
+
+    const NumberInput = ({ value, onChange, prefix, suffix, label, tooltip }) => (
+      <div className="mb-5">
+        <div className="flex items-center text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">
+          <label>{label}</label>
+          {tooltip && <Tooltip text={tooltip} />}
+        </div>
+        <div className="relative rounded-xl shadow-sm">
+          {prefix && (
+            <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+              <span className="text-slate-400 font-semibold">{prefix}</span>
+            </div>
+          )}
+          <input
+            type="number"
+            className={`block w-full rounded-xl border-slate-200 border py-3 focus:ring-4 focus:ring-[#da3f0b20] focus:border-[#da3f0b] sm:text-sm font-semibold text-slate-800 transition-all ${prefix ? 'pl-9' : 'pl-4'} ${suffix ? 'pr-12' : 'pr-4'} bg-white`}
+            value={value}
+            onChange={(e) => onChange(e.target.value)}
+            onFocus={(e) => e.target.select()}
+            placeholder="0.00"
+          />
+          {suffix && (
+            <div className="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none">
+              <span className="text-slate-400 font-semibold">{suffix}</span>
+            </div>
+          )}
+        </div>
+      </div>
+    );
+
+    const StatCard = ({ label, value, subtext, type = 'neutral', isMain = false }) => {
+      let colorClass = 'text-slate-900';
+      if (type === 'profit') colorClass = 'text-[#16a34a]';
+      if (type === 'loss') colorClass = 'text-[#dc2626]';
+
+      return (
+        <div className={`${isMain ? 'hero-card p-8' : 'bg-white p-5 rounded-2xl border border-slate-100 shadow-sm'} flex flex-col items-center text-center`}>
+          {isMain ? (
+            <>
+              <p className="text-xs font-black text-[#da3f0b] uppercase tracking-[0.2em] mb-4">{label}</p>
+              <div className="flex items-center justify-center">
+                <span className={`text-5xl md:text-6xl font-black tracking-tighter leading-none ${colorClass}`}>{value}</span>
+              </div>
+              {subtext && <p className="text-sm text-slate-400 font-medium mt-4">{subtext}</p>}
+            </>
+          ) : (
+            <div className="w-full">
+              <div className="text-[10px] font-black text-slate-400 uppercase tracking-widest flex items-center justify-center mb-1">
+                {label}
+              </div>
+              <p className={`text-xl font-extrabold ${colorClass}`}>{value}</p>
+              {subtext && <p className="text-[10px] text-slate-400 font-medium mt-1 uppercase tracking-tight">{subtext}</p>}
+            </div>
+          )}
+        </div>
+      );
+    };
+
     const App = () => {
-        const [text, setText] = useState('https://gemini.google.com/');
-        const [logo, setLogo] = useState(undefined);
-        const [dotColor, setDotColor] = useState('#1f2937');
-        const [backgroundColor, setBackgroundColor] = useState('#ffffff');
-        const [dotType, setDotType] = useState('rounded');
-        const [eyeType, setEyeType] = useState('extra-rounded');
-        const [errorCorrectionLevel, setErrorCorrectionLevel] = useState('Q');
+      const [currency, setCurrency] = useState(currencies[0]);
+      const [investment, setInvestment] = useState(1000);
+      const [buyPrice, setBuyPrice] = useState(50000);
+      const [sellPrice, setSellPrice] = useState(55000);
+      const [buyFeePercent, setBuyFeePercent] = useState(0.1);
+      const [sellFeePercent, setSellFeePercent] = useState(0.1);
 
-        const qrRef = useRef(null);
-        const qrCodeInstance = useRef(null);
+      const calculations = useMemo(() => {
+        const investVal = parseFloat(investment) || 0;
+        const buyVal = parseFloat(buyPrice) || 0;
+        const sellVal = parseFloat(sellPrice) || 0;
+        const buyFeeVal = parseFloat(buyFeePercent) || 0;
+        const sellFeeVal = parseFloat(sellFeePercent) || 0;
 
-        useEffect(() => {
-            if (qrRef.current) {
-            qrCodeInstance.current = new QRCodeStyling({
-                width: 500,
-                height: 500,
-                data: text,
-                image: logo,
-                dotsOptions: {
-                color: dotColor,
-                type: dotType,
-                },
-                backgroundOptions: {
-                color: backgroundColor,
-                },
-                cornersSquareOptions: {
-                type: eyeType,
-                color: dotColor,
-                },
-                cornersDotOptions: {
-                type: 'dot', // Keep inner dots consistent
-                color: dotColor,
-                },
-                qrOptions: {
-                    errorCorrectionLevel: errorCorrectionLevel,
-                },
-                imageOptions: {
-                crossOrigin: 'anonymous',
-                margin: 10,
-                },
-            });
-            // Clear previous QR code before appending a new one
-            qrRef.current.innerHTML = '';
-            qrCodeInstance.current.append(qrRef.current);
-            }
-        }, []); // Run only once on mount to initialize
+        if (buyVal === 0) return { profit: 0, roi: 0, totalFees: 0, netReturn: 0, breakEven: 0 };
 
-        useEffect(() => {
-            if (qrCodeInstance.current) {
-            qrCodeInstance.current.update({
-                data: text,
-                image: logo,
-                dotsOptions: {
-                color: dotColor,
-                type: dotType,
-                },
-                backgroundOptions: {
-                color: backgroundColor,
-                },
-                cornersSquareOptions: {
-                    type: eyeType,
-                    color: dotColor,
-                },
-                cornersDotOptions: {
-                    type: 'dot',
-                    color: dotColor,
-                },
-                qrOptions: {
-                    errorCorrectionLevel: errorCorrectionLevel,
-                },
-            });
-            }
-        }, [text, logo, dotColor, backgroundColor, dotType, eyeType, errorCorrectionLevel]);
+        // Logic: 
+        // 1. Calculate coins bought. Usually fees are deducted from the investment amount or added to cost.
+        // Simple approach: Investment is the total cash out of pocket. 
+        // Fee is taken from that cash, remainder buys coins.
+        const entryFeeAmount = investVal * (buyFeeVal / 100);
+        const netInvestmentForCoins = investVal - entryFeeAmount;
+        const coins = netInvestmentForCoins / buyVal;
 
-        const handleLogoChange = (e) => {
-            const file = e.target.files?.[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onloadend = () => {
-                    setLogo(reader.result);
-                };
-                reader.readAsDataURL(file);
-            } else {
-                setLogo(undefined);
-            }
-        };
+        // 2. Calculate Gross Sale
+        const grossSaleVal = coins * sellVal;
         
-        const handleDownload = (extension) => {
-            if (qrCodeInstance.current) {
-                qrCodeInstance.current.download({
-                    name: 'qr-code',
-                    extension,
-                });
-            }
-        };
+        // 3. Exit Fees
+        const exitFeeAmount = grossSaleVal * (sellFeeVal / 100);
+        
+        // 4. Net Return (Cash in pocket after sale)
+        const netReturn = grossSaleVal - exitFeeAmount;
+        
+        // 5. Profit/Loss
+        const totalProfit = netReturn - investVal;
+        const totalFees = entryFeeAmount + exitFeeAmount;
+        
+        // 6. ROI
+        const roi = investVal > 0 ? (totalProfit / investVal) * 100 : 0;
 
-        return (
-            <div className="min-h-screen w-full flex items-center justify-center p-4 sm:p-6 lg:p-8">
-            <div className="w-full max-w-7xl mx-auto bg-white rounded-xl shadow-lg p-4 sm:p-8">
-                <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
-                <div className="lg:col-span-2">
-                    <ControlPanel
-                    text={text}
-                    dotColor={dotColor}
-                    backgroundColor={backgroundColor}
-                    dotType={dotType}
-                    eyeType={eyeType}
-                    errorCorrectionLevel={errorCorrectionLevel}
-                    onTextChange={setText}
-                    onLogoChange={handleLogoChange}
-                    onDotColorChange={setDotColor}
-                    onBackgroundColorChange={setBackgroundColor}
-                    onDotTypeChange={setDotType}
-                    onEyeTypeChange={setEyeType}
-                    onErrorCorrectionLevelChange={setErrorCorrectionLevel}
-                    onDownloadPNG={() => handleDownload('png')}
-                    onDownloadSVG={() => handleDownload('svg')}
+        // 7. Break Even Price
+        // Need (coins * Price) * (1 - sellFee) = Investment
+        // Price = Investment / (coins * (1 - sellFee))
+        const breakEvenPrice = coins > 0 ? investVal / (coins * (1 - (sellFeeVal/100))) : 0;
+
+        return {
+          coins,
+          entryFeeAmount,
+          exitFeeAmount,
+          totalFees,
+          netReturn,
+          profit: totalProfit,
+          roi,
+          breakEven: breakEvenPrice
+        };
+      }, [investment, buyPrice, sellPrice, buyFeePercent, sellFeePercent]);
+
+      const formatMoney = (amount) => {
+        return new Intl.NumberFormat(currency.locale, {
+          style: 'currency',
+          currency: currency.code,
+          maximumFractionDigits: 2
+        }).format(amount);
+      };
+
+      const formatCrypto = (amount) => {
+        return new Intl.NumberFormat('en-US', {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 6
+        }).format(amount);
+      };
+
+      const applyPreset = (multiplier) => {
+        if(buyPrice) {
+          setSellPrice((parseFloat(buyPrice) * multiplier).toFixed(2));
+        }
+      };
+
+      return (
+        <div className="bg-white rounded-[2rem] shadow-2xl overflow-hidden border border-slate-100">
+          <header className="bg-slate-50/50 border-b border-slate-100 p-6 md:p-8 flex flex-col md:flex-row justify-between items-center gap-6">
+            <div className="text-center md:text-left">
+              <h2 className="text-2xl font-black text-slate-800 tracking-tight flex items-center justify-center md:justify-start gap-3">
+                <span className="bg-[#da3f0b] text-white p-2 rounded-xl text-lg shadow-lg shadow-[#da3f0b30]">
+                  <i className="fas fa-chart-line"></i>
+                </span>
+                Crypto investment return calculator
+              </h2>
+            </div>
+            
+            <div className="relative group min-w-[140px]">
+              <select 
+                value={currency.code}
+                onChange={(e) => setCurrency(currencies.find(c => c.code === e.target.value))}
+                className="appearance-none w-full bg-white border border-slate-200 text-slate-700 py-2.5 pl-4 pr-10 rounded-xl text-xs font-bold focus:outline-none focus:ring-4 focus:ring-[#da3f0b15] focus:border-[#da3f0b] shadow-sm cursor-pointer hover:border-[#da3f0b40]"
+              >
+                {currencies.map(c => (
+                  <option key={c.code} value={c.code}>{c.code} ({c.symbol})</option>
+                ))}
+              </select>
+              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-slate-400">
+                <i className="fas fa-chevron-down text-[10px]"></i>
+              </div>
+            </div>
+          </header>
+
+          <main className="flex flex-col lg:flex-row">
+            {/* Input Panel */}
+            <div className="lg:w-[50%] p-6 md:p-10 lg:p-12 border-r border-slate-100">
+              <div className="space-y-6">
+                
+                {/* Investment & Buy */}
+                <div className="bg-slate-50 p-6 rounded-2xl border border-slate-100">
+                  <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest mb-6"><i className="fas fa-wallet mr-2"></i>Entry Position</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <NumberInput 
+                      label="Invested Amount" 
+                      value={investment} 
+                      onChange={setInvestment} 
+                      prefix={currency.symbol}
+                      tooltip="Total capital you are putting into this trade."
                     />
+                    <NumberInput 
+                      label="Buy Price" 
+                      value={buyPrice} 
+                      onChange={setBuyPrice} 
+                      prefix={currency.symbol}
+                      tooltip="The price of one coin at the time of purchase."
+                    />
+                  </div>
+                  <div className="flex justify-between items-center px-2 mt-2">
+                     <span className="text-xs font-bold text-slate-400">Coins Acquired:</span>
+                     <span className="text-sm font-black text-slate-700">{formatCrypto(calculations.coins)} Units</span>
+                  </div>
                 </div>
-                <div className="lg:col-span-3 flex items-center justify-center bg-gray-100 rounded-lg p-8 min-h-[300px] lg:min-h-0">
-                    <div ref={qrRef} className="w-full h-full max-w-[500px] max-h-[500px] aspect-square" />
+
+                {/* Sell Target */}
+                <div className="bg-[#da3f0b08] p-6 rounded-2xl border border-[#da3f0b15]">
+                   <div className="flex justify-between items-center mb-6">
+                      <h3 className="text-xs font-black text-[#da3f0b] uppercase tracking-widest"><i className="fas fa-bullseye mr-2"></i>Exit Strategy</h3>
+                      <div className="flex gap-2">
+                         {Object.values(presets).map((p, idx) => (
+                           <button 
+                             key={idx} 
+                             onClick={() => applyPreset(p.multiplier)}
+                             className="text-[10px] bg-white border border-[#da3f0b20] text-[#da3f0b] px-2 py-1 rounded-md font-bold hover:bg-[#da3f0b] hover:text-white transition-all"
+                           >
+                             {p.label}
+                           </button>
+                         ))}
+                      </div>
+                   </div>
+                   
+                   <NumberInput 
+                      label="Sell Price" 
+                      value={sellPrice} 
+                      onChange={setSellPrice} 
+                      prefix={currency.symbol}
+                      tooltip="Target price or actual price at which you sell."
+                   />
                 </div>
+
+                {/* Fees */}
+                <div className="p-2">
+                   <button 
+                     onClick={() => document.getElementById('fee-section').classList.toggle('hidden')}
+                     className="text-xs font-bold text-slate-400 flex items-center gap-2 hover:text-[#da3f0b] transition-colors"
+                   >
+                     <i className="fas fa-sliders-h"></i> Exchange Fees (Advanced)
+                   </button>
+                   <div id="fee-section" className="hidden grid grid-cols-2 gap-4 mt-4 animate-fade">
+                      <NumberInput 
+                        label="Buy Fee" 
+                        value={buyFeePercent} 
+                        onChange={setBuyFeePercent} 
+                        suffix="%"
+                      />
+                      <NumberInput 
+                        label="Sell Fee" 
+                        value={sellFeePercent} 
+                        onChange={setSellFeePercent} 
+                        suffix="%"
+                      />
+                   </div>
                 </div>
+
+              </div>
             </div>
+
+            {/* Results Panel */}
+            <div className="lg:w-[50%] bg-slate-50/50 p-6 md:p-10 lg:p-12 flex flex-col justify-center">
+               <div className="space-y-6">
+                  
+                  <StatCard 
+                    isMain={true}
+                    label="Net Profit / Loss"
+                    value={formatMoney(calculations.profit)}
+                    type={calculations.profit >= 0 ? 'profit' : 'loss'}
+                    subtext={`Return on Investment: ${calculations.roi.toFixed(2)}%`}
+                  />
+
+                  <div className="grid grid-cols-2 gap-4">
+                     <StatCard 
+                       label="Total Fees" 
+                       value={formatMoney(calculations.totalFees)}
+                       subtext="Exchange Costs"
+                     />
+                     <StatCard 
+                       label="Total Exit Value" 
+                       value={formatMoney(calculations.netReturn)}
+                       subtext="Cash in Hand"
+                     />
+                  </div>
+
+                  {/* Break Even Indicator */}
+                  <div className="bg-white rounded-xl p-6 border border-slate-100 shadow-sm mt-4">
+                     <div className="flex justify-between items-center mb-2">
+                        <span className="text-xs font-bold text-slate-400 uppercase tracking-widest">Break-Even Price</span>
+                        <span className="text-lg font-black text-slate-700">{formatMoney(calculations.breakEven)}</span>
+                     </div>
+                     <div className="w-full bg-slate-100 rounded-full h-2 mb-2 overflow-hidden">
+                        {/* Visual marker relative to Buy Price */}
+                        <div 
+                           className="bg-slate-400 h-2 rounded-full transition-all duration-500" 
+                           style={{width: '100%'}} // Simplified visual
+                        ></div>
+                     </div>
+                     <p className="text-[10px] text-slate-400">
+                       You need to sell above <strong>{formatMoney(calculations.breakEven)}</strong> to cover your trading fees.
+                     </p>
+                  </div>
+
+                  {/* Visual Gauge */}
+                  <div className="flex text-[10px] font-bold uppercase tracking-widest text-slate-400 justify-between px-2 pt-4">
+                     <span>Buy: {formatMoney(buyPrice)}</span>
+                     <span>Target: {formatMoney(sellPrice)}</span>
+                  </div>
+
+               </div>
             </div>
-        );
+          </main>
+        </div>
+      );
     };
 
-    // --- Mount the App to the DOM ---
-    const rootElement = document.getElementById('root');
-    const root = ReactDOM.createRoot(rootElement);
-    root.render(
-      <React.StrictMode>
-        <App />
-      </React.StrictMode>
-    );
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+    </script>
 
-  </script>
+
+  <section class="bg-white py-12 sm:py-16">
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="prose prose-lg max-w-none prose-h2:text-gray-800 prose-p:text-gray-700">
+
+      <!-- Intro -->
+      <h2 class="text-3xl font-bold text-gray-900 mb-4">Crypto Profit & Loss Calculator – Track Your Gains Instantly</h2>
+      <p class="mb-6 leading-relaxed">
+        Cryptocurrency trading can be exciting, but it’s also risky if you don’t track your numbers carefully. 
+        Our <strong>Crypto Profit & Loss Calculator</strong> is designed to help traders, investors, and even beginners 
+        calculate profits, losses, and ROI with precision. Whether you’re looking for a <em>Bitcoin profit calculator</em>, 
+        an <em>Ethereum ROI calculator</em>, or a tool to <em>calculate crypto gains for tax</em>, this guide will show you 
+        how to use our calculator effectively and improve your trading decisions.
+      </p>
+
+      <!-- Section 1 -->
+      <h2 class="text-2xl font-bold mt-8 mb-4">Why You Need a Crypto Investment Return Calculator</h2>
+      <p class="mb-6 leading-relaxed">
+        Many traders focus only on the buy and sell price, forgetting that exchange fees, taxes, and market volatility 
+        can significantly impact actual profits. A <strong>crypto investment return calculator</strong> helps you measure 
+        the true ROI of your trades. By factoring in fees, you avoid overestimating gains and can plan better exit strategies. 
+        This is especially important for day traders who make frequent trades, as even small fees add up quickly.
+      </p>
+      <p class="mb-6 leading-relaxed">
+        For long-term investors, the calculator provides clarity on whether holding Bitcoin, Ethereum, or altcoins 
+        is outperforming traditional assets like stocks or real estate. It’s not just about numbers—it’s about 
+        making informed financial decisions.
+      </p>
+
+      <!-- Section 2 -->
+      <h2 class="text-2xl font-bold mt-8 mb-4">How to Calculate Crypto Profits and ROI</h2>
+      <p class="mb-6 leading-relaxed">
+        Calculating crypto profits isn’t complicated once you understand the formula. Our <strong>Crypto Profit Calculator</strong> 
+        uses the following method:
+      </p>
+      <ul class="list-disc pl-6 mb-6 space-y-2 text-gray-700">
+        <li><strong>Gross Profit:</strong> (Sell Price – Buy Price) × Quantity</li>
+        <li><strong>Net Profit:</strong> Gross Profit – Exchange Fees</li>
+        <li><strong>ROI:</strong> (Net Profit ÷ Total Investment) × 100</li>
+      </ul>
+      <p class="mb-6 leading-relaxed">
+        This formula ensures you get an accurate percentage return. For example, if you bought 1 BTC at $20,000 and sold it at $25,000, 
+        your gross profit is $5,000. After deducting fees, your net profit might be $4,950. The ROI would then be 24.75%. 
+        This makes our tool a reliable <em>Bitcoin profit calculator</em> and a versatile <em>crypto ROI calculator</em>.
+      </p>
+
+      <!-- Section 3 -->
+      <h2 class="text-2xl font-bold mt-8 mb-4">Understanding the Crypto Exit Strategy Calculator</h2>
+      <p class="mb-6 leading-relaxed">
+        An exit strategy is crucial for every trader. Our <strong>exit strategy calculator for crypto</strong> helps you 
+        determine the best time to sell by showing break-even points, profit targets, and stop-loss levels. 
+        This prevents emotional trading and ensures you stick to your plan.
+      </p>
+      <ul class="list-disc pl-6 mb-6 space-y-2 text-gray-700">
+        <li><strong>Break-Even Point:</strong> The price at which your investment covers costs and fees.</li>
+        <li><strong>Profit Target:</strong> Set a percentage gain (e.g., 20%) and see the exact sell price needed.</li>
+        <li><strong>Stop Loss:</strong> Plan for downside risk by calculating losses if the market drops 5–10%.</li>
+      </ul>
+      <p class="mb-6 leading-relaxed">
+        Whether you are swing trading altcoins or holding Bitcoin for years, this tool ensures you have a clear 
+        strategy instead of relying on guesswork.
+      </p>
+
+      <!-- Section 4 -->
+      <h2 class="text-2xl font-bold mt-8 mb-4">How to Calculate Crypto Gains for Tax Reporting</h2>
+      <p class="mb-6 leading-relaxed">
+        Taxes are one of the most overlooked aspects of crypto trading. In most countries, selling crypto is a taxable event. 
+        Our calculator doubles as a <strong>crypto capital gains calculator</strong>, helping you estimate profits for IRS or 
+        local tax reporting. By entering your buy and sell prices, you can calculate taxable gains and avoid surprises during tax season.
+      </p>
+      <p class="mb-6 leading-relaxed">
+        For example, if you sold Ethereum for a $2,000 profit, that amount may be subject to capital gains tax. 
+        Using our <em>crypto tax calculator tool</em>, you can prepare ahead of time and keep records for compliance. 
+        Always consult a tax professional for official reporting, but this tool gives you a strong starting point.
+      </p>
+
+      <!-- Section 5 -->
+      <h2 class="text-2xl font-bold mt-8 mb-4">Crypto Profit Calculator with Fees</h2>
+      <p class="mb-6 leading-relaxed">
+        Exchange fees can drastically reduce profits. Our <strong>crypto profit calculator with fees</strong> allows you 
+        to input maker/taker fees, withdrawal fees, and even network gas fees. This ensures your calculations reflect 
+        real-world trading conditions. For example, Binance charges 0.1% per trade, while Coinbase may charge 0.5%. 
+        Adjusting these values in the calculator gives you a realistic net profit figure.
+      </p>
+
+      <!-- Section 6 -->
+      <h2 class="text-2xl font-bold mt-8 mb-4">Using the Calculator for Different Cryptocurrencies</h2>
+      <p class="mb-6 leading-relaxed">
+        While Bitcoin and Ethereum are the most popular, our calculator works for all altcoins. Whether you’re trading 
+        Solana, Cardano, or Dogecoin, the formulas remain the same. This makes it a universal <em>crypto portfolio calculator</em> 
+        for tracking multiple assets at once.
+      </p>
+
+      <!-- Section 7 -->
+      <h2 class="text-2xl font-bold mt-8 mb-4">Pro Tips for Maximizing Your Crypto ROI</h2>
+      <ul class="list-disc pl-6 mb-6 space-y-2 text-gray-700">
+        <li>Always factor in fees before calculating profits.</li>
+        <li>Use stop-loss strategies to protect capital.</li>
+        <li>Compare crypto ROI against traditional investments.</li>
+        <li>Keep detailed records for tax reporting.</li>
+        <li>Test different scenarios using the calculator before entering trades.</li>
+      </ul>
+      <p class="mb-6 leading-relaxed">
+        By following these tips, you’ll use the calculator not just as a tool, but as part of a disciplined trading strategy.
+      </p>
+
+      <!-- Section 8 -->
+      <h2 class="text-2xl font-bold mt-8 mb-4">Frequently Asked Questions</h2>
+      <p class="mb-6 leading-relaxed"><strong>Q: Can I use this calculator for tax reporting?</strong><br>
+        Yes, it helps estimate capital gains, but always confirm with a tax professional.</p>
+      <p class="mb-6 leading-relaxed"><strong>Q: Does it work for altcoins?</strong><br>
+        Absolutely. It works for Bitcoin, Ethereum, and all other cryptocurrencies.</p>
+      <p class="mb-6 leading-relaxed"><strong>Q: Is this calculator free?</strong><br>
+        Yes, it’s a free online tool designed for traders and investors.</p>
+
+      <!-- Closing -->
+      <h2 class="text-2xl font-bold mt-8 mb-4">Final Thoughts</h2>
+      <p class="mb-6 leading-relaxed">
+        The <strong>Crypto Profit & Loss Calculator</strong> is more than just a tool—it’s a trading companion. 
+        By using it as a <em>Bitcoin profit calculator</em>, <em>crypto investment return calculator</em>, 
+        <em>exit strategy calculator for crypto</em>, and <em>crypto capital gains calculator</em>, 
+        you cover all aspects of trading and investing. Whether you’re a beginner or an experienced trader, 
+        this calculator ensures your decisions are backed by accurate numbers, helping you maximize ROI and 
+        minimize risk.
+      </
+  
+
+    <section class="bg-gray-50 py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-center text-gray-900 mb-8">Crypto Calculator – Frequently Asked Questions</h2>
+            <div class="space-y-4">
+                
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-primary">
+                        <span>How do I calculate profit on Bitcoin?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">
+                            The basic formula is: <code>(Sell Price - Buy Price) * Quantity of Coins</code>. However, to get your <em>Net Profit</em>, you must subtract trading fees. Our calculator handles this automatically: <code>Net Profit = (Total Sale Value - Exit Fees) - (Initial Investment + Entry Fees)</code>.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-primary">
+                        <span>Does this tool work for Ethereum and Altcoins?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">
+                            Yes. The math for profit and loss is the same regardless of the coin. You can use this for Ethereum (ETH), Solana (SOL), Pepe, or any other token. Simply enter the price per unit in the Buy/Sell fields.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-primary">
+                        <span>Why is my break-even price higher than my buy price?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">
+                            This is due to exchange fees. If you pay a 0.5% fee to buy and a 0.5% fee to sell, the coin price must increase by more than 1% just for you to get your original money back. This calculator shows you that exact price floor.
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <div id="footer"></div>
+
+    <script>
+    function initializeHeaderScripts() {
+        const header = document.getElementById('header');
+        if (header) {
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 10) {
+                    header.classList.add('scrolled-effect');
+                } else {
+                    header.classList.remove('scrolled-effect');
+                }
+            });
+        }
+        // Mobile Menu Logic would go here
+    }
+    
+    function initializeFooterScripts() {
+        const yearSpan = document.getElementById('current-year');
+        if(yearSpan) {
+            yearSpan.textContent = new Date().getFullYear();
+        }
+    }
+
+    async function loadComponent(url, elementId, callback) {
+        try {
+            const response = await fetch(url);
+            if (!response.ok) throw new Error('Status: ' + response.status);
+            const text = await response.text();
+            const element = document.getElementById(elementId);
+            if (element) {
+                element.innerHTML = text;
+                if (callback) callback();
+            }
+        } catch (error) {
+            console.error('Error loading component:', error);
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        loadComponent('/components/navbar.html', 'navbar', initializeHeaderScripts);
+        loadComponent('/components/footer.html', 'footer', initializeFooterScripts);
+        
+        // FAQ Accordion Logic
+        const faqToggles = document.querySelectorAll('[data-faq-toggle]');
+        faqToggles.forEach(button => {
+            button.addEventListener('click', () => {
+                const answer = button.nextElementSibling;
+                const icon = button.querySelector('.faq-icon');
+                const isOpening = !answer.style.maxHeight;
+
+                faqToggles.forEach(other => {
+                    if (other !== button) {
+                        other.nextElementSibling.style.maxHeight = null;
+                        other.querySelector('.faq-icon').classList.remove('rotate-90');
+                        other.querySelector('.faq-icon').classList.add('-rotate-90');
+                    }
+                });
+
+                if (isOpening) {
+                    answer.style.maxHeight = answer.scrollHeight + "px";
+                    icon.classList.remove('-rotate-90');
+                    icon.classList.add('rotate-90');
+                } else {
+                    answer.style.maxHeight = null;
+                    icon.classList.remove('rotate-90');
+                    icon.classList.add('-rotate-90');
+                }
+            });
+        });
+    });
+    </script>
 </body>
-
 </html>
