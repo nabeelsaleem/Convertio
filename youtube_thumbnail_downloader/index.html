@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="title" content="YouTube Thumbnail Downloader (4K & HD) – Save Cover Images | SimpliConvert">
+    <meta name="description" content="Download YouTube thumbnails in 4K, 1080p, and HD instantly. Free YouTube thumbnail grabber to save video cover images. Works for Shorts and videos.">
+    <meta name="keywords" content="YouTube thumbnail downloader, save youtube thumbnail 4k, youtube thumbnail grabber, extract youtube image, youtube video cover downloader, get youtube thumbnail high quality, download youtube shorts thumbnail">
+    <meta name="author" content="SimpliConvert">
+    <meta name="robots" content="index, follow">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://simpliconvert.com/youtube_thumbnail_downloader/">
+    <meta property="og:title" content="YouTube Thumbnail Downloader – Get 4K Images">
+    <meta property="og:description" content="Extract and download high-quality thumbnails from any YouTube video or Short instantly.">
+    <meta property="og:image" content="https://simpliconvert.com/images/youtube-thumbnail-downloader-og.jpg">
+
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://simpliconvert.com/youtube_thumbnail_downloader/">
+    <meta property="twitter:title" content="YouTube Thumbnail Downloader – 4K & HD">
+    <meta property="twitter:description" content="Free tool to grab YouTube video cover images in maximum resolution.">
+    <meta property="twitter:image" content="https://simpliconvert.com/images/youtube-thumbnail-downloader-og.jpg">
+
+    <link rel="canonical" href="https://simpliconvert.com/youtube_thumbnail_downloader/">
+    <title>YouTube Thumbnail Downloader (4K & HD) – Save Cover Images | SimpliConvert</title>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "YouTube Thumbnail Downloader",
+      "url": "https://simpliconvert.com/youtube_thumbnail_downloader/",
+      "description": "A free online tool to extract and download YouTube video thumbnails in 4K, HD, and Standard definition qualities.",
+      "applicationCategory": "MultimediaApplication",
+      "operatingSystem": "Web Browser",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "SimpliConvert",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://simpliconvert.com/logo.png"
+        }
+      }
+    }
+    </script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #da3f0b;
+            --primary-hover: #b53409;
+            --primary-light: #fff5f2;
+            --bg: #f8fafc;
+            --text-dark: #0f172a;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text-dark);
+        }
+
+        .hero-card {
+            background: white;
+            border: 1px solid #f1f5f9;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background-color: var(--primary);
+        }
+
+        .animate-fade { animation: fadeIn 0.3s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Button hover glow effect */
+        .btn-glow:hover {
+            box-shadow: 0 0 15px rgba(218, 63, 11, 0.3);
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 min-h-screen flex flex-col">
+    <div id="navbar"></div>
+
+    <section class="hero-white text-black py-2 md:py-10">
+        <div class="container mx-auto px-4 text-center">
+            <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-2">YouTube Thumbnail Downloader (4K & HD)</h1>
+            <p class="text-lg md:text-xl max-w-3x1 mx-auto mb-2">
+                Instantly extract and save high-quality cover images from any YouTube video. Just paste the link below.
+            </p>
+        </div>
+    </section>
+
+    <div id="root" class="w-full max-w-5xl mx-auto p-4 sm:p-6"></div>
+
+    <script type="text/babel">
+    const { useState, useEffect } = React;
+
+    const App = () => {
+      const [url, setUrl] = useState('');
+      const [videoId, setVideoId] = useState(null);
+      const [error, setError] = useState('');
+
+      const extractVideoId = (inputUrl) => {
+        if (!inputUrl) return null;
+        
+        // Regex handles:
+        // 1. youtube.com/watch?v=VIDEO_ID
+        // 2. youtu.be/VIDEO_ID
+        // 3. youtube.com/shorts/VIDEO_ID
+        const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=|shorts\/)([^#&?]*).*/;
+        const match = inputUrl.match(regExp);
+
+        return (match && match[2].length === 11) ? match[2] : null;
+      };
+
+      useEffect(() => {
+        if (!url) {
+            setVideoId(null);
+            setError('');
+            return;
+        }
+
+        const id = extractVideoId(url);
+        if (id) {
+            setVideoId(id);
+            setError('');
+        } else {
+            setVideoId(null);
+            // Only show error if user has typed a substantial amount to avoid annoying them while pasting
+            if (url.length > 15) {
+                setError('Invalid YouTube URL format');
+            }
+        }
+      }, [url]);
+
+      const downloadImage = async (imageUrl, fileName) => {
+        try {
+            const response = await fetch(imageUrl);
+            const blob = await response.blob();
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = fileName; // 'thumbnail.jpg'
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+        } catch (err) {
+            // Fallback: Open in new tab if fetch fails (due to CORS)
+            window.open(imageUrl, '_blank');
+        }
+      };
+
+      const ThumbnailOption = ({ resolution, label, width, height, isPrimary = false }) => {
+        const imgUrl = `https://img.youtube.com/vi/${videoId}/${resolution}.jpg`;
+        
+        return (
+            <div className={`flex flex-col md:flex-row items-center gap-4 p-4 rounded-xl border ${isPrimary ? 'bg-orange-50 border-orange-200' : 'bg-white border-slate-100'}`}>
+                <div className="w-full md:w-32 aspect-video bg-slate-200 rounded-lg overflow-hidden shrink-0 relative">
+                    <img src={imgUrl} alt={label} className="w-full h-full object-cover" />
+                    <div className="absolute inset-0 bg-black/10"></div>
+                </div>
+                
+                <div className="flex-grow text-center md:text-left">
+                    <h3 className={`font-bold ${isPrimary ? 'text-orange-900' : 'text-slate-700'}`}>{label}</h3>
+                    <p className="text-xs text-slate-500 font-medium">{width}x{height}</p>
+                </div>
+
+                <a 
+                   href={imgUrl} 
+                   target="_blank" 
+                   download={`youtube-thumbnail-${resolution}.jpg`}
+                   className={`px-6 py-2.5 rounded-lg text-sm font-bold transition-all whitespace-nowrap ${
+                       isPrimary 
+                       ? 'bg-[#da3f0b] text-white hover:bg-[#b53409] shadow-lg shadow-orange-200 btn-glow' 
+                       : 'bg-slate-100 text-slate-600 hover:bg-slate-200 hover:text-slate-900'
+                   }`}
+                >
+                   <i className="fas fa-download mr-2"></i> Download
+                </a>
+            </div>
+        );
+      };
+
+      return (
+        <div className="flex flex-col gap-8">
+          
+          {/* Input Section */}
+          <div className="bg-white rounded-[2rem] shadow-xl p-6 md:p-10 border border-slate-100 text-center relative overflow-hidden">
+             <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-orange-500 to-red-600"></div>
+             
+             <div className="max-w-2xl mx-auto relative z-10">
+                <div className="mb-6 inline-block bg-red-100 text-red-600 p-4 rounded-full text-2xl">
+                    <i className="fab fa-youtube"></i>
+                </div>
+                <h2 className="text-2xl font-black text-slate-800 mb-6">Paste Video URL</h2>
+                
+                <div className="relative group">
+                    <input 
+                        type="text" 
+                        value={url}
+                        onChange={(e) => setUrl(e.target.value)}
+                        placeholder="https://www.youtube.com/watch?v=..."
+                        className="w-full py-4 px-6 rounded-xl border-2 border-slate-200 text-lg focus:outline-none focus:border-[#da3f0b] focus:ring-4 focus:ring-[#da3f0b10] transition-all bg-slate-50 focus:bg-white text-slate-700 placeholder-slate-400 font-medium"
+                    />
+                    {url && (
+                        <button 
+                            onClick={() => setUrl('')}
+                            className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-2"
+                        >
+                            <i className="fas fa-times"></i>
+                        </button>
+                    )}
+                </div>
+                
+                {error && (
+                    <div className="mt-4 text-red-500 text-sm font-bold bg-red-50 py-2 px-4 rounded-lg inline-block animate-fade">
+                        <i className="fas fa-exclamation-circle mr-2"></i> {error}
+                    </div>
+                )}
+             </div>
+          </div>
+
+          {/* Results Section */}
+          {videoId && (
+              <div className="bg-white rounded-[2rem] shadow-xl p-6 md:p-10 border border-slate-100 animate-fade">
+                  <div className="flex flex-col lg:flex-row gap-10">
+                      
+                      {/* Main Preview */}
+                      <div className="lg:w-1/2">
+                          <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest mb-4">HD Preview</h3>
+                          <div className="relative rounded-2xl overflow-hidden shadow-2xl bg-black aspect-video group">
+                              <img 
+                                src={`https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`} 
+                                alt="Thumbnail Preview" 
+                                className="w-full h-full object-cover"
+                                onError={(e) => {
+                                    // Fallback if maxres doesn't exist (some older videos)
+                                    e.target.src = `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
+                                }}
+                              />
+                              <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors"></div>
+                          </div>
+                          <div className="mt-4 text-center">
+                             <span className="bg-slate-100 text-slate-600 px-3 py-1 rounded-full text-xs font-bold">
+                                Video ID: {videoId}
+                             </span>
+                          </div>
+                      </div>
+
+                      {/* Download Options */}
+                      <div className="lg:w-1/2 flex flex-col justify-center gap-4">
+                          <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest mb-2">Available Qualities</h3>
+                          
+                          <ThumbnailOption 
+                             resolution="maxresdefault" 
+                             label="Maximum Resolution (HD/4K)" 
+                             width="1280" height="720"
+                             isPrimary={true}
+                          />
+                          <ThumbnailOption 
+                             resolution="sddefault" 
+                             label="Standard Definition (SD)" 
+                             width="640" height="480"
+                          />
+                          <ThumbnailOption 
+                             resolution="hqdefault" 
+                             label="High Quality (HQ)" 
+                             width="480" height="360"
+                          />
+                          <ThumbnailOption 
+                             resolution="mqdefault" 
+                             label="Medium Quality (MQ)" 
+                             width="320" height="180"
+                          />
+                          
+                          <p className="text-xs text-slate-400 text-center mt-2 italic">
+                            * Note: 1280x720 is available only if the video was uploaded in HD.
+                          </p>
+                      </div>
+                  </div>
+              </div>
+          )}
+
+        </div>
+      );
+    };
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+    </script>
+    <section class="bg-white py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="prose prose-lg max-w-none prose-h2:text-gray-800 prose-p:text-gray-700">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">How to Download High-Quality YouTube Thumbnails</h2>
+                <p class="mb-6 leading-relaxed">
+                    YouTube thumbnails are often the most engaging part of a video, designed to grab attention instantly. Whether you need a thumbnail for a blog post, a presentation, or to analyze your competitors' designs, extracting them manually via screenshots results in poor quality. Our <strong>YouTube Thumbnail Downloader</strong> grabs the original image file directly from YouTube's servers, ensuring you get the crispest 4K or HD version available.
+                </p>
+                
+                <h2 class="text-2xl font-bold mt-8 mb-4">Supported Resolutions & Formats</h2>
+                <p class="mb-6 leading-relaxed">
+                    Not all videos have a 4K thumbnail, but we always attempt to fetch the highest quality possible. Here is a breakdown of the image sizes our tool extracts:
+                </p>
+                <ul class="list-disc pl-6 mb-6 space-y-2 text-gray-700">
+                    <li><strong>Max Resolution (maxresdefault):</strong> 1280 x 720 pixels. This is the HD version used for high-quality displays.</li>
+                    <li><strong>Standard Definition (sddefault):</strong> 640 x 480 pixels. Good for blog posts or smaller embeds.</li>
+                    <li><strong>High Quality (hqdefault):</strong> 480 x 360 pixels. The standard 4:3 image used by YouTube on mobile lists.</li>
+                    <li><strong>Medium Quality (mqdefault):</strong> 320 x 180 pixels. Useful for thumbnails or preview lists.</li>
+                </ul>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Can I Download Thumbnails from YouTube Shorts?</h2>
+                <p class="mb-6 leading-relaxed">
+                    Yes! YouTube Shorts use the same image hosting system as regular long-form videos. Simply paste the Shorts URL (e.g., <code>youtube.com/shorts/xyz...</code>) into the input box above, and our tool will automatically detect the ID and provide the download links just like any other video.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-center text-gray-900 mb-8">Thumbnail Downloader FAQs</h2>
+            <div class="space-y-4">
+                
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-primary">
+                        <span>Is it legal to download YouTube thumbnails?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">
+                            Thumbnails are copyrighted by the content creator. You can download them for personal use, educational purposes, or fair use (like commentary or criticism). You should not use someone else's thumbnail as your own on YouTube without permission.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-primary">
+                        <span>Why can't I see the 4K / HD option?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">
+                            If the video owner uploaded a low-quality video or did not upload a custom high-resolution thumbnail, the "Max Resolution" file might not exist on YouTube's servers. In these cases, you will only see the Standard or High Quality options.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-primary">
+                        <span>Does this tool work on mobile?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">
+                            Yes! Our YouTube Thumbnail Grabber is fully responsive. You can use it on iPhone, Android, or tablets. Just copy the link from the YouTube app (Share > Copy Link) and paste it here.
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <div id="footer"></div>
+
+    <script>
+    function initializeHeaderScripts() {
+        const header = document.getElementById('header');
+        if (header) {
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 10) {
+                    header.classList.add('scrolled-effect');
+                } else {
+                    header.classList.remove('scrolled-effect');
+                }
+            });
+        }
+    }
+    
+    function initializeFooterScripts() {
+        const yearSpan = document.getElementById('current-year');
+        if(yearSpan) {
+            yearSpan.textContent = new Date().getFullYear();
+        }
+    }
+
+    async function loadComponent(url, elementId, callback) {
+        try {
+            const response = await fetch(url);
+            if (!response.ok) throw new Error('Status: ' + response.status);
+            const text = await response.text();
+            const element = document.getElementById(elementId);
+            if (element) {
+                element.innerHTML = text;
+                if (callback) callback();
+            }
+        } catch (error) {
+            console.error('Error loading component:', error);
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        loadComponent('/components/navbar.html', 'navbar', initializeHeaderScripts);
+        loadComponent('/components/footer.html', 'footer', initializeFooterScripts);
+        
+        const faqToggles = document.querySelectorAll('[data-faq-toggle]');
+        faqToggles.forEach(button => {
+            button.addEventListener('click', () => {
+                const answer = button.nextElementSibling;
+                const icon = button.querySelector('.faq-icon');
+                const isOpening = !answer.style.maxHeight;
+
+                faqToggles.forEach(other => {
+                    if (other !== button) {
+                        other.nextElementSibling.style.maxHeight = null;
+                        other.querySelector('.faq-icon').classList.remove('rotate-90');
+                        other.querySelector('.faq-icon').classList.add('-rotate-90');
+                    }
+                });
+
+                if (isOpening) {
+                    answer.style.maxHeight = answer.scrollHeight + "px";
+                    icon.classList.remove('-rotate-90');
+                    icon.classList.add('rotate-90');
+                } else {
+                    answer.style.maxHeight = null;
+                    icon.classList.remove('rotate-90');
+                    icon.classList.add('-rotate-90');
+                }
+            });
+        });
+    });
+    </script>
+</body>
+</html>
