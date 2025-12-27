@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="title" content="JSON Formatter & Validator (Beautify JSON) | SimpliConvert">
+    <meta name="description" content="Free online JSON Formatter and Validator. Beautify messy JSON code, unminify API responses, debug syntax errors, and view JSON tree structures instantly.">
+    <meta name="keywords" content="JSON formatter, json validator, json pretty print, unminify json online, debug json file, json beautifier, json lint, format json online">
+    <meta name="author" content="SimpliConvert">
+    <meta name="robots" content="index, follow">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://simpliconvert.com/json-formatter-validator/">
+    <meta property="og:title" content="JSON Formatter & Validator – Debug & Beautify">
+    <meta property="og:description" content="The easiest way to read, format, and validate JSON data. Perfect for developers and data analysis.">
+    <meta property="og:image" content="https://simpliconvert.com/images/json-formatter-og.jpg">
+
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://simpliconvert.com/json-formatter-validator/">
+    <meta property="twitter:title" content="JSON Formatter & Validator">
+    <meta property="twitter:description" content="Clean up your JSON code instantly. Free beautifier and syntax checker.">
+    <meta property="twitter:image" content="https://simpliconvert.com/images/json-formatter-og.jpg">
+
+    <link rel="canonical" href="https://simpliconvert.com/json-formatter-validator/">
+    <title>JSON Formatter & Validator (Beautify JSON) | SimpliConvert</title>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "JSON Formatter & Validator",
+      "url": "https://simpliconvert.com/json-formatter-validator/",
+      "description": "A developer tool to format, validate, and minify JSON data with syntax highlighting and error detection.",
+      "applicationCategory": "DeveloperApplication",
+      "operatingSystem": "Web Browser",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "SimpliConvert",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://simpliconvert.com/logo.png"
+        }
+      }
+    }
+    </script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #da3f0b;
+            --primary-hover: #b53409;
+            --primary-light: #fff5f2;
+            --bg: #f8fafc;
+            --text-dark: #0f172a;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text-dark);
+        }
+
+        .hero-card {
+            background: white;
+            border: 1px solid #f1f5f9;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background-color: var(--primary);
+        }
+
+        .font-mono { font-family: 'JetBrains Mono', monospace; }
+
+        /* Custom Scrollbar for Code Areas */
+        .code-scroll::-webkit-scrollbar { width: 8px; height: 8px; }
+        .code-scroll::-webkit-scrollbar-track { background: #1e293b; border-radius: 4px; }
+        .code-scroll::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+        .code-scroll::-webkit-scrollbar-thumb:hover { background: #475569; }
+
+        .animate-fade { animation: fadeIn 0.3s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+        
+        textarea { resize: none; }
+        textarea:focus { outline: none; }
+    </style>
+</head>
+
+<body class="bg-gray-50 min-h-screen flex flex-col">
+    <div id="navbar"></div>
+
+    <section class="hero-white text-black py-2 md:py-10">
+        <div class="container mx-auto px-4 text-center">
+            <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-2">JSON Formatter & Validator</h1>
+            <p class="text-lg md:text-xl max-w-3x1 mx-auto mb-2">
+                Beautify messy JSON, debug syntax errors, and minify code for production. A powerful tool for developers.
+            </p>
+        </div>
+    </section>
+
+    <div id="root" class="w-full max-w-[90rem] mx-auto p-4 sm:p-6"></div>
+
+    <script type="text/babel">
+    const { useState, useEffect, useRef } = React;
+
+    const App = () => {
+      const [input, setInput] = useState('');
+      const [output, setOutput] = useState('');
+      const [error, setError] = useState(null);
+      const [indentSize, setIndentSize] = useState(4);
+      const [viewMode, setViewMode] = useState('formatted'); // formatted | raw
+      const [stats, setStats] = useState({ size: 0, items: 0 });
+      const [copied, setCopied] = useState(false);
+
+      const handleFormat = (jsonString, spaces) => {
+        try {
+          if (!jsonString.trim()) {
+            setOutput('');
+            setError(null);
+            setStats({ size: 0, items: 0 });
+            return;
+          }
+          const parsed = JSON.parse(jsonString);
+          const formatted = JSON.stringify(parsed, null, spaces);
+          
+          setOutput(formatted);
+          setError(null);
+          
+          // Calculate Stats
+          const size = new Blob([jsonString]).size;
+          const items = Array.isArray(parsed) ? parsed.length : Object.keys(parsed).length;
+          setStats({ size, items });
+
+        } catch (err) {
+          setError(err.message);
+        }
+      };
+
+      const handleMinify = () => {
+        try {
+          if (!input.trim()) return;
+          const parsed = JSON.parse(input);
+          const minified = JSON.stringify(parsed);
+          setOutput(minified);
+          setViewMode('raw'); // Switch to raw view usually for minified
+          setError(null);
+        } catch (err) {
+          setError(err.message);
+        }
+      };
+
+      const handleInputChange = (e) => {
+        const val = e.target.value;
+        setInput(val);
+        // Auto format on paste if valid
+        handleFormat(val, indentSize);
+      };
+
+      // Re-run format if indent size changes
+      useEffect(() => {
+        if (!error && input) {
+            handleFormat(input, indentSize);
+        }
+      }, [indentSize]);
+
+      const handleCopy = () => {
+        if (!output) return;
+        navigator.clipboard.writeText(output).then(() => {
+            setCopied(true);
+            setTimeout(() => setCopied(false), 2000);
+        });
+      };
+
+      const handleClear = () => {
+        if (window.confirm("Clear editor?")) {
+            setInput('');
+            setOutput('');
+            setError(null);
+        }
+      };
+
+      const formatBytes = (bytes) => {
+        if (bytes === 0) return '0 B';
+        const k = 1024;
+        const sizes = ['B', 'KB', 'MB', 'GB'];
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+      };
+
+      // Custom Syntax Highlighter Component
+      const HighlightedJSON = ({ json }) => {
+        if (!json) return null;
+        
+        // Simple regex to tokenize JSON parts
+        // Captures: strings (keys or values), numbers, booleans, nulls
+        const syntaxHighlight = (jsonStr) => {
+            if (viewMode === 'raw') return <span className="text-slate-300">{jsonStr}</span>;
+
+            // This regex is a bit complex: finds strings, numbers, booleans, nulls
+            const regex = /("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g;
+            
+            const parts = [];
+            let lastIndex = 0;
+            let match;
+
+            while ((match = regex.exec(jsonStr)) !== null) {
+                // Add non-matched text (separators like { } , [ ])
+                if (match.index > lastIndex) {
+                    parts.push(<span key={lastIndex} className="text-slate-400">{jsonStr.substring(lastIndex, match.index)}</span>);
+                }
+
+                const cls = match[0].endsWith(':') ? 'text-[#da3f0b] font-bold' // Key
+                          : /true|false/.test(match[0]) ? 'text-blue-400' // Boolean
+                          : /null/.test(match[0]) ? 'text-gray-500' // Null
+                          : /^"/.test(match[0]) ? 'text-green-400' // String Value
+                          : 'text-orange-300'; // Number
+
+                parts.push(<span key={match.index} className={cls}>{match[0]}</span>);
+                lastIndex = regex.lastIndex;
+            }
+            
+            // Add remaining text
+            if (lastIndex < jsonStr.length) {
+                parts.push(<span key={lastIndex} className="text-slate-400">{jsonStr.substring(lastIndex)}</span>);
+            }
+
+            return parts;
+        };
+
+        return <pre className="font-mono text-sm leading-6">{syntaxHighlight(json)}</pre>;
+      };
+
+      return (
+        <div className="flex flex-col h-[85vh] min-h-[600px] bg-white rounded-2xl shadow-xl overflow-hidden border border-slate-200">
+          
+          {/* Toolbar */}
+          <div className="bg-slate-50 border-b border-slate-200 p-4 flex flex-col md:flex-row justify-between items-center gap-4">
+             <div className="flex items-center gap-4">
+                <button 
+                  onClick={() => { handleFormat(input, indentSize); setViewMode('formatted'); }}
+                  className="bg-[#da3f0b] text-white px-4 py-2 rounded-lg text-sm font-bold shadow-sm hover:bg-[#b53409] transition-all flex items-center gap-2"
+                >
+                  <i className="fas fa-magic"></i> Beautify
+                </button>
+                <button 
+                  onClick={handleMinify}
+                  className="bg-white border border-slate-300 text-slate-700 px-4 py-2 rounded-lg text-sm font-bold hover:bg-slate-50 transition-all flex items-center gap-2"
+                >
+                  <i className="fas fa-compress-arrows-alt"></i> Minify
+                </button>
+                <div className="hidden md:block h-6 w-px bg-slate-300"></div>
+                <select 
+                   value={indentSize}
+                   onChange={(e) => setIndentSize(parseInt(e.target.value))}
+                   className="bg-white border border-slate-300 text-slate-600 text-sm font-bold rounded-lg px-3 py-2 focus:outline-none focus:border-[#da3f0b]"
+                >
+                   <option value={2}>2 Spaces</option>
+                   <option value={4}>4 Spaces</option>
+                   <option value={8}>8 Spaces</option>
+                </select>
+             </div>
+
+             <div className="flex items-center gap-4 text-xs font-bold text-slate-500">
+                <span className="bg-slate-200 px-2 py-1 rounded">Size: {formatBytes(stats.size)}</span>
+                <span className="hidden sm:inline bg-slate-200 px-2 py-1 rounded">Items: {stats.items}</span>
+                <button 
+                  onClick={handleClear}
+                  className="text-slate-400 hover:text-red-500 transition-colors uppercase tracking-wider"
+                >
+                  Clear
+                </button>
+             </div>
+          </div>
+
+          {/* Main Area: Split Screen */}
+          <div className="flex-grow flex flex-col md:flex-row overflow-hidden">
+             
+             {/* LEFT: Input Editor */}
+             <div className="w-full md:w-[40%] flex flex-col border-b md:border-b-0 md:border-r border-slate-200 relative">
+                <div className="absolute top-0 left-0 right-0 bg-slate-100 text-slate-500 text-[10px] font-bold uppercase tracking-widest px-4 py-1 border-b border-slate-200 z-10">
+                   Input (Raw JSON)
+                </div>
+                <textarea
+                  className="flex-grow w-full p-4 pt-8 font-mono text-sm bg-slate-50 text-slate-800 focus:bg-white transition-colors"
+                  placeholder='Paste your JSON here... {"example": true}'
+                  value={input}
+                  onChange={handleInputChange}
+                  spellCheck="false"
+                ></textarea>
+             </div>
+
+             {/* RIGHT: Output Viewer */}
+             <div className="w-full md:w-[60%] bg-[#1e293b] text-slate-300 flex flex-col relative code-scroll">
+                <div className="flex justify-between items-center bg-[#0f172a] text-slate-400 px-4 py-1 border-b border-slate-700">
+                   <span className="text-[10px] font-bold uppercase tracking-widest">
+                     {error ? <span className="text-red-500"><i className="fas fa-times-circle mr-1"></i> Invalid JSON</span> : <span className="text-green-500"><i className="fas fa-check-circle mr-1"></i> Valid JSON</span>}
+                   </span>
+                   <button 
+                     onClick={handleCopy}
+                     className={`text-[10px] font-bold uppercase tracking-widest hover:text-white transition-colors flex items-center gap-1 ${copied ? 'text-green-400' : ''}`}
+                   >
+                     {copied ? 'Copied!' : <><i className="far fa-copy"></i> Copy</>}
+                   </button>
+                </div>
+                
+                {/* Scrollable Output Content */}
+                <div className="flex-grow overflow-auto p-4 code-scroll relative">
+                   {error ? (
+                      <div className="absolute inset-0 flex items-center justify-center p-6">
+                         <div className="bg-red-500/10 border border-red-500/50 rounded-xl p-6 text-center max-w-md">
+                            <i className="fas fa-bug text-3xl text-red-500 mb-3"></i>
+                            <h3 className="text-red-400 font-bold mb-2">Syntax Error Detected</h3>
+                            <p className="text-red-200 font-mono text-xs break-words">{error}</p>
+                         </div>
+                      </div>
+                   ) : (
+                      <HighlightedJSON json={output} />
+                   )}
+                   
+                   {!input && !error && (
+                      <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-20">
+                         <div className="text-center">
+                            <i className="fas fa-code text-6xl text-slate-500 mb-4"></i>
+                            <p className="text-slate-400 font-bold uppercase tracking-widest">Waiting for input...</p>
+                         </div>
+                      </div>
+                   )}
+                </div>
+             </div>
+          </div>
+
+        </div>
+      );
+    };
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+    </script>
+    <section class="bg-white py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="prose prose-lg max-w-none prose-h2:text-gray-800 prose-p:text-gray-700">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">Why Use a JSON Formatter?</h2>
+                <p class="mb-6 leading-relaxed">
+                    JSON (JavaScript Object Notation) is the language of the web. APIs send data in this format because it is lightweight. However, computers prefer "Minified" JSON (all in one line with no spaces) to save bandwidth, which is impossible for humans to read. 
+                </p>
+                <p class="mb-6 leading-relaxed">
+                    Our **JSON Formatter & Validator** solves this by parsing the messy code and applying proper indentation (Pretty Print). It transforms a wall of text into a structured, color-coded tree that you can easily read and debug.
+                </p>
+                
+                <h2 class="text-2xl font-bold mt-8 mb-4">Features of Our JSON Tool</h2>
+                <ul class="list-disc pl-6 mb-6 space-y-2 text-gray-700">
+                    <li><strong>Instant Validation:</strong> As soon as you paste, we check for missing commas, unclosed brackets, or bad formatting.</li>
+                    <li><strong>Error Highlighting:</strong> We don't just say "Error"; we tell you exactly what went wrong so you can fix your API payload.</li>
+                    <li><strong>Secure & Client-Side:</strong> Your data never leaves your browser. All processing happens locally via JavaScript, ensuring your sensitive API keys or data remain private.</li>
+                    <li><strong>Minification:</strong> Need to send data to a server? Switch to "Minify" mode to compress your JSON to the smallest possible size.</li>
+                </ul>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">How to Debug JSON Syntax Errors</h2>
+                <p class="mb-6 leading-relaxed">
+                    A single missing quote `"` or comma `,` can break an entire application. When you see the red error box in our tool, look for the position mentioned. Common errors include:
+                </p>
+                <ul class="list-disc pl-6 mb-6 space-y-2 text-gray-700">
+                    <li>Trailing commas (a comma after the last item in a list).</li>
+                    <li>Using single quotes `'` instead of double quotes `"` (JSON standard requires double quotes).</li>
+                    <li>Unescaped characters in strings.</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-center text-gray-900 mb-8">JSON FAQs</h2>
+            <div class="space-y-4">
+                
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-primary">
+                        <span>What is the difference between JSON and XML?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">
+                            JSON is lighter, easier to read, and faster to parse than XML. While XML uses start and end tags (like HTML), JSON uses key-value pairs and curly braces, making it the preferred choice for modern REST APIs.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-primary">
+                        <span>Is my data safe on this JSON formatter?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">
+                            Yes. This tool runs entirely in your web browser (Client-Side). We do not store, record, or transmit your JSON data to any server. You can even use this tool while offline.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-primary">
+                        <span>Why does JSON use double quotes?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">
+                            The JSON standard (derived from JavaScript) strictly requires double quotes `"` for keys and string values to ensure compatibility across different programming languages (Python, PHP, Java) that parse JSON.
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <div id="footer"></div>
+
+    <script>
+    function initializeHeaderScripts() {
+        const header = document.getElementById('header');
+        if (header) {
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 10) {
+                    header.classList.add('scrolled-effect');
+                } else {
+                    header.classList.remove('scrolled-effect');
+                }
+            });
+        }
+    }
+    
+    function initializeFooterScripts() {
+        const yearSpan = document.getElementById('current-year');
+        if(yearSpan) {
+            yearSpan.textContent = new Date().getFullYear();
+        }
+    }
+
+    async function loadComponent(url, elementId, callback) {
+        try {
+            const response = await fetch(url);
+            if (!response.ok) throw new Error('Status: ' + response.status);
+            const text = await response.text();
+            const element = document.getElementById(elementId);
+            if (element) {
+                element.innerHTML = text;
+                if (callback) callback();
+            }
+        } catch (error) {
+            console.error('Error loading component:', error);
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        loadComponent('/components/navbar.html', 'navbar', initializeHeaderScripts);
+        loadComponent('/components/footer.html', 'footer', initializeFooterScripts);
+        
+        const faqToggles = document.querySelectorAll('[data-faq-toggle]');
+        faqToggles.forEach(button => {
+            button.addEventListener('click', () => {
+                const answer = button.nextElementSibling;
+                const icon = button.querySelector('.faq-icon');
+                const isOpening = !answer.style.maxHeight;
+
+                faqToggles.forEach(other => {
+                    if (other !== button) {
+                        other.nextElementSibling.style.maxHeight = null;
+                        other.querySelector('.faq-icon').classList.remove('rotate-90');
+                        other.querySelector('.faq-icon').classList.add('-rotate-90');
+                    }
+                });
+
+                if (isOpening) {
+                    answer.style.maxHeight = answer.scrollHeight + "px";
+                    icon.classList.remove('-rotate-90');
+                    icon.classList.add('rotate-90');
+                } else {
+                    answer.style.maxHeight = null;
+                    icon.classList.remove('rotate-90');
+                    icon.classList.add('-rotate-90');
+                }
+            });
+        });
+    });
+    </script>
+</body>
+</html>
