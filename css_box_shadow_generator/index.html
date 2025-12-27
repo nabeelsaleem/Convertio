@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="title" content="CSS Box Shadow Generator & Preview – Soft & Neumorphism | SimpliConvert">
+    <meta name="description" content="Generate beautiful CSS box shadows instantly. Create soft shadows, trendy Neumorphism effects, and layered drop shadows. Copy and paste the code directly.">
+    <meta name="keywords" content="CSS box shadow generator, soft shadow css, neumorphism generator, css drop shadow code, box shadow layer generator, css shadow preview, web design shadow tool, inset shadow generator">
+    <meta name="author" content="SimpliConvert">
+    <meta name="robots" content="index, follow">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://simpliconvert.com/css_box_shadow_generator/">
+    <meta property="og:title" content="CSS Box Shadow Generator – Beautiful UI Shadows">
+    <meta property="og:description" content="Design perfect shadows for your website. Supports multi-layering, Neumorphism, and instant CSS export.">
+    <meta property="og:image" content="https://simpliconvert.com/images/css-box-shadow-generator-og.jpg">
+
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://simpliconvert.com/css_box_shadow_generator/">
+    <meta property="twitter:title" content="CSS Box Shadow Generator – Soft & Modern">
+    <meta property="twitter:description" content="The easiest way to generate complex CSS box-shadows.">
+    <meta property="twitter:image" content="https://simpliconvert.com/images/css-box-shadow-generator-og.jpg">
+
+    <link rel="canonical" href="https://simpliconvert.com/css_box_shadow_generator/">
+    <title>CSS Box Shadow Generator & Preview – Soft & Neumorphism | SimpliConvert</title>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "CSS Box Shadow Generator",
+      "url": "https://simpliconvert.com/css_box_shadow_generator/",
+      "description": "A free developer tool to generate CSS box-shadow code, supporting multiple layers, Neumorphism, and inset shadows.",
+      "applicationCategory": "DeveloperApplication",
+      "operatingSystem": "Web Browser",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "SimpliConvert",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://simpliconvert.com/logo.png"
+        }
+      }
+    }
+    </script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #da3f0b;
+            --primary-hover: #b53409;
+            --primary-light: #fff5f2;
+            --bg: #f8fafc;
+            --text-dark: #0f172a;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text-dark);
+        }
+
+        .hero-card {
+            background: white;
+            border: 1px solid #f1f5f9;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background-color: var(--primary);
+        }
+
+        /* Custom Range Slider */
+        input[type=range] {
+            height: 6px;
+            -webkit-appearance: none;
+            width: 100%;
+            background: #e2e8f0;
+            border-radius: 8px;
+            outline: none;
+        }
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: var(--primary);
+            cursor: pointer;
+            border: 2px solid white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: all 0.1s ease;
+        }
+        input[type=range]::-webkit-slider-thumb:hover {
+            transform: scale(1.1);
+            background: var(--primary-hover);
+        }
+
+        .color-input-wrapper {
+            position: relative;
+            overflow: hidden;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+            width: 100%;
+            height: 40px;
+        }
+        
+        .color-input-wrapper input[type="color"] {
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            cursor: pointer;
+            border: none;
+        }
+
+        .animate-fade { animation: fadeIn 0.3s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+
+<body class="bg-gray-50 min-h-screen flex flex-col">
+    <div id="navbar"></div>
+
+    <section class="hero-white text-black py-2 md:py-10">
+        <div class="container mx-auto px-4 text-center">
+            <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-2">CSS Box Shadow Generator</h1>
+            <p class="text-lg md:text-xl max-w-3x1 mx-auto mb-2">
+                Design beautiful soft shadows, layered elevation, or trendy Neumorphism effects. Copy the CSS instantly.
+            </p>
+        </div>
+    </section>
+
+    <div id="root" class="w-full max-w-7xl mx-auto p-4 sm:p-6"></div>
+
+    <script type="text/babel">
+    const { useState, useEffect } = React;
+
+    const App = () => {
+      // Global Settings
+      const [bgColor, setBgColor] = useState('#f8fafc');
+      const [boxColor, setBoxColor] = useState('#ffffff');
+      const [copied, setCopied] = useState(false);
+
+      // Layer State
+      const [layers, setLayers] = useState([
+        { id: 1, x: 0, y: 10, blur: 15, spread: -3, color: '#000000', opacity: 0.1, inset: false }
+      ]);
+
+      // Presets
+      const presets = {
+        soft: {
+            bg: '#f8fafc', box: '#ffffff',
+            layers: [{ id: 1, x: 0, y: 10, blur: 15, spread: -3, color: '#000000', opacity: 0.1, inset: false }]
+        },
+        neumorphism: {
+            bg: '#e0e5ec', box: '#e0e5ec',
+            layers: [
+                { id: 1, x: 9, y: 9, blur: 16, spread: 0, color: '#a3b1c6', opacity: 0.6, inset: false },
+                { id: 2, x: -9, y: -9, blur: 16, spread: 0, color: '#ffffff', opacity: 0.8, inset: false }
+            ]
+        },
+        retro: {
+            bg: '#f8fafc', box: '#ffde00',
+            layers: [
+                { id: 1, x: 5, y: 5, blur: 0, spread: 0, color: '#000000', opacity: 1, inset: false }
+            ]
+        },
+        glow: {
+            bg: '#1e293b', box: '#da3f0b',
+            layers: [
+                { id: 1, x: 0, y: 0, blur: 20, spread: 5, color: '#da3f0b', opacity: 0.6, inset: false }
+            ]
+        }
+      };
+
+      const hexToRgba = (hex, alpha) => {
+        let r = 0, g = 0, b = 0;
+        if (hex.length === 4) {
+          r = "0x" + hex[1] + hex[1];
+          g = "0x" + hex[2] + hex[2];
+          b = "0x" + hex[3] + hex[3];
+        } else if (hex.length === 7) {
+          r = "0x" + hex[1] + hex[2];
+          g = "0x" + hex[3] + hex[4];
+          b = "0x" + hex[5] + hex[6];
+        }
+        return `rgba(${+r}, ${+g}, ${+b}, ${alpha})`;
+      };
+
+      const generateCSS = () => {
+        const shadowString = layers.map(l => {
+            return `${l.inset ? 'inset ' : ''}${l.x}px ${l.y}px ${l.blur}px ${l.spread}px ${hexToRgba(l.color, l.opacity)}`;
+        }).join(',\n  ');
+        return `box-shadow: ${shadowString};`;
+      };
+
+      const updateLayer = (id, key, value) => {
+        setLayers(layers.map(l => l.id === id ? { ...l, [key]: value } : l));
+      };
+
+      const addLayer = () => {
+        const newId = Math.max(...layers.map(l => l.id), 0) + 1;
+        setLayers([...layers, { id: newId, x: 0, y: 5, blur: 10, spread: 0, color: '#000000', opacity: 0.1, inset: false }]);
+      };
+
+      const removeLayer = (id) => {
+        if (layers.length > 1) {
+            setLayers(layers.filter(l => l.id !== id));
+        }
+      };
+
+      const loadPreset = (name) => {
+        const p = presets[name];
+        setBgColor(p.bg);
+        setBoxColor(p.box);
+        setLayers(p.layers);
+      };
+
+      const handleCopy = () => {
+        navigator.clipboard.writeText(generateCSS());
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
+      };
+
+      return (
+        <div className="flex flex-col lg:flex-row gap-6">
+          
+          {/* LEFT: Controls */}
+          <div className="lg:w-[45%] space-y-6">
+             
+             {/* Global Config */}
+             <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
+                <div className="flex justify-between items-center mb-4">
+                   <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest"><i className="fas fa-sliders-h mr-2"></i>Presets</h3>
+                   <div className="flex gap-2">
+                      <button onClick={() => loadPreset('soft')} className="text-[10px] font-bold bg-slate-100 hover:bg-slate-200 px-3 py-1 rounded-full text-slate-600">Soft</button>
+                      <button onClick={() => loadPreset('neumorphism')} className="text-[10px] font-bold bg-[#da3f0b10] hover:bg-[#da3f0b20] px-3 py-1 rounded-full text-[#da3f0b]">Neumorphism</button>
+                      <button onClick={() => loadPreset('retro')} className="text-[10px] font-bold bg-yellow-100 hover:bg-yellow-200 px-3 py-1 rounded-full text-yellow-800">Retro</button>
+                      <button onClick={() => loadPreset('glow')} className="text-[10px] font-bold bg-slate-800 hover:bg-slate-900 px-3 py-1 rounded-full text-white">Glow</button>
+                   </div>
+                </div>
+                
+                <div className="grid grid-cols-2 gap-4">
+                   <div>
+                      <label className="text-xs font-bold text-slate-500 mb-1 block">Background</label>
+                      <div className="flex items-center gap-2">
+                         <div className="color-input-wrapper w-10 h-10 shrink-0">
+                            <input type="color" value={bgColor} onChange={(e) => setBgColor(e.target.value)} />
+                         </div>
+                         <input type="text" value={bgColor} onChange={(e) => setBgColor(e.target.value)} className="w-full text-xs font-bold p-2 border border-slate-200 rounded-lg" />
+                      </div>
+                   </div>
+                   <div>
+                      <label className="text-xs font-bold text-slate-500 mb-1 block">Box Color</label>
+                      <div className="flex items-center gap-2">
+                         <div className="color-input-wrapper w-10 h-10 shrink-0">
+                            <input type="color" value={boxColor} onChange={(e) => setBoxColor(e.target.value)} />
+                         </div>
+                         <input type="text" value={boxColor} onChange={(e) => setBoxColor(e.target.value)} className="w-full text-xs font-bold p-2 border border-slate-200 rounded-lg" />
+                      </div>
+                   </div>
+                </div>
+             </div>
+
+             {/* Layers List */}
+             <div className="space-y-4">
+                {layers.map((layer, index) => (
+                   <div key={layer.id} className="bg-white rounded-2xl shadow-sm border border-slate-100 p-5 animate-fade relative group">
+                      <div className="flex justify-between items-center mb-4">
+                         <span className="text-xs font-black text-slate-400 uppercase tracking-widest">Layer {index + 1}</span>
+                         <div className="flex gap-2">
+                             <label className="flex items-center gap-1 text-[10px] font-bold text-slate-500 cursor-pointer">
+                                <input type="checkbox" checked={layer.inset} onChange={(e) => updateLayer(layer.id, 'inset', e.target.checked)} className="accent-[#da3f0b]" />
+                                Inset
+                             </label>
+                             {layers.length > 1 && (
+                                <button onClick={() => removeLayer(layer.id)} className="text-slate-300 hover:text-red-500 transition-colors">
+                                   <i className="fas fa-trash-alt"></i>
+                                </button>
+                             )}
+                         </div>
+                      </div>
+
+                      <div className="grid grid-cols-2 gap-x-6 gap-y-4">
+                         {/* X Offset */}
+                         <div>
+                            <div className="flex justify-between text-[10px] font-bold text-slate-500 mb-1">
+                               <span>Horizontal (X)</span>
+                               <span>{layer.x}px</span>
+                            </div>
+                            <input type="range" min="-100" max="100" value={layer.x} onChange={(e) => updateLayer(layer.id, 'x', parseInt(e.target.value))} />
+                         </div>
+
+                         {/* Y Offset */}
+                         <div>
+                            <div className="flex justify-between text-[10px] font-bold text-slate-500 mb-1">
+                               <span>Vertical (Y)</span>
+                               <span>{layer.y}px</span>
+                            </div>
+                            <input type="range" min="-100" max="100" value={layer.y} onChange={(e) => updateLayer(layer.id, 'y', parseInt(e.target.value))} />
+                         </div>
+
+                         {/* Blur */}
+                         <div>
+                            <div className="flex justify-between text-[10px] font-bold text-slate-500 mb-1">
+                               <span>Blur Radius</span>
+                               <span>{layer.blur}px</span>
+                            </div>
+                            <input type="range" min="0" max="100" value={layer.blur} onChange={(e) => updateLayer(layer.id, 'blur', parseInt(e.target.value))} />
+                         </div>
+
+                         {/* Spread */}
+                         <div>
+                            <div className="flex justify-between text-[10px] font-bold text-slate-500 mb-1">
+                               <span>Spread Radius</span>
+                               <span>{layer.spread}px</span>
+                            </div>
+                            <input type="range" min="-50" max="50" value={layer.spread} onChange={(e) => updateLayer(layer.id, 'spread', parseInt(e.target.value))} />
+                         </div>
+
+                         {/* Color & Opacity */}
+                         <div className="col-span-2 flex gap-4 items-center mt-2">
+                             <div className="color-input-wrapper w-12 h-10 shrink-0 rounded-lg border border-slate-200">
+                                <input type="color" value={layer.color} onChange={(e) => updateLayer(layer.id, 'color', e.target.value)} />
+                             </div>
+                             <div className="w-full">
+                                <div className="flex justify-between text-[10px] font-bold text-slate-500 mb-1">
+                                   <span>Shadow Opacity</span>
+                                   <span>{Math.round(layer.opacity * 100)}%</span>
+                                </div>
+                                <input type="range" min="0" max="1" step="0.01" value={layer.opacity} onChange={(e) => updateLayer(layer.id, 'opacity', parseFloat(e.target.value))} />
+                             </div>
+                         </div>
+                      </div>
+                   </div>
+                ))}
+                
+                <button onClick={addLayer} className="w-full py-3 rounded-xl border-2 border-dashed border-slate-200 text-slate-400 font-bold hover:border-[#da3f0b] hover:text-[#da3f0b] transition-all">
+                   <i className="fas fa-plus mr-2"></i> Add Layer
+                </button>
+             </div>
+          </div>
+
+          {/* RIGHT: Preview */}
+          <div className="lg:w-[55%] flex flex-col gap-6">
+             
+             {/* Visual Preview */}
+             <div 
+               className="flex-grow min-h-[400px] rounded-[2rem] shadow-inner flex items-center justify-center relative overflow-hidden transition-colors duration-300"
+               style={{ backgroundColor: bgColor }}
+             >
+                {/* Grid Pattern Overlay for transparency feel */}
+                <div className="absolute inset-0 opacity-5 pointer-events-none" style={{ backgroundImage: 'radial-gradient(#000 1px, transparent 1px)', backgroundSize: '20px 20px' }}></div>
+                
+                <div 
+                   className="w-48 h-48 md:w-64 md:h-64 rounded-3xl transition-all duration-200 flex items-center justify-center"
+                   style={{ 
+                      backgroundColor: boxColor,
+                      boxShadow: layers.map(l => `${l.inset ? 'inset ' : ''}${l.x}px ${l.y}px ${l.blur}px ${l.spread}px ${hexToRgba(l.color, l.opacity)}`).join(',')
+                   }}
+                >
+                   <span className="text-slate-400 font-bold text-xs opacity-50 uppercase tracking-widest">Preview</span>
+                </div>
+             </div>
+
+             {/* Code Block */}
+             <div className="bg-[#1e293b] rounded-2xl p-6 relative group">
+                <div className="absolute top-4 right-4">
+                   <button 
+                     onClick={handleCopy}
+                     className={`px-4 py-2 rounded-lg text-xs font-bold transition-all ${copied ? 'bg-[#16a34a] text-white' : 'bg-white/10 text-white hover:bg-white/20'}`}
+                   >
+                     {copied ? <><i className="fas fa-check mr-1"></i> Copied</> : <><i className="fas fa-copy mr-1"></i> Copy Code</>}
+                   </button>
+                </div>
+                <h3 className="text-xs font-black text-slate-500 uppercase tracking-widest mb-3">CSS Output</h3>
+                <pre className="font-mono text-sm text-[#da3f0b] overflow-x-auto whitespace-pre-wrap">
+{generateCSS()}
+                </pre>
+             </div>
+
+          </div>
+
+        </div>
+      );
+    };
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+    </script>
+    <section class="bg-white py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="prose prose-lg max-w-none prose-h2:text-gray-800 prose-p:text-gray-700">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">Mastering the CSS Box Shadow Generator</h2>
+                <p class="mb-6 leading-relaxed">
+                    Shadows add depth and hierarchy to web design, turning flat elements into tangible objects. However, writing complex <code>box-shadow</code> rules by hand involves guessing pixel values and hex codes. Our <strong>CSS Box Shadow Generator</strong> provides a visual interface to design everything from subtle drops to complex layered effects instantly.
+                </p>
+                
+                <h2 class="text-2xl font-bold mt-8 mb-4">What is Neumorphism? (Soft UI)</h2>
+                
+                <p class="mb-6 leading-relaxed">
+                    Neumorphism (or Soft UI) is a design trend that makes elements appear to be extruded from the background rather than floating over it. It requires a very specific shadow configuration:
+                </p>
+                <ul class="list-disc pl-6 mb-6 space-y-2 text-gray-700">
+                    <li><strong>Background Matching:</strong> The element and the background must share the exact same color (usually an off-white or light grey).</li>
+                    <li><strong>Dual Shadows:</strong> You need two shadow layers. One is a dark shadow (bottom-right) and the other is a light shadow (top-left) to simulate a light source.</li>
+                </ul>
+                <p class="mb-6 leading-relaxed">
+                    You can achieve this effect instantly by clicking the <strong>Neumorphism</strong> preset button in our tool.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Layered Shadows for "Smooth" Elevation</h2>
+                <p class="mb-6 leading-relaxed">
+                    Standard drop shadows often look artificial. Modern "Smooth Shadows" utilize multiple layers with increasing blur radii to create a more realistic diffusion of light. By using the "Add Layer" button, you can stack 3 or 4 shadows with different opacities to create that premium, high-end application feel seen on sites like Stripe or Vercel.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-center text-gray-900 mb-8">CSS Shadow FAQs</h2>
+            <div class="space-y-4">
+                
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-primary">
+                        <span>How do I create an inner shadow?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">
+                            Simply toggle the <strong>Inset</strong> checkbox on any layer. This moves the shadow inside the box, creating a depressed or engraved look, which is crucial for input fields or pressed buttons in Neumorphic design.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-primary">
+                        <span>Does box-shadow affect performance?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">
+                            Generally, no. However, animating large box-shadows (especially with large blur radii) can be intensive for the browser's painting engine. Use them statically where possible, or animate `transform` and `opacity` for better performance.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-primary">
+                        <span>Can I use RGBA for transparency?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">
+                            Yes. This generator automatically converts your selected color and opacity slider into the correct `rgba()` format, ensuring your shadows blend perfectly with any background.
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <div id="footer"></div>
+
+    <script>
+    function initializeHeaderScripts() {
+        const header = document.getElementById('header');
+        if (header) {
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 10) {
+                    header.classList.add('scrolled-effect');
+                } else {
+                    header.classList.remove('scrolled-effect');
+                }
+            });
+        }
+    }
+    
+    function initializeFooterScripts() {
+        const yearSpan = document.getElementById('current-year');
+        if(yearSpan) {
+            yearSpan.textContent = new Date().getFullYear();
+        }
+    }
+
+    async function loadComponent(url, elementId, callback) {
+        try {
+            const response = await fetch(url);
+            if (!response.ok) throw new Error('Status: ' + response.status);
+            const text = await response.text();
+            const element = document.getElementById(elementId);
+            if (element) {
+                element.innerHTML = text;
+                if (callback) callback();
+            }
+        } catch (error) {
+            console.error('Error loading component:', error);
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        loadComponent('/components/navbar.html', 'navbar', initializeHeaderScripts);
+        loadComponent('/components/footer.html', 'footer', initializeFooterScripts);
+        
+        const faqToggles = document.querySelectorAll('[data-faq-toggle]');
+        faqToggles.forEach(button => {
+            button.addEventListener('click', () => {
+                const answer = button.nextElementSibling;
+                const icon = button.querySelector('.faq-icon');
+                const isOpening = !answer.style.maxHeight;
+
+                faqToggles.forEach(other => {
+                    if (other !== button) {
+                        other.nextElementSibling.style.maxHeight = null;
+                        other.querySelector('.faq-icon').classList.remove('rotate-90');
+                        other.querySelector('.faq-icon').classList.add('-rotate-90');
+                    }
+                });
+
+                if (isOpening) {
+                    answer.style.maxHeight = answer.scrollHeight + "px";
+                    icon.classList.remove('-rotate-90');
+                    icon.classList.add('rotate-90');
+                } else {
+                    answer.style.maxHeight = null;
+                    icon.classList.remove('rotate-90');
+                    icon.classList.add('-rotate-90');
+                }
+            });
+        });
+    });
+    </script>
+</body>
+</html>
