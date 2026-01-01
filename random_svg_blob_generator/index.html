@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Random SVG Blob Generator – Create Organic Shapes | SimpliConvert</title>
+    <meta name="description" content="Generate unique, organic SVG shapes for your designs with our Random SVG Blob Generator. Customize complexity and contrast to create modern web backgrounds instantly.">
+    <meta name="keywords" content="random svg blob generator, organic shape maker, svg background shapes, blob design tool, custom svg shapes, web design assets, vector blob creator">
+    <meta name="author" content="SimpliConvert">
+    <meta property="og:site_name" content="SimpliConvert">
+    <meta name="robots" content="index, follow">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://simpliconvert.com/random_svg_blob_generator/">
+    <meta property="og:title" content="Random SVG Blob Generator – Organic Shape Maker">
+    <meta property="og:description" content="Create beautiful, unique SVG blobs for your website or app. Adjust complexity, contrast, and color with ease.">
+    <meta property="og:image" content="https://simpliconvert.com/images/svg-blob-generator-og.jpg">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://simpliconvert.com/random_svg_blob_generator/">
+    <meta name="twitter:title" content="Random SVG Blob Generator – Design Unique Shapes">
+    <meta name="twitter:description" content="Free tool to generate organic SVG blobs. Perfect for modern UI/UX design and landing page backgrounds.">
+    <meta name="twitter:image" content="https://simpliconvert.com/images/svg-blob-generator-og.jpg">
+
+    <link rel="canonical" href="https://simpliconvert.com/random_svg_blob_generator/">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Random SVG Blob Generator",
+      "url": "https://simpliconvert.com/random_svg_blob_generator/",
+      "description": "A free online design tool to generate unique, organic SVG shapes (blobs) for web backgrounds and UI elements.",
+      "applicationCategory": "DesignApplication",
+      "operatingSystem": "Web Browser",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "SimpliConvert",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://simpliconvert.com/logo.png"
+        }
+      }
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [{
+        "@type": "Question",
+        "name": "What is an SVG Blob?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "An SVG blob is an organic, non-geometric shape created using vector paths. They are popular in modern web design for backgrounds, image masks, and decorative UI elements."
+        }
+      }, {
+        "@type": "Question",
+        "name": "How do I use the generated blob in my website?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Simply copy the generated SVG code and paste it directly into your HTML. You can also use it as a CSS background-image or download it as a .svg file for use in design tools like Figma or Adobe XD."
+        }
+      }, {
+        "@type": "Question",
+        "name": "What does complexity and contrast mean?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Complexity refers to the number of anchor points the shape has (more points = more 'wavy'). Contrast determines how much those points vary from a perfect circle (higher contrast = more irregular shape)."
+        }
+      }]
+    }
+    </script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #da3f0b;
+            --primary-hover: #b53409;
+            --primary-light: #fff5f2;
+            --bg: #f8fafc;
+            --text-dark: #0f172a;
+            --success: #16a34a;
+            --danger: #dc2626;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text-dark);
+        }
+
+        .hero-card {
+            background: white;
+            border: 1px solid #f1f5f9;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background-color: var(--primary);
+        }
+
+        input[type=range] {
+            height: 6px;
+            -webkit-appearance: none;
+            width: 100%;
+            background: #e2e8f0;
+            border-radius: 8px;
+            outline: none;
+        }
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: var(--primary);
+            cursor: pointer;
+            border: 2px solid white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: all 0.1s ease;
+        }
+
+        .prose a { color: #da3f0b; text-decoration: none; }
+        .prose a:hover { text-decoration: underline; }
+
+        .tooltip-container { position: relative; display: inline-block; }
+        .tooltip-text {
+            visibility: hidden; width: 220px; background-color: #1e293b; color: #fff;
+            text-align: center; border-radius: 8px; padding: 10px; position: absolute;
+            z-index: 50; bottom: 125%; left: 50%; margin-left: -110px; opacity: 0;
+            transition: opacity 0.2s; font-size: 0.75rem; font-weight: 400;
+            pointer-events: none; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+        .tooltip-container:hover .tooltip-text { visibility: visible; opacity: 1; }
+
+        .animate-fade { animation: fadeIn 0.3s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+        .tool-card { transition: transform 0.2s ease, box-shadow 0.2s ease; }
+        .tool-card:hover { transform: translateY(-4px); box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
+
+        .blob-preview-container {
+            background-image: radial-gradient(#e2e8f0 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 min-h-screen flex flex-col">
+    <div id="navbar"></div>
+
+    <section class="hero-white text-black py-2 md:py-10">
+        <div class="container mx-auto px-4 text-center">
+            <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-2">Random SVG Blob Generator</h1>
+            <p class="text-lg md:text-xl max-w-3x1 mx-auto mb-2">
+                Create unique, organic shapes for your web designs. Customize complexity, contrast, and color to generate the perfect SVG background.
+            </p>
+        </div>
+    </section>
+
+    <div id="root" class="w-full max-w-6xl mx-auto p-4 sm:p-6"></div>
+
+    <script type="text/babel">
+    const { useState, useEffect, useMemo, useCallback } = React;
+
+    const Tooltip = ({ text }) => (
+      <span className="tooltip-container ml-2">
+        <i className="fas fa-info-circle text-slate-300 hover:text-[#da3f0b] cursor-help text-xs transition-colors"></i>
+        <span className="tooltip-text">{text}</span>
+      </span>
+    );
+
+    const ControlSlider = ({ label, value, min, max, onChange, tooltip }) => (
+      <div className="mb-6">
+        <div className="flex justify-between items-center mb-2">
+          <label className="text-xs font-bold text-slate-500 uppercase tracking-widest flex items-center">
+            {label} {tooltip && <Tooltip text={tooltip} />}
+          </label>
+          <span className="text-xs font-black text-[#da3f0b] bg-[#da3f0b10] px-2 py-0.5 rounded">{value}</span>
+        </div>
+        <input 
+          type="range" 
+          min={min} 
+          max={max} 
+          value={value} 
+          onChange={(e) => onChange(parseInt(e.target.value))}
+          className="w-full"
+        />
+      </div>
+    );
+
+    const App = () => {
+      const [complexity, setComplexity] = useState(6);
+      const [contrast, setContrast] = useState(40);
+      const [color, setColor] = useState('#da3f0b');
+      const [seed, setSeed] = useState(Math.random());
+      const [isOutline, setIsOutline] = useState(false);
+      const [showCopyToast, setShowCopyToast] = useState(false);
+
+      const generatePath = useCallback(() => {
+        const points = [];
+        const angleStep = (Math.PI * 2) / complexity;
+        const radius = 300;
+        const center = 500;
+        
+        // Use a simple LCG-like pseudo-random based on seed for consistency if needed, 
+        // but here we just use the seed trigger.
+        const rng = () => {
+            const x = Math.sin(seed++) * 10000;
+            return x - Math.floor(x);
+        };
+
+        let tempSeed = seed;
+        const getRng = () => {
+            tempSeed = (tempSeed * 9301 + 49297) % 233280;
+            return tempSeed / 233280;
+        };
+
+        for (let i = 0; i < complexity; i++) {
+          const theta = i * angleStep;
+          const randomFactor = 1 + (getRng() - 0.5) * (contrast / 50);
+          const r = radius * randomFactor;
+          const x = center + r * Math.cos(theta);
+          const y = center + r * Math.sin(theta);
+          points.push({ x, y });
+        }
+
+        // Create smooth cubic bezier path
+        let d = `M ${points[0].x} ${points[0].y}`;
+        for (let i = 0; i < complexity; i++) {
+          const p0 = points[i];
+          const p1 = points[(i + 1) % complexity];
+          const p2 = points[(i + 2) % complexity];
+          const p3 = points[(i + 3) % complexity];
+
+          // Control points for smoothing
+          const cp1x = p1.x + (p2.x - p0.x) / 6;
+          const cp1y = p1.y + (p2.y - p0.y) / 6;
+          const cp2x = p2.x - (p3.x - p1.x) / 6;
+          const cp2y = p2.y - (p3.y - p1.y) / 6;
+
+          d += ` C ${cp1x} ${cp1y}, ${cp2x} ${cp2y}, ${p2.x} ${p2.y}`;
+        }
+        return d;
+      }, [complexity, contrast, seed]);
+
+      const pathData = useMemo(() => generatePath(), [generatePath]);
+
+      const svgCode = `<svg viewBox="0 0 1000 1000" xmlns="http://www.w3.org/2000/svg">\n  <path d="${pathData}" fill="${isOutline ? 'none' : color}" stroke="${isOutline ? color : 'none'}" stroke-width="${isOutline ? '10' : '0'}"></path>\n</svg>`;
+
+      const copyToClipboard = (text) => {
+        navigator.clipboard.writeText(text);
+        setShowCopyToast(true);
+        setTimeout(() => setShowCopyToast(false), 2000);
+      };
+
+      const downloadSvg = () => {
+        const blob = new Blob([svgCode], { type: 'image/svg+xml' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `blob-${Math.floor(Date.now()/1000)}.svg`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      };
+
+      const ShareButton = ({ platform, icon, color: btnColor }) => {
+        const url = encodeURIComponent(window.location.href);
+        const title = encodeURIComponent("Check out this Random SVG Blob Generator!");
+        let shareUrl = '';
+        if (platform === 'twitter') shareUrl = `https://twitter.com/intent/tweet?url=${url}&text=${title}`;
+        if (platform === 'facebook') shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${url}`;
+        if (platform === 'whatsapp') shareUrl = `https://api.whatsapp.com/send?text=${title}%20${url}`;
+
+        return (
+          <a href={shareUrl} target="_blank" rel="noopener noreferrer" className={`w-10 h-10 rounded-full flex items-center justify-center text-white transition-transform hover:-translate-y-1 ${btnColor}`}>
+            <i className={`fab fa-${icon}`}></i>
+          </a>
+        );
+      };
+
+      return (
+        <div className="bg-white rounded-[2rem] shadow-2xl overflow-hidden border border-slate-100">
+          <header className="bg-slate-50/50 border-b border-slate-100 p-6 md:p-8 flex flex-col md:flex-row justify-between items-center gap-6">
+            <div className="text-center md:text-left">
+              <h2 className="text-2xl font-black text-slate-800 tracking-tight flex items-center justify-center md:justify-start gap-3">
+                <span className="bg-[#da3f0b] text-white p-2 rounded-xl text-lg shadow-lg shadow-[#da3f0b30]">
+                  <i className="fas fa-shapes"></i>
+                </span>
+                Organic Shape Generator
+              </h2>
+            </div>
+            <button 
+              onClick={() => setSeed(Math.random() * 1000)}
+              className="bg-[#da3f0b] hover:bg-[#b53409] text-white px-6 py-2.5 rounded-xl font-bold text-sm transition-all flex items-center gap-2 shadow-lg shadow-[#da3f0b30]"
+            >
+              <i className="fas fa-sync-alt"></i> Generate New
+            </button>
+          </header>
+
+          <main className="flex flex-col lg:flex-row">
+            {/* Input Panel */}
+            <div className="lg:w-[40%] p-6 md:p-10 border-r border-slate-100">
+              <div className="space-y-2">
+                <ControlSlider 
+                  label="Complexity" 
+                  min={3} max={12} 
+                  value={complexity} 
+                  onChange={setComplexity}
+                  tooltip="Number of anchor points. Higher values create more intricate edges."
+                />
+                <ControlSlider 
+                  label="Contrast" 
+                  min={1} max={90} 
+                  value={contrast} 
+                  onChange={setContrast}
+                  tooltip="How much the shape deviates from a circle."
+                />
+
+                <div className="mb-6">
+                  <label className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-2 block">Shape Color</label>
+                  <div className="flex gap-3 items-center">
+                    <input 
+                      type="color" 
+                      value={color} 
+                      onChange={(e) => setColor(e.target.value)}
+                      className="w-12 h-12 rounded-lg cursor-pointer border-none bg-transparent"
+                    />
+                    <input 
+                      type="text" 
+                      value={color} 
+                      onChange={(e) => setColor(e.target.value)}
+                      className="flex-1 border border-slate-200 rounded-xl px-4 py-2.5 text-sm font-mono font-bold text-slate-700"
+                    />
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-4 p-4 bg-slate-50 rounded-2xl border border-slate-100">
+                  <label className="relative inline-flex items-center cursor-pointer">
+                    <input type="checkbox" checked={isOutline} onChange={() => setIsOutline(!isOutline)} className="sr-only peer" />
+                    <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#da3f0b]"></div>
+                  </label>
+                  <span className="text-xs font-bold text-slate-600 uppercase tracking-wider">Outline Mode</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Preview Panel */}
+            <div className="lg:w-[60%] bg-slate-50/30 p-6 md:p-10 flex flex-col">
+              <div className="flex-1 blob-preview-container rounded-3xl border border-slate-100 bg-white shadow-inner flex items-center justify-center relative min-h-[350px] overflow-hidden">
+                <svg viewBox="0 0 1000 1000" className="w-full h-full max-w-[450px] drop-shadow-2xl">
+                  <path 
+                    d={pathData} 
+                    fill={isOutline ? 'none' : color} 
+                    stroke={isOutline ? color : 'none'} 
+                    strokeWidth={isOutline ? '15' : '0'}
+                    className="transition-all duration-500 ease-in-out"
+                  />
+                </svg>
+              </div>
+
+              <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <button 
+                  onClick={() => copyToClipboard(svgCode)}
+                  className="bg-slate-800 hover:bg-slate-900 text-white py-4 rounded-2xl font-bold flex items-center justify-center gap-3 transition-all active:scale-95"
+                >
+                  <i className="fas fa-code"></i> Copy SVG Code
+                </button>
+                <button 
+                  onClick={downloadSvg}
+                  className="bg-white border-2 border-slate-200 hover:border-[#da3f0b] hover:text-[#da3f0b] text-slate-700 py-4 rounded-2xl font-bold flex items-center justify-center gap-3 transition-all active:scale-95"
+                >
+                  <i className="fas fa-download"></i> Download .SVG
+                </button>
+              </div>
+            </div>
+          </main>
+
+          {/* Share & Bookmark Footer */}
+          <footer className="bg-slate-50 border-t border-slate-100 p-6 md:p-8">
+             <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+                 <div className="text-center md:text-left">
+                     <h4 className="text-sm font-bold text-slate-700 mb-1">Share this tool</h4>
+                     <p className="text-xs text-slate-400">Help other designers create organic shapes.</p>
+                 </div>
+                 
+                 <div className="flex gap-3">
+                     <ShareButton platform="facebook" icon="facebook-f" color="bg-[#1877F2]" />
+                     <ShareButton platform="twitter" icon="twitter" color="bg-[#1DA1F2]" />
+                     <ShareButton platform="whatsapp" icon="whatsapp" color="bg-[#25D366]" />
+                 </div>
+
+                 <div className="relative">
+                     <button 
+                        onClick={() => { setShowCopyToast(true); setTimeout(() => setShowCopyToast(false), 3000); }}
+                        className="flex items-center gap-2 bg-white border border-slate-200 hover:border-[#da3f0b] hover:text-[#da3f0b] text-slate-600 px-4 py-2 rounded-lg text-sm font-bold transition-all shadow-sm active:scale-95"
+                     >
+                        <i className="fas fa-bookmark"></i> Bookmark
+                     </button>
+                     {showCopyToast && (
+                         <div className="absolute bottom-full mb-3 left-1/2 -translate-x-1/2 bg-slate-800 text-white text-xs py-2 px-4 rounded-lg shadow-lg whitespace-nowrap animate-fade">
+                             {showCopyToast === true && typeof showCopyToast === 'boolean' ? "Press Ctrl+D to bookmark" : "Copied to clipboard!"}
+                         </div>
+                     )}
+                 </div>
+             </div>
+          </footer>
+        </div>
+      );
+    };
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+    </script>
+
+    <section class="bg-white py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="prose prose-lg max-w-none prose-h2:text-gray-800 prose-p:text-gray-700">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">Random SVG Blob Generator – Modern Design Made Simple</h2>
+                <p class="mb-6 leading-relaxed">
+                    In modern web design, rigid geometric shapes are often replaced by fluid, organic forms known as <strong>SVG blobs</strong>. Our <strong>Random SVG Blob Generator</strong> is a powerful tool that allows designers and developers to create these unique shapes instantly. Whether you need a subtle background element for a landing page or a creative mask for an image, this tool provides the flexibility to design exactly what you need.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Why Use Organic SVG Shapes?</h2>
+                <p class="mb-6 leading-relaxed">
+                    Organic shapes break the monotony of standard grid layouts. They add a human, natural touch to digital interfaces, making them feel more approachable and modern. Using an <strong>organic shape maker</strong> helps in:
+                </p>
+                <ul class="list-disc pl-6 mb-6 space-y-2 text-gray-700">
+                    <li><strong>Visual Interest:</strong> Blobs create focal points without the harshness of squares or circles.</li>
+                    <li><strong>Brand Identity:</strong> Custom shapes can reflect a brand's fluid and innovative nature.</li>
+                    <li><strong>Layering:</strong> They are perfect for layering behind text or images to create depth (Glassmorphism).</li>
+                    <li><strong>Performance:</strong> SVG code is incredibly lightweight compared to PNG or JPG images, ensuring fast load times.</li>
+                </ul>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">How to Use the Blob Design Tool</h2>
+                <p class="mb-6 leading-relaxed">
+                    Creating a custom blob is as easy as moving a few sliders. Our <strong>svg background shapes</strong> generator offers three main customization options:
+                </p>
+                <ul class="list-disc pl-6 mb-6 space-y-2 text-gray-700">
+                    <li><strong>Complexity:</strong> Adjust how many "corners" or anchor points the blob has. Low complexity creates smooth, pill-like shapes, while high complexity results in more intricate, wavy designs.</li>
+                    <li><strong>Contrast:</strong> This controls the randomness. Low contrast keeps the shape close to a circle, while high contrast creates wild, irregular protrusions.</li>
+                    <li><strong>Color & Mode:</strong> Choose any hex color and toggle between a solid fill or a stylish outline (stroke) mode.</li>
+                </ul>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Integrating Blobs into Your Workflow</h2>
+                <p class="mb-6 leading-relaxed">
+                    Once you've generated the perfect shape, you can use it in several ways. You can copy the raw SVG code and paste it directly into your HTML for maximum control via CSS. Alternatively, download the .SVG file to import it into professional design software like Figma, Sketch, or Adobe Illustrator. 
+                </p>
+                <p class="mb-6 leading-relaxed">
+                    For developers, these blobs can be animated using CSS transitions or libraries like GSAP to create "breathing" or morphing background effects that captivate users.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-center text-gray-900 mb-8">Frequently Asked Questions</h2>
+            <div class="space-y-4">
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>Are these SVG blobs free for commercial use?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">
+                            Yes! All shapes generated by our tool are free to use for both personal and commercial projects. No attribution is required.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>Can I animate these blobs?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">
+                            Absolutely. Since they are standard SVG paths, you can use CSS animations or JavaScript libraries like GSAP to animate the 'd' attribute or apply rotations and scaling.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>Why should I use SVG instead of a PNG image?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">
+                            SVGs are vector-based, meaning they stay perfectly sharp at any resolution or screen size. They also have much smaller file sizes and can be styled directly with CSS (changing colors, strokes, etc.).
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 pb-16">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-slate-200 pt-16">
+            <h2 class="text-2xl font-bold text-center text-slate-800 mb-10">Explore More Design Tools</h2>
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+                <a href="/qr_code_generator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-slate-50 text-slate-800 flex items-center justify-center shrink-0 group-hover:bg-slate-900 group-hover:text-white transition-colors">
+                        <i class="fas fa-qrcode text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">QR Creator</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Generate custom QR codes.</p>
+                    </div>
+                </a>
+
+                <a href="/image_resizer/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center shrink-0 group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-image text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Image Resizer</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Resize images instantly.</p>
+                    </div>
+                </a>
+
+                <a href="/meta_tag_generator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0 group-hover:bg-indigo-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-search text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Meta Tag Gen</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Optimize SEO tags.</p>
+                    </div>
+                </a>
+
+                <a href="/jpg_to_pdf/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-purple-50 text-purple-600 flex items-center justify-center shrink-0 group-hover:bg-purple-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-file-pdf text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">JPG to PDF</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Convert images to PDF.</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <div id="footer"></div>
+
+    <script>
+    async function loadComponent(url, elementId, callback) {
+        try {
+            const response = await fetch(url);
+            if (!response.ok) throw new Error('Status: ' + response.status);
+            const text = await response.text();
+            const element = document.getElementById(elementId);
+            if (element) {
+                element.innerHTML = text;
+                if (callback) callback();
+            }
+        } catch (error) {
+            console.error('Error loading component:', error);
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        loadComponent('/components/navbar.html', 'navbar');
+        loadComponent('/components/footer.html', 'footer', () => {
+            const yearSpan = document.getElementById('current-year');
+            if(yearSpan) yearSpan.textContent = new Date().getFullYear();
+        });
+        
+        const faqToggles = document.querySelectorAll('[data-faq-toggle]');
+        faqToggles.forEach(button => {
+            button.addEventListener('click', () => {
+                const answer = button.nextElementSibling;
+                const icon = button.querySelector('.faq-icon');
+                const isOpening = !answer.style.maxHeight;
+
+                faqToggles.forEach(other => {
+                    if (other !== button) {
+                        other.nextElementSibling.style.maxHeight = null;
+                        other.querySelector('.faq-icon').classList.remove('rotate-90');
+                        other.querySelector('.faq-icon').classList.add('-rotate-90');
+                    }
+                });
+
+                if (isOpening) {
+                    answer.style.maxHeight = answer.scrollHeight + "px";
+                    icon.classList.remove('-rotate-90');
+                    icon.classList.add('rotate-90');
+                } else {
+                    answer.style.maxHeight = null;
+                    icon.classList.remove('rotate-90');
+                    icon.classList.add('-rotate-90');
+                }
+            });
+        });
+    });
+    </script>
+</body>
+</html>

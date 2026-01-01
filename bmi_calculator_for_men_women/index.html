@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>BMI Calculator For Men Women – Check Your Ideal Weight | SimpliConvert</title>
+    <meta name="description" content="Check your health status with our BMI Calculator For Men Women. Enter your height and weight to instantly see your Body Mass Index category and ideal weight range.">
+    <meta name="keywords" content="bmi calculator for men women, body mass index tool, check ideal weight, healthy weight calculator, BMI for adults, weight category calculator">
+    <meta name="author" content="SimpliConvert">
+    <meta property="og:site_name" content="SimpliConvert">
+    <meta name="robots" content="index, follow">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://simpliconvert.com/bmi_calculator_for_men_women/">
+    <meta property="og:title" content="BMI Calculator For Men Women – Instant Health Check">
+    <meta property="og:description" content="Calculate your Body Mass Index (BMI) quickly. Supports both Metric and Imperial units for men and women.">
+    <meta property="og:image" content="https://simpliconvert.com/images/bmi-calculator-og.jpg">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://simpliconvert.com/bmi_calculator_for_men_women/">
+    <meta name="twitter:title" content="BMI Calculator For Men Women – Healthy Weight Tool">
+    <meta name="twitter:description" content="Free online BMI tool to check your body mass index and health category instantly.">
+    <meta name="twitter:image" content="https://simpliconvert.com/images/bmi-calculator-og.jpg">
+
+    <link rel="canonical" href="https://simpliconvert.com/bmi_calculator_for_men_women/">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "BMI Calculator For Men Women",
+      "url": "https://simpliconvert.com/bmi_calculator_for_men_women/",
+      "description": "A free online tool to calculate Body Mass Index (BMI) for men and women, providing health category insights based on height and weight.",
+      "applicationCategory": "HealthApplication",
+      "operatingSystem": "Web Browser",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "SimpliConvert",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://simpliconvert.com/logo.png"
+        }
+      }
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [{
+        "@type": "Question",
+        "name": "What is a healthy BMI range for adults?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "For most adults, a healthy BMI range is between 18.5 and 24.9. A BMI below 18.5 is considered underweight, 25 to 29.9 is overweight, and 30 or above is considered obese."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Is BMI calculated differently for men and women?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The standard BMI formula is the same for both men and women. However, men often have higher muscle mass, which BMI does not distinguish from fat. It is a general screening tool rather than a diagnostic of body fat percentage."
+        }
+      }, {
+        "@type": "Question",
+        "name": "How accurate is the BMI calculator?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "BMI is a useful population-level measure of overweight and obesity. It is not a direct measure of body fat. Athletes with high muscle mass may have a high BMI without having excess body fat."
+        }
+      }]
+    }
+    </script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #da3f0b;
+            --primary-hover: #b53409;
+            --primary-light: #fff5f2;
+            --bg: #f8fafc;
+            --text-dark: #0f172a;
+            --success: #16a34a;
+            --warning: #eab308;
+            --danger: #dc2626;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text-dark);
+        }
+
+        .hero-card {
+            background: white;
+            border: 1px solid #f1f5f9;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background-color: var(--primary);
+        }
+
+        .prose a {
+            color: #da3f0b;
+            text-decoration: none; 
+        }
+        .prose a:hover {
+            text-decoration: underline; 
+        }
+
+        .tooltip-container { position: relative; display: inline-block; }
+        .tooltip-text {
+            visibility: hidden; width: 220px; background-color: #1e293b; color: #fff;
+            text-align: center; border-radius: 8px; padding: 10px; position: absolute;
+            z-index: 50; bottom: 125%; left: 50%; margin-left: -110px; opacity: 0;
+            transition: opacity 0.2s; font-size: 0.75rem; font-weight: 400;
+            pointer-events: none; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+        .tooltip-container:hover .tooltip-text { visibility: visible; opacity: 1; }
+        .tooltip-text::after {
+            content: ""; position: absolute; top: 100%; left: 50%; margin-left: -5px;
+            border-width: 5px; border-style: solid; border-color: #1e293b transparent transparent transparent;
+        }
+
+        .animate-fade { animation: fadeIn 0.3s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+        .tool-card {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .tool-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 min-h-screen flex flex-col">
+    <div id="navbar"></div>
+
+    <section class="hero-white text-black py-2 md:py-10">
+        <div class="container mx-auto px-4 text-center">
+            <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-2">BMI Calculator For Men Women</h1>
+            <p class="text-lg md:text-xl max-w-3x1 mx-auto mb-2">
+                Quickly check your Body Mass Index (BMI) and health status. Simple, accurate, and supports both Metric and Imperial units.
+            </p>
+        </div>
+    </section>
+
+    <div id="root" class="w-full max-w-6xl mx-auto p-4 sm:p-6"></div>
+
+    <script type="text/babel">
+    const { useState, useEffect, useMemo } = React;
+
+    const Tooltip = ({ text }) => (
+      <span className="tooltip-container ml-2">
+        <i className="fas fa-info-circle text-slate-300 hover:text-[#da3f0b] cursor-help text-xs transition-colors"></i>
+        <span className="tooltip-text">{text}</span>
+      </span>
+    );
+
+    const NumberInput = ({ value, onChange, prefix, suffix, label, tooltip, placeholder }) => (
+      <div className="mb-5">
+        <div className="flex items-center text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">
+          <label>{label}</label>
+          {tooltip && <Tooltip text={tooltip} />}
+        </div>
+        <div className="relative rounded-xl shadow-sm">
+          {prefix && (
+            <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+              <span className="text-slate-400 font-semibold">{prefix}</span>
+            </div>
+          )}
+          <input
+            type="number"
+            className={`block w-full rounded-xl border-slate-200 border py-3 focus:ring-4 focus:ring-[#da3f0b20] focus:border-[#da3f0b] sm:text-sm font-semibold text-slate-800 transition-all ${prefix ? 'pl-9' : 'pl-4'} ${suffix ? 'pr-12' : 'pr-4'} bg-white`}
+            value={value}
+            onChange={(e) => onChange(e.target.value)}
+            onFocus={(e) => e.target.select()}
+            placeholder={placeholder || "0"}
+          />
+          {suffix && (
+            <div className="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none">
+              <span className="text-slate-400 font-semibold">{suffix}</span>
+            </div>
+          )}
+        </div>
+      </div>
+    );
+
+    const StatCard = ({ label, value, subtext, type = 'neutral', isMain = false }) => {
+      let colorClass = 'text-slate-900';
+      if (type === 'success') colorClass = 'text-[#16a34a]';
+      if (type === 'warning') colorClass = 'text-[#eab308]';
+      if (type === 'danger') colorClass = 'text-[#dc2626]';
+
+      return (
+        <div className={`${isMain ? 'hero-card p-8' : 'bg-white p-5 rounded-2xl border border-slate-100 shadow-sm'} flex flex-col items-center text-center`}>
+          {isMain ? (
+            <>
+              <p className="text-xs font-black text-[#da3f0b] uppercase tracking-[0.2em] mb-4">{label}</p>
+              <div className="flex items-center justify-center">
+                <span className={`text-5xl md:text-6xl font-black tracking-tighter leading-none ${colorClass}`}>{value}</span>
+              </div>
+              {subtext && <p className="text-sm text-slate-500 font-medium mt-4">{subtext}</p>}
+            </>
+          ) : (
+            <div className="w-full">
+              <div className="text-[10px] font-black text-slate-400 uppercase tracking-widest flex items-center justify-center mb-1">
+                {label}
+              </div>
+              <p className={`text-xl font-extrabold ${colorClass}`}>{value}</p>
+              {subtext && <p className="text-[10px] text-slate-400 font-medium mt-1 uppercase tracking-tight">{subtext}</p>}
+            </div>
+          )}
+        </div>
+      );
+    };
+
+    const ShareButton = ({ platform, icon, color, url, title }) => {
+        let shareUrl = '';
+        switch(platform) {
+            case 'facebook': shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${url}`; break;
+            case 'twitter': shareUrl = `https://twitter.com/intent/tweet?url=${url}&text=${title}`; break;
+            case 'linkedin': shareUrl = `https://www.linkedin.com/shareArticle?mini=true&url=${url}`; break;
+            case 'whatsapp': shareUrl = `https://api.whatsapp.com/send?text=${title}%20${url}`; break;
+            default: return null;
+        }
+        return (
+            <a href={shareUrl} target="_blank" rel="noopener noreferrer" className={`w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center text-white transition-transform hover:-translate-y-1 hover:shadow-lg ${color}`}>
+                <i className={`fab fa-${icon}`}></i>
+            </a>
+        );
+    };
+
+    const App = () => {
+      const [unit, setUnit] = useState('metric'); // 'metric' or 'imperial'
+      const [gender, setGender] = useState('male');
+      const [weight, setWeight] = useState(70);
+      const [heightCm, setHeightCm] = useState(175);
+      const [heightFt, setHeightFt] = useState(5);
+      const [heightIn, setHeightIn] = useState(9);
+      const [showBookmarkToast, setShowBookmarkToast] = useState(false);
+
+      const calculations = useMemo(() => {
+        let bmi = 0;
+        let w = parseFloat(weight) || 0;
+        
+        if (unit === 'metric') {
+          let h = (parseFloat(heightCm) || 0) / 100;
+          if (h > 0) bmi = w / (h * h);
+        } else {
+          let totalInches = (parseFloat(heightFt) || 0) * 12 + (parseFloat(heightIn) || 0);
+          if (totalInches > 0) bmi = (w / (totalInches * totalInches)) * 703;
+        }
+
+        let category = "Enter details";
+        let type = "neutral";
+        let idealRange = "";
+
+        if (bmi > 0) {
+          if (bmi < 18.5) { category = "Underweight"; type = "warning"; }
+          else if (bmi < 25) { category = "Normal Weight"; type = "success"; }
+          else if (bmi < 30) { category = "Overweight"; type = "warning"; }
+          else { category = "Obese"; type = "danger"; }
+
+          // Ideal Weight Range (BMI 18.5 - 24.9)
+          if (unit === 'metric') {
+            let h = (parseFloat(heightCm) || 0) / 100;
+            idealRange = `${(18.5 * h * h).toFixed(1)}kg - ${(24.9 * h * h).toFixed(1)}kg`;
+          } else {
+            let totalInches = (parseFloat(heightFt) || 0) * 12 + (parseFloat(heightIn) || 0);
+            idealRange = `${((18.5 * totalInches * totalInches) / 703).toFixed(1)}lbs - ${((24.9 * totalInches * totalInches) / 703).toFixed(1)}lbs`;
+          }
+        }
+
+        return { bmi: bmi.toFixed(1), category, type, idealRange };
+      }, [unit, weight, heightCm, heightFt, heightIn]);
+
+      const handleBookmark = () => {
+        setShowBookmarkToast(true);
+        setTimeout(() => setShowBookmarkToast(false), 3000);
+      };
+
+      const pageUrl = encodeURIComponent("https://simpliconvert.com/bmi_calculator_for_men_women/");
+      const pageTitle = encodeURIComponent("Check your health status with this BMI Calculator!");
+
+      return (
+        <div className="bg-white rounded-[2rem] shadow-2xl overflow-hidden border border-slate-100">
+          <header className="bg-slate-50/50 border-b border-slate-100 p-6 md:p-8 flex flex-col md:flex-row justify-between items-center gap-6">
+            <div className="text-center md:text-left">
+              <h2 className="text-2xl font-black text-slate-800 tracking-tight flex items-center justify-center md:justify-start gap-3">
+                <span className="bg-[#da3f0b] text-white p-2 rounded-xl text-lg shadow-lg shadow-[#da3f0b30]">
+                  <i className="fas fa-heartbeat"></i>
+                </span>
+                Body Mass Index Tool
+              </h2>
+            </div>
+            
+            <div className="flex bg-slate-100 p-1 rounded-xl">
+              <button 
+                onClick={() => setUnit('metric')}
+                className={`px-6 py-2 rounded-lg text-xs font-bold transition-all ${unit === 'metric' ? 'bg-white text-[#da3f0b] shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
+              >Metric</button>
+              <button 
+                onClick={() => setUnit('imperial')}
+                className={`px-6 py-2 rounded-lg text-xs font-bold transition-all ${unit === 'imperial' ? 'bg-white text-[#da3f0b] shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
+              >Imperial</button>
+            </div>
+          </header>
+
+          <main className="flex flex-col lg:flex-row">
+            <div className="lg:w-[50%] p-6 md:p-10 lg:p-12 border-r border-slate-100">
+              <div className="space-y-6">
+                
+                <div className="bg-slate-50 p-6 rounded-2xl border border-slate-100">
+                  <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest mb-6"><i className="fas fa-user mr-2"></i>Personal Details</h3>
+                  
+                  <div className="flex gap-4 mb-6">
+                    <button 
+                      onClick={() => setGender('male')}
+                      className={`flex-1 py-3 rounded-xl border-2 font-bold text-sm transition-all flex items-center justify-center gap-2 ${gender === 'male' ? 'border-[#da3f0b] bg-[#da3f0b08] text-[#da3f0b]' : 'border-slate-200 text-slate-400'}`}
+                    >
+                      <i className="fas fa-mars"></i> Men
+                    </button>
+                    <button 
+                      onClick={() => setGender('female')}
+                      className={`flex-1 py-3 rounded-xl border-2 font-bold text-sm transition-all flex items-center justify-center gap-2 ${gender === 'female' ? 'border-[#da3f0b] bg-[#da3f0b08] text-[#da3f0b]' : 'border-slate-200 text-slate-400'}`}
+                    >
+                      <i className="fas fa-venus"></i> Women
+                    </button>
+                  </div>
+
+                  {unit === 'metric' ? (
+                    <NumberInput 
+                      label="Height (cm)" 
+                      value={heightCm} 
+                      onChange={setHeightCm} 
+                      suffix="cm"
+                      tooltip="Enter your height in centimeters."
+                    />
+                  ) : (
+                    <div className="grid grid-cols-2 gap-4">
+                      <NumberInput label="Height (ft)" value={heightFt} onChange={setHeightFt} suffix="ft" />
+                      <NumberInput label="Height (in)" value={heightIn} onChange={setHeightIn} suffix="in" />
+                    </div>
+                  )}
+
+                  <NumberInput 
+                    label={`Weight (${unit === 'metric' ? 'kg' : 'lbs'})`} 
+                    value={weight} 
+                    onChange={setWeight} 
+                    suffix={unit === 'metric' ? 'kg' : 'lbs'}
+                    tooltip="Enter your current body weight."
+                  />
+                </div>
+
+                <div className="p-4 bg-blue-50 rounded-xl border border-blue-100">
+                  <p className="text-xs text-blue-700 leading-relaxed">
+                    <i className="fas fa-info-circle mr-2"></i>
+                    BMI is a general indicator. It does not account for muscle mass, bone density, or overall body composition.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div className="lg:w-[50%] bg-slate-50/50 p-6 md:p-10 lg:p-12 flex flex-col justify-center">
+               <div className="space-y-6">
+                  <StatCard 
+                    isMain={true}
+                    label="Your BMI Score"
+                    value={calculations.bmi}
+                    type={calculations.type}
+                    subtext={calculations.category}
+                  />
+
+                  <div className="grid grid-cols-1 gap-4">
+                     <StatCard 
+                       label="Ideal Weight Range" 
+                       value={calculations.idealRange || "---"}
+                       subtext="Based on your height"
+                     />
+                  </div>
+
+                  <div className="bg-white rounded-xl p-6 border border-slate-100 shadow-sm">
+                     <h4 className="text-xs font-black text-slate-400 uppercase tracking-widest mb-4">BMI Categories</h4>
+                     <div className="space-y-3">
+                        {[
+                          { label: 'Underweight', range: '< 18.5', color: 'bg-yellow-400' },
+                          { label: 'Normal', range: '18.5 - 24.9', color: 'bg-green-500' },
+                          { label: 'Overweight', range: '25 - 29.9', color: 'bg-yellow-500' },
+                          { label: 'Obese', range: '30+', color: 'bg-red-500' }
+                        ].map((cat, i) => (
+                          <div key={i} className="flex items-center justify-between text-xs font-bold">
+                            <div className="flex items-center gap-2">
+                              <div className={`w-2 h-2 rounded-full ${cat.color}`}></div>
+                              <span className="text-slate-600">{cat.label}</span>
+                            </div>
+                            <span className="text-slate-400">{cat.range}</span>
+                          </div>
+                        ))}
+                     </div>
+                  </div>
+               </div>
+            </div>
+          </main>
+
+          <footer className="bg-slate-50 border-t border-slate-100 p-6 md:p-8">
+             <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+                 <div className="text-center md:text-left">
+                     <h4 className="text-sm font-bold text-slate-700 mb-1">Share this tool</h4>
+                     <p className="text-xs text-slate-400">Help friends track their health.</p>
+                 </div>
+                 
+                 <div className="flex flex-wrap justify-center gap-3">
+                     <ShareButton platform="facebook" icon="facebook-f" color="bg-[#1877F2]" url={pageUrl} title={pageTitle} />
+                     <ShareButton platform="twitter" icon="twitter" color="bg-[#1DA1F2]" url={pageUrl} title={pageTitle} />
+                     <ShareButton platform="linkedin" icon="linkedin-in" color="bg-[#0A66C2]" url={pageUrl} title={pageTitle} />
+                     <ShareButton platform="whatsapp" icon="whatsapp" color="bg-[#25D366]" url={pageUrl} title={pageTitle} />
+                 </div>
+
+                 <div className="relative">
+                     <button onClick={handleBookmark} className="flex items-center gap-2 bg-white border border-slate-200 hover:border-[#da3f0b] hover:text-[#da3f0b] text-slate-600 px-4 py-2 rounded-lg text-sm font-bold transition-all shadow-sm active:scale-95">
+                        <i className="fas fa-bookmark"></i> Bookmark
+                     </button>
+                     {showBookmarkToast && (
+                         <div className="absolute bottom-full mb-3 left-1/2 -translate-x-1/2 bg-slate-800 text-white text-xs py-2 px-4 rounded-lg shadow-lg whitespace-nowrap animate-fade">
+                             Press <span className="font-bold text-[#da3f0b]">Ctrl + D</span> to bookmark
+                         </div>
+                     )}
+                 </div>
+             </div>
+          </footer>
+        </div>
+      );
+    };
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+    </script>
+
+    <section class="bg-white py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="prose prose-lg max-w-none prose-h2:text-gray-800 prose-p:text-gray-700">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">Why Use a BMI Calculator For Men Women?</h2>
+                <p class="mb-6 leading-relaxed">
+                    Maintaining a healthy weight is a cornerstone of long-term wellness. Our <strong>BMI Calculator For Men Women</strong> provides a simple yet effective way to screen for weight categories that may lead to health issues. Body Mass Index (BMI) is a value derived from the mass and height of a person, used globally by healthcare professionals to identify if an individual is underweight, normal weight, overweight, or obese.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">How to Calculate Your Body Mass Index</h2>
+                <p class="mb-6 leading-relaxed">
+                    Our <strong>body mass index tool</strong> automates the complex math for you. However, understanding the formula can be helpful:
+                </p>
+                <ul class="list-disc pl-6 mb-6 space-y-2 text-gray-700">
+                    <li><strong>Metric System:</strong> BMI = weight (kg) ÷ [height (m)]²</li>
+                    <li><strong>Imperial System:</strong> BMI = 703 × weight (lbs) ÷ [height (in)]²</li>
+                </ul>
+                <p class="mb-6 leading-relaxed">
+                    Simply enter your details, and the tool will instantly categorize your result based on World Health Organization (WHO) standards. This makes it an essential <strong>healthy weight calculator</strong> for anyone starting a fitness journey.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Key Features of Our BMI Tool</h2>
+                <ul class="list-disc pl-6 mb-6 space-y-2 text-gray-700">
+                    <li><strong>Dual Unit Support:</strong> Switch between Metric (kg/cm) and Imperial (lbs/ft/in) effortlessly.</li>
+                    <li><strong>Gender Specifics:</strong> While the formula is standard, our interface allows you to select your gender for a personalized experience.</li>
+                    <li><strong>Ideal Weight Range:</strong> Unlike basic tools, we show you the weight range you should aim for based on your specific height.</li>
+                    <li><strong>Instant Analysis:</strong> Get immediate feedback on whether you fall into the normal, overweight, or obese categories.</li>
+                </ul>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Understanding the Results</h2>
+                <p class="mb-6 leading-relaxed">
+                    Once you <strong>check ideal weight</strong> targets, it's important to interpret the numbers correctly. A high BMI can be an indicator of high body fatness, but it can also be high due to muscle mass. This is why athletes often have "overweight" BMIs despite having very low body fat. Use this tool as a starting point for discussions with your doctor or nutritionist.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-center text-gray-900 mb-8">Frequently Asked Questions</h2>
+            <div class="space-y-4">
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>Is BMI the same for everyone?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">
+                            The calculation is the same for all adults. However, the interpretation might vary for children and teens, where BMI-for-age percentiles are used instead of fixed categories.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>What should I do if my BMI is high?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">
+                            A high BMI is a signal to look closer at your lifestyle. Consult a healthcare provider to assess other factors like waist circumference, diet, and physical activity levels.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>Can I use this for children?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">
+                            This specific calculator is designed for adults (ages 20+). For children and adolescents, BMI is interpreted differently using age and sex-specific growth charts.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 pb-16">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-slate-200 pt-16">
+            <h2 class="text-2xl font-bold text-center text-slate-800 mb-10">Explore More Tools</h2>
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+                <a href="/freelance_hourly_rate_calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0 group-hover:bg-emerald-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-calculator text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Rate Calc</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Calculate freelance hourly rates.</p>
+                    </div>
+                </a>
+                <a href="/password_generator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-slate-50 text-slate-700 flex items-center justify-center shrink-0 group-hover:bg-slate-800 group-hover:text-white transition-colors">
+                        <i class="fas fa-key text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Password Gen</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Create secure, random passwords.</p>
+                    </div>
+                </a>
+                <a href="/qr_code_generator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-slate-50 text-slate-800 flex items-center justify-center shrink-0 group-hover:bg-slate-900 group-hover:text-white transition-colors">
+                        <i class="fas fa-qrcode text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">QR Creator</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Generate custom QR codes instantly.</p>
+                    </div>
+                </a>
+                <a href="/crypto_profit_calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-orange-50 text-orange-600 flex items-center justify-center shrink-0 group-hover:bg-orange-600 group-hover:text-white transition-colors">
+                        <i class="fab fa-bitcoin text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Crypto Calc</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Calculate trading profit & ROI.</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <div id="footer"></div>
+
+    <script>
+    async function loadComponent(url, elementId, callback) {
+        try {
+            const response = await fetch(url);
+            if (!response.ok) throw new Error('Status: ' + response.status);
+            const text = await response.text();
+            const element = document.getElementById(elementId);
+            if (element) {
+                element.innerHTML = text;
+                if (callback) callback();
+            }
+        } catch (error) {
+            console.error('Error loading component:', error);
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        loadComponent('/components/navbar.html', 'navbar');
+        loadComponent('/components/footer.html', 'footer', () => {
+            const yearSpan = document.getElementById('current-year');
+            if(yearSpan) yearSpan.textContent = new Date().getFullYear();
+        });
+        
+        document.addEventListener('click', (e) => {
+            if (e.target.closest('[data-faq-toggle]')) {
+                const button = e.target.closest('[data-faq-toggle]');
+                const answer = button.nextElementSibling;
+                const icon = button.querySelector('.faq-icon');
+                const isOpening = !answer.style.maxHeight;
+
+                if (isOpening) {
+                    answer.style.maxHeight = answer.scrollHeight + "px";
+                    icon.classList.remove('-rotate-90');
+                    icon.classList.add('rotate-90');
+                } else {
+                    answer.style.maxHeight = null;
+                    icon.classList.remove('rotate-90');
+                    icon.classList.add('-rotate-90');
+                }
+            }
+        });
+    });
+    </script>
+</body>
+</html>

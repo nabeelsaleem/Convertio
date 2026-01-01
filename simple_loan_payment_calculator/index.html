@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Simple Loan Payment Calculator – Estimate Monthly Payments | SimpliConvert</title>
+    <meta name="description" content="Plan your budget with this Simple Loan Payment Calculator. Enter the loan amount and interest rate to see your estimated monthly payments.">
+    <meta name="keywords" content="simple loan payment calculator, calculate monthly payments, mortgage estimator, interest calculator, loan repayment tool, personal loan calculator, auto loan estimator">
+    <meta name="author" content="SimpliConvert">
+    <meta property="og:site_name" content="SimpliConvert">
+    <meta name="robots" content="index, follow">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://simpliconvert.com/simple_loan_payment_calculator/">
+    <meta property="og:title" content="Simple Loan Payment Calculator – Plan Your Budget">
+    <meta property="og:description" content="Calculate your monthly loan payments, total interest, and total repayment amount instantly with our free tool.">
+    <meta property="og:image" content="https://simpliconvert.com/images/loan-calculator-og.jpg">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://simpliconvert.com/simple_loan_payment_calculator/">
+    <meta name="twitter:title" content="Simple Loan Payment Calculator – Monthly Payment Estimator">
+    <meta name="twitter:description" content="Free tool to calculate monthly loan repayments and total interest costs. Perfect for personal, auto, or home loans.">
+    <meta name="twitter:image" content="https://simpliconvert.com/images/loan-calculator-og.jpg">
+
+    <link rel="canonical" href="https://simpliconvert.com/simple_loan_payment_calculator/">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Simple Loan Payment Calculator",
+      "url": "https://simpliconvert.com/simple_loan_payment_calculator/",
+      "description": "A free online tool to calculate monthly loan payments, total interest paid, and total repayment amounts based on interest rates and loan terms.",
+      "applicationCategory": "FinanceApplication",
+      "operatingSystem": "Web Browser",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "SimpliConvert",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://simpliconvert.com/logo.png"
+        }
+      }
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [{
+        "@type": "Question",
+        "name": "How is my monthly loan payment calculated?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Monthly payments are calculated using the standard amortization formula: M = P [ i(1 + i)^n ] / [ (1 + i)^n – 1 ]. Where M is the monthly payment, P is the principal loan amount, i is the monthly interest rate, and n is the total number of months."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Can I use this for mortgages and car loans?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. This calculator works for any fixed-rate loan, including mortgages, auto loans, personal loans, and student loans. Simply enter the total amount you are borrowing and the annual interest rate."
+        }
+      }, {
+        "@type": "Question",
+        "name": "How does the loan term affect my payment?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "A longer loan term (e.g., 30 years) will result in lower monthly payments but higher total interest paid over the life of the loan. A shorter term (e.g., 5 years) has higher monthly payments but saves you money on interest."
+        }
+      }]
+    }
+    </script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #da3f0b;
+            --primary-hover: #b53409;
+            --primary-light: #fff5f2;
+            --bg: #f8fafc;
+            --text-dark: #0f172a;
+            --success: #16a34a;
+            --danger: #dc2626;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text-dark);
+        }
+
+        .hero-card {
+            background: white;
+            border: 1px solid #f1f5f9;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background-color: var(--primary);
+        }
+
+        input[type=range] {
+            height: 6px;
+            -webkit-appearance: none;
+            width: 100%;
+            background: #e2e8f0;
+            border-radius: 8px;
+            outline: none;
+        }
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: var(--primary);
+            cursor: pointer;
+            border: 2px solid white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: all 0.1s ease;
+        }
+
+        .prose a { color: #da3f0b; text-decoration: none; }
+        .prose a:hover { text-decoration: underline; }
+
+        .tooltip-container { position: relative; display: inline-block; }
+        .tooltip-text {
+            visibility: hidden; width: 220px; background-color: #1e293b; color: #fff;
+            text-align: center; border-radius: 8px; padding: 10px; position: absolute;
+            z-index: 50; bottom: 125%; left: 50%; margin-left: -110px; opacity: 0;
+            transition: opacity 0.2s; font-size: 0.75rem; font-weight: 400;
+            pointer-events: none; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+        .tooltip-container:hover .tooltip-text { visibility: visible; opacity: 1; }
+        .tooltip-text::after {
+            content: ""; position: absolute; top: 100%; left: 50%; margin-left: -5px;
+            border-width: 5px; border-style: solid; border-color: #1e293b transparent transparent transparent;
+        }
+
+        .animate-fade { animation: fadeIn 0.3s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+        .tool-card { transition: transform 0.2s ease, box-shadow 0.2s ease; }
+        .tool-card:hover { transform: translateY(-4px); box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
+    </style>
+</head>
+
+<body class="bg-gray-50 min-h-screen flex flex-col">
+    <div id="navbar"></div>
+
+    <section class="hero-white text-black py-2 md:py-10">
+        <div class="container mx-auto px-4 text-center">
+            <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-2">Simple Loan Payment Calculator</h1>
+            <p class="text-lg md:text-xl max-w-3x1 mx-auto mb-2">
+                Calculate your monthly loan repayments instantly. Plan your mortgage, auto, or personal loan with ease.
+            </p>
+        </div>
+    </section>
+
+    <div id="root" class="w-full max-w-6xl mx-auto p-4 sm:p-6"></div>
+
+    <script type="text/babel">
+    const { useState, useEffect, useMemo } = React;
+
+    const currencies = [
+      { code: 'USD', symbol: '$', locale: 'en-US' },
+      { code: 'EUR', symbol: '€', locale: 'de-DE' },
+      { code: 'GBP', symbol: '£', locale: 'en-GB' },
+      { code: 'JPY', symbol: '¥', locale: 'ja-JP' },
+      { code: 'AUD', symbol: 'A$', locale: 'en-AU' },
+      { code: 'CAD', symbol: 'C$', locale: 'en-CA' },
+      { code: 'INR', symbol: '₹', locale: 'en-IN' }
+    ];
+
+    const presets = {
+      short: { label: '5 Years', value: 5 },
+      medium: { label: '15 Years', value: 15 },
+      long: { label: '30 Years', value: 30 }
+    };
+
+    const Tooltip = ({ text }) => (
+      <span className="tooltip-container ml-2">
+        <i className="fas fa-info-circle text-slate-300 hover:text-[#da3f0b] cursor-help text-xs transition-colors"></i>
+        <span className="tooltip-text">{text}</span>
+      </span>
+    );
+
+    const NumberInput = ({ value, onChange, prefix, suffix, label, tooltip }) => (
+      <div className="mb-5">
+        <div className="flex items-center text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">
+          <label>{label}</label>
+          {tooltip && <Tooltip text={tooltip} />}
+        </div>
+        <div className="relative rounded-xl shadow-sm">
+          {prefix && (
+            <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+              <span className="text-slate-400 font-semibold">{prefix}</span>
+            </div>
+          )}
+          <input
+            type="number"
+            className={`block w-full rounded-xl border-slate-200 border py-3 focus:ring-4 focus:ring-[#da3f0b20] focus:border-[#da3f0b] sm:text-sm font-semibold text-slate-800 transition-all ${prefix ? 'pl-9' : 'pl-4'} ${suffix ? 'pr-12' : 'pr-4'} bg-white`}
+            value={value}
+            onChange={(e) => onChange(e.target.value)}
+            onFocus={(e) => e.target.select()}
+            placeholder="0.00"
+          />
+          {suffix && (
+            <div className="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none">
+              <span className="text-slate-400 font-semibold">{suffix}</span>
+            </div>
+          )}
+        </div>
+      </div>
+    );
+
+    const StatCard = ({ label, value, subtext, type = 'neutral', isMain = false }) => {
+      let colorClass = 'text-slate-900';
+      if (type === 'primary') colorClass = 'text-[#da3f0b]';
+
+      return (
+        <div className={`${isMain ? 'hero-card p-8' : 'bg-white p-5 rounded-2xl border border-slate-100 shadow-sm'} flex flex-col items-center text-center`}>
+          {isMain ? (
+            <>
+              <p className="text-xs font-black text-[#da3f0b] uppercase tracking-[0.2em] mb-4">{label}</p>
+              <div className="flex items-center justify-center">
+                <span className={`text-5xl md:text-6xl font-black tracking-tighter leading-none ${colorClass}`}>{value}</span>
+              </div>
+              {subtext && <p className="text-sm text-slate-400 font-medium mt-4">{subtext}</p>}
+            </>
+          ) : (
+            <div className="w-full">
+              <div className="text-[10px] font-black text-slate-400 uppercase tracking-widest flex items-center justify-center mb-1">
+                {label}
+              </div>
+              <p className={`text-xl font-extrabold ${colorClass}`}>{value}</p>
+              {subtext && <p className="text-[10px] text-slate-400 font-medium mt-1 uppercase tracking-tight">{subtext}</p>}
+            </div>
+          )}
+        </div>
+      );
+    };
+
+    const ShareButton = ({ platform, icon, color, url, title }) => {
+        let shareUrl = '';
+        switch(platform) {
+            case 'facebook': shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${url}`; break;
+            case 'twitter': shareUrl = `https://twitter.com/intent/tweet?url=${url}&text=${title}`; break;
+            case 'linkedin': shareUrl = `https://www.linkedin.com/shareArticle?mini=true&url=${url}`; break;
+            case 'whatsapp': shareUrl = `https://api.whatsapp.com/send?text=${title}%20${url}`; break;
+            default: return null;
+        }
+        return (
+            <a href={shareUrl} target="_blank" rel="noopener noreferrer" className={`w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center text-white transition-transform hover:-translate-y-1 hover:shadow-lg ${color}`}>
+                <i className={`fab fa-${icon}`}></i>
+            </a>
+        );
+    };
+
+    const App = () => {
+      const [currency, setCurrency] = useState(currencies[0]);
+      const [loanAmount, setLoanAmount] = useState(250000);
+      const [interestRate, setInterestRate] = useState(5.5);
+      const [loanTerm, setLoanTerm] = useState(30);
+      const [showBookmarkToast, setShowBookmarkToast] = useState(false);
+
+      const calculations = useMemo(() => {
+        const principal = parseFloat(loanAmount) || 0;
+        const annualRate = parseFloat(interestRate) || 0;
+        const years = parseFloat(loanTerm) || 0;
+
+        if (principal <= 0 || annualRate < 0 || years <= 0) {
+          return { monthlyPayment: 0, totalPayment: 0, totalInterest: 0 };
+        }
+
+        const monthlyRate = annualRate / 100 / 12;
+        const numberOfPayments = years * 12;
+
+        let monthlyPayment = 0;
+        if (monthlyRate === 0) {
+          monthlyPayment = principal / numberOfPayments;
+        } else {
+          monthlyPayment = principal * (monthlyRate * Math.pow(1 + monthlyRate, numberOfPayments)) / (Math.pow(1 + monthlyRate, numberOfPayments) - 1);
+        }
+
+        const totalPayment = monthlyPayment * numberOfPayments;
+        const totalInterest = totalPayment - principal;
+
+        return {
+          monthlyPayment,
+          totalPayment,
+          totalInterest
+        };
+      }, [loanAmount, interestRate, loanTerm]);
+
+      const formatMoney = (amount) => {
+        return new Intl.NumberFormat(currency.locale, {
+          style: 'currency',
+          currency: currency.code,
+          maximumFractionDigits: 2
+        }).format(amount);
+      };
+
+      const handleBookmark = () => {
+        setShowBookmarkToast(true);
+        setTimeout(() => setShowBookmarkToast(false), 3000);
+      };
+
+      const pageUrl = encodeURIComponent("https://simpliconvert.com/simple_loan_payment_calculator/");
+      const pageTitle = encodeURIComponent("Check out this Simple Loan Payment Calculator!");
+
+      return (
+        <div className="bg-white rounded-[2rem] shadow-2xl overflow-hidden border border-slate-100">
+          <header className="bg-slate-50/50 border-b border-slate-100 p-6 md:p-8 flex flex-col md:flex-row justify-between items-center gap-6">
+            <div className="text-center md:text-left">
+              <h2 className="text-2xl font-black text-slate-800 tracking-tight flex items-center justify-center md:justify-start gap-3">
+                <span className="bg-[#da3f0b] text-white p-2 rounded-xl text-lg shadow-lg shadow-[#da3f0b30]">
+                  <i className="fas fa-calculator"></i>
+                </span>
+                Loan Repayment Estimator
+              </h2>
+            </div>
+            
+            <div className="relative group min-w-[140px]">
+              <select 
+                value={currency.code}
+                onChange={(e) => setCurrency(currencies.find(c => c.code === e.target.value))}
+                className="appearance-none w-full bg-white border border-slate-200 text-slate-700 py-2.5 pl-4 pr-10 rounded-xl text-xs font-bold focus:outline-none focus:ring-4 focus:ring-[#da3f0b15] focus:border-[#da3f0b] shadow-sm cursor-pointer hover:border-[#da3f0b40]"
+              >
+                {currencies.map(c => (
+                  <option key={c.code} value={c.code}>{c.code} ({c.symbol})</option>
+                ))}
+              </select>
+              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-slate-400">
+                <i className="fas fa-chevron-down text-[10px]"></i>
+              </div>
+            </div>
+          </header>
+
+          <main className="flex flex-col lg:flex-row">
+            <div className="lg:w-[50%] p-6 md:p-10 lg:p-12 border-r border-slate-100">
+              <div className="space-y-6">
+                <div className="bg-slate-50 p-6 rounded-2xl border border-slate-100">
+                  <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest mb-6"><i className="fas fa-hand-holding-usd mr-2"></i>Loan Details</h3>
+                  <NumberInput 
+                    label="Loan Amount (Principal)" 
+                    value={loanAmount} 
+                    onChange={setLoanAmount} 
+                    prefix={currency.symbol}
+                    tooltip="The total amount of money you are borrowing."
+                  />
+                  <NumberInput 
+                    label="Annual Interest Rate" 
+                    value={interestRate} 
+                    onChange={setInterestRate} 
+                    suffix="%"
+                    tooltip="The yearly interest rate for this loan."
+                  />
+                </div>
+
+                <div className="bg-[#da3f0b08] p-6 rounded-2xl border border-[#da3f0b15]">
+                   <div className="flex justify-between items-center mb-6">
+                      <h3 className="text-xs font-black text-[#da3f0b] uppercase tracking-widest"><i className="fas fa-calendar-alt mr-2"></i>Loan Term</h3>
+                      <div className="flex gap-2">
+                         {Object.values(presets).map((p, idx) => (
+                           <button 
+                             key={idx} 
+                             onClick={() => setLoanTerm(p.value)}
+                             className="text-[10px] bg-white border border-[#da3f0b20] text-[#da3f0b] px-2 py-1 rounded-md font-bold hover:bg-[#da3f0b] hover:text-white transition-all"
+                           >
+                             {p.label}
+                           </button>
+                         ))}
+                      </div>
+                   </div>
+                   <NumberInput 
+                      label="Duration" 
+                      value={loanTerm} 
+                      onChange={setLoanTerm} 
+                      suffix="Years"
+                      tooltip="How many years you have to repay the loan."
+                   />
+                </div>
+              </div>
+            </div>
+
+            <div className="lg:w-[50%] bg-slate-50/50 p-6 md:p-10 lg:p-12 flex flex-col justify-center">
+               <div className="space-y-6">
+                  <StatCard 
+                    isMain={true}
+                    label="Estimated Monthly Payment"
+                    value={formatMoney(calculations.monthlyPayment)}
+                    type="primary"
+                    subtext={`Based on ${loanTerm} year term at ${interestRate}%`}
+                  />
+
+                  <div className="grid grid-cols-2 gap-4">
+                     <StatCard 
+                       label="Total Interest" 
+                       value={formatMoney(calculations.totalInterest)}
+                       subtext="Cost of Borrowing"
+                     />
+                     <StatCard 
+                       label="Total Repayment" 
+                       value={formatMoney(calculations.totalPayment)}
+                       subtext="Principal + Interest"
+                     />
+                  </div>
+
+                  <div className="bg-white rounded-xl p-6 border border-slate-100 shadow-sm mt-4">
+                     <p className="text-xs text-slate-500 leading-relaxed">
+                       <i className="fas fa-info-circle mr-1 text-[#da3f0b]"></i>
+                       This estimate does not include taxes, insurance, or additional lender fees. Your actual payment may vary based on your credit score and specific loan terms.
+                     </p>
+                  </div>
+               </div>
+            </div>
+          </main>
+
+          <footer className="bg-slate-50 border-t border-slate-100 p-6 md:p-8">
+             <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+                 <div className="text-center md:text-left">
+                     <h4 className="text-sm font-bold text-slate-700 mb-1">Share this calculator</h4>
+                     <p className="text-xs text-slate-400">Help others plan their finances.</p>
+                 </div>
+                 
+                 <div className="flex flex-wrap justify-center gap-3">
+                     <ShareButton platform="facebook" icon="facebook-f" color="bg-[#1877F2]" url={pageUrl} title={pageTitle} />
+                     <ShareButton platform="twitter" icon="twitter" color="bg-[#1DA1F2]" url={pageUrl} title={pageTitle} />
+                     <ShareButton platform="linkedin" icon="linkedin-in" color="bg-[#0A66C2]" url={pageUrl} title={pageTitle} />
+                     <ShareButton platform="whatsapp" icon="whatsapp" color="bg-[#25D366]" url={pageUrl} title={pageTitle} />
+                 </div>
+
+                 <div className="relative">
+                     <button 
+                        onClick={handleBookmark}
+                        className="flex items-center gap-2 bg-white border border-slate-200 hover:border-[#da3f0b] hover:text-[#da3f0b] text-slate-600 px-4 py-2 rounded-lg text-sm font-bold transition-all shadow-sm active:scale-95"
+                     >
+                        <i className="fas fa-bookmark"></i> Bookmark
+                     </button>
+                     {showBookmarkToast && (
+                         <div className="absolute bottom-full mb-3 left-1/2 -translate-x-1/2 bg-slate-800 text-white text-xs py-2 px-4 rounded-lg shadow-lg whitespace-nowrap animate-fade">
+                             Press <span className="font-bold text-[#da3f0b]">Ctrl + D</span> to bookmark
+                         </div>
+                     )}
+                 </div>
+             </div>
+          </footer>
+        </div>
+      );
+    };
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+    </script>
+
+    <section class="bg-white py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="prose prose-lg max-w-none prose-h2:text-gray-800 prose-p:text-gray-700">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">Simple Loan Payment Calculator – Budget with Confidence</h2>
+                <p class="mb-6 leading-relaxed">
+                    Taking out a loan is a major financial commitment. Whether you are buying a new home, financing a car, or consolidating debt, knowing exactly how much you will owe each month is essential for maintaining a healthy budget. Our <strong>Simple Loan Payment Calculator</strong> provides instant, accurate estimates of your monthly repayments, helping you avoid financial surprises.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">How to Use the Loan Estimator</h2>
+                <p class="mb-6 leading-relaxed">
+                    Using our tool is straightforward. You only need three pieces of information to get a complete breakdown of your loan costs:
+                </p>
+                <ul class="list-disc pl-6 mb-6 space-y-2 text-gray-700">
+                    <li><strong>Loan Amount:</strong> The total principal you intend to borrow.</li>
+                    <li><strong>Interest Rate:</strong> The annual percentage rate (APR) offered by your lender.</li>
+                    <li><strong>Loan Term:</strong> The number of years you have to pay back the loan.</li>
+                </ul>
+                <p class="mb-6 leading-relaxed">
+                    Once entered, the calculator instantly shows your monthly payment, the total interest you will pay over the life of the loan, and the total amount you will have paid back by the end of the term.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Why Calculating Total Interest Matters</h2>
+                <p class="mb-6 leading-relaxed">
+                    Many borrowers focus only on the monthly payment, but the <strong>total interest</strong> is the true cost of borrowing. A lower monthly payment over a longer term might seem attractive, but it often results in paying significantly more in interest. For example, a 30-year mortgage will have much lower payments than a 15-year mortgage, but you could end up paying double the interest. Our tool helps you compare these scenarios side-by-side.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Tips for Lowering Your Monthly Payments</h2>
+                <p class="mb-6 leading-relaxed">
+                    If the estimated monthly payment is too high for your budget, consider these strategies:
+                </p>
+                <ul class="list-disc pl-6 mb-6 space-y-2 text-gray-700">
+                    <li><strong>Improve your credit score:</strong> Higher scores usually qualify for lower interest rates.</li>
+                    <li><strong>Make a larger down payment:</strong> Borrowing less principal reduces both the payment and interest.</li>
+                    <li><strong>Extend the loan term:</strong> Spreading payments over more years lowers the monthly cost, though it increases total interest.</li>
+                    <li><strong>Shop around:</strong> Different lenders offer different rates for the same loan amount.</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-center text-gray-900 mb-8">Loan Calculator – Frequently Asked Questions</h2>
+            <div class="space-y-4">
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>What is the difference between fixed and variable rates?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">
+                            A fixed-rate loan maintains the same interest rate for the entire term, meaning your monthly payment never changes. A variable-rate loan can change based on market conditions, which may cause your monthly payments to increase or decrease over time.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>Does this calculator include PMI or property taxes?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">
+                            No, this is a simple loan calculator that focuses on principal and interest. For mortgages, you should also factor in Private Mortgage Insurance (PMI), property taxes, and homeowners insurance, which are typically added to your monthly escrow payment.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>How can I pay off my loan faster?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">
+                            You can pay off a loan faster by making extra payments toward the principal. Even small additional monthly payments can significantly reduce the total interest paid and shorten the loan term.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 pb-16">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-slate-200 pt-16">
+            <h2 class="text-2xl font-bold text-center text-slate-800 mb-10">Popular Tools on SimpliConvert</h2>
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+                <a href="/crypto_profit_calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-orange-50 text-orange-600 flex items-center justify-center shrink-0 group-hover:bg-orange-600 group-hover:text-white transition-colors">
+                        <i class="fab fa-bitcoin text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Crypto Calc</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Calculate crypto P&L and ROI.</p>
+                    </div>
+                </a>
+                <a href="/freelance_hourly_rate_calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0 group-hover:bg-emerald-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-calculator text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Rate Calc</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Calculate freelance hourly rates.</p>
+                    </div>
+                </a>
+                <a href="/roblox_devex_calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-gray-50 text-gray-800 flex items-center justify-center shrink-0 group-hover:bg-gray-900 group-hover:text-white transition-colors">
+                        <i class="fas fa-gamepad text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">DevEx Calc</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Convert Robux to USD instantly.</p>
+                    </div>
+                </a>
+                <a href="/password_generator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-slate-50 text-slate-700 flex items-center justify-center shrink-0 group-hover:bg-slate-800 group-hover:text-white transition-colors">
+                        <i class="fas fa-key text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Password Gen</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Create secure, random passwords.</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <div id="footer"></div>
+
+    <script>
+    function initializeHeaderScripts() {
+        const header = document.getElementById('header');
+        if (header) {
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 10) header.classList.add('scrolled-effect');
+                else header.classList.remove('scrolled-effect');
+            });
+        }
+    }
+    
+    function initializeFooterScripts() {
+        const yearSpan = document.getElementById('current-year');
+        if(yearSpan) yearSpan.textContent = new Date().getFullYear();
+    }
+
+    async function loadComponent(url, elementId, callback) {
+        try {
+            const response = await fetch(url);
+            const text = await response.text();
+            const element = document.getElementById(elementId);
+            if (element) {
+                element.innerHTML = text;
+                if (callback) callback();
+            }
+        } catch (error) {
+            console.error('Error loading component:', error);
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        loadComponent('/components/navbar.html', 'navbar', initializeHeaderScripts);
+        loadComponent('/components/footer.html', 'footer', initializeFooterScripts);
+        
+        const faqToggles = document.querySelectorAll('[data-faq-toggle]');
+        faqToggles.forEach(button => {
+            button.addEventListener('click', () => {
+                const answer = button.nextElementSibling;
+                const icon = button.querySelector('.faq-icon');
+                const isOpening = !answer.style.maxHeight;
+
+                faqToggles.forEach(other => {
+                    if (other !== button) {
+                        other.nextElementSibling.style.maxHeight = null;
+                        other.querySelector('.faq-icon').classList.remove('rotate-90');
+                        other.querySelector('.faq-icon').classList.add('-rotate-90');
+                    }
+                });
+
+                if (isOpening) {
+                    answer.style.maxHeight = answer.scrollHeight + "px";
+                    icon.classList.remove('-rotate-90');
+                    icon.classList.add('rotate-90');
+                } else {
+                    answer.style.maxHeight = null;
+                    icon.classList.remove('rotate-90');
+                    icon.classList.add('-rotate-90');
+                }
+            });
+        });
+    });
+    </script>
+</body>
+</html>
