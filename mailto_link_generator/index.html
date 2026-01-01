@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Mailto Link Generator – Create Custom HTML Email Links | SimpliConvert</title>
+    <meta name="description" content="Create custom email links with the Mailto Link Generator. Pre-fill the subject line, body text, and recipient for ready-to-send HTML email links.">
+    <meta name="keywords" content="mailto link generator, email link maker, html email link, custom email url, email signature link, pre-fill email subject, mailto generator with body">
+    <meta name="author" content="SimpliConvert">
+    <meta property="og:site_name" content="SimpliConvert">
+    <meta name="robots" content="index, follow">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://simpliconvert.com/mailto_link_generator/">
+    <meta property="og:title" content="Mailto Link Generator – Create Custom Email Links">
+    <meta property="og:description" content="Easily generate mailto links with pre-filled recipients, subjects, and body text for your website or email signature.">
+    <meta property="og:image" content="https://simpliconvert.com/images/mailto-link-generator-og.jpg">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://simpliconvert.com/mailto_link_generator/">
+    <meta name="twitter:title" content="Mailto Link Generator – HTML Email Link Maker">
+    <meta name="twitter:description" content="Free tool to generate custom mailto: links. Pre-fill CC, BCC, Subject, and Body text instantly.">
+    <meta name="twitter:image" content="https://simpliconvert.com/images/mailto-link-generator-og.jpg">
+
+    <link rel="canonical" href="https://simpliconvert.com/mailto_link_generator/">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Mailto Link Generator",
+      "url": "https://simpliconvert.com/mailto_link_generator/",
+      "description": "A free online tool to create custom HTML mailto links with pre-filled recipients, CC, BCC, subject lines, and body content.",
+      "applicationCategory": "UtilityApplication",
+      "operatingSystem": "Web Browser",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "SimpliConvert",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://simpliconvert.com/logo.png"
+        }
+      }
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [{
+        "@type": "Question",
+        "name": "What is a mailto link?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "A mailto link is an HTML hyperlink that redirects the user to their default email client (like Outlook, Gmail, or Apple Mail) with a new message window already open. It can pre-fill the recipient, subject, and body."
+        }
+      }, {
+        "@type": "Question",
+        "name": "How do I add multiple recipients to a mailto link?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "You can add multiple recipients by separating email addresses with a comma in the 'To', 'CC', or 'BCC' fields. Our generator handles the encoding automatically."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Does this work on mobile devices?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes, mailto links work on almost all modern mobile browsers and will trigger the default mail app on iOS and Android devices."
+        }
+      }]
+    }
+    </script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #da3f0b;
+            --primary-hover: #b53409;
+            --primary-light: #fff5f2;
+            --bg: #f8fafc;
+            --text-dark: #0f172a;
+            --success: #16a34a;
+            --danger: #dc2626;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text-dark);
+        }
+
+        .hero-card {
+            background: white;
+            border: 1px solid #f1f5f9;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background-color: var(--primary);
+        }
+
+        .prose a {
+            color: #da3f0b;
+            text-decoration: none; 
+        }
+        .prose a:hover {
+            text-decoration: underline; 
+        }
+
+        .tooltip-container { position: relative; display: inline-block; }
+        .tooltip-text {
+            visibility: hidden; width: 220px; background-color: #1e293b; color: #fff;
+            text-align: center; border-radius: 8px; padding: 10px; position: absolute;
+            z-index: 50; bottom: 125%; left: 50%; margin-left: -110px; opacity: 0;
+            transition: opacity 0.2s; font-size: 0.75rem; font-weight: 400;
+            pointer-events: none; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+        .tooltip-container:hover .tooltip-text { visibility: visible; opacity: 1; }
+        .tooltip-text::after {
+            content: ""; position: absolute; top: 100%; left: 50%; margin-left: -5px;
+            border-width: 5px; border-style: solid; border-color: #1e293b transparent transparent transparent;
+        }
+
+        .animate-fade { animation: fadeIn 0.3s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+        .tool-card {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .tool-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+        }
+        
+        .code-block {
+            background: #1e293b;
+            color: #e2e8f0;
+            font-family: 'Courier New', Courier, monospace;
+            padding: 1rem;
+            border-radius: 0.75rem;
+            position: relative;
+            word-break: break-all;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 min-h-screen flex flex-col">
+    <div id="navbar"></div>
+
+    <section class="hero-white text-black py-2 md:py-10">
+        <div class="container mx-auto px-4 text-center">
+            <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-2">Mailto Link Generator</h1>
+            <p class="text-lg md:text-xl max-w-3x1 mx-auto mb-2">
+                Create custom email links instantly. Pre-fill recipients, CC, BCC, subjects, and body text for professional HTML links and email signatures.
+            </p>
+        </div>
+    </section>
+
+    <div id="root" class="w-full max-w-6xl mx-auto p-4 sm:p-6"></div>
+
+    <script type="text/babel">
+    const { useState, useEffect, useMemo } = React;
+
+    const Tooltip = ({ text }) => (
+      <span className="tooltip-container ml-2">
+        <i className="fas fa-info-circle text-slate-300 hover:text-[#da3f0b] cursor-help text-xs transition-colors"></i>
+        <span className="tooltip-text">{text}</span>
+      </span>
+    );
+
+    const InputField = ({ value, onChange, label, placeholder, tooltip, type = "text" }) => (
+      <div className="mb-5">
+        <div className="flex items-center text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">
+          <label>{label}</label>
+          {tooltip && <Tooltip text={tooltip} />}
+        </div>
+        <input
+          type={type}
+          className="block w-full rounded-xl border-slate-200 border py-3 px-4 focus:ring-4 focus:ring-[#da3f0b20] focus:border-[#da3f0b] sm:text-sm font-semibold text-slate-800 transition-all bg-white"
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          placeholder={placeholder}
+        />
+      </div>
+    );
+
+    const TextAreaField = ({ value, onChange, label, placeholder, tooltip }) => (
+      <div className="mb-5">
+        <div className="flex items-center text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">
+          <label>{label}</label>
+          {tooltip && <Tooltip text={tooltip} />}
+        </div>
+        <textarea
+          rows="4"
+          className="block w-full rounded-xl border-slate-200 border py-3 px-4 focus:ring-4 focus:ring-[#da3f0b20] focus:border-[#da3f0b] sm:text-sm font-semibold text-slate-800 transition-all bg-white"
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          placeholder={placeholder}
+        />
+      </div>
+    );
+
+    const ShareButton = ({ platform, icon, color, url, title }) => {
+        let shareUrl = '';
+        switch(platform) {
+            case 'facebook': shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${url}`; break;
+            case 'twitter': shareUrl = `https://twitter.com/intent/tweet?url=${url}&text=${title}`; break;
+            case 'linkedin': shareUrl = `https://www.linkedin.com/shareArticle?mini=true&url=${url}`; break;
+            case 'whatsapp': shareUrl = `https://api.whatsapp.com/send?text=${title}%20${url}`; break;
+            case 'reddit': shareUrl = `https://www.reddit.com/submit?url=${url}&title=${title}`; break;
+            case 'telegram': shareUrl = `https://t.me/share/url?url=${url}&text=${title}`; break;
+            default: return null;
+        }
+
+        return (
+            <a 
+                href={shareUrl} 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className={`w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center text-white transition-transform hover:-translate-y-1 hover:shadow-lg ${color}`}
+            >
+                <i className={`fab fa-${icon}`}></i>
+            </a>
+        );
+    };
+
+    const App = () => {
+      const [to, setTo] = useState('');
+      const [cc, setCc] = useState('');
+      const [bcc, setBcc] = useState('');
+      const [subject, setSubject] = useState('');
+      const [body, setBody] = useState('');
+      const [linkText, setLinkText] = useState('Contact Us');
+      const [copySuccess, setCopySuccess] = useState('');
+      const [showBookmarkToast, setShowBookmarkToast] = useState(false);
+
+      const mailtoUrl = useMemo(() => {
+        let url = `mailto:${to.trim()}`;
+        const params = [];
+        if (cc.trim()) params.push(`cc=${encodeURIComponent(cc.trim())}`);
+        if (bcc.trim()) params.push(`bcc=${encodeURIComponent(bcc.trim())}`);
+        if (subject.trim()) params.push(`subject=${encodeURIComponent(subject.trim())}`);
+        if (body.trim()) params.push(`body=${encodeURIComponent(body.trim())}`);
+        
+        if (params.length > 0) {
+          url += `?${params.join('&')}`;
+        }
+        return url;
+      }, [to, cc, bcc, subject, body]);
+
+      const htmlCode = useMemo(() => {
+        return `<a href="${mailtoUrl}">${linkText || 'Email Us'}</a>`;
+      }, [mailtoUrl, linkText]);
+
+      const copyToClipboard = (text, type) => {
+        navigator.clipboard.writeText(text);
+        setCopySuccess(type);
+        setTimeout(() => setCopySuccess(''), 2000);
+      };
+
+      const handleBookmark = () => {
+        setShowBookmarkToast(true);
+        setTimeout(() => setShowBookmarkToast(false), 3000);
+      };
+
+      const pageUrl = encodeURIComponent("https://simpliconvert.com/mailto_link_generator/");
+      const pageTitle = encodeURIComponent("Check out this Mailto Link Generator!");
+
+      return (
+        <div className="bg-white rounded-[2rem] shadow-2xl overflow-hidden border border-slate-100">
+          <header className="bg-slate-50/50 border-b border-slate-100 p-6 md:p-8 flex flex-col md:flex-row justify-between items-center gap-6">
+            <div className="text-center md:text-left">
+              <h2 className="text-2xl font-black text-slate-800 tracking-tight flex items-center justify-center md:justify-start gap-3">
+                <span className="bg-[#da3f0b] text-white p-2 rounded-xl text-lg shadow-lg shadow-[#da3f0b30]">
+                  <i className="fas fa-envelope-open-text"></i>
+                </span>
+                Email Link Maker
+              </h2>
+            </div>
+            <div className="text-xs font-bold text-slate-400 uppercase tracking-widest">
+                Free HTML Utility
+            </div>
+          </header>
+
+          <main className="flex flex-col lg:flex-row">
+            {/* Input Panel */}
+            <div className="lg:w-[50%] p-6 md:p-10 lg:p-12 border-r border-slate-100">
+              <div className="space-y-2">
+                <InputField 
+                    label="Recipient Email (To)" 
+                    value={to} 
+                    onChange={setTo} 
+                    placeholder="example@mail.com"
+                    tooltip="The main email address you want to send to."
+                />
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <InputField 
+                        label="CC" 
+                        value={cc} 
+                        onChange={setCc} 
+                        placeholder="cc@mail.com"
+                        tooltip="Carbon Copy recipients (comma separated)."
+                    />
+                    <InputField 
+                        label="BCC" 
+                        value={bcc} 
+                        onChange={setBcc} 
+                        placeholder="bcc@mail.com"
+                        tooltip="Blind Carbon Copy recipients."
+                    />
+                </div>
+                <InputField 
+                    label="Subject Line" 
+                    value={subject} 
+                    onChange={setSubject} 
+                    placeholder="How can we help?"
+                    tooltip="The pre-filled subject of the email."
+                />
+                <TextAreaField 
+                    label="Email Body" 
+                    value={body} 
+                    onChange={setBody} 
+                    placeholder="Type your message here..."
+                    tooltip="The pre-filled content of the email message."
+                />
+                <InputField 
+                    label="Link Text" 
+                    value={linkText} 
+                    onChange={setLinkText} 
+                    placeholder="Contact Us"
+                    tooltip="The text that will be clickable in the HTML link."
+                />
+              </div>
+            </div>
+
+            {/* Results Panel */}
+            <div className="lg:w-[50%] bg-slate-50/50 p-6 md:p-10 lg:p-12 flex flex-col">
+               <div className="space-y-8">
+                  
+                  {/* Preview */}
+                  <div className="hero-card p-8 rounded-2xl text-center">
+                    <p className="text-xs font-black text-[#da3f0b] uppercase tracking-[0.2em] mb-4">Live Preview</p>
+                    <div className="py-6">
+                        <a 
+                            href={mailtoUrl} 
+                            className="inline-block bg-[#da3f0b] text-white px-8 py-4 rounded-xl font-bold text-lg shadow-xl shadow-[#da3f0b30] hover:bg-[#b53409] transition-all transform hover:scale-105"
+                        >
+                            {linkText || 'Email Us'}
+                        </a>
+                    </div>
+                    <p className="text-xs text-slate-400 mt-2">Click the button above to test the link in your email client.</p>
+                  </div>
+
+                  {/* Generated URL */}
+                  <div className="space-y-4">
+                    <div>
+                        <div className="flex justify-between items-center mb-2">
+                            <span className="text-xs font-black text-slate-400 uppercase tracking-widest">Mailto URL</span>
+                            <button 
+                                onClick={() => copyToClipboard(mailtoUrl, 'url')}
+                                className="text-[10px] font-bold text-[#da3f0b] hover:underline"
+                            >
+                                {copySuccess === 'url' ? 'COPIED!' : 'COPY URL'}
+                            </button>
+                        </div>
+                        <div className="code-block text-xs">
+                            {mailtoUrl}
+                        </div>
+                    </div>
+
+                    <div>
+                        <div className="flex justify-between items-center mb-2">
+                            <span className="text-xs font-black text-slate-400 uppercase tracking-widest">HTML Code</span>
+                            <button 
+                                onClick={() => copyToClipboard(htmlCode, 'html')}
+                                className="text-[10px] font-bold text-[#da3f0b] hover:underline"
+                            >
+                                {copySuccess === 'html' ? 'COPIED!' : 'COPY HTML'}
+                            </button>
+                        </div>
+                        <div className="code-block text-xs">
+                            {htmlCode}
+                        </div>
+                    </div>
+                  </div>
+
+                  <div className="bg-white rounded-xl p-6 border border-slate-100 shadow-sm">
+                     <h4 className="text-xs font-black text-slate-800 uppercase mb-3 flex items-center gap-2">
+                        <i className="fas fa-lightbulb text-yellow-500"></i> Pro Tip
+                     </h4>
+                     <p className="text-xs text-slate-500 leading-relaxed">
+                        Use <strong>%0D%0A</strong> for line breaks in the body if you are manually editing the link, or simply press Enter in our generator above!
+                     </p>
+                  </div>
+
+               </div>
+            </div>
+          </main>
+
+          {/* Share & Bookmark Footer */}
+          <footer className="bg-slate-50 border-t border-slate-100 p-6 md:p-8">
+             <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+                 <div className="text-center md:text-left">
+                     <h4 className="text-sm font-bold text-slate-700 mb-1">Share this tool</h4>
+                     <p className="text-xs text-slate-400">Help others create email links easily.</p>
+                 </div>
+                 
+                 <div className="flex flex-wrap justify-center gap-3">
+                     <ShareButton platform="facebook" icon="facebook-f" color="bg-[#1877F2]" url={pageUrl} title={pageTitle} />
+                     <ShareButton platform="twitter" icon="twitter" color="bg-[#1DA1F2]" url={pageUrl} title={pageTitle} />
+                     <ShareButton platform="linkedin" icon="linkedin-in" color="bg-[#0A66C2]" url={pageUrl} title={pageTitle} />
+                     <ShareButton platform="whatsapp" icon="whatsapp" color="bg-[#25D366]" url={pageUrl} title={pageTitle} />
+                     <ShareButton platform="reddit" icon="reddit-alien" color="bg-[#FF4500]" url={pageUrl} title={pageTitle} />
+                     <ShareButton platform="telegram" icon="telegram-plane" color="bg-[#0088cc]" url={pageUrl} title={pageTitle} />
+                 </div>
+
+                 <div className="relative">
+                     <button 
+                        onClick={handleBookmark}
+                        className="flex items-center gap-2 bg-white border border-slate-200 hover:border-[#da3f0b] hover:text-[#da3f0b] text-slate-600 px-4 py-2 rounded-lg text-sm font-bold transition-all shadow-sm active:scale-95"
+                     >
+                        <i className="fas fa-bookmark"></i> Bookmark
+                     </button>
+                     {showBookmarkToast && (
+                         <div className="absolute bottom-full mb-3 left-1/2 -translate-x-1/2 bg-slate-800 text-white text-xs py-2 px-4 rounded-lg shadow-lg whitespace-nowrap animate-fade">
+                             Press <span className="font-bold text-[#da3f0b]">Ctrl + D</span> to bookmark
+                         </div>
+                     )}
+                 </div>
+             </div>
+          </footer>
+        </div>
+      );
+    };
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+    </script>
+
+
+  <section class="bg-white py-12 sm:py-16">
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="prose prose-lg max-w-none prose-h2:text-gray-800 prose-p:text-gray-700">
+
+      <h2 class="text-3xl font-bold text-gray-900 mb-4">Mailto Link Generator – Simplify Your Contact Links</h2>
+      <p class="mb-6 leading-relaxed">
+        Adding a contact email to your website shouldn't be a hassle for your users. A standard email link is fine, but a <strong>Mailto Link Generator</strong> takes it to the next level. By pre-filling the subject line and body text, you make it incredibly easy for customers to reach out with the right information. Whether you're a web developer, a small business owner, or a freelancer, this tool helps you create professional <em>HTML email links</em> in seconds.
+      </p>
+
+      <h2 class="text-2xl font-bold mt-8 mb-4">Why Use a Custom Email Link Maker?</h2>
+      <p class="mb-6 leading-relaxed">
+        User experience (UX) is everything in the digital world. When a user clicks an email link and finds a blank message, they might hesitate or forget what they wanted to ask. A <strong>custom email url</strong> ensures that:
+      </p>
+      <ul class="list-disc pl-6 mb-6 space-y-2 text-gray-700">
+        <li><strong>Consistency:</strong> Every inquiry comes with a standardized subject line (e.g., "Support Request").</li>
+        <li><strong>Speed:</strong> Users don't have to type out their intent; they just fill in the blanks.</li>
+        <li><strong>Tracking:</strong> You can use specific subject lines to track which page or campaign the email originated from.</li>
+      </ul>
+
+      <h2 class="text-2xl font-bold mt-8 mb-4">How to Create an HTML Email Link with Body and Subject</h2>
+      <p class="mb-6 leading-relaxed">
+        Creating a mailto link manually can be tricky because special characters like spaces and line breaks must be URL-encoded. Our <strong>mailto link generator</strong> handles all the technical work for you. Here is how the structure works:
+      </p>
+      <ul class="list-disc pl-6 mb-6 space-y-2 text-gray-700">
+        <li><strong>To:</strong> The primary recipient of the email.</li>
+        <li><strong>CC/BCC:</strong> Additional recipients for visibility or archiving.</li>
+        <li><strong>Subject:</strong> The text that appears in the subject line of the user's mail app.</li>
+        <li><strong>Body:</strong> The initial message content, which can include multiple lines.</li>
+      </ul>
+      <p class="mb-6 leading-relaxed">
+        Just like our <a href="https://simpliconvert.com/meta_tag_generator/" target="_blank">Meta Tag Generator</a> helps you optimize your site's SEO, this tool optimizes your site's communication flow.
+      </p>
+
+      <h2 class="text-2xl font-bold mt-8 mb-4">Common Uses for Mailto Links</h2>
+      <p class="mb-6 leading-relaxed">
+        Where should you use these generated links? Here are a few popular applications:
+      </p>
+      <ul class="list-disc pl-6 mb-6 space-y-2 text-gray-700">
+        <li><strong>"Contact Us" Buttons:</strong> Pre-fill the subject with "Website Inquiry".</li>
+        <li><strong>Support Portals:</strong> Pre-fill the body with a template for the user to provide their order number.</li>
+        <li><strong>Email Signatures:</strong> Add a "Schedule a Meeting" link that opens an email with a specific request.</li>
+        <li><strong>RSVPs:</strong> Create a link for events where the subject is "Attending Event Name".</li>
+      </ul>
+
+      <h2 class="text-2xl font-bold mt-8 mb-4">Technical Details: URL Encoding</h2>
+      <p class="mb-6 leading-relaxed">
+        Behind the scenes, the <strong>mailto generator with body</strong> converts your text into a format browsers understand. For example, a space becomes <code>%20</code> and a new line becomes <code>%0D%0A</code>. If you were to do this manually, it would be prone to errors. Our tool ensures that your <em>custom email url</em> is perfectly formatted every time, ensuring compatibility across Gmail, Outlook, and mobile mail apps.
+      </p>
+
+      <h2 class="text-2xl font-bold mt-8 mb-4">Pro Tips for Better Email Links</h2>
+      <ul class="list-disc pl-6 mb-6 space-y-2 text-gray-700">
+        <li>Keep the subject line short and descriptive.</li>
+        <li>Don't overfill the body; leave room for the user to add their personal details.</li>
+        <li>Test your link on both desktop and mobile to ensure it opens the correct app.</li>
+        <li>Use clear call-to-action text like "Send us a message" or "Get a Quote".</li>
+      </ul>
+      <p class="mb-6 leading-relaxed">
+        If you are managing a professional portfolio, you might also find our 
+        <a href="https://simpliconvert.com/freelance_hourly_rate_calculator/" target="_blank">Freelance Rate Calculator</a> 
+        useful for determining what to charge when those email inquiries start rolling in!
+      </p>
+
+      <h2 class="text-2xl font-bold mt-8 mb-4">Final Thoughts</h2>
+      <p class="mb-6 leading-relaxed">
+        The <strong>Mailto Link Generator</strong> is a simple yet powerful utility for anyone building a web presence. By removing friction from the contact process, you increase the likelihood of receiving high-quality leads and inquiries. Stop manually coding your links and start using our free <em>email link maker</em> to save time and improve your site's professional feel.
+      </p>
+    </div>
+    </div>
+    </section>
+  
+
+    <section class="bg-gray-50 py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-center text-gray-900 mb-8">Mailto Generator – Frequently Asked Questions</h2>
+            <div class="space-y-4">
+                
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-primary">
+                        <span>What is a mailto link?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">
+                            A mailto link is an HTML hyperlink that redirects the user to their default email client (like Outlook, Gmail, or Apple Mail) with a new message window already open. It can pre-fill the recipient, subject, and body.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-primary">
+                        <span>How do I add multiple recipients to a mailto link?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">
+                            You can add multiple recipients by separating email addresses with a comma in the 'To', 'CC', or 'BCC' fields. Our generator handles the encoding automatically.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-primary">
+                        <span>Does this work on mobile devices?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">
+                            Yes, mailto links work on almost all modern mobile browsers and will trigger the default mail app on iOS and Android devices.
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 pb-16">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-slate-200 pt-16">
+            <h2 class="text-2xl font-bold text-center text-slate-800 mb-10">Popular Tools on SimpliConvert</h2>
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+                
+                <a href="/password_generator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-slate-50 text-slate-700 flex items-center justify-center shrink-0 group-hover:bg-slate-800 group-hover:text-white transition-colors">
+                        <i class="fas fa-key text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Password Gen</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Create secure, random passwords.</p>
+                    </div>
+                </a>
+
+                <a href="/image_resizer/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center shrink-0 group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-image text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Image Resizer</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Resize images without quality loss.</p>
+                    </div>
+                </a>
+
+                <a href="/split_pdf/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-red-50 text-red-600 flex items-center justify-center shrink-0 group-hover:bg-red-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-cut text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Split PDF</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Extract pages from PDF documents.</p>
+                    </div>
+                </a>
+
+                <a href="/qr_code_generator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-slate-50 text-slate-800 flex items-center justify-center shrink-0 group-hover:bg-slate-900 group-hover:text-white transition-colors">
+                        <i class="fas fa-qrcode text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">QR Creator</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Generate custom QR codes instantly.</p>
+                    </div>
+                </a>
+
+                <a href="/to_do_list/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-green-50 text-green-600 flex items-center justify-center shrink-0 group-hover:bg-green-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-check-square text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">To-Do List</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Manage tasks and stay organized.</p>
+                    </div>
+                </a>
+
+                <a href="/merge_pdf_online/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-red-50 text-red-600 flex items-center justify-center shrink-0 group-hover:bg-red-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-object-group text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Merge PDF</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Combine multiple PDFs into one.</p>
+                    </div>
+                </a>
+
+                <a href="/compress_pdf/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-orange-50 text-orange-600 flex items-center justify-center shrink-0 group-hover:bg-orange-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-compress-arrows-alt text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Compress PDF</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Reduce PDF file size online.</p>
+                    </div>
+                </a>
+
+                <a href="/jpg_to_pdf/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-purple-50 text-purple-600 flex items-center justify-center shrink-0 group-hover:bg-purple-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-file-pdf text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">JPG to PDF</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Convert images to PDF documents.</p>
+                    </div>
+                </a>
+
+                <a href="/roblox_devex_calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-gray-50 text-gray-800 flex items-center justify-center shrink-0 group-hover:bg-gray-900 group-hover:text-white transition-colors">
+                        <i class="fas fa-gamepad text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">DevEx Calc</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Calculate Roblox Robux to USD.</p>
+                    </div>
+                </a>
+
+                <a href="/meta_tag_generator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0 group-hover:bg-indigo-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-search text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Meta Tag Gen</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Optimize SEO with custom tags.</p>
+                    </div>
+                </a>
+
+                <a href="/freelance_hourly_rate_calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0 group-hover:bg-emerald-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-calculator text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Rate Calc</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Calculate freelance hourly rates.</p>
+                    </div>
+                </a>
+
+                <a href="/youtube_thumbnail_downloader/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-red-50 text-red-600 flex items-center justify-center shrink-0 group-hover:bg-red-600 group-hover:text-white transition-colors">
+                        <i class="fab fa-youtube text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Thumb Grabber</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Download YouTube video covers.</p>
+                    </div>
+                </a>
+
+            </div>
+        </div>
+    </section>
+
+    <div id="footer"></div>
+
+    <script>
+    function initializeHeaderScripts() {
+        const header = document.getElementById('header');
+        if (header) {
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 10) {
+                    header.classList.add('scrolled-effect');
+                } else {
+                    header.classList.remove('scrolled-effect');
+                }
+            });
+        }
+    }
+    
+    function initializeFooterScripts() {
+        const yearSpan = document.getElementById('current-year');
+        if(yearSpan) {
+            yearSpan.textContent = new Date().getFullYear();
+        }
+    }
+
+    async function loadComponent(url, elementId, callback) {
+        try {
+            const response = await fetch(url);
+            if (!response.ok) throw new Error('Status: ' + response.status);
+            const text = await response.text();
+            const element = document.getElementById(elementId);
+            if (element) {
+                element.innerHTML = text;
+                if (callback) callback();
+            }
+        } catch (error) {
+            console.error('Error loading component:', error);
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        loadComponent('/components/navbar.html', 'navbar', initializeHeaderScripts);
+        loadComponent('/components/footer.html', 'footer', initializeFooterScripts);
+        
+        const faqToggles = document.querySelectorAll('[data-faq-toggle]');
+        faqToggles.forEach(button => {
+            button.addEventListener('click', () => {
+                const answer = button.nextElementSibling;
+                const icon = button.querySelector('.faq-icon');
+                const isOpening = !answer.style.maxHeight;
+
+                faqToggles.forEach(other => {
+                    if (other !== button) {
+                        other.nextElementSibling.style.maxHeight = null;
+                        other.querySelector('.faq-icon').classList.remove('rotate-90');
+                        other.querySelector('.faq-icon').classList.add('-rotate-90');
+                    }
+                });
+
+                if (isOpening) {
+                    answer.style.maxHeight = answer.scrollHeight + "px";
+                    icon.classList.remove('-rotate-90');
+                    icon.classList.add('rotate-90');
+                } else {
+                    answer.style.maxHeight = null;
+                    icon.classList.remove('rotate-90');
+                    icon.classList.add('-rotate-90');
+                }
+            });
+        });
+    });
+    </script>
+</body>
+</html>

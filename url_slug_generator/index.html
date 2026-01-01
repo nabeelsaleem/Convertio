@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>URL Slug Generator – Create SEO-Friendly URLs | SimpliConvert</title>
+    <meta name="description" content="Create SEO-friendly URLs instantly with our URL Slug Generator. Convert article titles or text into clean, hyphenated slugs for your website.">
+    <meta name="keywords" content="url slug generator, text to slug, seo friendly url, clean url maker, slugify text, permalink generator, website url optimizer">
+    <meta name="author" content="SimpliConvert">
+    <meta property="og:site_name" content="SimpliConvert">
+    <meta name="robots" content="index, follow">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://simpliconvert.com/url_slug_generator/">
+    <meta property="og:title" content="URL Slug Generator – Clean & SEO-Friendly Permalinks">
+    <meta property="og:description" content="Transform any text into a clean, hyphenated URL slug. Perfect for bloggers, developers, and SEO experts.">
+    <meta property="og:image" content="https://simpliconvert.com/images/url-slug-generator-og.jpg">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://simpliconvert.com/url_slug_generator/">
+    <meta name="twitter:title" content="URL Slug Generator – Text to SEO Slug">
+    <meta name="twitter:description" content="Free tool to convert titles into clean URL slugs. Improve your website's SEO and readability instantly.">
+    <meta name="twitter:image" content="https://simpliconvert.com/images/url-slug-generator-og.jpg">
+
+    <link rel="canonical" href="https://simpliconvert.com/url_slug_generator/">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "URL Slug Generator",
+      "url": "https://simpliconvert.com/url_slug_generator/",
+      "description": "A free online tool to convert text and article titles into SEO-friendly URL slugs with customizable separators.",
+      "applicationCategory": "DeveloperApplication",
+      "operatingSystem": "Web Browser",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "SimpliConvert",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://simpliconvert.com/logo.png"
+        }
+      }
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [{
+        "@type": "Question",
+        "name": "What is a URL slug?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "A URL slug is the part of a web address that identifies a specific page in a human-readable format. For example, in 'example.com/how-to-make-coffee', the slug is 'how-to-make-coffee'."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Why are hyphens better than underscores in slugs?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Google and other search engines treat hyphens as word separators, whereas underscores are often seen as part of the word itself. Using hyphens makes your URL more readable for both users and search engine crawlers."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Should I remove stop words from my slugs?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes, it is generally recommended to remove 'stop words' like 'a', 'the', 'and', or 'in' to keep the URL short, descriptive, and focused on your primary keywords."
+        }
+      }]
+    }
+    </script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #da3f0b;
+            --primary-hover: #b53409;
+            --primary-light: #fff5f2;
+            --bg: #f8fafc;
+            --text-dark: #0f172a;
+            --success: #16a34a;
+            --danger: #dc2626;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text-dark);
+        }
+
+        .hero-card {
+            background: white;
+            border: 1px solid #f1f5f9;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background-color: var(--primary);
+        }
+
+        .prose a {
+            color: #da3f0b;
+            text-decoration: none; 
+        }
+        .prose a:hover {
+            text-decoration: underline; 
+        }
+
+        .tooltip-container { position: relative; display: inline-block; }
+        .tooltip-text {
+            visibility: hidden; width: 220px; background-color: #1e293b; color: #fff;
+            text-align: center; border-radius: 8px; padding: 10px; position: absolute;
+            z-index: 50; bottom: 125%; left: 50%; margin-left: -110px; opacity: 0;
+            transition: opacity 0.2s; font-size: 0.75rem; font-weight: 400;
+            pointer-events: none; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+        .tooltip-container:hover .tooltip-text { visibility: visible; opacity: 1; }
+        .tooltip-text::after {
+            content: ""; position: absolute; top: 100%; left: 50%; margin-left: -5px;
+            border-width: 5px; border-style: solid; border-color: #1e293b transparent transparent transparent;
+        }
+
+        .animate-fade { animation: fadeIn 0.3s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+        .tool-card {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .tool-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 min-h-screen flex flex-col">
+    <div id="navbar"></div>
+
+    <section class="hero-white text-black py-2 md:py-10">
+        <div class="container mx-auto px-4 text-center">
+            <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-2">URL Slug Generator</h1>
+            <p class="text-lg md:text-xl max-w-3x1 mx-auto mb-2">
+                Convert any text into clean, SEO-friendly URL slugs. Perfect for blog posts, product pages, and clean web architecture.
+            </p>
+        </div>
+    </section>
+
+    <div id="root" class="w-full max-w-6xl mx-auto p-4 sm:p-6"></div>
+
+    <script type="text/babel">
+    const { useState, useEffect, useMemo } = React;
+
+    const Tooltip = ({ text }) => (
+      <span className="tooltip-container ml-2">
+        <i className="fas fa-info-circle text-slate-300 hover:text-[#da3f0b] cursor-help text-xs transition-colors"></i>
+        <span className="tooltip-text">{text}</span>
+      </span>
+    );
+
+    const ShareButton = ({ platform, icon, color, url, title }) => {
+        let shareUrl = '';
+        switch(platform) {
+            case 'facebook': shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${url}`; break;
+            case 'twitter': shareUrl = `https://twitter.com/intent/tweet?url=${url}&text=${title}`; break;
+            case 'linkedin': shareUrl = `https://www.linkedin.com/shareArticle?mini=true&url=${url}`; break;
+            case 'whatsapp': shareUrl = `https://api.whatsapp.com/send?text=${title}%20${url}`; break;
+            case 'reddit': shareUrl = `https://www.reddit.com/submit?url=${url}&title=${title}`; break;
+            case 'telegram': shareUrl = `https://t.me/share/url?url=${url}&text=${title}`; break;
+            default: return null;
+        }
+
+        return (
+            <a 
+                href={shareUrl} 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className={`w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center text-white transition-transform hover:-translate-y-1 hover:shadow-lg ${color}`}
+            >
+                <i className={`fab fa-${icon}`}></i>
+            </a>
+        );
+    };
+
+    const App = () => {
+      const [inputText, setInputText] = useState("");
+      const [separator, setSeparator] = useState("-");
+      const [isLowercase, setIsLowercase] = useState(true);
+      const [removeStopWords, setRemoveStopWords] = useState(false);
+      const [copySuccess, setCopySuccess] = useState(false);
+      const [showBookmarkToast, setShowBookmarkToast] = useState(false);
+
+      const stopWords = ["a", "an", "the", "and", "or", "but", "in", "on", "at", "to", "for", "with", "is", "of"];
+
+      const slug = useMemo(() => {
+        if (!inputText) return "";
+
+        let text = inputText.trim();
+        
+        if (isLowercase) {
+          text = text.toLowerCase();
+        }
+
+        // Handle Accents/Diacritics
+        text = text.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+
+        // Remove stop words if enabled
+        if (removeStopWords) {
+            const words = text.split(/\s+/);
+            text = words.filter(word => !stopWords.includes(word.toLowerCase())).join(" ");
+        }
+
+        // Replace non-alphanumeric characters with separator
+        text = text.replace(/[^a-z0-9]/gi, separator);
+
+        // Replace multiple separators with a single one
+        const escapedSeparator = separator.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        const regex = new RegExp(`${escapedSeparator}+`, 'g');
+        text = text.replace(regex, separator);
+
+        // Trim separator from start and end
+        if (text.startsWith(separator)) text = text.substring(separator.length);
+        if (text.endsWith(separator)) text = text.substring(0, text.length - separator.length);
+
+        return text;
+      }, [inputText, separator, isLowercase, removeStopWords]);
+
+      const handleCopy = () => {
+        if (!slug) return;
+        navigator.clipboard.writeText(slug);
+        setCopySuccess(true);
+        setTimeout(() => setCopySuccess(false), 2000);
+      };
+
+      const handleBookmark = () => {
+        setShowBookmarkToast(true);
+        setTimeout(() => setShowBookmarkToast(false), 3000);
+      };
+
+      const pageUrl = encodeURIComponent("https://simpliconvert.com/url_slug_generator/");
+      const pageTitle = encodeURIComponent("Check out this URL Slug Generator!");
+
+      return (
+        <div className="bg-white rounded-[2rem] shadow-2xl overflow-hidden border border-slate-100">
+          <header className="bg-slate-50/50 border-b border-slate-100 p-6 md:p-8 flex flex-col md:flex-row justify-between items-center gap-6">
+            <div className="text-center md:text-left">
+              <h2 className="text-2xl font-black text-slate-800 tracking-tight flex items-center justify-center md:justify-start gap-3">
+                <span className="bg-[#da3f0b] text-white p-2 rounded-xl text-lg shadow-lg shadow-[#da3f0b30]">
+                  <i className="fas fa-link"></i>
+                </span>
+                SEO Slug Maker
+              </h2>
+            </div>
+            <div className="flex items-center gap-4">
+                <span className="text-xs font-bold text-slate-400 uppercase tracking-widest">Status: Ready</span>
+            </div>
+          </header>
+
+          <main className="flex flex-col lg:flex-row">
+            {/* Input Panel */}
+            <div className="lg:w-[55%] p-6 md:p-10 lg:p-12 border-r border-slate-100">
+              <div className="space-y-6">
+                <div>
+                  <label className="flex items-center text-xs font-bold text-slate-500 uppercase tracking-widest mb-3">
+                    Enter Title or Text
+                    <Tooltip text="Type or paste the text you want to convert into a URL slug." />
+                  </label>
+                  <textarea
+                    className="w-full h-40 p-4 rounded-2xl border border-slate-200 focus:ring-4 focus:ring-[#da3f0b20] focus:border-[#da3f0b] transition-all text-slate-700 font-medium resize-none bg-white"
+                    placeholder="e.g. How to Create a Great SEO Strategy for 2024!"
+                    value={inputText}
+                    onChange={(e) => setInputText(e.target.value)}
+                  />
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="bg-slate-50 p-5 rounded-2xl border border-slate-100">
+                    <label className="block text-xs font-black text-slate-400 uppercase tracking-widest mb-4">Separator</label>
+                    <div className="flex gap-3">
+                      {["-", "_", "."].map((sep) => (
+                        <button
+                          key={sep}
+                          onClick={() => setSeparator(sep)}
+                          className={`flex-1 py-2 rounded-xl font-bold transition-all ${separator === sep ? 'bg-[#da3f0b] text-white shadow-md' : 'bg-white text-slate-600 border border-slate-200 hover:border-[#da3f0b]'}`}
+                        >
+                          {sep === "-" ? "Hyphen (-)" : sep === "_" ? "Underscore (_)" : "Dot (.)"}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="bg-slate-50 p-5 rounded-2xl border border-slate-100 space-y-4">
+                    <label className="block text-xs font-black text-slate-400 uppercase tracking-widest mb-2">Options</label>
+                    <div className="flex flex-col gap-3">
+                        <label className="flex items-center cursor-pointer group">
+                            <input type="checkbox" checked={isLowercase} onChange={(e) => setIsLowercase(e.target.checked)} className="hidden" />
+                            <div className={`w-5 h-5 rounded border flex items-center justify-center mr-3 transition-all ${isLowercase ? 'bg-[#da3f0b] border-[#da3f0b]' : 'bg-white border-slate-300'}`}>
+                                {isLowercase && <i className="fas fa-check text-[10px] text-white"></i>}
+                            </div>
+                            <span className="text-sm font-bold text-slate-600 group-hover:text-slate-800">Force Lowercase</span>
+                        </label>
+                        <label className="flex items-center cursor-pointer group">
+                            <input type="checkbox" checked={removeStopWords} onChange={(e) => setRemoveStopWords(e.target.checked)} className="hidden" />
+                            <div className={`w-5 h-5 rounded border flex items-center justify-center mr-3 transition-all ${removeStopWords ? 'bg-[#da3f0b] border-[#da3f0b]' : 'bg-white border-slate-300'}`}>
+                                {removeStopWords && <i className="fas fa-check text-[10px] text-white"></i>}
+                            </div>
+                            <span className="text-sm font-bold text-slate-600 group-hover:text-slate-800">Remove Stop Words</span>
+                        </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Results Panel */}
+            <div className="lg:w-[45%] bg-slate-50/50 p-6 md:p-10 lg:p-12 flex flex-col justify-center">
+               <div className="space-y-8">
+                  <div className="hero-card p-8 rounded-3xl">
+                    <p className="text-xs font-black text-[#da3f0b] uppercase tracking-[0.2em] mb-6">Generated Slug</p>
+                    <div className="min-h-[100px] flex items-center justify-center bg-slate-50 rounded-2xl p-6 border border-dashed border-slate-200 mb-6">
+                        <p className={`text-xl md:text-2xl font-bold break-all text-center ${slug ? 'text-slate-800' : 'text-slate-300 italic'}`}>
+                            {slug || "Your slug will appear here..."}
+                        </p>
+                    </div>
+                    
+                    <button
+                        onClick={handleCopy}
+                        disabled={!slug}
+                        className={`w-full py-4 rounded-2xl font-black uppercase tracking-widest transition-all flex items-center justify-center gap-3 ${copySuccess ? 'bg-green-500 text-white' : 'bg-[#da3f0b] hover:bg-[#b53409] text-white shadow-lg shadow-[#da3f0b30] active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed'}`}
+                    >
+                        {copySuccess ? (
+                            <><i className="fas fa-check"></i> Copied!</>
+                        ) : (
+                            <><i className="fas fa-copy"></i> Copy Slug</>
+                        )}
+                    </button>
+                  </div>
+
+                  <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm">
+                    <h4 className="text-xs font-black text-slate-400 uppercase tracking-widest mb-4">Live Preview</h4>
+                    <div className="text-sm font-medium text-slate-500 truncate">
+                        https://yoursite.com/<span className="text-[#da3f0b] font-bold">{slug || "example-slug"}</span>
+                    </div>
+                  </div>
+               </div>
+            </div>
+          </main>
+
+          <footer className="bg-slate-50 border-t border-slate-100 p-6 md:p-8">
+             <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+                 <div className="text-center md:text-left">
+                     <h4 className="text-sm font-bold text-slate-700 mb-1">Share this tool</h4>
+                     <p className="text-xs text-slate-400">Help others create cleaner URLs.</p>
+                 </div>
+                 
+                 <div className="flex flex-wrap justify-center gap-3">
+                     <ShareButton platform="facebook" icon="facebook-f" color="bg-[#1877F2]" url={pageUrl} title={pageTitle} />
+                     <ShareButton platform="twitter" icon="twitter" color="bg-[#1DA1F2]" url={pageUrl} title={pageTitle} />
+                     <ShareButton platform="linkedin" icon="linkedin-in" color="bg-[#0A66C2]" url={pageUrl} title={pageTitle} />
+                     <ShareButton platform="whatsapp" icon="whatsapp" color="bg-[#25D366]" url={pageUrl} title={pageTitle} />
+                     <ShareButton platform="reddit" icon="reddit-alien" color="bg-[#FF4500]" url={pageUrl} title={pageTitle} />
+                     <ShareButton platform="telegram" icon="telegram-plane" color="bg-[#0088cc]" url={pageUrl} title={pageTitle} />
+                 </div>
+
+                 <div className="relative">
+                     <button 
+                        onClick={handleBookmark}
+                        className="flex items-center gap-2 bg-white border border-slate-200 hover:border-[#da3f0b] hover:text-[#da3f0b] text-slate-600 px-4 py-2 rounded-lg text-sm font-bold transition-all shadow-sm active:scale-95"
+                     >
+                        <i className="fas fa-bookmark"></i> Bookmark
+                     </button>
+                     {showBookmarkToast && (
+                         <div className="absolute bottom-full mb-3 left-1/2 -translate-x-1/2 bg-slate-800 text-white text-xs py-2 px-4 rounded-lg shadow-lg whitespace-nowrap animate-fade">
+                             Press <span className="font-bold text-[#da3f0b]">Ctrl + D</span> to bookmark
+                         </div>
+                     )}
+                 </div>
+             </div>
+          </footer>
+        </div>
+      );
+    };
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+    </script>
+
+    <section class="bg-white py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="prose prose-lg max-w-none prose-h2:text-gray-800 prose-p:text-gray-700">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">Why Use a URL Slug Generator?</h2>
+                <p class="mb-6 leading-relaxed">
+                    A URL slug is the specific part of a web address that identifies a page in a human-readable format. Instead of having a URL like <code>example.com/p=123</code>, a slug allows you to have <code>example.com/how-to-generate-slugs</code>. Our <strong>URL Slug Generator</strong> helps you transform messy titles into clean, SEO-friendly permalinks in seconds.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Key Features of Our Slug Maker</h2>
+                <ul class="list-disc pl-6 mb-6 space-y-2 text-gray-700">
+                    <li><strong>Instant Conversion:</strong> See your slug update in real-time as you type.</li>
+                    <li><strong>SEO Optimized:</strong> Automatically removes special characters and handles accents.</li>
+                    <li><strong>Custom Separators:</strong> Choose between hyphens, underscores, or dots based on your CMS requirements.</li>
+                    <li><strong>Stop Word Removal:</strong> Optionally strip out common words like "the", "and", and "is" to keep URLs concise.</li>
+                    <li><strong>One-Click Copy:</strong> Quickly copy your generated slug to your clipboard for use in WordPress, Ghost, or custom applications.</li>
+                </ul>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">SEO Best Practices for URL Slugs</h2>
+                <p class="mb-6 leading-relaxed">
+                    Search engines like Google use the URL to understand what a page is about. To maximize your SEO potential, follow these rules:
+                </p>
+                <ul class="list-decimal pl-6 mb-6 space-y-2 text-gray-700">
+                    <li><strong>Keep it Short:</strong> Aim for 3-5 words that describe the core topic.</li>
+                    <li><strong>Use Hyphens:</strong> Search engines prefer hyphens over underscores as word separators.</li>
+                    <li><strong>Include Keywords:</strong> Ensure your primary target keyword is present in the slug.</li>
+                    <li><strong>Avoid Dates:</strong> Unless the content is time-sensitive, avoid putting years or months in the slug to keep it evergreen.</li>
+                    <li><strong>Lowercase Only:</strong> Stick to lowercase letters to avoid 404 errors on case-sensitive servers.</li>
+                </ul>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">How to Use the Tool</h2>
+                <p class="mb-6 leading-relaxed">
+                    Simply paste your article title or any string of text into the input box. The tool will automatically "slugify" the text by removing symbols and replacing spaces with your chosen separator. You can toggle the "Remove Stop Words" option to make the URL even cleaner. Once satisfied, hit the copy button and paste it into your website's permalink settings.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-center text-gray-900 mb-8">Frequently Asked Questions</h2>
+            <div class="space-y-4">
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>What is a URL slug?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">
+                            A URL slug is the part of a URL that identifies a specific page in a human-readable format. It is usually the last part of the URL and is used to improve both user experience and search engine optimization.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>Why are hyphens better than underscores?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">
+                            Google's algorithms are designed to recognize hyphens as spaces between words. Underscores are often interpreted as characters that join words together, which can make it harder for search engines to index your keywords correctly.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>Does this tool handle non-English characters?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">
+                            Yes! Our generator includes a normalization feature that converts accented characters (like 'é', 'ö', 'ñ') into their standard Latin equivalents ('e', 'o', 'n') to ensure your URLs remain clean and compatible across all browsers.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 pb-16">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-slate-200 pt-16">
+            <h2 class="text-2xl font-bold text-center text-slate-800 mb-10">Popular Tools on SimpliConvert</h2>
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+                <a href="/meta_tag_generator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0 group-hover:bg-indigo-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-search text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Meta Tag Gen</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Optimize SEO with custom tags.</p>
+                    </div>
+                </a>
+                <a href="/password_generator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-slate-50 text-slate-700 flex items-center justify-center shrink-0 group-hover:bg-slate-800 group-hover:text-white transition-colors">
+                        <i class="fas fa-key text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Password Gen</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Create secure, random passwords.</p>
+                    </div>
+                </a>
+                <a href="/qr_code_generator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-slate-50 text-slate-800 flex items-center justify-center shrink-0 group-hover:bg-slate-900 group-hover:text-white transition-colors">
+                        <i class="fas fa-qrcode text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">QR Creator</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Generate custom QR codes instantly.</p>
+                    </div>
+                </a>
+                <a href="/image_resizer/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center shrink-0 group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-image text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Image Resizer</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Resize images without quality loss.</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <div id="footer"></div>
+
+    <script>
+    async function loadComponent(url, elementId, callback) {
+        try {
+            const response = await fetch(url);
+            if (!response.ok) throw new Error('Status: ' + response.status);
+            const text = await response.text();
+            const element = document.getElementById(elementId);
+            if (element) {
+                element.innerHTML = text;
+                if (callback) callback();
+            }
+        } catch (error) {
+            console.error('Error loading component:', error);
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        loadComponent('/components/navbar.html', 'navbar');
+        loadComponent('/components/footer.html', 'footer', () => {
+            const yearSpan = document.getElementById('current-year');
+            if(yearSpan) yearSpan.textContent = new Date().getFullYear();
+        });
+        
+        const faqToggles = document.querySelectorAll('[data-faq-toggle]');
+        faqToggles.forEach(button => {
+            button.addEventListener('click', () => {
+                const answer = button.nextElementSibling;
+                const icon = button.querySelector('.faq-icon');
+                const isOpening = !answer.style.maxHeight;
+
+                faqToggles.forEach(other => {
+                    if (other !== button) {
+                        other.nextElementSibling.style.maxHeight = null;
+                        other.querySelector('.faq-icon').classList.remove('rotate-90');
+                        other.querySelector('.faq-icon').classList.add('-rotate-90');
+                    }
+                });
+
+                if (isOpening) {
+                    answer.style.maxHeight = answer.scrollHeight + "px";
+                    icon.classList.remove('-rotate-90');
+                    icon.classList.add('rotate-90');
+                } else {
+                    answer.style.maxHeight = null;
+                    icon.classList.remove('rotate-90');
+                    icon.classList.add('-rotate-90');
+                }
+            });
+        });
+    });
+    </script>
+</body>
+</html>

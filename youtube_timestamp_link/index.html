@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>YouTube Timestamp Link Generator – Share Video at Specific Time | SimpliConvert</title>
+    <meta name="description" content="Share specific video moments with the YouTube Timestamp Link generator. Create a URL that starts a YouTube video exactly at your chosen second, minute, or hour.">
+    <meta name="keywords" content="youtube timestamp link, share youtube at time, youtube time start, video chapter link, youtube link generator, youtube start time tool, share specific video moment">
+    <meta name="author" content="SimpliConvert">
+    <meta property="og:site_name" content="SimpliConvert">
+    <meta name="robots" content="index, follow">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://simpliconvert.com/youtube_timestamp_link/">
+    <meta property="og:title" content="YouTube Timestamp Link Generator – Share Specific Moments">
+    <meta property="og:description" content="Create custom YouTube links that start at a specific time. Perfect for sharing highlights, chapters, or specific moments in any video.">
+    <meta property="og:image" content="https://simpliconvert.com/images/youtube-timestamp-og.jpg">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://simpliconvert.com/youtube_timestamp_link/">
+    <meta name="twitter:title" content="YouTube Timestamp Link Generator – Share Video at Time">
+    <meta name="twitter:description" content="Free tool to generate YouTube links with a custom start time. Share the exact second you want others to see.">
+    <meta name="twitter:image" content="https://simpliconvert.com/images/youtube-timestamp-og.jpg">
+
+    <link rel="canonical" href="https://simpliconvert.com/youtube_timestamp_link/">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "YouTube Timestamp Link Generator",
+      "url": "https://simpliconvert.com/youtube_timestamp_link/",
+      "description": "A free online tool to generate YouTube URLs that start at a specific timestamp, making it easy to share specific video moments.",
+      "applicationCategory": "UtilitiesApplication",
+      "operatingSystem": "Web Browser",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "SimpliConvert",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://simpliconvert.com/logo.png"
+        }
+      }
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [{
+        "@type": "Question",
+        "name": "How do I make a YouTube link start at a specific time?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "You can manually add '&t=XmYs' to the end of a YouTube URL, where X is minutes and Y is seconds. However, our tool automates this by parsing your link and allowing you to input hours, minutes, and seconds to generate the perfect timestamped link instantly."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Does this work for YouTube Shorts?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes, but YouTube Shorts links usually need to be converted to the standard watch format for timestamps to work reliably across all devices. Our tool handles various YouTube URL formats to ensure compatibility."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Can I share a link that starts at a specific hour?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Absolutely. Our generator includes an 'Hours' field. If a video is long (like a podcast or livestream), you can specify the exact hour, minute, and second for the link to begin."
+        }
+      }]
+    }
+    </script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #da3f0b;
+            --primary-hover: #b53409;
+            --primary-light: #fff5f2;
+            --bg: #f8fafc;
+            --text-dark: #0f172a;
+            --success: #16a34a;
+            --danger: #dc2626;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text-dark);
+        }
+
+        .hero-card {
+            background: white;
+            border: 1px solid #f1f5f9;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background-color: var(--primary);
+        }
+
+        .prose a {
+            color: #da3f0b;
+            text-decoration: none; 
+        }
+        .prose a:hover {
+            text-decoration: underline; 
+        }
+
+        .tooltip-container { position: relative; display: inline-block; }
+        .tooltip-text {
+            visibility: hidden; width: 220px; background-color: #1e293b; color: #fff;
+            text-align: center; border-radius: 8px; padding: 10px; position: absolute;
+            z-index: 50; bottom: 125%; left: 50%; margin-left: -110px; opacity: 0;
+            transition: opacity 0.2s; font-size: 0.75rem; font-weight: 400;
+            pointer-events: none; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+        .tooltip-container:hover .tooltip-text { visibility: visible; opacity: 1; }
+        .tooltip-text::after {
+            content: ""; position: absolute; top: 100%; left: 50%; margin-left: -5px;
+            border-width: 5px; border-style: solid; border-color: #1e293b transparent transparent transparent;
+        }
+
+        .animate-fade { animation: fadeIn 0.3s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+        .tool-card {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .tool-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 min-h-screen flex flex-col">
+    <div id="navbar"></div>
+
+    <section class="hero-white text-black py-2 md:py-10">
+        <div class="container mx-auto px-4 text-center">
+            <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-2">YouTube Timestamp Link Generator</h1>
+            <p class="text-lg md:text-xl max-w-3x1 mx-auto mb-2">
+                Create custom links to share specific moments in YouTube videos. Just paste the URL and set your start time.
+            </p>
+        </div>
+    </section>
+
+    <div id="root" class="w-full max-w-6xl mx-auto p-4 sm:p-6"></div>
+
+    <script type="text/babel">
+    const { useState, useEffect, useMemo } = React;
+
+    const Tooltip = ({ text }) => (
+      <span className="tooltip-container ml-2">
+        <i className="fas fa-info-circle text-slate-300 hover:text-[#da3f0b] cursor-help text-xs transition-colors"></i>
+        <span className="tooltip-text">{text}</span>
+      </span>
+    );
+
+    const TextInput = ({ value, onChange, placeholder, label, tooltip, icon }) => (
+      <div className="mb-5">
+        <div className="flex items-center text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">
+          <label>{label}</label>
+          {tooltip && <Tooltip text={tooltip} />}
+        </div>
+        <div className="relative rounded-xl shadow-sm">
+          {icon && (
+            <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+              <i className={`${icon} text-slate-400`}></i>
+            </div>
+          )}
+          <input
+            type="text"
+            className={`block w-full rounded-xl border-slate-200 border py-3 focus:ring-4 focus:ring-[#da3f0b20] focus:border-[#da3f0b] sm:text-sm font-semibold text-slate-800 transition-all ${icon ? 'pl-10' : 'pl-4'} pr-4 bg-white`}
+            value={value}
+            onChange={(e) => onChange(e.target.value)}
+            placeholder={placeholder}
+          />
+        </div>
+      </div>
+    );
+
+    const TimeInput = ({ value, onChange, label, max }) => (
+      <div className="flex-1">
+        <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1 text-center">{label}</label>
+        <input
+          type="number"
+          min="0"
+          max={max}
+          className="block w-full text-center rounded-xl border-slate-200 border py-3 focus:ring-4 focus:ring-[#da3f0b20] focus:border-[#da3f0b] sm:text-sm font-bold text-slate-800 bg-white"
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          onFocus={(e) => e.target.select()}
+        />
+      </div>
+    );
+
+    const ShareButton = ({ platform, icon, color, url, title }) => {
+        let shareUrl = '';
+        switch(platform) {
+            case 'facebook': shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${url}`; break;
+            case 'twitter': shareUrl = `https://twitter.com/intent/tweet?url=${url}&text=${title}`; break;
+            case 'linkedin': shareUrl = `https://www.linkedin.com/shareArticle?mini=true&url=${url}`; break;
+            case 'whatsapp': shareUrl = `https://api.whatsapp.com/send?text=${title}%20${url}`; break;
+            case 'reddit': shareUrl = `https://www.reddit.com/submit?url=${url}&title=${title}`; break;
+            case 'telegram': shareUrl = `https://t.me/share/url?url=${url}&text=${title}`; break;
+            default: return null;
+        }
+
+        return (
+            <a 
+                href={shareUrl} 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className={`w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center text-white transition-transform hover:-translate-y-1 hover:shadow-lg ${color}`}
+            >
+                <i className={`fab fa-${icon}`}></i>
+            </a>
+        );
+    };
+
+    const App = () => {
+      const [videoUrl, setVideoUrl] = useState('');
+      const [hours, setHours] = useState(0);
+      const [minutes, setMinutes] = useState(0);
+      const [seconds, setSeconds] = useState(0);
+      const [copySuccess, setCopySuccess] = useState(false);
+      const [showBookmarkToast, setShowBookmarkToast] = useState(false);
+
+      const generatedLink = useMemo(() => {
+        if (!videoUrl) return '';
+        
+        try {
+          let urlObj = new URL(videoUrl.trim());
+          let videoId = '';
+          let baseUrl = '';
+
+          // Handle youtu.be
+          if (urlObj.hostname === 'youtu.be') {
+            videoId = urlObj.pathname.slice(1);
+            baseUrl = `https://youtu.be/${videoId}`;
+          } 
+          // Handle youtube.com
+          else if (urlObj.hostname.includes('youtube.com')) {
+            if (urlObj.pathname.includes('/shorts/')) {
+                videoId = urlObj.pathname.split('/shorts/')[1].split('?')[0];
+            } else {
+                videoId = urlObj.searchParams.get('v');
+            }
+            baseUrl = `https://www.youtube.com/watch?v=${videoId}`;
+          } else {
+            return 'Invalid YouTube URL';
+          }
+
+          if (!videoId) return 'Could not find Video ID';
+
+          const h = parseInt(hours) || 0;
+          const m = parseInt(minutes) || 0;
+          const s = parseInt(seconds) || 0;
+          
+          if (h === 0 && m === 0 && s === 0) return baseUrl;
+
+          let timeParam = '';
+          if (h > 0) timeParam += `${h}h`;
+          if (m > 0) timeParam += `${m}m`;
+          if (s > 0 || (h === 0 && m === 0)) timeParam += `${s}s`;
+
+          const separator = baseUrl.includes('?') ? '&' : '?';
+          return `${baseUrl}${separator}t=${timeParam}`;
+        } catch (e) {
+          return '';
+        }
+      }, [videoUrl, hours, minutes, seconds]);
+
+      const handleCopy = () => {
+        if (!generatedLink || generatedLink.startsWith('Invalid')) return;
+        navigator.clipboard.writeText(generatedLink);
+        setCopySuccess(true);
+        setTimeout(() => setCopySuccess(false), 2000);
+      };
+
+      const handleBookmark = () => {
+        setShowBookmarkToast(true);
+        setTimeout(() => setShowBookmarkToast(false), 3000);
+      };
+
+      const pageUrl = encodeURIComponent("https://simpliconvert.com/youtube_timestamp_link/");
+      const pageTitle = encodeURIComponent("Check out this YouTube Timestamp Link Generator!");
+
+      return (
+        <div className="bg-white rounded-[2rem] shadow-2xl overflow-hidden border border-slate-100">
+          <header className="bg-slate-50/50 border-b border-slate-100 p-6 md:p-8 flex flex-col md:flex-row justify-between items-center gap-6">
+            <div className="text-center md:text-left">
+              <h2 className="text-2xl font-black text-slate-800 tracking-tight flex items-center justify-center md:justify-start gap-3">
+                <span className="bg-[#da3f0b] text-white p-2 rounded-xl text-lg shadow-lg shadow-[#da3f0b30]">
+                  <i className="fab fa-youtube"></i>
+                </span>
+                Video Moment Sharer
+              </h2>
+            </div>
+            <div className="flex items-center gap-2 text-xs font-bold text-slate-400">
+                <i className="fas fa-clock"></i>
+                <span>PRECISION TIMING</span>
+            </div>
+          </header>
+
+          <main className="flex flex-col lg:flex-row">
+            {/* Input Panel */}
+            <div className="lg:w-[55%] p-6 md:p-10 lg:p-12 border-r border-slate-100">
+              <div className="space-y-8">
+                
+                <div>
+                    <TextInput 
+                        label="YouTube Video URL"
+                        placeholder="https://www.youtube.com/watch?v=..."
+                        value={videoUrl}
+                        onChange={setVideoUrl}
+                        icon="fab fa-youtube"
+                        tooltip="Paste any YouTube video or Shorts link here."
+                    />
+                </div>
+
+                <div className="bg-slate-50 p-6 rounded-2xl border border-slate-100">
+                  <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest mb-6"><i className="fas fa-stopwatch mr-2"></i>Set Start Time</h3>
+                  <div className="flex gap-4">
+                    <TimeInput label="Hours" value={hours} onChange={setHours} />
+                    <TimeInput label="Minutes" value={minutes} onChange={setMinutes} max="59" />
+                    <TimeInput label="Seconds" value={seconds} onChange={setSeconds} max="59" />
+                  </div>
+                </div>
+
+                <div className="flex justify-center">
+                    <button 
+                        onClick={() => {setHours(0); setMinutes(0); setSeconds(0); setVideoUrl('');}}
+                        className="text-xs font-bold text-slate-400 hover:text-[#da3f0b] transition-colors"
+                    >
+                        <i className="fas fa-undo mr-1"></i> Reset All Fields
+                    </button>
+                </div>
+
+              </div>
+            </div>
+
+            {/* Results Panel */}
+            <div className="lg:w-[45%] bg-slate-50/50 p-6 md:p-10 lg:p-12 flex flex-col justify-center">
+               <div className="space-y-6">
+                  
+                  <div className="hero-card p-8 rounded-3xl text-center">
+                    <p className="text-xs font-black text-[#da3f0b] uppercase tracking-[0.2em] mb-4">Generated Link</p>
+                    
+                    <div className="bg-slate-50 border border-slate-200 rounded-xl p-4 mb-6 break-all min-h-[60px] flex items-center justify-center">
+                        <span className={`text-sm font-mono font-bold ${generatedLink.startsWith('Invalid') ? 'text-red-500' : 'text-slate-700'}`}>
+                            {generatedLink || 'Link will appear here...'}
+                        </span>
+                    </div>
+
+                    <button 
+                        disabled={!generatedLink || generatedLink.startsWith('Invalid')}
+                        onClick={handleCopy}
+                        className={`w-full py-4 rounded-xl font-black uppercase tracking-widest text-sm transition-all flex items-center justify-center gap-2 shadow-lg ${copySuccess ? 'bg-green-600 text-white' : 'bg-[#da3f0b] hover:bg-[#b53409] text-white disabled:opacity-50 disabled:cursor-not-allowed'}`}
+                    >
+                        {copySuccess ? (
+                            <><i className="fas fa-check"></i> Copied!</>
+                        ) : (
+                            <><i className="fas fa-copy"></i> Copy Timestamp Link</>
+                        )}
+                    </button>
+                  </div>
+
+                  <div className="bg-white rounded-xl p-5 border border-slate-100 shadow-sm">
+                    <div className="flex items-start gap-4">
+                        <div className="bg-blue-50 text-blue-600 p-3 rounded-lg">
+                            <i className="fas fa-lightbulb"></i>
+                        </div>
+                        <div>
+                            <h4 className="text-sm font-bold text-slate-800 mb-1">Quick Tip</h4>
+                            <p className="text-xs text-slate-500 leading-relaxed">
+                                Use this link in video descriptions, social media, or emails to send viewers directly to the most important part of your video.
+                            </p>
+                        </div>
+                    </div>
+                  </div>
+
+               </div>
+            </div>
+          </main>
+
+          {/* Share & Bookmark Footer */}
+          <footer className="bg-slate-50 border-t border-slate-100 p-6 md:p-8">
+             <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+                 <div className="text-center md:text-left">
+                     <h4 className="text-sm font-bold text-slate-700 mb-1">Share this tool</h4>
+                     <p className="text-xs text-slate-400">Help others share video moments easily.</p>
+                 </div>
+                 
+                 <div className="flex flex-wrap justify-center gap-3">
+                     <ShareButton platform="facebook" icon="facebook-f" color="bg-[#1877F2]" url={pageUrl} title={pageTitle} />
+                     <ShareButton platform="twitter" icon="twitter" color="bg-[#1DA1F2]" url={pageUrl} title={pageTitle} />
+                     <ShareButton platform="linkedin" icon="linkedin-in" color="bg-[#0A66C2]" url={pageUrl} title={pageTitle} />
+                     <ShareButton platform="whatsapp" icon="whatsapp" color="bg-[#25D366]" url={pageUrl} title={pageTitle} />
+                     <ShareButton platform="reddit" icon="reddit-alien" color="bg-[#FF4500]" url={pageUrl} title={pageTitle} />
+                     <ShareButton platform="telegram" icon="telegram-plane" color="bg-[#0088cc]" url={pageUrl} title={pageTitle} />
+                 </div>
+
+                 <div className="relative">
+                     <button 
+                        onClick={handleBookmark}
+                        className="flex items-center gap-2 bg-white border border-slate-200 hover:border-[#da3f0b] hover:text-[#da3f0b] text-slate-600 px-4 py-2 rounded-lg text-sm font-bold transition-all shadow-sm active:scale-95"
+                     >
+                        <i className="fas fa-bookmark"></i> Bookmark
+                     </button>
+                     {showBookmarkToast && (
+                         <div className="absolute bottom-full mb-3 left-1/2 -translate-x-1/2 bg-slate-800 text-white text-xs py-2 px-4 rounded-lg shadow-lg whitespace-nowrap animate-fade">
+                             Press <span className="font-bold text-[#da3f0b]">Ctrl + D</span> to bookmark
+                         </div>
+                     )}
+                 </div>
+             </div>
+          </footer>
+        </div>
+      );
+    };
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+    </script>
+
+
+    <section class="bg-white py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="prose prose-lg max-w-none prose-h2:text-gray-800 prose-p:text-gray-700">
+
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">YouTube Timestamp Link Generator – Share the Perfect Moment</h2>
+                <p class="mb-6 leading-relaxed">
+                    Have you ever wanted to share a specific part of a long YouTube video without making your friends or audience watch the whole thing? Our <strong>YouTube Timestamp Link Generator</strong> is the ultimate tool for creating URLs that start exactly where you want. Whether it's a funny clip, a specific tutorial step, or a key quote in a podcast, this tool makes sharing precise moments effortless.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Why Use a YouTube Time Start Link?</h2>
+                <p class="mb-6 leading-relaxed">
+                    In an era of short attention spans, getting straight to the point is vital. A <strong>YouTube timestamp link</strong> ensures that your viewers don't have to scrub through a 30-minute video to find the 10 seconds you're talking about. This is incredibly useful for:
+                </p>
+                <ul class="list-disc pl-6 mb-6 space-y-2 text-gray-700">
+                    <li><strong>Educators:</strong> Linking directly to a specific chapter or explanation in a lecture.</li>
+                    <li><strong>Gamers:</strong> Sharing a specific "epic moment" or glitch from a long stream.</li>
+                    <li><strong>Researchers:</strong> Citing specific evidence or statements in video interviews.</li>
+                    <li><strong>Social Media:</strong> Increasing engagement by showing the most exciting part of a video immediately.</li>
+                </ul>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">How to Generate a YouTube Link with a Timestamp</h2>
+                <p class="mb-6 leading-relaxed">
+                    Using our tool is faster than manually editing URLs. Here is the simple 3-step process:
+                </p>
+                <ol class="list-decimal pl-6 mb-6 space-y-2 text-gray-700">
+                    <li><strong>Paste the URL:</strong> Copy the link of the YouTube video you want to share and paste it into the input box.</li>
+                    <li><strong>Set the Time:</strong> Enter the hours, minutes, and seconds where you want the video to begin.</li>
+                    <li><strong>Copy & Share:</strong> Click the copy button to get your new <em>youtube time start</em> link, ready for sharing anywhere.</li>
+                </ol>
+                <p class="mb-6 leading-relaxed">
+                    Our tool supports standard YouTube links, mobile (youtu.be) links, and even YouTube Shorts. It automatically formats the time parameter correctly so it works across all browsers and devices.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Manual vs. Automatic Timestamping</h2>
+                <p class="mb-6 leading-relaxed">
+                    While you can manually add <code>?t=1m30s</code> to the end of a YouTube URL, it's easy to make mistakes with syntax, especially when the URL already contains other parameters (like tracking IDs). Our <strong>video chapter link</strong> generator eliminates the guesswork, ensuring the syntax is always perfect, whether it needs a question mark or an ampersand.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Maximize Engagement with Precise Sharing</h2>
+                <p class="mb-6 leading-relaxed">
+                    When you share a video at a specific time, you respect the viewer's time. This often leads to higher click-through rates and better retention. If you are a content creator, using timestamped links in your "pinned comments" or "video descriptions" can help viewers navigate your content more effectively, acting as a DIY <strong>video chapter link</strong> system.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-center text-gray-900 mb-8">Frequently Asked Questions</h2>
+            <div class="space-y-4">
+                
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>Does this work on mobile devices?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">
+                            Yes! The links generated by our tool are standard YouTube URLs. When someone clicks the link on a smartphone, it will open either in their YouTube app or mobile browser, starting exactly at the timestamp you set.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>Can I use this for YouTube Shorts?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">
+                            Yes. Our tool detects Shorts URLs and converts them into a format that supports timestamps, ensuring your shared moment works as intended.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>Is there a limit to how many links I can generate?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">
+                            No, the tool is completely free and unlimited. You can generate as many timestamped links as you need for your projects or social sharing.
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 pb-16">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-slate-200 pt-16">
+            <h2 class="text-2xl font-bold text-center text-slate-800 mb-10">Popular Tools on SimpliConvert</h2>
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+                
+                <a href="/youtube_thumbnail_downloader/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-red-50 text-red-600 flex items-center justify-center shrink-0 group-hover:bg-red-600 group-hover:text-white transition-colors">
+                        <i class="fab fa-youtube text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Thumb Grabber</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Download YouTube video covers.</p>
+                    </div>
+                </a>
+
+                <a href="/password_generator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-slate-50 text-slate-700 flex items-center justify-center shrink-0 group-hover:bg-slate-800 group-hover:text-white transition-colors">
+                        <i class="fas fa-key text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Password Gen</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Create secure, random passwords.</p>
+                    </div>
+                </a>
+
+                <a href="/qr_code_generator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-slate-50 text-slate-800 flex items-center justify-center shrink-0 group-hover:bg-slate-900 group-hover:text-white transition-colors">
+                        <i class="fas fa-qrcode text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">QR Creator</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Generate custom QR codes instantly.</p>
+                    </div>
+                </a>
+
+                <a href="/meta_tag_generator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0 group-hover:bg-indigo-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-search text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Meta Tag Gen</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Optimize SEO with custom tags.</p>
+                    </div>
+                </a>
+
+            </div>
+        </div>
+    </section>
+
+    <div id="footer"></div>
+
+    <script>
+    function initializeHeaderScripts() {
+        const header = document.getElementById('header');
+        if (header) {
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 10) {
+                    header.classList.add('scrolled-effect');
+                } else {
+                    header.classList.remove('scrolled-effect');
+                }
+            });
+        }
+    }
+    
+    function initializeFooterScripts() {
+        const yearSpan = document.getElementById('current-year');
+        if(yearSpan) {
+            yearSpan.textContent = new Date().getFullYear();
+        }
+    }
+
+    async function loadComponent(url, elementId, callback) {
+        try {
+            const response = await fetch(url);
+            if (!response.ok) throw new Error('Status: ' + response.status);
+            const text = await response.text();
+            const element = document.getElementById(elementId);
+            if (element) {
+                element.innerHTML = text;
+                if (callback) callback();
+            }
+        } catch (error) {
+            console.error('Error loading component:', error);
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        loadComponent('/components/navbar.html', 'navbar', initializeHeaderScripts);
+        loadComponent('/components/footer.html', 'footer', initializeFooterScripts);
+        
+        const faqToggles = document.querySelectorAll('[data-faq-toggle]');
+        faqToggles.forEach(button => {
+            button.addEventListener('click', () => {
+                const answer = button.nextElementSibling;
+                const icon = button.querySelector('.faq-icon');
+                const isOpening = !answer.style.maxHeight;
+
+                faqToggles.forEach(other => {
+                    if (other !== button) {
+                        other.nextElementSibling.style.maxHeight = null;
+                        other.querySelector('.faq-icon').classList.remove('rotate-90');
+                        other.querySelector('.faq-icon').classList.add('-rotate-90');
+                    }
+                });
+
+                if (isOpening) {
+                    answer.style.maxHeight = answer.scrollHeight + "px";
+                    icon.classList.remove('-rotate-90');
+                    icon.classList.add('rotate-90');
+                } else {
+                    answer.style.maxHeight = null;
+                    icon.classList.remove('rotate-90');
+                    icon.classList.add('-rotate-90');
+                }
+            });
+        });
+    });
+    </script>
+</body>
+</html>

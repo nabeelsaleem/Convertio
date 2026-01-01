@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>WhatsApp Link Generator – Create Click-to-Chat Links | SimpliConvert</title>
+    <meta name="description" content="Create custom click-to-chat links with our WhatsApp Link Generator. Add a pre-filled message and generate a direct wa.me URL for your customers instantly.">
+    <meta name="keywords" content="whatsapp link generator, wa.me link, click to chat whatsapp, whatsapp url maker, create whatsapp link with message, whatsapp business link, free whatsapp link tool">
+    <meta name="author" content="SimpliConvert">
+    <meta property="og:site_name" content="SimpliConvert">
+    <meta name="robots" content="index, follow">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://simpliconvert.com/whatsapp_link_generator/">
+    <meta property="og:title" content="WhatsApp Link Generator – Instant Click-to-Chat">
+    <meta property="og:description" content="Generate custom WhatsApp links with pre-filled messages. Perfect for businesses, social media profiles, and customer support.">
+    <meta property="og:image" content="https://simpliconvert.com/images/whatsapp-link-generator-og.jpg">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://simpliconvert.com/whatsapp_link_generator/">
+    <meta name="twitter:title" content="WhatsApp Link Generator – Create wa.me Links">
+    <meta name="twitter:description" content="Free tool to generate WhatsApp chat links. No need to save numbers—just click and chat.">
+    <meta name="twitter:image" content="https://simpliconvert.com/images/whatsapp-link-generator-og.jpg">
+
+    <link rel="canonical" href="https://simpliconvert.com/whatsapp_link_generator/">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "WhatsApp Link Generator",
+      "url": "https://simpliconvert.com/whatsapp_link_generator/",
+      "description": "A free online tool to create WhatsApp click-to-chat links with custom pre-filled messages for better customer engagement.",
+      "applicationCategory": "CommunicationApplication",
+      "operatingSystem": "Web Browser",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "SimpliConvert",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://simpliconvert.com/logo.png"
+        }
+      }
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [{
+        "@type": "Question",
+        "name": "What is a WhatsApp Link?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "A WhatsApp link (wa.me) uses the 'Click to Chat' feature to allow users to start a conversation with you without having your phone number saved in their contact list."
+        }
+      }, {
+        "@type": "Question",
+        "name": "How do I include a pre-filled message?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Our generator allows you to type a message in the 'Pre-filled Message' field. When someone clicks your link, this text will automatically appear in their chat box, ready to be sent."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Do I need to include the '+' sign in the phone number?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "No. You should enter your full international phone number starting with the country code, but omit any plus signs, zeros, or brackets. For example, use 15551234567 instead of +1 (555) 123-4567."
+        }
+      }]
+    }
+    </script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #25D366; /* WhatsApp Green */
+            --primary-hover: #128C7E;
+            --primary-light: #e7f9ee;
+            --bg: #f8fafc;
+            --text-dark: #0f172a;
+            --accent: #da3f0b;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text-dark);
+        }
+
+        .hero-card {
+            background: white;
+            border: 1px solid #f1f5f9;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background-color: var(--primary);
+        }
+
+        .prose a {
+            color: #da3f0b;
+            text-decoration: none; 
+        }
+        .prose a:hover {
+            text-decoration: underline; 
+        }
+
+        .tooltip-container { position: relative; display: inline-block; }
+        .tooltip-text {
+            visibility: hidden; width: 220px; background-color: #1e293b; color: #fff;
+            text-align: center; border-radius: 8px; padding: 10px; position: absolute;
+            z-index: 50; bottom: 125%; left: 50%; margin-left: -110px; opacity: 0;
+            transition: opacity 0.2s; font-size: 0.75rem; font-weight: 400;
+            pointer-events: none; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+        .tooltip-container:hover .tooltip-text { visibility: visible; opacity: 1; }
+        .tooltip-text::after {
+            content: ""; position: absolute; top: 100%; left: 50%; margin-left: -5px;
+            border-width: 5px; border-style: solid; border-color: #1e293b transparent transparent transparent;
+        }
+
+        .animate-fade { animation: fadeIn 0.3s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+        .tool-card {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .tool-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 min-h-screen flex flex-col">
+    <div id="navbar"></div>
+
+    <section class="hero-white text-black py-2 md:py-10">
+        <div class="container mx-auto px-4 text-center">
+            <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-2">WhatsApp Link Generator</h1>
+            <p class="text-lg md:text-xl max-w-3x1 mx-auto mb-2">
+                Create custom click-to-chat links with pre-filled messages. Share your wa.me URL on Instagram, Facebook, or your website.
+            </p>
+        </div>
+    </section>
+
+    <div id="root" class="w-full max-w-6xl mx-auto p-4 sm:p-6"></div>
+
+    <script type="text/babel">
+    const { useState, useEffect, useMemo } = React;
+
+    const Tooltip = ({ text }) => (
+      <span className="tooltip-container ml-2">
+        <i className="fas fa-info-circle text-slate-300 hover:text-[#25D366] cursor-help text-xs transition-colors"></i>
+        <span className="tooltip-text">{text}</span>
+      </span>
+    );
+
+    const ShareButton = ({ platform, icon, color, url, title }) => {
+        let shareUrl = '';
+        switch(platform) {
+            case 'facebook': shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${url}`; break;
+            case 'twitter': shareUrl = `https://twitter.com/intent/tweet?url=${url}&text=${title}`; break;
+            case 'linkedin': shareUrl = `https://www.linkedin.com/shareArticle?mini=true&url=${url}`; break;
+            case 'whatsapp': shareUrl = `https://api.whatsapp.com/send?text=${title}%20${url}`; break;
+            case 'reddit': shareUrl = `https://www.reddit.com/submit?url=${url}&title=${title}`; break;
+            case 'telegram': shareUrl = `https://t.me/share/url?url=${url}&text=${title}`; break;
+            default: return null;
+        }
+
+        return (
+            <a 
+                href={shareUrl} 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className={`w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center text-white transition-transform hover:-translate-y-1 hover:shadow-lg ${color}`}
+            >
+                <i className={`fab fa-${icon}`}></i>
+            </a>
+        );
+    };
+
+    const App = () => {
+      const [phone, setPhone] = useState('');
+      const [message, setMessage] = useState('');
+      const [showCopyToast, setShowCopyToast] = useState(false);
+      const [showBookmarkToast, setShowBookmarkToast] = useState(false);
+
+      const generatedLink = useMemo(() => {
+        const cleanPhone = phone.replace(/\D/g, '');
+        if (!cleanPhone) return '';
+        const encodedMsg = encodeURIComponent(message);
+        return `https://wa.me/${cleanPhone}${encodedMsg ? '?text=' + encodedMsg : ''}`;
+      }, [phone, message]);
+
+      const copyToClipboard = () => {
+        if (!generatedLink) return;
+        navigator.clipboard.writeText(generatedLink);
+        setShowCopyToast(true);
+        setTimeout(() => setShowCopyToast(false), 2000);
+      };
+
+      const handleBookmark = () => {
+        setShowBookmarkToast(true);
+        setTimeout(() => setShowBookmarkToast(false), 3000);
+      };
+
+      const pageUrl = encodeURIComponent("https://simpliconvert.com/whatsapp_link_generator/");
+      const pageTitle = encodeURIComponent("Create your free WhatsApp Link!");
+
+      return (
+        <div className="bg-white rounded-[2rem] shadow-2xl overflow-hidden border border-slate-100">
+          <header className="bg-slate-50/50 border-b border-slate-100 p-6 md:p-8 flex flex-col md:flex-row justify-between items-center gap-6">
+            <div className="text-center md:text-left">
+              <h2 className="text-2xl font-black text-slate-800 tracking-tight flex items-center justify-center md:justify-start gap-3">
+                <span className="bg-[#25D366] text-white p-2 rounded-xl text-lg shadow-lg shadow-[#25D36630]">
+                  <i className="fab fa-whatsapp"></i>
+                </span>
+                WhatsApp URL Maker
+              </h2>
+            </div>
+          </header>
+
+          <main className="flex flex-col lg:flex-row">
+            {/* Input Panel */}
+            <div className="lg:w-[50%] p-6 md:p-10 lg:p-12 border-r border-slate-100">
+              <div className="space-y-6">
+                
+                <div className="bg-slate-50 p-6 rounded-2xl border border-slate-100">
+                  <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest mb-6"><i className="fas fa-phone-alt mr-2"></i>Contact Details</h3>
+                  
+                  <div className="mb-5">
+                    <div className="flex items-center text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">
+                      <label>Phone Number</label>
+                      <Tooltip text="Enter full international number (e.g., 15551234567). No '+' or '00'." />
+                    </div>
+                    <div className="relative rounded-xl shadow-sm">
+                      <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                        <span className="text-slate-400 font-semibold">+</span>
+                      </div>
+                      <input
+                        type="text"
+                        className="block w-full rounded-xl border-slate-200 border py-3 pl-8 pr-4 focus:ring-4 focus:ring-[#25D36620] focus:border-[#25D366] sm:text-sm font-semibold text-slate-800 transition-all bg-white"
+                        value={phone}
+                        onChange={(e) => setPhone(e.target.value)}
+                        placeholder="15551234567"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="mb-2">
+                    <div className="flex items-center text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">
+                      <label>Pre-filled Message (Optional)</label>
+                      <Tooltip text="This message will appear in the user's chat box automatically." />
+                    </div>
+                    <textarea
+                      className="block w-full rounded-xl border-slate-200 border py-3 px-4 focus:ring-4 focus:ring-[#25D36620] focus:border-[#25D366] sm:text-sm font-semibold text-slate-800 transition-all bg-white h-32 resize-none"
+                      value={message}
+                      onChange={(e) => setMessage(e.target.value)}
+                      placeholder="Hi! I'm interested in your services..."
+                    />
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+            {/* Results Panel */}
+            <div className="lg:w-[50%] bg-slate-50/50 p-6 md:p-10 lg:p-12 flex flex-col justify-center">
+               <div className="space-y-6">
+                  
+                  <div className="hero-card p-8 rounded-2xl flex flex-col items-center text-center">
+                    <p className="text-xs font-black text-[#25D366] uppercase tracking-[0.2em] mb-4">Your Generated Link</p>
+                    
+                    <div className="w-full bg-slate-50 border border-slate-200 rounded-xl p-4 mb-6 break-all font-mono text-sm text-slate-600 min-h-[60px] flex items-center justify-center">
+                      {generatedLink || "Enter a phone number to generate link..."}
+                    </div>
+
+                    <div className="flex flex-col sm:flex-row gap-3 w-full">
+                      <button 
+                        onClick={copyToClipboard}
+                        disabled={!generatedLink}
+                        className={`flex-1 py-4 rounded-xl font-bold text-white transition-all flex items-center justify-center gap-2 shadow-lg ${generatedLink ? 'bg-[#25D366] hover:bg-[#128C7E] active:scale-95' : 'bg-slate-300 cursor-not-allowed'}`}
+                      >
+                        <i className="fas fa-copy"></i> {showCopyToast ? 'Copied!' : 'Copy Link'}
+                      </button>
+                      
+                      {generatedLink && (
+                        <a 
+                          href={generatedLink}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex-1 py-4 bg-slate-800 hover:bg-slate-900 text-white rounded-xl font-bold transition-all flex items-center justify-center gap-2 shadow-lg active:scale-95"
+                        >
+                          <i className="fab fa-whatsapp"></i> Test Link
+                        </a>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="bg-white rounded-xl p-6 border border-slate-100 shadow-sm">
+                     <h4 className="text-xs font-black text-slate-400 uppercase tracking-widest mb-4">Preview</h4>
+                     <div className="bg-[#e5ddd5] rounded-lg p-4 relative overflow-hidden">
+                        <div className="bg-white rounded-lg p-3 shadow-sm max-w-[80%] ml-auto relative">
+                           <p className="text-xs text-slate-800 mb-1">{message || "Your message will appear here..."}</p>
+                           <span className="text-[10px] text-slate-400 block text-right">12:00 PM ✓✓</span>
+                           <div className="absolute top-0 right-[-8px] w-0 h-0 border-t-[10px] border-t-white border-r-[10px] border-r-transparent"></div>
+                        </div>
+                     </div>
+                  </div>
+
+               </div>
+            </div>
+          </main>
+
+          {/* Share & Bookmark Footer */}
+          <footer className="bg-slate-50 border-t border-slate-100 p-6 md:p-8">
+             <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+                 <div className="text-center md:text-left">
+                     <h4 className="text-sm font-bold text-slate-700 mb-1">Share this tool</h4>
+                     <p className="text-xs text-slate-400">Help others create WhatsApp links.</p>
+                 </div>
+                 
+                 <div className="flex flex-wrap justify-center gap-3">
+                     <ShareButton platform="facebook" icon="facebook-f" color="bg-[#1877F2]" url={pageUrl} title={pageTitle} />
+                     <ShareButton platform="twitter" icon="twitter" color="bg-[#1DA1F2]" url={pageUrl} title={pageTitle} />
+                     <ShareButton platform="linkedin" icon="linkedin-in" color="bg-[#0A66C2]" url={pageUrl} title={pageTitle} />
+                     <ShareButton platform="whatsapp" icon="whatsapp" color="bg-[#25D366]" url={pageUrl} title={pageTitle} />
+                     <ShareButton platform="reddit" icon="reddit-alien" color="bg-[#FF4500]" url={pageUrl} title={pageTitle} />
+                     <ShareButton platform="telegram" icon="telegram-plane" color="bg-[#0088cc]" url={pageUrl} title={pageTitle} />
+                 </div>
+
+                 <div className="relative">
+                     <button 
+                        onClick={handleBookmark}
+                        className="flex items-center gap-2 bg-white border border-slate-200 hover:border-[#25D366] hover:text-[#25D366] text-slate-600 px-4 py-2 rounded-lg text-sm font-bold transition-all shadow-sm active:scale-95"
+                     >
+                        <i className="fas fa-bookmark"></i> Bookmark
+                     </button>
+                     {showBookmarkToast && (
+                         <div className="absolute bottom-full mb-3 left-1/2 -translate-x-1/2 bg-slate-800 text-white text-xs py-2 px-4 rounded-lg shadow-lg whitespace-nowrap animate-fade">
+                             Press <span className="font-bold text-[#25D366]">Ctrl + D</span> to bookmark
+                         </div>
+                     )}
+                 </div>
+             </div>
+          </footer>
+        </div>
+      );
+    };
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+    </script>
+
+
+  <section class="bg-white py-12 sm:py-16">
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="prose prose-lg max-w-none prose-h2:text-gray-800 prose-p:text-gray-700">
+
+      <h2 class="text-3xl font-bold text-gray-900 mb-4">WhatsApp Link Generator – Connect with One Click</h2>
+      <p class="mb-6 leading-relaxed">
+        In today's fast-paced digital world, reducing friction for your customers is key to conversion. Our <strong>WhatsApp Link Generator</strong> allows you to create a direct "Click to Chat" link, enabling anyone to message you instantly without having to manually save your phone number. Whether you are a business owner, a freelancer, or an influencer, a <em>wa.me link</em> is the most professional way to invite inquiries on social media.
+      </p>
+
+      <h2 class="text-2xl font-bold mt-8 mb-4">Why Use a WhatsApp URL Maker?</h2>
+      <p class="mb-6 leading-relaxed">
+        Manually typing a phone number is a hurdle that many potential customers won't jump over. By using a <strong>whatsapp url maker</strong>, you remove that barrier. 
+      </p>
+      <ul class="list-disc pl-6 mb-6 space-y-2 text-gray-700">
+        <li><strong>Professionalism:</strong> Looks cleaner in Instagram or TikTok bios.</li>
+        <li><strong>Efficiency:</strong> Pre-filled messages help you identify where the lead came from.</li>
+        <li><strong>Global Reach:</strong> Works internationally as long as you use the correct country code.</li>
+        <li><strong>Privacy:</strong> Users don't need to clutter their contact list just for a single inquiry.</li>
+      </ul>
+
+      <h2 class="text-2xl font-bold mt-8 mb-4">How to Create a WhatsApp Link with a Message</h2>
+      <p class="mb-6 leading-relaxed">
+        Creating your custom link is simple and takes less than 30 seconds:
+      </p>
+      <ol class="list-decimal pl-6 mb-6 space-y-2 text-gray-700">
+        <li><strong>Enter Phone Number:</strong> Type your full number including the country code (e.g., 1 for USA, 44 for UK). Do not include '+' or leading zeros.</li>
+        <li><strong>Add Message:</strong> Type a default message like "I'd like to book a consultation" or "Is this item still available?".</li>
+        <li><strong>Generate & Copy:</strong> Click the button and copy your new <em>wa.me</em> URL.</li>
+      </ol>
+      <p class="mb-6 leading-relaxed">
+        Just as our <a href="https://simpliconvert.com/qr_code_generator/" target="_blank">QR Code Generator</a> helps bridge the gap between physical and digital, this tool bridges the gap between a lead and a conversation.
+      </p>
+
+      <h2 class="text-2xl font-bold mt-8 mb-4">Best Places to Share Your WhatsApp Link</h2>
+      <p class="mb-6 leading-relaxed">
+        Once you've generated your link, you should place it where your audience is most active:
+      </p>
+      <ul class="list-disc pl-6 mb-6 space-y-2 text-gray-700">
+        <li><strong>Instagram Bio:</strong> Use it as your "Link in Bio" to handle sales via DM.</li>
+        <li><strong>Facebook Business Page:</strong> Add it to your "About" section or as a "Contact Us" button.</li>
+        <li><strong>YouTube Descriptions:</strong> Perfect for creators offering coaching or merchandise.</li>
+        <li><strong>Email Signatures:</strong> Let clients reach you quickly for urgent matters.</li>
+      </ul>
+
+      <h2 class="text-2xl font-bold mt-8 mb-4">Safety and Privacy</h2>
+      <p class="mb-6 leading-relaxed">
+        Our <strong>WhatsApp Link Generator</strong> does not store your phone number or messages. The link is generated locally in your browser. Note that once you share the link publicly, anyone with the link can see your phone number, so it is best used for business or public-facing contact points.
+      </p>
+    </div>
+    </div>
+    </section>
+  
+
+    <section class="bg-gray-50 py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-center text-gray-900 mb-8">Frequently Asked Questions</h2>
+            <div class="space-y-4">
+                
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-primary">
+                        <span>Is the WhatsApp Link Generator free?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">
+                            Yes, our tool is 100% free to use. You can generate as many links as you need for different phone numbers or marketing campaigns.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-primary">
+                        <span>Why isn't my link working?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">
+                            The most common reason is an incorrect phone number format. Ensure you have included the country code and removed any special characters like +, -, or spaces. For example, use 447123456789 instead of +44 7123-456789.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-primary">
+                        <span>Can I use this for WhatsApp Business?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">
+                            Absolutely! This tool works perfectly with both standard WhatsApp accounts and the WhatsApp Business app.
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 pb-16">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-slate-200 pt-16">
+            <h2 class="text-2xl font-bold text-center text-slate-800 mb-10">Popular Tools on SimpliConvert</h2>
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+                
+                <a href="/qr_code_generator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#25D366] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-slate-50 text-slate-800 flex items-center justify-center shrink-0 group-hover:bg-slate-900 group-hover:text-white transition-colors">
+                        <i class="fas fa-qrcode text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#25D366]">QR Creator</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Generate custom QR codes instantly.</p>
+                    </div>
+                </a>
+
+                <a href="/password_generator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#25D366] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-slate-50 text-slate-700 flex items-center justify-center shrink-0 group-hover:bg-slate-800 group-hover:text-white transition-colors">
+                        <i class="fas fa-key text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#25D366]">Password Gen</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Create secure, random passwords.</p>
+                    </div>
+                </a>
+
+                <a href="/meta_tag_generator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#25D366] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0 group-hover:bg-indigo-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-search text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#25D366]">Meta Tag Gen</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Optimize SEO with custom tags.</p>
+                    </div>
+                </a>
+
+                <a href="/to_do_list/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#25D366] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-green-50 text-green-600 flex items-center justify-center shrink-0 group-hover:bg-green-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-check-square text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#25D366]">To-Do List</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Manage tasks and stay organized.</p>
+                    </div>
+                </a>
+
+            </div>
+        </div>
+    </section>
+
+    <div id="footer"></div>
+
+    <script>
+    function initializeHeaderScripts() {
+        const header = document.getElementById('header');
+        if (header) {
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 10) {
+                    header.classList.add('scrolled-effect');
+                } else {
+                    header.classList.remove('scrolled-effect');
+                }
+            });
+        }
+    }
+    
+    function initializeFooterScripts() {
+        const yearSpan = document.getElementById('current-year');
+        if(yearSpan) {
+            yearSpan.textContent = new Date().getFullYear();
+        }
+    }
+
+    async function loadComponent(url, elementId, callback) {
+        try {
+            const response = await fetch(url);
+            if (!response.ok) throw new Error('Status: ' + response.status);
+            const text = await response.text();
+            const element = document.getElementById(elementId);
+            if (element) {
+                element.innerHTML = text;
+                if (callback) callback();
+            }
+        } catch (error) {
+            console.error('Error loading component:', error);
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        loadComponent('/components/navbar.html', 'navbar', initializeHeaderScripts);
+        loadComponent('/components/footer.html', 'footer', initializeFooterScripts);
+        
+        const faqToggles = document.querySelectorAll('[data-faq-toggle]');
+        faqToggles.forEach(button => {
+            button.addEventListener('click', () => {
+                const answer = button.nextElementSibling;
+                const icon = button.querySelector('.faq-icon');
+                const isOpening = !answer.style.maxHeight;
+
+                faqToggles.forEach(other => {
+                    if (other !== button) {
+                        other.nextElementSibling.style.maxHeight = null;
+                        other.querySelector('.faq-icon').classList.remove('rotate-90');
+                        other.querySelector('.faq-icon').classList.add('-rotate-90');
+                    }
+                });
+
+                if (isOpening) {
+                    answer.style.maxHeight = answer.scrollHeight + "px";
+                    icon.classList.remove('-rotate-90');
+                    icon.classList.add('rotate-90');
+                } else {
+                    answer.style.maxHeight = null;
+                    icon.classList.remove('rotate-90');
+                    icon.classList.add('-rotate-90');
+                }
+            });
+        });
+    });
+    </script>
+</body>
+</html>

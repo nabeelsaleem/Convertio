@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Chmod Calculator – Linux File Permissions Generator | SimpliConvert</title>
+    <meta name="description" content="Generate correct Linux file permissions with our Chmod Calculator. Visually select read, write, and execute rights to get the exact numeric code and symbolic notation.">
+    <meta name="keywords" content="chmod calculator, linux permissions, file permissions generator, unix permission tool, chmod 755, chmod 777, linux file security">
+    <meta name="author" content="SimpliConvert">
+    <meta property="og:site_name" content="SimpliConvert">
+    <meta name="robots" content="index, follow">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://simpliconvert.com/chmod_calculator/">
+    <meta property="og:title" content="Chmod Calculator – Linux File Permissions Generator">
+    <meta property="og:description" content="Stop guessing Linux permissions. Visually calculate chmod numeric codes and symbolic strings for your files and directories.">
+    <meta property="og:image" content="https://simpliconvert.com/images/chmod-calculator-og.jpg">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://simpliconvert.com/chmod_calculator/">
+    <meta name="twitter:title" content="Chmod Calculator – Generate Linux Permissions">
+    <meta name="twitter:description" content="Free tool to calculate chmod numeric values and symbolic notation. Perfect for web developers and Linux sysadmins.">
+    <meta name="twitter:image" content="https://simpliconvert.com/images/chmod-calculator-og.jpg">
+
+    <link rel="canonical" href="https://simpliconvert.com/chmod_calculator/">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Chmod Calculator",
+      "url": "https://simpliconvert.com/chmod_calculator/",
+      "description": "A free online tool for Linux users and developers to calculate file permissions in numeric and symbolic formats.",
+      "applicationCategory": "DeveloperApplication",
+      "operatingSystem": "Web Browser",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "SimpliConvert",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://simpliconvert.com/logo.png"
+        }
+      }
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [{
+        "@type": "Question",
+        "name": "What does chmod 755 mean?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Chmod 755 means the owner has full permissions (read, write, execute), while the group and others have only read and execute permissions. It is commonly used for directories and executable scripts."
+        }
+      }, {
+        "@type": "Question",
+        "name": "How do I calculate the numeric chmod value?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Each permission has a value: Read = 4, Write = 2, and Execute = 1. You sum these values for each user class (Owner, Group, Others). For example, Read (4) + Write (2) = 6."
+        }
+      }, {
+        "@type": "Question",
+        "name": "What is the difference between numeric and symbolic mode?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Numeric mode uses three digits (e.g., 644) to represent permissions. Symbolic mode uses a string of characters (e.g., -rw-r--r--) to represent the same rights."
+        }
+      }]
+    }
+    </script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #da3f0b;
+            --primary-hover: #b53409;
+            --primary-light: #fff5f2;
+            --bg: #f8fafc;
+            --text-dark: #0f172a;
+            --success: #16a34a;
+            --danger: #dc2626;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text-dark);
+        }
+
+        .hero-card {
+            background: white;
+            border: 1px solid #f1f5f9;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background-color: var(--primary);
+        }
+
+        .prose a {
+            color: #da3f0b;
+            text-decoration: none; 
+        }
+        .prose a:hover {
+            text-decoration: underline; 
+        }
+
+        .tooltip-container { position: relative; display: inline-block; }
+        .tooltip-text {
+            visibility: hidden; width: 220px; background-color: #1e293b; color: #fff;
+            text-align: center; border-radius: 8px; padding: 10px; position: absolute;
+            z-index: 50; bottom: 125%; left: 50%; margin-left: -110px; opacity: 0;
+            transition: opacity 0.2s; font-size: 0.75rem; font-weight: 400;
+            pointer-events: none; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+        .tooltip-container:hover .tooltip-text { visibility: visible; opacity: 1; }
+        .tooltip-text::after {
+            content: ""; position: absolute; top: 100%; left: 50%; margin-left: -5px;
+            border-width: 5px; border-style: solid; border-color: #1e293b transparent transparent transparent;
+        }
+
+        .animate-fade { animation: fadeIn 0.3s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+        .tool-card {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .tool-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+        }
+
+        .checkbox-custom {
+            width: 24px;
+            height: 24px;
+            accent-color: var(--primary);
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 min-h-screen flex flex-col">
+    <div id="navbar"></div>
+
+    <section class="hero-white text-black py-2 md:py-10">
+        <div class="container mx-auto px-4 text-center">
+            <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-2">Chmod Calculator</h1>
+            <p class="text-lg md:text-xl max-w-3x1 mx-auto mb-2">
+                Visually generate Linux file permissions. Calculate numeric codes, symbolic notation, and the exact command for your terminal.
+            </p>
+        </div>
+    </section>
+
+    <div id="root" class="w-full max-w-6xl mx-auto p-4 sm:p-6"></div>
+
+    <script type="text/babel">
+    const { useState, useEffect, useMemo } = React;
+
+    const Tooltip = ({ text }) => (
+      <span className="tooltip-container ml-2">
+        <i className="fas fa-info-circle text-slate-300 hover:text-[#da3f0b] cursor-help text-xs transition-colors"></i>
+        <span className="tooltip-text">{text}</span>
+      </span>
+    );
+
+    const PermissionGroup = ({ title, permissions, onChange, icon }) => (
+      <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm">
+        <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest mb-6 flex items-center">
+          <i className={`fas ${icon} mr-2`}></i>{title}
+        </h3>
+        <div className="space-y-4">
+          {['read', 'write', 'execute'].map((type) => (
+            <label key={type} className="flex items-center justify-between cursor-pointer group">
+              <span className="text-sm font-semibold text-slate-700 capitalize">{type}</span>
+              <input 
+                type="checkbox" 
+                checked={permissions[type]} 
+                onChange={() => onChange(type)}
+                className="checkbox-custom"
+              />
+            </label>
+          ))}
+        </div>
+      </div>
+    );
+
+    const StatCard = ({ label, value, subtext, isMain = false, isCode = false }) => (
+      <div className={`${isMain ? 'hero-card p-8' : 'bg-white p-5 rounded-2xl border border-slate-100 shadow-sm'} flex flex-col items-center text-center`}>
+        <p className={`text-xs font-black ${isMain ? 'text-[#da3f0b]' : 'text-slate-400'} uppercase tracking-[0.2em] mb-4`}>{label}</p>
+        <div className="flex items-center justify-center w-full">
+          <span className={`${isMain ? 'text-6xl' : 'text-2xl'} font-black tracking-tighter leading-none text-slate-900 ${isCode ? 'font-mono' : ''}`}>
+            {value}
+          </span>
+        </div>
+        {subtext && <p className="text-sm text-slate-400 font-medium mt-4">{subtext}</p>}
+      </div>
+    );
+
+    const ShareButton = ({ platform, icon, color, url, title }) => {
+        let shareUrl = '';
+        switch(platform) {
+            case 'facebook': shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${url}`; break;
+            case 'twitter': shareUrl = `https://twitter.com/intent/tweet?url=${url}&text=${title}`; break;
+            case 'linkedin': shareUrl = `https://www.linkedin.com/shareArticle?mini=true&url=${url}`; break;
+            case 'whatsapp': shareUrl = `https://api.whatsapp.com/send?text=${title}%20${url}`; break;
+            case 'reddit': shareUrl = `https://www.reddit.com/submit?url=${url}&title=${title}`; break;
+            case 'telegram': shareUrl = `https://t.me/share/url?url=${url}&text=${title}`; break;
+            default: return null;
+        }
+        return (
+            <a href={shareUrl} target="_blank" rel="noopener noreferrer" className={`w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center text-white transition-transform hover:-translate-y-1 hover:shadow-lg ${color}`}>
+                <i className={`fab fa-${icon}`}></i>
+            </a>
+        );
+    };
+
+    const App = () => {
+      const [owner, setOwner] = useState({ read: true, write: true, execute: false });
+      const [group, setGroup] = useState({ read: true, write: false, execute: false });
+      const [others, setOthers] = useState({ read: true, write: false, execute: false });
+      const [showBookmarkToast, setShowBookmarkToast] = useState(false);
+
+      const calcNumeric = (perms) => (perms.read ? 4 : 0) + (perms.write ? 2 : 0) + (perms.execute ? 1 : 0);
+      const calcSymbolic = (perms) => (perms.read ? 'r' : '-') + (perms.write ? 'w' : '-') + (perms.execute ? 'x' : '-');
+
+      const results = useMemo(() => {
+        const oVal = calcNumeric(owner);
+        const gVal = calcNumeric(group);
+        const otVal = calcNumeric(others);
+        const numeric = `${oVal}${gVal}${otVal}`;
+        const symbolic = `-${calcSymbolic(owner)}${calcSymbolic(group)}${calcSymbolic(others)}`;
+        return { numeric, symbolic };
+      }, [owner, group, others]);
+
+      const applyPreset = (code) => {
+        const digits = code.split('').map(Number);
+        const mapDigit = (d) => ({ read: !!(d & 4), write: !!(d & 2), execute: !!(d & 1) });
+        setOwner(mapDigit(digits[0]));
+        setGroup(mapDigit(digits[1]));
+        setOthers(mapDigit(digits[2]));
+      };
+
+      const handleBookmark = () => {
+        setShowBookmarkToast(true);
+        setTimeout(() => setShowBookmarkToast(false), 3000);
+      };
+
+      const pageUrl = encodeURIComponent("https://simpliconvert.com/chmod_calculator/");
+      const pageTitle = encodeURIComponent("Check out this Chmod Calculator for Linux permissions!");
+
+      return (
+        <div className="bg-white rounded-[2rem] shadow-2xl overflow-hidden border border-slate-100">
+          <header className="bg-slate-50/50 border-b border-slate-100 p-6 md:p-8 flex flex-col md:flex-row justify-between items-center gap-6">
+            <div className="text-center md:text-left">
+              <h2 className="text-2xl font-black text-slate-800 tracking-tight flex items-center justify-center md:justify-start gap-3">
+                <span className="bg-[#da3f0b] text-white p-2 rounded-xl text-lg shadow-lg shadow-[#da3f0b30]">
+                  <i className="fas fa-terminal"></i>
+                </span>
+                Linux Permission Generator
+              </h2>
+            </div>
+            <div className="flex gap-2 flex-wrap justify-center">
+              {['777', '755', '644', '400'].map(code => (
+                <button 
+                  key={code}
+                  onClick={() => applyPreset(code)}
+                  className="bg-white border border-slate-200 text-slate-600 px-3 py-1.5 rounded-lg text-xs font-bold hover:border-[#da3f0b] hover:text-[#da3f0b] transition-all shadow-sm"
+                >
+                  {code}
+                </button>
+              ))}
+            </div>
+          </header>
+
+          <main className="flex flex-col lg:flex-row">
+            <div className="lg:w-[60%] p-6 md:p-10 lg:p-12 border-r border-slate-100">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <PermissionGroup 
+                  title="Owner (User)" 
+                  icon="fa-user-shield"
+                  permissions={owner} 
+                  onChange={(type) => setOwner({...owner, [type]: !owner[type]})} 
+                />
+                <PermissionGroup 
+                  title="Group" 
+                  icon="fa-users"
+                  permissions={group} 
+                  onChange={(type) => setGroup({...group, [type]: !group[type]})} 
+                />
+                <PermissionGroup 
+                  title="Others (Public)" 
+                  icon="fa-globe"
+                  permissions={others} 
+                  onChange={(type) => setOthers({...others, [type]: !others[type]})} 
+                />
+              </div>
+
+              <div className="mt-10 p-6 bg-slate-900 rounded-2xl border border-slate-800 shadow-xl">
+                <div className="flex justify-between items-center mb-4">
+                  <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Linux Command</span>
+                  <button 
+                    onClick={() => navigator.clipboard.writeText(`chmod ${results.numeric} filename`)}
+                    className="text-xs text-[#da3f0b] font-bold hover:text-white transition-colors"
+                  >
+                    <i className="fas fa-copy mr-1"></i> Copy
+                  </button>
+                </div>
+                <code className="text-[#da3f0b] text-lg md:text-xl font-mono block break-all">
+                  chmod {results.numeric} <span className="text-slate-400">filename</span>
+                </code>
+              </div>
+            </div>
+
+            <div className="lg:w-[40%] bg-slate-50/50 p-6 md:p-10 lg:p-12 flex flex-col justify-center gap-6">
+              <StatCard 
+                isMain={true}
+                label="Numeric Value"
+                value={results.numeric}
+                subtext="Octal representation of permissions"
+              />
+              <StatCard 
+                label="Symbolic Notation"
+                value={results.symbolic}
+                isCode={true}
+                subtext="Standard string format"
+              />
+              <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm">
+                <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4 text-center">Quick Reference</h4>
+                <div className="grid grid-cols-3 gap-2 text-[10px] font-bold text-slate-500">
+                  <div className="text-center p-2 bg-slate-50 rounded">Read: 4</div>
+                  <div className="text-center p-2 bg-slate-50 rounded">Write: 2</div>
+                  <div className="text-center p-2 bg-slate-50 rounded">Exec: 1</div>
+                </div>
+              </div>
+            </div>
+          </main>
+
+          <footer className="bg-slate-50 border-t border-slate-100 p-6 md:p-8">
+             <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+                 <div className="text-center md:text-left">
+                     <h4 className="text-sm font-bold text-slate-700 mb-1">Share this tool</h4>
+                     <p className="text-xs text-slate-400">Help other developers manage permissions.</p>
+                 </div>
+                 <div className="flex flex-wrap justify-center gap-3">
+                     <ShareButton platform="facebook" icon="facebook-f" color="bg-[#1877F2]" url={pageUrl} title={pageTitle} />
+                     <ShareButton platform="twitter" icon="twitter" color="bg-[#1DA1F2]" url={pageUrl} title={pageTitle} />
+                     <ShareButton platform="linkedin" icon="linkedin-in" color="bg-[#0A66C2]" url={pageUrl} title={pageTitle} />
+                     <ShareButton platform="whatsapp" icon="whatsapp" color="bg-[#25D366]" url={pageUrl} title={pageTitle} />
+                     <ShareButton platform="reddit" icon="reddit-alien" color="bg-[#FF4500]" url={pageUrl} title={pageTitle} />
+                     <ShareButton platform="telegram" icon="telegram-plane" color="bg-[#0088cc]" url={pageUrl} title={pageTitle} />
+                 </div>
+                 <div className="relative">
+                     <button onClick={handleBookmark} className="flex items-center gap-2 bg-white border border-slate-200 hover:border-[#da3f0b] hover:text-[#da3f0b] text-slate-600 px-4 py-2 rounded-lg text-sm font-bold transition-all shadow-sm active:scale-95">
+                        <i className="fas fa-bookmark"></i> Bookmark
+                     </button>
+                     {showBookmarkToast && (
+                         <div className="absolute bottom-full mb-3 left-1/2 -translate-x-1/2 bg-slate-800 text-white text-xs py-2 px-4 rounded-lg shadow-lg whitespace-nowrap animate-fade">
+                             Press <span className="font-bold text-[#da3f0b]">Ctrl + D</span> to bookmark
+                         </div>
+                     )}
+                 </div>
+             </div>
+          </footer>
+        </div>
+      );
+    };
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+    </script>
+
+    <section class="bg-white py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="prose prose-lg max-w-none prose-h2:text-gray-800 prose-p:text-gray-700">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">Understanding Linux File Permissions</h2>
+                <p class="mb-6 leading-relaxed">
+                    In Linux and Unix-like operating systems, file permissions are a fundamental security feature. They determine who can read, modify, or execute a file. Our <strong>Chmod Calculator</strong> simplifies the process of generating these permissions, whether you prefer the numeric (octal) format or the symbolic notation.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">How the Chmod Calculator Works</h2>
+                <p class="mb-6 leading-relaxed">
+                    Permissions are divided into three categories: <strong>Owner</strong>, <strong>Group</strong>, and <strong>Others</strong>. For each category, there are three types of access:
+                </p>
+                <ul class="list-disc pl-6 mb-6 space-y-2 text-gray-700">
+                    <li><strong>Read (r):</strong> Allows viewing the contents of a file or listing a directory. (Value: 4)</li>
+                    <li><strong>Write (w):</strong> Allows modifying or deleting a file. (Value: 2)</li>
+                    <li><strong>Execute (x):</strong> Allows running a file as a program or entering a directory. (Value: 1)</li>
+                </ul>
+                <p class="mb-6 leading-relaxed">
+                    By selecting the checkboxes in our tool, the calculator automatically sums these values. For example, if the Owner has Read (4) and Write (2), the first digit of the numeric code is 6.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Common Chmod Permissions</h2>
+                <p class="mb-6 leading-relaxed">
+                    If you are managing a web server or working with scripts, you will likely encounter these common settings:
+                </p>
+                <ul class="list-disc pl-6 mb-6 space-y-2 text-gray-700">
+                    <li><strong>777:</strong> Everyone has full access. Use with extreme caution as it is a security risk.</li>
+                    <li><strong>755:</strong> Owner can do everything; others can only read and execute. Standard for public directories.</li>
+                    <li><strong>644:</strong> Owner can read/write; others can only read. Standard for HTML and image files.</li>
+                    <li><strong>600:</strong> Only the owner can read and write. Good for sensitive configuration files.</li>
+                </ul>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Why Use a Visual Permission Generator?</h2>
+                <p class="mb-6 leading-relaxed">
+                    Manual calculation of octal values can lead to errors, which might either break your application or leave your server vulnerable. Using a <strong>file permissions generator</strong> ensures that the command you paste into your terminal is exactly what you intended. It's an essential tool for developers, sysadmins, and students learning Linux.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-center text-gray-900 mb-8">Chmod Calculator – Frequently Asked Questions</h2>
+            <div class="space-y-4">
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>What is the "chmod" command?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">
+                            "chmod" stands for "change mode." It is a command used in Unix and Linux systems to change the access permissions of file system objects (files and directories).
+                        </p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>How do I apply permissions to all files in a folder?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">
+                            You can use the recursive flag <code>-R</code>. For example: <code>chmod -R 755 /path/to/directory</code>. This will apply the permission to the directory and everything inside it.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>What does the first dash in "-rwxr-xr-x" mean?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">
+                            The first character indicates the file type. A dash <code>-</code> means it is a regular file. A <code>d</code> indicates a directory, and an <code>l</code> indicates a symbolic link.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 pb-16">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-slate-200 pt-16">
+            <h2 class="text-2xl font-bold text-center text-slate-800 mb-10">Popular Tools on SimpliConvert</h2>
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+                <a href="/password_generator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-slate-50 text-slate-700 flex items-center justify-center shrink-0 group-hover:bg-slate-800 group-hover:text-white transition-colors">
+                        <i class="fas fa-key text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Password Gen</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Create secure, random passwords.</p>
+                    </div>
+                </a>
+                <a href="/meta_tag_generator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0 group-hover:bg-indigo-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-search text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Meta Tag Gen</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Optimize SEO with custom tags.</p>
+                    </div>
+                </a>
+                <a href="/qr_code_generator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-slate-50 text-slate-800 flex items-center justify-center shrink-0 group-hover:bg-slate-900 group-hover:text-white transition-colors">
+                        <i class="fas fa-qrcode text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">QR Creator</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Generate custom QR codes instantly.</p>
+                    </div>
+                </a>
+                <a href="/roblox_devex_calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-gray-50 text-gray-800 flex items-center justify-center shrink-0 group-hover:bg-gray-900 group-hover:text-white transition-colors">
+                        <i class="fas fa-gamepad text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">DevEx Calc</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Calculate Roblox Robux to USD.</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <div id="footer"></div>
+
+    <script>
+    function initializeHeaderScripts() {
+        const header = document.getElementById('header');
+        if (header) {
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 10) {
+                    header.classList.add('scrolled-effect');
+                } else {
+                    header.classList.remove('scrolled-effect');
+                }
+            });
+        }
+    }
+    
+    function initializeFooterScripts() {
+        const yearSpan = document.getElementById('current-year');
+        if(yearSpan) {
+            yearSpan.textContent = new Date().getFullYear();
+        }
+    }
+
+    async function loadComponent(url, elementId, callback) {
+        try {
+            const response = await fetch(url);
+            if (!response.ok) throw new Error('Status: ' + response.status);
+            const text = await response.text();
+            const element = document.getElementById(elementId);
+            if (element) {
+                element.innerHTML = text;
+                if (callback) callback();
+            }
+        } catch (error) {
+            console.error('Error loading component:', error);
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        loadComponent('/components/navbar.html', 'navbar', initializeHeaderScripts);
+        loadComponent('/components/footer.html', 'footer', initializeFooterScripts);
+        
+        const faqToggles = document.querySelectorAll('[data-faq-toggle]');
+        faqToggles.forEach(button => {
+            button.addEventListener('click', () => {
+                const answer = button.nextElementSibling;
+                const icon = button.querySelector('.faq-icon');
+                const isOpening = !answer.style.maxHeight;
+
+                faqToggles.forEach(other => {
+                    if (other !== button) {
+                        other.nextElementSibling.style.maxHeight = null;
+                        other.querySelector('.faq-icon').classList.remove('rotate-90');
+                        other.querySelector('.faq-icon').classList.add('-rotate-90');
+                    }
+                });
+
+                if (isOpening) {
+                    answer.style.maxHeight = answer.scrollHeight + "px";
+                    icon.classList.remove('-rotate-90');
+                    icon.classList.add('rotate-90');
+                } else {
+                    answer.style.maxHeight = null;
+                    icon.classList.remove('rotate-90');
+                    icon.classList.add('-rotate-90');
+                }
+            });
+        });
+    });
+    </script>
+</body>
+</html>

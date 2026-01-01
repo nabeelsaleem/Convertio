@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Binary Code Translator – Text to Binary & Binary to Text | SimpliConvert</title>
+    <meta name="description" content="Translate text to binary code and back with this Binary Code Translator. A simple tool for learning computer logic or encoding secret messages.">
+    <meta name="keywords" content="binary code translator, text to binary, binary to text, binary converter, binary decoder, binary encoder, translate binary to english">
+    <meta name="author" content="SimpliConvert">
+    <meta property="og:site_name" content="SimpliConvert">
+    <meta name="robots" content="index, follow">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://simpliconvert.com/binary_code_translator/">
+    <meta property="og:title" content="Binary Code Translator – Encode & Decode Binary">
+    <meta property="og:description" content="Easily convert text to binary and binary to text. Perfect for students, developers, and hobbyists.">
+    <meta property="og:image" content="https://simpliconvert.com/images/binary-translator-og.jpg">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://simpliconvert.com/binary_code_translator/">
+    <meta name="twitter:title" content="Binary Code Translator – Text to Binary Converter">
+    <meta name="twitter:description" content="Free online tool to translate text into binary code and decode binary strings back into readable text.">
+    <meta name="twitter:image" content="https://simpliconvert.com/images/binary-translator-og.jpg">
+
+    <link rel="canonical" href="https://simpliconvert.com/binary_code_translator/">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Binary Code Translator",
+      "url": "https://simpliconvert.com/binary_code_translator/",
+      "description": "A free online tool to translate text to binary code and decode binary back to text instantly.",
+      "applicationCategory": "UtilitiesApplication",
+      "operatingSystem": "Web Browser",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "SimpliConvert",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://simpliconvert.com/logo.png"
+        }
+      }
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [{
+        "@type": "Question",
+        "name": "What is binary code?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Binary code is a base-2 numbering system that uses only two symbols: 0 and 1. It is the fundamental language of computers, representing data through electrical signals being 'on' or 'off'."
+        }
+      }, {
+        "@type": "Question",
+        "name": "How do I convert text to binary?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "To convert text to binary, each character is converted into its ASCII or Unicode decimal value, which is then converted into an 8-bit binary string. Our tool automates this process instantly."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Can I translate binary back to English text?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. By selecting the 'Binary to Text' mode, you can paste a string of 0s and 1s, and the translator will decode them back into readable characters."
+        }
+      }]
+    }
+    </script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #da3f0b;
+            --primary-hover: #b53409;
+            --primary-light: #fff5f2;
+            --bg: #f8fafc;
+            --text-dark: #0f172a;
+            --success: #16a34a;
+            --danger: #dc2626;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text-dark);
+        }
+
+        .hero-card {
+            background: white;
+            border: 1px solid #f1f5f9;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background-color: var(--primary);
+        }
+
+        .prose a {
+            color: #da3f0b;
+            text-decoration: none; 
+        }
+        .prose a:hover {
+            text-decoration: underline; 
+        }
+
+        .tooltip-container { position: relative; display: inline-block; }
+        .tooltip-text {
+            visibility: hidden; width: 220px; background-color: #1e293b; color: #fff;
+            text-align: center; border-radius: 8px; padding: 10px; position: absolute;
+            z-index: 50; bottom: 125%; left: 50%; margin-left: -110px; opacity: 0;
+            transition: opacity 0.2s; font-size: 0.75rem; font-weight: 400;
+            pointer-events: none; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+        .tooltip-container:hover .tooltip-text { visibility: visible; opacity: 1; }
+        .tooltip-text::after {
+            content: ""; position: absolute; top: 100%; left: 50%; margin-left: -5px;
+            border-width: 5px; border-style: solid; border-color: #1e293b transparent transparent transparent;
+        }
+
+        .animate-fade { animation: fadeIn 0.3s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+        .tool-card {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .tool-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+        }
+
+        textarea {
+            resize: none;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 min-h-screen flex flex-col">
+    <div id="navbar"></div>
+
+    <section class="hero-white text-black py-2 md:py-10">
+        <div class="container mx-auto px-4 text-center">
+            <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-2">Binary Code Translator</h1>
+            <p class="text-lg md:text-xl max-w-3x1 mx-auto mb-2">
+                Instantly convert text to binary and decode binary back to text. A fast, free tool for encoding messages and understanding computer logic.
+            </p>
+        </div>
+    </section>
+
+    <div id="root" class="w-full max-w-6xl mx-auto p-4 sm:p-6"></div>
+
+    <script type="text/babel">
+    const { useState, useEffect } = React;
+
+    const Tooltip = ({ text }) => (
+      <span className="tooltip-container ml-2">
+        <i className="fas fa-info-circle text-slate-300 hover:text-[#da3f0b] cursor-help text-xs transition-colors"></i>
+        <span className="tooltip-text">{text}</span>
+      </span>
+    );
+
+    const App = () => {
+      const [input, setInput] = useState('');
+      const [output, setOutput] = useState('');
+      const [mode, setMode] = useState('textToBinary'); // 'textToBinary' or 'binaryToText'
+      const [copyStatus, setCopyStatus] = useState(false);
+      const [showBookmarkToast, setShowBookmarkToast] = useState(false);
+
+      const textToBinary = (text) => {
+        return text.split('').map(char => {
+          return char.charCodeAt(0).toString(2).padStart(8, '0');
+        }).join(' ');
+      };
+
+      const binaryToText = (bin) => {
+        try {
+          const cleanBin = bin.replace(/[^01\s]/g, '');
+          const binArray = cleanBin.trim().split(/\s+/);
+          return binArray.map(b => {
+            if (b.length > 0) {
+              return String.fromCharCode(parseInt(b, 2));
+            }
+            return '';
+          }).join('');
+        } catch (e) {
+          return "Invalid Binary Format";
+        }
+      };
+
+      useEffect(() => {
+        if (!input) {
+          setOutput('');
+          return;
+        }
+        if (mode === 'textToBinary') {
+          setOutput(textToBinary(input));
+        } else {
+          setOutput(binaryToText(input));
+        }
+      }, [input, mode]);
+
+      const handleCopy = () => {
+        navigator.clipboard.writeText(output);
+        setCopyStatus(true);
+        setTimeout(() => setCopyStatus(false), 2000);
+      };
+
+      const handleClear = () => {
+        setInput('');
+        setOutput('');
+      };
+
+      const toggleMode = () => {
+        setMode(prev => prev === 'textToBinary' ? 'binaryToText' : 'textToBinary');
+        setInput(output); // Swap content
+      };
+
+      const handleBookmark = () => {
+        setShowBookmarkToast(true);
+        setTimeout(() => setShowBookmarkToast(false), 3000);
+      };
+
+      const pageUrl = encodeURIComponent("https://simpliconvert.com/binary_code_translator/");
+      const pageTitle = encodeURIComponent("Check out this Binary Code Translator!");
+
+      return (
+        <div className="bg-white rounded-[2rem] shadow-2xl overflow-hidden border border-slate-100">
+          <header className="bg-slate-50/50 border-b border-slate-100 p-6 md:p-8 flex flex-col md:flex-row justify-between items-center gap-6">
+            <div className="text-center md:text-left">
+              <h2 className="text-2xl font-black text-slate-800 tracking-tight flex items-center justify-center md:justify-start gap-3">
+                <span className="bg-[#da3f0b] text-white p-2 rounded-xl text-lg shadow-lg shadow-[#da3f0b30]">
+                  <i className="fas fa-code"></i>
+                </span>
+                Binary Converter Tool
+              </h2>
+            </div>
+            
+            <div className="flex bg-slate-100 p-1 rounded-xl">
+              <button 
+                onClick={() => setMode('textToBinary')}
+                className={`px-4 py-2 rounded-lg text-xs font-bold transition-all ${mode === 'textToBinary' ? 'bg-white text-[#da3f0b] shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
+              >
+                Text to Binary
+              </button>
+              <button 
+                onClick={() => setMode('binaryToText')}
+                className={`px-4 py-2 rounded-lg text-xs font-bold transition-all ${mode === 'binaryToText' ? 'bg-white text-[#da3f0b] shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
+              >
+                Binary to Text
+              </button>
+            </div>
+          </header>
+
+          <main className="flex flex-col lg:flex-row">
+            {/* Input Panel */}
+            <div className="lg:w-[50%] p-6 md:p-10 lg:p-12 border-r border-slate-100">
+              <div className="flex items-center justify-between mb-4">
+                <label className="text-xs font-black text-slate-400 uppercase tracking-widest">
+                  {mode === 'textToBinary' ? 'Enter Plain Text' : 'Enter Binary Code'}
+                </label>
+                <button onClick={handleClear} className="text-xs font-bold text-slate-400 hover:text-red-500 transition-colors">
+                  <i className="fas fa-trash-alt mr-1"></i> Clear
+                </button>
+              </div>
+              <textarea
+                className="w-full h-64 md:h-80 p-6 rounded-2xl border border-slate-200 focus:ring-4 focus:ring-[#da3f0b20] focus:border-[#da3f0b] text-slate-700 font-medium transition-all bg-slate-50/30"
+                placeholder={mode === 'textToBinary' ? 'Type your message here...' : '01001000 01100101 01101100 01101100 01101111...'}
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+              ></textarea>
+            </div>
+
+            {/* Output Panel */}
+            <div className="lg:w-[50%] bg-slate-50/50 p-6 md:p-10 lg:p-12">
+              <div className="flex items-center justify-between mb-4">
+                <label className="text-xs font-black text-slate-400 uppercase tracking-widest">
+                  {mode === 'textToBinary' ? 'Binary Output' : 'Text Output'}
+                </label>
+                <button 
+                  onClick={handleCopy}
+                  className={`text-xs font-bold transition-colors ${copyStatus ? 'text-green-600' : 'text-[#da3f0b] hover:text-[#b53409]'}`}
+                >
+                  <i className={`fas ${copyStatus ? 'fa-check' : 'fa-copy'} mr-1`}></i> {copyStatus ? 'Copied!' : 'Copy Output'}
+                </button>
+              </div>
+              <div className="w-full h-64 md:h-80 p-6 rounded-2xl border border-slate-200 bg-white text-slate-800 font-mono overflow-auto break-all">
+                {output || <span className="text-slate-300 italic">Translation will appear here...</span>}
+              </div>
+              
+              <div className="mt-8 p-6 bg-white rounded-2xl border border-slate-100 shadow-sm">
+                <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest mb-3">Quick Actions</h3>
+                <div className="flex flex-wrap gap-3">
+                  <button 
+                    onClick={toggleMode}
+                    className="flex-1 bg-slate-800 text-white py-3 px-4 rounded-xl font-bold text-sm hover:bg-slate-900 transition-all flex items-center justify-center gap-2"
+                  >
+                    <i className="fas fa-exchange-alt"></i> Swap Mode
+                  </button>
+                  <button 
+                    onClick={() => setInput(mode === 'textToBinary' ? 'Hello World' : '01001000 01101001')}
+                    className="flex-1 border border-slate-200 text-slate-600 py-3 px-4 rounded-xl font-bold text-sm hover:bg-slate-50 transition-all"
+                  >
+                    Try Sample
+                  </button>
+                </div>
+              </div>
+            </div>
+          </main>
+
+          {/* Share & Bookmark Footer */}
+          <footer className="bg-slate-50 border-t border-slate-100 p-6 md:p-8">
+             <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+                 <div className="text-center md:text-left">
+                     <h4 className="text-sm font-bold text-slate-700 mb-1">Share this translator</h4>
+                     <p className="text-xs text-slate-400">Help others decode the matrix.</p>
+                 </div>
+                 
+                 <div className="flex flex-wrap justify-center gap-3">
+                    <a href={`https://www.facebook.com/sharer/sharer.php?u=${pageUrl}`} target="_blank" className="w-10 h-10 rounded-full flex items-center justify-center text-white bg-[#1877F2] hover:-translate-y-1 transition-transform"><i className="fab fa-facebook-f"></i></a>
+                    <a href={`https://twitter.com/intent/tweet?url=${pageUrl}&text=${pageTitle}`} target="_blank" className="w-10 h-10 rounded-full flex items-center justify-center text-white bg-[#1DA1F2] hover:-translate-y-1 transition-transform"><i className="fab fa-twitter"></i></a>
+                    <a href={`https://api.whatsapp.com/send?text=${pageTitle}%20${pageUrl}`} target="_blank" className="w-10 h-10 rounded-full flex items-center justify-center text-white bg-[#25D366] hover:-translate-y-1 transition-transform"><i className="fab fa-whatsapp"></i></a>
+                    <a href={`https://t.me/share/url?url=${pageUrl}&text=${pageTitle}`} target="_blank" className="w-10 h-10 rounded-full flex items-center justify-center text-white bg-[#0088cc] hover:-translate-y-1 transition-transform"><i className="fab fa-telegram-plane"></i></a>
+                 </div>
+
+                 <div className="relative">
+                     <button 
+                        onClick={handleBookmark}
+                        className="flex items-center gap-2 bg-white border border-slate-200 hover:border-[#da3f0b] hover:text-[#da3f0b] text-slate-600 px-4 py-2 rounded-lg text-sm font-bold transition-all shadow-sm active:scale-95"
+                     >
+                        <i className="fas fa-bookmark"></i> Bookmark
+                     </button>
+                     {showBookmarkToast && (
+                         <div className="absolute bottom-full mb-3 left-1/2 -translate-x-1/2 bg-slate-800 text-white text-xs py-2 px-4 rounded-lg shadow-lg whitespace-nowrap animate-fade">
+                             Press <span className="font-bold text-[#da3f0b]">Ctrl + D</span> to bookmark
+                         </div>
+                     )}
+                 </div>
+             </div>
+          </footer>
+        </div>
+      );
+    };
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+    </script>
+
+    <section class="bg-white py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="prose prose-lg max-w-none prose-h2:text-gray-800 prose-p:text-gray-700">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">Binary Code Translator – Decode the Language of Computers</h2>
+                <p class="mb-6 leading-relaxed">
+                    At its core, every computer, smartphone, and digital device speaks one language: <strong>Binary</strong>. This system of 0s and 1s represents electrical pulses that power our digital world. Our <strong>Binary Code Translator</strong> is a powerful, user-friendly tool designed to bridge the gap between human language and machine code. Whether you are a student learning computer science, a developer debugging data, or someone looking to send an encoded "secret" message, this tool makes the conversion instant and effortless.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">How Does Text to Binary Conversion Work?</h2>
+                <p class="mb-6 leading-relaxed">
+                    When you type a letter like "A", your computer doesn't see a shape; it sees a number. In the standard ASCII encoding system, "A" is represented by the number 65. Our <strong>text to binary converter</strong> takes that decimal number and converts it into a base-2 format. For "A", that results in <code>01000001</code>. By repeating this for every character in your text, the tool generates a complete binary string.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Key Features of Our Binary Translator</h2>
+                <ul class="list-disc pl-6 mb-6 space-y-2 text-gray-700">
+                    <li><strong>Bidirectional Translation:</strong> Switch between <em>Text to Binary</em> and <em>Binary to Text</em> with a single click.</li>
+                    <li><strong>Real-Time Processing:</strong> See your results instantly as you type, with no need to refresh the page.</li>
+                    <li><strong>Clean Formatting:</strong> Our tool automatically adds spaces between 8-bit blocks (bytes) to make the binary code readable.</li>
+                    <li><strong>Universal Compatibility:</strong> Works with all standard characters, numbers, and symbols.</li>
+                    <li><strong>Privacy Focused:</strong> All translations happen locally in your browser; your data is never sent to our servers.</li>
+                </ul>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Why Use a Binary Code Translator?</h2>
+                <p class="mb-6 leading-relaxed">
+                    Binary translation isn't just for "The Matrix" fans. It has several practical and educational applications:
+                </p>
+                <ul class="list-disc pl-6 mb-6 space-y-2 text-gray-700">
+                    <li><strong>Education:</strong> It's the perfect companion for students learning about bits, bytes, and computer architecture.</li>
+                    <li><strong>Data Debugging:</strong> Developers often need to inspect low-level data streams to identify errors in encoding.</li>
+                    <li><strong>Creative Projects:</strong> Use binary to create unique designs, tattoos, or hidden messages in digital art.</li>
+                    <li><strong>Geocaching & Puzzles:</strong> Binary is a popular choice for riddles and scavenger hunt clues.</li>
+                </ul>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Practical Example: Translating "Hi"</h2>
+                <p class="mb-6 leading-relaxed">
+                    If you want to see how it works, try typing "Hi" into the input. 
+                    The letter "H" becomes <code>01001000</code> and "i" becomes <code>01101001</code>. 
+                    The final output is <code>01001000 01101001</code>. You can then copy this and send it to a friend, who can use the <strong>binary to text</strong> mode to decode it back!
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-center text-gray-900 mb-8">Binary Translator – Frequently Asked Questions</h2>
+            <div class="space-y-4">
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>What is the difference between ASCII and Binary?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">
+                            ASCII is a character encoding standard that assigns a numeric value to letters and symbols. Binary is the base-2 number system used to represent those numeric values. ASCII tells the computer "A is 65," and Binary tells the computer "65 is 01000001."
+                        </p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>Does this tool support special characters and emojis?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">
+                            Yes, our translator uses standard JavaScript character encoding, which supports basic symbols, numbers, and punctuation. For complex emojis, the binary string will be longer as they occupy more bytes in Unicode.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>Is there a limit to how much text I can translate?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">
+                            There is no hard limit, but very large amounts of text (like an entire book) might slow down your browser's performance as it processes the conversion in real-time. For standard messages and paragraphs, it is nearly instantaneous.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 pb-16">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-slate-200 pt-16">
+            <h2 class="text-2xl font-bold text-center text-slate-800 mb-10">Popular Tools on SimpliConvert</h2>
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+                <a href="/password_generator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-slate-50 text-slate-700 flex items-center justify-center shrink-0 group-hover:bg-slate-800 group-hover:text-white transition-colors">
+                        <i class="fas fa-key text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Password Gen</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Create secure, random passwords.</p>
+                    </div>
+                </a>
+                <a href="/qr_code_generator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-slate-50 text-slate-800 flex items-center justify-center shrink-0 group-hover:bg-slate-900 group-hover:text-white transition-colors">
+                        <i class="fas fa-qrcode text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">QR Creator</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Generate custom QR codes instantly.</p>
+                    </div>
+                </a>
+                <a href="/crypto_profit_calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-orange-50 text-orange-600 flex items-center justify-center shrink-0 group-hover:bg-orange-600 group-hover:text-white transition-colors">
+                        <i class="fab fa-bitcoin text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Crypto Calc</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Calculate crypto P&L and ROI.</p>
+                    </div>
+                </a>
+                <a href="/meta_tag_generator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0 group-hover:bg-indigo-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-search text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Meta Tag Gen</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Optimize SEO with custom tags.</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <div id="footer"></div>
+
+    <script>
+    function initializeHeaderScripts() {
+        const header = document.getElementById('header');
+        if (header) {
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 10) {
+                    header.classList.add('scrolled-effect');
+                } else {
+                    header.classList.remove('scrolled-effect');
+                }
+            });
+        }
+    }
+    
+    function initializeFooterScripts() {
+        const yearSpan = document.getElementById('current-year');
+        if(yearSpan) {
+            yearSpan.textContent = new Date().getFullYear();
+        }
+    }
+
+    async function loadComponent(url, elementId, callback) {
+        try {
+            const response = await fetch(url);
+            if (!response.ok) throw new Error('Status: ' + response.status);
+            const text = await response.text();
+            const element = document.getElementById(elementId);
+            if (element) {
+                element.innerHTML = text;
+                if (callback) callback();
+            }
+        } catch (error) {
+            console.error('Error loading component:', error);
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        loadComponent('/components/navbar.html', 'navbar', initializeHeaderScripts);
+        loadComponent('/components/footer.html', 'footer', initializeFooterScripts);
+        
+        const faqToggles = document.querySelectorAll('[data-faq-toggle]');
+        faqToggles.forEach(button => {
+            button.addEventListener('click', () => {
+                const answer = button.nextElementSibling;
+                const icon = button.querySelector('.faq-icon');
+                const isOpening = !answer.style.maxHeight;
+
+                faqToggles.forEach(other => {
+                    if (other !== button) {
+                        other.nextElementSibling.style.maxHeight = null;
+                        other.querySelector('.faq-icon').classList.remove('rotate-90');
+                        other.querySelector('.faq-icon').classList.add('-rotate-90');
+                    }
+                });
+
+                if (isOpening) {
+                    answer.style.maxHeight = answer.scrollHeight + "px";
+                    icon.classList.remove('-rotate-90');
+                    icon.classList.add('rotate-90');
+                } else {
+                    answer.style.maxHeight = null;
+                    icon.classList.remove('rotate-90');
+                    icon.classList.add('-rotate-90');
+                }
+            });
+        });
+    });
+    </script>
+</body>
+</html>

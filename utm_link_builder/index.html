@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>UTM Link Builder – Generate Campaign Tracking URLs | SimpliConvert</title>
+    <meta name="description" content="Track your marketing campaigns precisely with our UTM Link Builder. Easily generate Google Analytics tracking URLs with campaign source, medium, and name.">
+    <meta name="keywords" content="utm link builder, campaign url builder, google analytics link, track marketing, utm generator, marketing attribution tool, campaign tracking, social media link tracker">
+    <meta name="author" content="SimpliConvert">
+    <meta property="og:site_name" content="SimpliConvert">
+    <meta name="robots" content="index, follow">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://simpliconvert.com/utm_link_builder/">
+    <meta property="og:title" content="UTM Link Builder – Track Your Marketing Campaigns">
+    <meta property="og:description" content="Stop guessing where your traffic comes from. Generate precise UTM tracking links for Google Analytics in seconds.">
+    <meta property="og:image" content="https://simpliconvert.com/images/utm-link-builder-og.jpg">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://simpliconvert.com/utm_link_builder/">
+    <meta name="twitter:title" content="UTM Link Builder – Campaign URL Generator">
+    <meta name="twitter:description" content="Free tool to build UTM parameters for your marketing links. Perfect for social media, email, and paid ads.">
+    <meta name="twitter:image" content="https://simpliconvert.com/images/utm-link-builder-og.jpg">
+
+    <link rel="canonical" href="https://simpliconvert.com/utm_link_builder/">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "UTM Link Builder",
+      "url": "https://simpliconvert.com/utm_link_builder/",
+      "description": "A free online tool for marketers to generate campaign tracking URLs with UTM parameters for Google Analytics and other tracking platforms.",
+      "applicationCategory": "MarketingApplication",
+      "operatingSystem": "Web Browser",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "SimpliConvert",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://simpliconvert.com/logo.png"
+        }
+      }
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [{
+        "@type": "Question",
+        "name": "What is a UTM link?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "UTM (Urchin Tracking Module) parameters are five variants of URL parameters used by marketers to track the effectiveness of online marketing campaigns across traffic sources and publishing media."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Why are Campaign Source and Medium important?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Campaign Source (utm_source) identifies which site sent the traffic (e.g., Google, Facebook), while Campaign Medium (utm_medium) identifies the type of link (e.g., CPC, email, social). Together, they allow Google Analytics to categorize your traffic correctly."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Do UTM links affect SEO?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "No, UTM parameters do not negatively affect SEO. Search engines like Google generally recognize them as tracking parameters and ignore them when indexing the content of the page, provided you use canonical tags correctly."
+        }
+      }]
+    }
+    </script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #da3f0b;
+            --primary-hover: #b53409;
+            --primary-light: #fff5f2;
+            --bg: #f8fafc;
+            --text-dark: #0f172a;
+            --success: #16a34a;
+            --danger: #dc2626;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text-dark);
+        }
+
+        .hero-card {
+            background: white;
+            border: 1px solid #f1f5f9;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background-color: var(--primary);
+        }
+
+        .prose a {
+            color: #da3f0b;
+            text-decoration: none; 
+        }
+        .prose a:hover {
+            text-decoration: underline; 
+        }
+
+        .tooltip-container { position: relative; display: inline-block; }
+        .tooltip-text {
+            visibility: hidden; width: 220px; background-color: #1e293b; color: #fff;
+            text-align: center; border-radius: 8px; padding: 10px; position: absolute;
+            z-index: 50; bottom: 125%; left: 50%; margin-left: -110px; opacity: 0;
+            transition: opacity 0.2s; font-size: 0.75rem; font-weight: 400;
+            pointer-events: none; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+        .tooltip-container:hover .tooltip-text { visibility: visible; opacity: 1; }
+        .tooltip-text::after {
+            content: ""; position: absolute; top: 100%; left: 50%; margin-left: -5px;
+            border-width: 5px; border-style: solid; border-color: #1e293b transparent transparent transparent;
+        }
+
+        .animate-fade { animation: fadeIn 0.3s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+        .tool-card {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .tool-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 min-h-screen flex flex-col">
+    <div id="navbar"></div>
+
+    <section class="hero-white text-black py-2 md:py-10">
+        <div class="container mx-auto px-4 text-center">
+            <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-2">UTM Link Builder</h1>
+            <p class="text-lg md:text-xl max-w-3x1 mx-auto mb-2">
+                Generate custom campaign URLs for Google Analytics. Track your marketing performance across email, social media, and paid ads with ease.
+            </p>
+        </div>
+    </section>
+
+    <div id="root" class="w-full max-w-6xl mx-auto p-4 sm:p-6"></div>
+
+    <script type="text/babel">
+    const { useState, useEffect, useMemo } = React;
+
+    const Tooltip = ({ text }) => (
+      <span className="tooltip-container ml-2">
+        <i className="fas fa-info-circle text-slate-300 hover:text-[#da3f0b] cursor-help text-xs transition-colors"></i>
+        <span className="tooltip-text">{text}</span>
+      </span>
+    );
+
+    const TextInput = ({ value, onChange, placeholder, label, tooltip, required = false }) => (
+      <div className="mb-5">
+        <div className="flex items-center text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">
+          <label>{label} {required && <span className="text-[#da3f0b]">*</span>}</label>
+          {tooltip && <Tooltip text={tooltip} />}
+        </div>
+        <div className="relative rounded-xl shadow-sm">
+          <input
+            type="text"
+            className="block w-full rounded-xl border-slate-200 border py-3 px-4 focus:ring-4 focus:ring-[#da3f0b20] focus:border-[#da3f0b] sm:text-sm font-semibold text-slate-800 transition-all bg-white"
+            value={value}
+            onChange={(e) => onChange(e.target.value)}
+            placeholder={placeholder}
+          />
+        </div>
+      </div>
+    );
+
+    const ShareButton = ({ platform, icon, color, url, title }) => {
+        let shareUrl = '';
+        switch(platform) {
+            case 'facebook': shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${url}`; break;
+            case 'twitter': shareUrl = `https://twitter.com/intent/tweet?url=${url}&text=${title}`; break;
+            case 'linkedin': shareUrl = `https://www.linkedin.com/shareArticle?mini=true&url=${url}`; break;
+            case 'whatsapp': shareUrl = `https://api.whatsapp.com/send?text=${title}%20${url}`; break;
+            case 'reddit': shareUrl = `https://www.reddit.com/submit?url=${url}&title=${title}`; break;
+            case 'telegram': shareUrl = `https://t.me/share/url?url=${url}&text=${title}`; break;
+            default: return null;
+        }
+
+        return (
+            <a 
+                href={shareUrl} 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className={`w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center text-white transition-transform hover:-translate-y-1 hover:shadow-lg ${color}`}
+            >
+                <i className={`fab fa-${icon}`}></i>
+            </a>
+        );
+    };
+
+    const App = () => {
+      const [baseUrl, setBaseUrl] = useState('');
+      const [source, setSource] = useState('');
+      const [medium, setMedium] = useState('');
+      const [campaign, setCampaign] = useState('');
+      const [term, setTerm] = useState('');
+      const [content, setContent] = useState('');
+      const [copied, setCopied] = useState(false);
+      const [showBookmarkToast, setShowBookmarkToast] = useState(false);
+
+      const generatedUrl = useMemo(() => {
+        if (!baseUrl || !source) return '';
+        
+        try {
+          let urlToProcess = baseUrl.trim();
+          if (!/^https?:\/\//i.test(urlToProcess)) {
+            urlToProcess = 'https://' + urlToProcess;
+          }
+          
+          const urlObj = new URL(urlToProcess);
+          const params = new URLSearchParams(urlObj.search);
+          
+          params.set('utm_source', source.trim());
+          if (medium) params.set('utm_medium', medium.trim());
+          if (campaign) params.set('utm_campaign', campaign.trim());
+          if (term) params.set('utm_term', term.trim());
+          if (content) params.set('utm_content', content.trim());
+          
+          urlObj.search = params.toString();
+          return urlObj.toString();
+        } catch (e) {
+          return 'Invalid Website URL';
+        }
+      }, [baseUrl, source, medium, campaign, term, content]);
+
+      const handleCopy = () => {
+        if (generatedUrl && generatedUrl !== 'Invalid Website URL') {
+          navigator.clipboard.writeText(generatedUrl);
+          setCopied(true);
+          setTimeout(() => setCopied(false), 2000);
+        }
+      };
+
+      const handleClear = () => {
+        setBaseUrl('');
+        setSource('');
+        setMedium('');
+        setCampaign('');
+        setTerm('');
+        setContent('');
+      };
+
+      const handleBookmark = () => {
+        setShowBookmarkToast(true);
+        setTimeout(() => setShowBookmarkToast(false), 3000);
+      };
+
+      const pageUrl = encodeURIComponent("https://simpliconvert.com/utm_link_builder/");
+      const pageTitle = encodeURIComponent("Check out this UTM Link Builder!");
+
+      return (
+        <div className="bg-white rounded-[2rem] shadow-2xl overflow-hidden border border-slate-100">
+          <header className="bg-slate-50/50 border-b border-slate-100 p-6 md:p-8 flex flex-col md:flex-row justify-between items-center gap-6">
+            <div className="text-center md:text-left">
+              <h2 className="text-2xl font-black text-slate-800 tracking-tight flex items-center justify-center md:justify-start gap-3">
+                <span className="bg-[#da3f0b] text-white p-2 rounded-xl text-lg shadow-lg shadow-[#da3f0b30]">
+                  <i className="fas fa-link"></i>
+                </span>
+                Campaign URL Generator
+              </h2>
+            </div>
+            <button 
+              onClick={handleClear}
+              className="text-xs font-bold text-slate-400 hover:text-[#da3f0b] transition-colors uppercase tracking-widest"
+            >
+              <i className="fas fa-trash-alt mr-2"></i> Clear Form
+            </button>
+          </header>
+
+          <main className="flex flex-col lg:flex-row">
+            {/* Input Panel */}
+            <div className="lg:w-[55%] p-6 md:p-10 lg:p-12 border-r border-slate-100">
+              <div className="space-y-6">
+                
+                <div className="bg-slate-50 p-6 rounded-2xl border border-slate-100">
+                  <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest mb-6"><i className="fas fa-globe mr-2"></i>Target Destination</h3>
+                  <TextInput 
+                    label="Website URL" 
+                    value={baseUrl} 
+                    onChange={setBaseUrl} 
+                    placeholder="https://example.com"
+                    required={true}
+                    tooltip="The full website URL (e.g. https://www.example.com)"
+                  />
+                </div>
+
+                <div className="bg-[#da3f0b08] p-6 rounded-2xl border border-[#da3f0b15]">
+                  <h3 className="text-xs font-black text-[#da3f0b] uppercase tracking-widest mb-6"><i className="fas fa-bullhorn mr-2"></i>Campaign Parameters</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <TextInput 
+                      label="Campaign Source" 
+                      value={source} 
+                      onChange={setSource} 
+                      placeholder="google, newsletter"
+                      required={true}
+                      tooltip="The referrer: (e.g. google, newsletter, facebook)"
+                    />
+                    <TextInput 
+                      label="Campaign Medium" 
+                      value={medium} 
+                      onChange={setMedium} 
+                      placeholder="cpc, banner, email"
+                      tooltip="Marketing medium: (e.g. cpc, banner, email)"
+                    />
+                    <TextInput 
+                      label="Campaign Name" 
+                      value={campaign} 
+                      onChange={setCampaign} 
+                      placeholder="summer_sale"
+                      tooltip="Product, promo code, or slogan (e.g. summer_sale)"
+                    />
+                    <TextInput 
+                      label="Campaign Term" 
+                      value={term} 
+                      onChange={setTerm} 
+                      placeholder="running+shoes"
+                      tooltip="Identify the paid keywords"
+                    />
+                  </div>
+                  <TextInput 
+                    label="Campaign Content" 
+                    value={content} 
+                    onChange={setContent} 
+                    placeholder="logolink, textlink"
+                    tooltip="Use to differentiate ads (e.g. A/B testing)"
+                  />
+                </div>
+
+              </div>
+            </div>
+
+            {/* Results Panel */}
+            <div className="lg:w-[45%] bg-slate-50/50 p-6 md:p-10 lg:p-12 flex flex-col justify-center">
+               <div className="space-y-6">
+                  
+                  <div className="hero-card p-8 rounded-2xl">
+                    <p className="text-xs font-black text-[#da3f0b] uppercase tracking-[0.2em] mb-4">Generated Campaign URL</p>
+                    <div className="bg-slate-50 rounded-xl p-4 border border-slate-200 min-h-[120px] break-all text-sm font-mono text-slate-700 mb-6">
+                      {generatedUrl || 'Fill in the Website URL and Campaign Source to generate your link...'}
+                    </div>
+                    
+                    <button 
+                      onClick={handleCopy}
+                      disabled={!generatedUrl || generatedUrl === 'Invalid Website URL'}
+                      className={`w-full py-4 rounded-xl font-black uppercase tracking-widest transition-all flex items-center justify-center gap-3 shadow-lg ${
+                        copied 
+                        ? 'bg-[#16a34a] text-white' 
+                        : 'bg-[#da3f0b] hover:bg-[#b53409] text-white disabled:opacity-50 disabled:cursor-not-allowed'
+                      }`}
+                    >
+                      {copied ? (
+                        <><i className="fas fa-check"></i> Copied to Clipboard</>
+                      ) : (
+                        <><i className="fas fa-copy"></i> Copy Campaign URL</>
+                      )}
+                    </button>
+                  </div>
+
+                  <div className="bg-white rounded-xl p-6 border border-slate-100 shadow-sm">
+                     <h4 className="text-xs font-black text-slate-400 uppercase tracking-widest mb-4">Quick Tips</h4>
+                     <ul className="text-xs text-slate-600 space-y-3">
+                        <li className="flex gap-2"><i className="fas fa-check-circle text-[#16a34a]"></i> Use underscores instead of spaces.</li>
+                        <li className="flex gap-2"><i className="fas fa-check-circle text-[#16a34a]"></i> Keep parameters lowercase for consistency.</li>
+                        <li className="flex gap-2"><i className="fas fa-check-circle text-[#16a34a]"></i> Always test the link before publishing.</li>
+                     </ul>
+                  </div>
+
+               </div>
+            </div>
+          </main>
+
+          {/* Share & Bookmark Footer */}
+          <footer className="bg-slate-50 border-t border-slate-100 p-6 md:p-8">
+             <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+                 <div className="text-center md:text-left">
+                     <h4 className="text-sm font-bold text-slate-700 mb-1">Share this tool</h4>
+                     <p className="text-xs text-slate-400">Help your marketing team track better.</p>
+                 </div>
+                 
+                 <div className="flex flex-wrap justify-center gap-3">
+                     <ShareButton platform="facebook" icon="facebook-f" color="bg-[#1877F2]" url={pageUrl} title={pageTitle} />
+                     <ShareButton platform="twitter" icon="twitter" color="bg-[#1DA1F2]" url={pageUrl} title={pageTitle} />
+                     <ShareButton platform="linkedin" icon="linkedin-in" color="bg-[#0A66C2]" url={pageUrl} title={pageTitle} />
+                     <ShareButton platform="whatsapp" icon="whatsapp" color="bg-[#25D366]" url={pageUrl} title={pageTitle} />
+                     <ShareButton platform="reddit" icon="reddit-alien" color="bg-[#FF4500]" url={pageUrl} title={pageTitle} />
+                     <ShareButton platform="telegram" icon="telegram-plane" color="bg-[#0088cc]" url={pageUrl} title={pageTitle} />
+                 </div>
+
+                 <div className="relative">
+                     <button 
+                        onClick={handleBookmark}
+                        className="flex items-center gap-2 bg-white border border-slate-200 hover:border-[#da3f0b] hover:text-[#da3f0b] text-slate-600 px-4 py-2 rounded-lg text-sm font-bold transition-all shadow-sm active:scale-95"
+                     >
+                        <i className="fas fa-bookmark"></i> Bookmark
+                     </button>
+                     {showBookmarkToast && (
+                         <div className="absolute bottom-full mb-3 left-1/2 -translate-x-1/2 bg-slate-800 text-white text-xs py-2 px-4 rounded-lg shadow-lg whitespace-nowrap animate-fade">
+                             Press <span className="font-bold text-[#da3f0b]">Ctrl + D</span> to bookmark
+                         </div>
+                     )}
+                 </div>
+             </div>
+          </footer>
+        </div>
+      );
+    };
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+    </script>
+
+
+  <section class="bg-white py-12 sm:py-16">
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="prose prose-lg max-w-none prose-h2:text-gray-800 prose-p:text-gray-700">
+
+      <h2 class="text-3xl font-bold text-gray-900 mb-4">UTM Link Builder – Master Your Marketing Attribution</h2>
+      <p class="mb-6 leading-relaxed">
+        In the world of digital marketing, data is king. But data is only useful if it's accurate. Our <strong>UTM Link Builder</strong> 
+        is a professional-grade tool designed to help marketers, small business owners, and social media managers 
+        create precise tracking URLs for Google Analytics. By using a <em>campaign URL builder</em>, you can pinpoint 
+        exactly which email, tweet, or ad drove a conversion, allowing you to optimize your budget and strategy.
+      </p>
+
+      <h2 class="text-2xl font-bold mt-8 mb-4">Why Use a Campaign URL Builder?</h2>
+      <p class="mb-6 leading-relaxed">
+        Without UTM parameters, Google Analytics often groups traffic into broad categories like "Direct" or "Social." 
+        A <strong>UTM link generator</strong> adds specific tags to your URLs that tell your analytics platform 
+        exactly where the visitor came from. This is essential for:
+      </p>
+      <ul class="list-disc pl-6 mb-6 space-y-2 text-gray-700">
+        <li><strong>A/B Testing:</strong> Compare two different ad creatives to see which performs better.</li>
+        <li><strong>Influencer Marketing:</strong> Track the ROI of specific partnerships.</li>
+        <li><strong>Email Campaigns:</strong> See which links inside your newsletter are getting the most clicks.</li>
+        <li><strong>Social Media Attribution:</strong> Distinguish between organic posts and paid promotions.</li>
+      </ul>
+
+      <h2 class="text-2xl font-bold mt-8 mb-4">Understanding UTM Parameters</h2>
+      <p class="mb-6 leading-relaxed">
+        Our <strong>Google Analytics link builder</strong> supports all five standard UTM parameters:
+      </p>
+      <ul class="list-disc pl-6 mb-6 space-y-2 text-gray-700">
+        <li><strong>Source (utm_source):</strong> The platform where the link lives (e.g., Facebook, Google, Newsletter).</li>
+        <li><strong>Medium (utm_medium):</strong> The marketing channel (e.g., CPC, email, social, affiliate).</li>
+        <li><strong>Campaign (utm_campaign):</strong> The specific promotion or product launch (e.g., black_friday_2023).</li>
+        <li><strong>Term (utm_term):</strong> Used primarily for paid search to track specific keywords.</li>
+        <li><strong>Content (utm_content):</strong> Used to differentiate similar content or links within the same ad.</li>
+      </ul>
+        <p class="mb-6 leading-relaxed">
+  Just as our <a href="https://simpliconvert.com/meta_tag_generator/" target="_blank">Meta Tag Generator</a> helps search engines understand your page, 
+  the <strong>UTM Link Builder</strong> helps you understand your audience's journey.
+</p>
+
+      <h2 class="text-2xl font-bold mt-8 mb-4">Best Practices for UTM Tracking</h2>
+      <p class="mb-6 leading-relaxed">
+        To keep your data clean and actionable, follow these pro tips when using our <em>track marketing tool</em>:
+      </p>
+      <ul class="list-disc pl-6 mb-6 space-y-2 text-gray-700">
+        <li><strong>Be Consistent:</strong> Use "social" or "Social" consistently. Google Analytics is case-sensitive!</li>
+        <li><strong>Use Underscores:</strong> Avoid spaces in your parameters; use underscores or dashes instead.</li>
+        <li><strong>Keep it Simple:</strong> Don't overcomplicate your naming conventions.</li>
+        <li><strong>Use a Spreadsheet:</strong> Keep a record of all the UTM links you've generated for future reference.</li>
+      </ul>
+
+      <h2 class="text-2xl font-bold mt-8 mb-4">UTM Links and Privacy</h2>
+      <p class="mb-6 leading-relaxed">
+        UTM parameters are generally considered privacy-friendly because they track the <em>source</em> of the traffic 
+        rather than the <em>identity</em> of the individual user. However, always ensure your marketing practices 
+        comply with local regulations like GDPR or CCPA.
+      </p>
+        <p class="mb-6 leading-relaxed">
+  If you are managing multiple marketing documents or reports, tools like our 
+  <a href="https://simpliconvert.com/merge_pdf_online/" target="_blank">Merge PDF Online</a> 
+  can help you consolidate your analytics exports into a single presentation.
+</p>
+
+      <h2 class="text-2xl font-bold mt-8 mb-4">Final Thoughts</h2>
+      <p class="mb-6 leading-relaxed">
+        The <strong>UTM Link Builder</strong> is an indispensable part of any digital marketer's toolkit. 
+        By taking the extra few seconds to generate a tracking link, you gain insights that can save thousands 
+        of dollars in wasted ad spend. Start building your campaign URLs today and take control of your marketing data.
+      </p>
+    </div>
+    </div>
+    </section>
+  
+
+    <section class="bg-gray-50 py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-center text-gray-900 mb-8">UTM Builder – Frequently Asked Questions</h2>
+            <div class="space-y-4">
+                
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-primary">
+                        <span>What is a UTM link?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">
+                            UTM (Urchin Tracking Module) parameters are five variants of URL parameters used by marketers to track the effectiveness of online marketing campaigns across traffic sources and publishing media.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-primary">
+                        <span>Why are Campaign Source and Medium important?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">
+                            Campaign Source (utm_source) identifies which site sent the traffic (e.g., Google, Facebook), while Campaign Medium (utm_medium) identifies the type of link (e.g., CPC, email, social). Together, they allow Google Analytics to categorize your traffic correctly.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-primary">
+                        <span>Do UTM links affect SEO?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">
+                            No, UTM parameters do not negatively affect SEO. Search engines like Google generally recognize them as tracking parameters and ignore them when indexing the content of the page, provided you use canonical tags correctly.
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 pb-16">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-slate-200 pt-16">
+            <h2 class="text-2xl font-bold text-center text-slate-800 mb-10">Popular Tools on SimpliConvert</h2>
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+                
+                <a href="/password_generator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-slate-50 text-slate-700 flex items-center justify-center shrink-0 group-hover:bg-slate-800 group-hover:text-white transition-colors">
+                        <i class="fas fa-key text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Password Gen</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Create secure, random passwords.</p>
+                    </div>
+                </a>
+
+                <a href="/image_resizer/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center shrink-0 group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-image text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Image Resizer</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Resize images without quality loss.</p>
+                    </div>
+                </a>
+
+                <a href="/split_pdf/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-red-50 text-red-600 flex items-center justify-center shrink-0 group-hover:bg-red-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-cut text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Split PDF</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Extract pages from PDF documents.</p>
+                    </div>
+                </a>
+
+                <a href="/qr_code_generator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-slate-50 text-slate-800 flex items-center justify-center shrink-0 group-hover:bg-slate-900 group-hover:text-white transition-colors">
+                        <i class="fas fa-qrcode text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">QR Creator</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Generate custom QR codes instantly.</p>
+                    </div>
+                </a>
+
+                <a href="/to_do_list/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-green-50 text-green-600 flex items-center justify-center shrink-0 group-hover:bg-green-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-check-square text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">To-Do List</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Manage tasks and stay organized.</p>
+                    </div>
+                </a>
+
+                <a href="/merge_pdf_online/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-red-50 text-red-600 flex items-center justify-center shrink-0 group-hover:bg-red-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-object-group text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Merge PDF</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Combine multiple PDFs into one.</p>
+                    </div>
+                </a>
+
+                <a href="/compress_pdf/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-orange-50 text-orange-600 flex items-center justify-center shrink-0 group-hover:bg-orange-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-compress-arrows-alt text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Compress PDF</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Reduce PDF file size online.</p>
+                    </div>
+                </a>
+
+                <a href="/jpg_to_pdf/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-purple-50 text-purple-600 flex items-center justify-center shrink-0 group-hover:bg-purple-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-file-pdf text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">JPG to PDF</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Convert images to PDF documents.</p>
+                    </div>
+                </a>
+
+                <a href="/roblox_devex_calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-gray-50 text-gray-800 flex items-center justify-center shrink-0 group-hover:bg-gray-900 group-hover:text-white transition-colors">
+                        <i class="fas fa-gamepad text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">DevEx Calc</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Calculate Roblox Robux to USD.</p>
+                    </div>
+                </a>
+
+                <a href="/meta_tag_generator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0 group-hover:bg-indigo-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-search text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Meta Tag Gen</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Optimize SEO with custom tags.</p>
+                    </div>
+                </a>
+
+                <a href="/freelance_hourly_rate_calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0 group-hover:bg-emerald-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-calculator text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Rate Calc</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Calculate freelance hourly rates.</p>
+                    </div>
+                </a>
+
+                <a href="/youtube_thumbnail_downloader/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-red-50 text-red-600 flex items-center justify-center shrink-0 group-hover:bg-red-600 group-hover:text-white transition-colors">
+                        <i class="fab fa-youtube text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Thumb Grabber</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Download YouTube video covers.</p>
+                    </div>
+                </a>
+
+            </div>
+        </div>
+    </section>
+
+    <div id="footer"></div>
+
+    <script>
+    function initializeHeaderScripts() {
+        const header = document.getElementById('header');
+        if (header) {
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 10) {
+                    header.classList.add('scrolled-effect');
+                } else {
+                    header.classList.remove('scrolled-effect');
+                }
+            });
+        }
+    }
+    
+    function initializeFooterScripts() {
+        const yearSpan = document.getElementById('current-year');
+        if(yearSpan) {
+            yearSpan.textContent = new Date().getFullYear();
+        }
+    }
+
+    async function loadComponent(url, elementId, callback) {
+        try {
+            const response = await fetch(url);
+            if (!response.ok) throw new Error('Status: ' + response.status);
+            const text = await response.text();
+            const element = document.getElementById(elementId);
+            if (element) {
+                element.innerHTML = text;
+                if (callback) callback();
+            }
+        } catch (error) {
+            console.error('Error loading component:', error);
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        loadComponent('/components/navbar.html', 'navbar', initializeHeaderScripts);
+        loadComponent('/components/footer.html', 'footer', initializeFooterScripts);
+        
+        const faqToggles = document.querySelectorAll('[data-faq-toggle]');
+        faqToggles.forEach(button => {
+            button.addEventListener('click', () => {
+                const answer = button.nextElementSibling;
+                const icon = button.querySelector('.faq-icon');
+                const isOpening = !answer.style.maxHeight;
+
+                faqToggles.forEach(other => {
+                    if (other !== button) {
+                        other.nextElementSibling.style.maxHeight = null;
+                        other.querySelector('.faq-icon').classList.remove('rotate-90');
+                        other.querySelector('.faq-icon').classList.add('-rotate-90');
+                    }
+                });
+
+                if (isOpening) {
+                    answer.style.maxHeight = answer.scrollHeight + "px";
+                    icon.classList.remove('-rotate-90');
+                    icon.classList.add('rotate-90');
+                } else {
+                    answer.style.maxHeight = null;
+                    icon.classList.remove('rotate-90');
+                    icon.classList.add('-rotate-90');
+                }
+            });
+        });
+    });
+    </script>
+</body>
+</html>

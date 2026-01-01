@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>SQL Formatter Online – Beautify & Format SQL Code | SimpliConvert</title>
+    <meta name="description" content="Clean up messy database queries with this SQL Formatter Online. Instantly beautify and structure your SQL code for better readability and debugging.">
+    <meta name="keywords" content="sql formatter, beautify sql, format sql code, sql pretty print, sql query cleaner, format mysql, format postgresql, sql syntax highlighter">
+    <meta name="author" content="SimpliConvert">
+    <meta property="og:site_name" content="SimpliConvert">
+    <meta name="robots" content="index, follow">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://simpliconvert.com/sql_formatter_online/">
+    <meta property="og:title" content="SQL Formatter Online – Beautify Your Queries">
+    <meta property="og:description" content="Instantly turn messy SQL into clean, readable code. Supports multiple dialects including MySQL, PostgreSQL, and SQL Server.">
+    <meta property="og:image" content="https://simpliconvert.com/images/sql-formatter-og.jpg">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://simpliconvert.com/sql_formatter_online/">
+    <meta name="twitter:title" content="SQL Formatter Online – Format SQL Code Instantly">
+    <meta name="twitter:description" content="Free online tool to beautify SQL queries. Improve readability and debug database code faster.">
+    <meta name="twitter:image" content="https://simpliconvert.com/images/sql-formatter-og.jpg">
+
+    <link rel="canonical" href="https://simpliconvert.com/sql_formatter_online/">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "SQL Formatter Online",
+      "url": "https://simpliconvert.com/sql_formatter_online/",
+      "description": "A free online tool to format and beautify SQL queries for better readability and debugging.",
+      "applicationCategory": "DeveloperApplication",
+      "operatingSystem": "Web Browser",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "SimpliConvert",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://simpliconvert.com/logo.png"
+        }
+      }
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [{
+        "@type": "Question",
+        "name": "Does formatting SQL change the query logic?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "No. SQL formatting only adjusts whitespace, indentation, and keyword casing (optional). It does not alter the logic, table names, or parameters of your query."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Which SQL dialects are supported?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Our formatter supports standard SQL, MySQL, PostgreSQL, MariaDB, SQL Server (TSQL), and many others. You can select the specific dialect for better syntax handling."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Is my SQL code stored on your servers?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "No. All formatting happens locally in your browser using JavaScript. Your database queries never leave your computer, ensuring complete privacy."
+        }
+      }]
+    }
+    </script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://unpkg.com/sql-formatter@15.3.1/dist/sql-formatter.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #da3f0b;
+            --primary-hover: #b53409;
+            --primary-light: #fff5f2;
+            --bg: #f8fafc;
+            --text-dark: #0f172a;
+            --success: #16a34a;
+            --danger: #dc2626;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text-dark);
+        }
+
+        .code-font {
+            font-family: 'Fira Code', monospace;
+        }
+
+        .hero-card {
+            background: white;
+            border: 1px solid #f1f5f9;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background-color: var(--primary);
+        }
+
+        .prose a {
+            color: #da3f0b;
+            text-decoration: none; 
+        }
+        .prose a:hover {
+            text-decoration: underline; 
+        }
+
+        .animate-fade { animation: fadeIn 0.3s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+        .tool-card {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .tool-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+        }
+
+        textarea {
+            resize: none;
+        }
+        
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 min-h-screen flex flex-col">
+    <div id="navbar"></div>
+
+    <section class="hero-white text-black py-2 md:py-10">
+        <div class="container mx-auto px-4 text-center">
+            <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-2">SQL Formatter Online</h1>
+            <p class="text-lg md:text-xl max-w-3x1 mx-auto mb-2">
+                Beautify, structure, and clean up your SQL queries instantly. Supports MySQL, PostgreSQL, SQL Server, and more.
+            </p>
+        </div>
+    </section>
+
+    <div id="root" class="w-full max-w-6xl mx-auto p-4 sm:p-6"></div>
+
+    <script type="text/babel">
+    const { useState, useEffect } = React;
+
+    const dialects = [
+      { id: 'sql', name: 'Standard SQL' },
+      { id: 'mysql', name: 'MySQL' },
+      { id: 'postgresql', name: 'PostgreSQL' },
+      { id: 'tsql', name: 'SQL Server (T-SQL)' },
+      { id: 'mariadb', name: 'MariaDB' },
+      { id: 'sqlite', name: 'SQLite' },
+      { id: 'plsql', name: 'Oracle PL/SQL' }
+    ];
+
+    const App = () => {
+      const [input, setInput] = useState('');
+      const [output, setOutput] = useState('');
+      const [dialect, setDialect] = useState('sql');
+      const [indent, setIndent] = useState(2);
+      const [uppercase, setUppercase] = useState(true);
+      const [copyStatus, setCopyStatus] = useState('Copy');
+      const [showBookmarkToast, setShowBookmarkToast] = useState(false);
+
+      const formatSQL = () => {
+        if (!input.trim()) {
+          setOutput('');
+          return;
+        }
+        try {
+          const formatted = window.sqlFormatter.format(input, {
+            language: dialect,
+            tabWidth: indent,
+            keywordCase: uppercase ? 'upper' : 'preserve',
+            linesBetweenQueries: 2,
+          });
+          setOutput(formatted);
+        } catch (err) {
+          setOutput('-- Error: Could not format SQL. Please check your syntax.\n' + err.message);
+        }
+      };
+
+      useEffect(() => {
+        const timeoutId = setTimeout(() => {
+          if (input) formatSQL();
+        }, 500);
+        return () => clearTimeout(timeoutId);
+      }, [input, dialect, indent, uppercase]);
+
+      const handleCopy = () => {
+        navigator.clipboard.writeText(output);
+        setCopyStatus('Copied!');
+        setTimeout(() => setCopyStatus('Copy'), 2000);
+      };
+
+      const handleClear = () => {
+        setInput('');
+        setOutput('');
+      };
+
+      const handleBookmark = () => {
+        setShowBookmarkToast(true);
+        setTimeout(() => setShowBookmarkToast(false), 3000);
+      };
+
+      return (
+        <div className="bg-white rounded-[2rem] shadow-2xl overflow-hidden border border-slate-100">
+          <header className="bg-slate-50/50 border-b border-slate-100 p-6 md:p-8 flex flex-col md:flex-row justify-between items-center gap-6">
+            <div className="text-center md:text-left">
+              <h2 className="text-2xl font-black text-slate-800 tracking-tight flex items-center justify-center md:justify-start gap-3">
+                <span className="bg-[#da3f0b] text-white p-2 rounded-xl text-lg shadow-lg shadow-[#da3f0b30]">
+                  <i className="fas fa-code"></i>
+                </span>
+                SQL Beautifier & Cleaner
+              </h2>
+            </div>
+            
+            <div className="flex flex-wrap justify-center gap-4">
+              <div className="relative min-w-[140px]">
+                <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1 ml-1">Dialect</label>
+                <select 
+                  value={dialect}
+                  onChange={(e) => setDialect(e.target.value)}
+                  className="appearance-none w-full bg-white border border-slate-200 text-slate-700 py-2 pl-4 pr-10 rounded-xl text-xs font-bold focus:outline-none focus:ring-4 focus:ring-[#da3f0b15] focus:border-[#da3f0b] shadow-sm cursor-pointer"
+                >
+                  {dialects.map(d => (
+                    <option key={d.id} value={d.id}>{d.name}</option>
+                  ))}
+                </select>
+                <div className="pointer-events-none absolute bottom-3 right-3 text-slate-400">
+                  <i className="fas fa-chevron-down text-[10px]"></i>
+                </div>
+              </div>
+
+              <div className="relative min-w-[100px]">
+                <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1 ml-1">Indent</label>
+                <select 
+                  value={indent}
+                  onChange={(e) => setIndent(parseInt(e.target.value))}
+                  className="appearance-none w-full bg-white border border-slate-200 text-slate-700 py-2 pl-4 pr-10 rounded-xl text-xs font-bold focus:outline-none focus:ring-4 focus:ring-[#da3f0b15] focus:border-[#da3f0b] shadow-sm cursor-pointer"
+                >
+                  <option value="2">2 Spaces</option>
+                  <option value="4">4 Spaces</option>
+                  <option value="8">8 Spaces</option>
+                </select>
+                <div className="pointer-events-none absolute bottom-3 right-3 text-slate-400">
+                  <i className="fas fa-chevron-down text-[10px]"></i>
+                </div>
+              </div>
+
+              <div className="flex flex-col justify-end">
+                <button 
+                  onClick={() => setUppercase(!uppercase)}
+                  className={`py-2 px-4 rounded-xl text-xs font-bold transition-all border ${uppercase ? 'bg-[#da3f0b] text-white border-[#da3f0b]' : 'bg-white text-slate-600 border-slate-200'}`}
+                >
+                  UPPERCASE
+                </button>
+              </div>
+            </div>
+          </header>
+
+          <main className="flex flex-col lg:flex-row min-h-[500px]">
+            {/* Input Panel */}
+            <div className="lg:w-1/2 p-4 md:p-6 border-r border-slate-100 flex flex-col">
+              <div className="flex justify-between items-center mb-3 px-2">
+                <span className="text-xs font-black text-slate-400 uppercase tracking-widest">Input SQL</span>
+                <button onClick={handleClear} className="text-[10px] font-bold text-slate-400 hover:text-red-500 transition-colors">
+                  <i className="fas fa-trash-alt mr-1"></i> CLEAR
+                </button>
+              </div>
+              <textarea
+                className="flex-grow w-full p-4 rounded-2xl border border-slate-200 focus:ring-4 focus:ring-[#da3f0b15] focus:border-[#da3f0b] outline-none code-font text-sm custom-scrollbar bg-slate-50/30"
+                placeholder="Paste your messy SQL here... e.g. SELECT * FROM users WHERE id=1"
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+              ></textarea>
+            </div>
+
+            {/* Output Panel */}
+            <div className="lg:w-1/2 p-4 md:p-6 bg-slate-50/50 flex flex-col">
+              <div className="flex justify-between items-center mb-3 px-2">
+                <span className="text-xs font-black text-slate-400 uppercase tracking-widest">Formatted Result</span>
+                <button 
+                  onClick={handleCopy}
+                  disabled={!output}
+                  className={`text-[10px] font-bold px-3 py-1 rounded-lg transition-all ${output ? 'bg-slate-800 text-white hover:bg-black' : 'bg-slate-200 text-slate-400 cursor-not-allowed'}`}
+                >
+                  <i className={`fas ${copyStatus === 'Copy' ? 'fa-copy' : 'fa-check'} mr-1`}></i> {copyStatus}
+                </button>
+              </div>
+              <textarea
+                readOnly
+                className="flex-grow w-full p-4 rounded-2xl border border-slate-200 bg-white code-font text-sm custom-scrollbar outline-none"
+                placeholder="Formatted SQL will appear here..."
+                value={output}
+              ></textarea>
+            </div>
+          </main>
+
+          {/* Share & Bookmark Footer */}
+          <footer className="bg-slate-50 border-t border-slate-100 p-6 md:p-8">
+             <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+                 <div className="text-center md:text-left">
+                     <h4 className="text-sm font-bold text-slate-700 mb-1">Share this tool</h4>
+                     <p className="text-xs text-slate-400">Help your fellow developers write cleaner code.</p>
+                 </div>
+                 
+                 <div className="flex flex-wrap justify-center gap-3">
+                     <a href={`https://twitter.com/intent/tweet?text=Check out this SQL Formatter!&url=${encodeURIComponent(window.location.href)}`} target="_blank" className="w-10 h-10 rounded-full flex items-center justify-center text-white bg-[#1DA1F2] hover:-translate-y-1 transition-transform"><i className="fab fa-twitter"></i></a>
+                     <a href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`} target="_blank" className="w-10 h-10 rounded-full flex items-center justify-center text-white bg-[#1877F2] hover:-translate-y-1 transition-transform"><i className="fab fa-facebook-f"></i></a>
+                     <a href={`https://api.whatsapp.com/send?text=SQL Formatter: ${encodeURIComponent(window.location.href)}`} target="_blank" className="w-10 h-10 rounded-full flex items-center justify-center text-white bg-[#25D366] hover:-translate-y-1 transition-transform"><i className="fab fa-whatsapp"></i></a>
+                 </div>
+
+                 <div className="relative">
+                     <button 
+                        onClick={handleBookmark}
+                        className="flex items-center gap-2 bg-white border border-slate-200 hover:border-[#da3f0b] hover:text-[#da3f0b] text-slate-600 px-4 py-2 rounded-lg text-sm font-bold transition-all shadow-sm active:scale-95"
+                     >
+                        <i className="fas fa-bookmark"></i> Bookmark
+                     </button>
+                     {showBookmarkToast && (
+                         <div className="absolute bottom-full mb-3 left-1/2 -translate-x-1/2 bg-slate-800 text-white text-xs py-2 px-4 rounded-lg shadow-lg whitespace-nowrap animate-fade">
+                             Press <span className="font-bold text-[#da3f0b]">Ctrl + D</span> to bookmark
+                         </div>
+                     )}
+                 </div>
+             </div>
+          </footer>
+        </div>
+      );
+    };
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+    </script>
+
+
+  <section class="bg-white py-12 sm:py-16">
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="prose prose-lg max-w-none prose-h2:text-gray-800 prose-p:text-gray-700">
+
+      <h2 class="text-3xl font-bold text-gray-900 mb-4">SQL Formatter Online – Clean Up Your Database Queries</h2>
+      <p class="mb-6 leading-relaxed">
+        Writing SQL queries is a fundamental part of database management, but as queries grow in complexity, they often become a "wall of text" that is difficult to read, debug, and maintain. Our <strong>SQL Formatter Online</strong> is a powerful, free utility designed to instantly beautify messy SQL code. Whether you are working with MySQL, PostgreSQL, or SQL Server, this tool helps you maintain a professional and readable codebase.
+      </p>
+
+      <h2 class="text-2xl font-bold mt-8 mb-4">Why Use an SQL Beautifier?</h2>
+      <p class="mb-6 leading-relaxed">
+        In a collaborative environment, code readability is paramount. A <strong>SQL beautifier</strong> ensures that every team member can understand the structure of a query at a glance. By using standardized indentation and keyword casing, you reduce the cognitive load required to review code. This is particularly useful when dealing with nested subqueries, complex joins, and long CASE statements that are prone to syntax errors when unformatted.
+      </p>
+      <p class="mb-6 leading-relaxed">
+        Beyond aesthetics, formatting helps in debugging. When your SQL is properly structured, missing commas, mismatched parentheses, or logic errors in JOIN conditions become much more obvious.
+      </p>
+
+      <h2 class="text-2xl font-bold mt-8 mb-4">Key Features of Our SQL Pretty Printer</h2>
+      <ul class="list-disc pl-6 mb-6 space-y-2 text-gray-700">
+        <li><strong>Multi-Dialect Support:</strong> Format code for MySQL, PostgreSQL, MariaDB, T-SQL, and more.</li>
+        <li><strong>Custom Indentation:</strong> Choose between 2, 4, or 8 spaces to match your project's style guide.</li>
+        <li><strong>Keyword Casing:</strong> Automatically convert SQL keywords (SELECT, FROM, WHERE) to uppercase for better contrast.</li>
+        <li><strong>Instant Processing:</strong> No page reloads; your code is formatted in real-time as you type or paste.</li>
+        <li><strong>Privacy First:</strong> Your SQL queries are processed locally in your browser. We never store or transmit your database code.</li>
+      </ul>
+
+      <h2 class="text-2xl font-bold mt-8 mb-4">How to Format SQL Code Online</h2>
+      <p class="mb-6 leading-relaxed">
+        Using our tool is simple and requires no technical setup:
+      </p>
+      <ol class="list-decimal pl-6 mb-6 space-y-2 text-gray-700">
+        <li><strong>Paste:</strong> Copy your messy SQL query and paste it into the "Input SQL" box.</li>
+        <li><strong>Configure:</strong> Select your preferred SQL dialect and indentation size from the header menu.</li>
+        <li><strong>Review:</strong> The "Formatted Result" box will update automatically with your clean code.</li>
+        <li><strong>Copy:</strong> Click the "Copy" button to grab your beautified SQL and paste it back into your IDE or database manager.</li>
+      </ol>
+
+      <h2 class="text-2xl font-bold mt-8 mb-4">Improve Your Workflow</h2>
+      <p class="mb-6 leading-relaxed">
+        Developers often spend more time reading code than writing it. By integrating a <strong>SQL pretty print</strong> tool into your workflow, you save valuable time during code reviews and troubleshooting sessions. Just as our <a href="https://simpliconvert.com/meta_tag_generator/" target="_blank">Meta Tag Generator</a> helps web developers optimize SEO, this SQL tool optimizes your backend development efficiency.
+      </p>
+
+      <h2 class="text-2xl font-bold mt-8 mb-4">Final Thoughts</h2>
+      <p class="mb-6 leading-relaxed">
+        Don't let messy queries slow you down. Use the <strong>SQL Formatter Online</strong> to transform your database scripts into clean, structured, and professional code. It’s the fastest way to ensure your SQL is production-ready and easy for anyone to read.
+      </p>
+    </div>
+    </div>
+    </section>
+  
+
+    <section class="bg-gray-50 py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-center text-gray-900 mb-8">SQL Formatter – Frequently Asked Questions</h2>
+            <div class="space-y-4">
+                
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-primary">
+                        <span>Does formatting SQL change the query logic?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">
+                            No. SQL formatting only adjusts whitespace, indentation, and keyword casing. It does not alter the logic, table names, column references, or parameters of your query. Your query will execute exactly the same way as before, just with better readability.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-primary">
+                        <span>Which SQL dialects are supported?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">
+                            Our tool supports a wide range of dialects including Standard SQL, MySQL, PostgreSQL, MariaDB, SQLite, Oracle PL/SQL, and SQL Server (T-SQL). Selecting the correct dialect ensures that specific syntax features (like backticks in MySQL or square brackets in T-SQL) are handled correctly.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-primary">
+                        <span>Is my SQL code secure?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">
+                            Yes. All formatting is performed client-side in your web browser. Your SQL queries are never sent to our servers, stored in any database, or shared with third parties. This makes it safe to use even for sensitive internal database queries.
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 pb-16">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-slate-200 pt-16">
+            <h2 class="text-2xl font-bold text-center text-slate-800 mb-10">Popular Tools on SimpliConvert</h2>
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+                
+                <a href="/password_generator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-slate-50 text-slate-700 flex items-center justify-center shrink-0 group-hover:bg-slate-800 group-hover:text-white transition-colors">
+                        <i class="fas fa-key text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Password Gen</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Create secure, random passwords.</p>
+                    </div>
+                </a>
+
+                <a href="/image_resizer/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center shrink-0 group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-image text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Image Resizer</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Resize images without quality loss.</p>
+                    </div>
+                </a>
+
+                <a href="/split_pdf/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-red-50 text-red-600 flex items-center justify-center shrink-0 group-hover:bg-red-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-cut text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Split PDF</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Extract pages from PDF documents.</p>
+                    </div>
+                </a>
+
+                <a href="/qr_code_generator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-slate-50 text-slate-800 flex items-center justify-center shrink-0 group-hover:bg-slate-900 group-hover:text-white transition-colors">
+                        <i class="fas fa-qrcode text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">QR Creator</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Generate custom QR codes instantly.</p>
+                    </div>
+                </a>
+
+                <a href="/to_do_list/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-green-50 text-green-600 flex items-center justify-center shrink-0 group-hover:bg-green-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-check-square text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">To-Do List</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Manage tasks and stay organized.</p>
+                    </div>
+                </a>
+
+                <a href="/merge_pdf_online/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-red-50 text-red-600 flex items-center justify-center shrink-0 group-hover:bg-red-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-object-group text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Merge PDF</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Combine multiple PDFs into one.</p>
+                    </div>
+                </a>
+
+                <a href="/compress_pdf/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-orange-50 text-orange-600 flex items-center justify-center shrink-0 group-hover:bg-orange-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-compress-arrows-alt text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Compress PDF</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Reduce PDF file size online.</p>
+                    </div>
+                </a>
+
+                <a href="/jpg_to_pdf/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-purple-50 text-purple-600 flex items-center justify-center shrink-0 group-hover:bg-purple-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-file-pdf text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">JPG to PDF</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Convert images to PDF documents.</p>
+                    </div>
+                </a>
+
+                <a href="/roblox_devex_calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-gray-50 text-gray-800 flex items-center justify-center shrink-0 group-hover:bg-gray-900 group-hover:text-white transition-colors">
+                        <i class="fas fa-gamepad text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">DevEx Calc</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Calculate Roblox Robux to USD.</p>
+                    </div>
+                </a>
+
+                <a href="/meta_tag_generator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0 group-hover:bg-indigo-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-search text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Meta Tag Gen</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Optimize SEO with custom tags.</p>
+                    </div>
+                </a>
+
+                <a href="/freelance_hourly_rate_calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0 group-hover:bg-emerald-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-calculator text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Rate Calc</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Calculate freelance hourly rates.</p>
+                    </div>
+                </a>
+
+                <a href="/youtube_thumbnail_downloader/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-red-50 text-red-600 flex items-center justify-center shrink-0 group-hover:bg-red-600 group-hover:text-white transition-colors">
+                        <i class="fab fa-youtube text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Thumb Grabber</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Download YouTube video covers.</p>
+                    </div>
+                </a>
+
+            </div>
+        </div>
+    </section>
+
+    <div id="footer"></div>
+
+    <script>
+    function initializeHeaderScripts() {
+        const header = document.getElementById('header');
+        if (header) {
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 10) {
+                    header.classList.add('scrolled-effect');
+                } else {
+                    header.classList.remove('scrolled-effect');
+                }
+            });
+        }
+    }
+    
+    function initializeFooterScripts() {
+        const yearSpan = document.getElementById('current-year');
+        if(yearSpan) {
+            yearSpan.textContent = new Date().getFullYear();
+        }
+    }
+
+    async function loadComponent(url, elementId, callback) {
+        try {
+            const response = await fetch(url);
+            if (!response.ok) throw new Error('Status: ' + response.status);
+            const text = await response.text();
+            const element = document.getElementById(elementId);
+            if (element) {
+                element.innerHTML = text;
+                if (callback) callback();
+            }
+        } catch (error) {
+            console.error('Error loading component:', error);
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        loadComponent('/components/navbar.html', 'navbar', initializeHeaderScripts);
+        loadComponent('/components/footer.html', 'footer', initializeFooterScripts);
+        
+        const faqToggles = document.querySelectorAll('[data-faq-toggle]');
+        faqToggles.forEach(button => {
+            button.addEventListener('click', () => {
+                const answer = button.nextElementSibling;
+                const icon = button.querySelector('.faq-icon');
+                const isOpening = !answer.style.maxHeight;
+
+                faqToggles.forEach(other => {
+                    if (other !== button) {
+                        other.nextElementSibling.style.maxHeight = null;
+                        other.querySelector('.faq-icon').classList.remove('rotate-90');
+                        other.querySelector('.faq-icon').classList.add('-rotate-90');
+                    }
+                });
+
+                if (isOpening) {
+                    answer.style.maxHeight = answer.scrollHeight + "px";
+                    icon.classList.remove('-rotate-90');
+                    icon.classList.add('rotate-90');
+                } else {
+                    answer.style.maxHeight = null;
+                    icon.classList.remove('rotate-90');
+                    icon.classList.add('-rotate-90');
+                }
+            });
+        });
+    });
+    </script>
+</body>
+</html>

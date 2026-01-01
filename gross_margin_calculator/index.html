@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Gross Margin Calculator – Calculate Profit Margin & Markup | SimpliConvert</title>
+    <meta name="description" content="Calculate your business profitability with this free Gross Margin Calculator. Input your cost and revenue to instantly see your profit margin percentage, gross profit, and markup.">
+    <meta name="keywords" content="gross margin calculator, profit margin tool, calculate gross margin, business profit, markup calculator, COGS calculator, retail margin tool, profitability analysis">
+    <meta name="author" content="SimpliConvert">
+    <meta property="og:site_name" content="SimpliConvert">
+    <meta name="robots" content="index, follow">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://simpliconvert.com/gross_margin_calculator/">
+    <meta property="og:title" content="Gross Margin Calculator – Analyze Business Profitability">
+    <meta property="og:description" content="Easily calculate gross profit, margin percentage, and markup for your products or services. Essential tool for small business owners and retailers.">
+    <meta property="og:image" content="https://simpliconvert.com/images/gross-margin-calculator-og.jpg">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://simpliconvert.com/gross_margin_calculator/">
+    <meta name="twitter:title" content="Gross Margin Calculator – Free Business Tool">
+    <meta name="twitter:description" content="Calculate your business margins and markups instantly. Perfect for pricing products and analyzing financial health.">
+    <meta name="twitter:image" content="https://simpliconvert.com/images/gross-margin-calculator-og.jpg">
+
+    <link rel="canonical" href="https://simpliconvert.com/gross_margin_calculator/">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Gross Margin Calculator",
+      "url": "https://simpliconvert.com/gross_margin_calculator/",
+      "description": "A free online tool for business owners to calculate gross profit, margin percentage, and markup based on revenue and cost of goods sold.",
+      "applicationCategory": "FinanceApplication",
+      "operatingSystem": "Web Browser",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "SimpliConvert",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://simpliconvert.com/logo.png"
+        }
+      }
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [{
+        "@type": "Question",
+        "name": "What is the formula for gross margin?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Gross Margin is calculated as: ((Revenue - Cost of Goods Sold) / Revenue) * 100. It represents the percentage of total sales revenue that the company retains after incurring the direct costs associated with producing the goods and services sold."
+        }
+      }, {
+        "@type": "Question",
+        "name": "What is the difference between margin and markup?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Margin is the ratio of profit to the selling price, while markup is the ratio of profit to the cost price. For example, if a product costs $100 and sells for $150, the profit is $50. The margin is 33.3% ($50/$150), but the markup is 50% ($50/$100)."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Why is gross margin important for my business?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Gross margin indicates how efficiently a company uses its labor and supplies in the production process. A higher margin means the business has more money to cover operating expenses, debt, and net profit."
+        }
+      }]
+    }
+    </script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #da3f0b;
+            --primary-hover: #b53409;
+            --primary-light: #fff5f2;
+            --bg: #f8fafc;
+            --text-dark: #0f172a;
+            --success: #16a34a;
+            --danger: #dc2626;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text-dark);
+        }
+
+        .hero-card {
+            background: white;
+            border: 1px solid #f1f5f9;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background-color: var(--primary);
+        }
+
+        input[type=range] {
+            height: 6px;
+            -webkit-appearance: none;
+            width: 100%;
+            background: #e2e8f0;
+            border-radius: 8px;
+            outline: none;
+        }
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: var(--primary);
+            cursor: pointer;
+            border: 2px solid white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: all 0.1s ease;
+        }
+
+        .prose a { color: #da3f0b; text-decoration: none; }
+        .prose a:hover { text-decoration: underline; }
+
+        .tooltip-container { position: relative; display: inline-block; }
+        .tooltip-text {
+            visibility: hidden; width: 220px; background-color: #1e293b; color: #fff;
+            text-align: center; border-radius: 8px; padding: 10px; position: absolute;
+            z-index: 50; bottom: 125%; left: 50%; margin-left: -110px; opacity: 0;
+            transition: opacity 0.2s; font-size: 0.75rem; font-weight: 400;
+            pointer-events: none; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+        .tooltip-container:hover .tooltip-text { visibility: visible; opacity: 1; }
+        .tooltip-text::after {
+            content: ""; position: absolute; top: 100%; left: 50%; margin-left: -5px;
+            border-width: 5px; border-style: solid; border-color: #1e293b transparent transparent transparent;
+        }
+
+        .animate-fade { animation: fadeIn 0.3s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .tool-card { transition: transform 0.2s ease, box-shadow 0.2s ease; }
+        .tool-card:hover { transform: translateY(-4px); box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
+    </style>
+</head>
+
+<body class="bg-gray-50 min-h-screen flex flex-col">
+    <div id="navbar"></div>
+
+    <section class="hero-white text-black py-2 md:py-10">
+        <div class="container mx-auto px-4 text-center">
+            <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-2">Gross Margin Calculator</h1>
+            <p class="text-lg md:text-xl max-w-3x1 mx-auto mb-2">
+                Evaluate your business profitability instantly. Calculate gross profit, margin percentage, and markup to optimize your pricing strategy.
+            </p>
+        </div>
+    </section>
+
+    <div id="root" class="w-full max-w-6xl mx-auto p-4 sm:p-6"></div>
+
+    <script type="text/babel">
+    const { useState, useEffect, useMemo } = React;
+
+    const currencies = [
+      { code: 'USD', symbol: '$', locale: 'en-US' },
+      { code: 'EUR', symbol: '€', locale: 'de-DE' },
+      { code: 'GBP', symbol: '£', locale: 'en-GB' },
+      { code: 'JPY', symbol: '¥', locale: 'ja-JP' },
+      { code: 'AUD', symbol: 'A$', locale: 'en-AU' },
+      { code: 'CAD', symbol: 'C$', locale: 'en-CA' },
+      { code: 'INR', symbol: '₹', locale: 'en-IN' }
+    ];
+
+    const presets = {
+      standard: { label: '20% Margin', margin: 0.20 },
+      retail: { label: '50% Margin', margin: 0.50 },
+      highEnd: { label: '75% Margin', margin: 0.75 },
+      keystone: { label: '100% Markup', markup: 1.0 }
+    };
+
+    const Tooltip = ({ text }) => (
+      <span className="tooltip-container ml-2">
+        <i className="fas fa-info-circle text-slate-300 hover:text-[#da3f0b] cursor-help text-xs transition-colors"></i>
+        <span className="tooltip-text">{text}</span>
+      </span>
+    );
+
+    const NumberInput = ({ value, onChange, prefix, suffix, label, tooltip }) => (
+      <div className="mb-5">
+        <div className="flex items-center text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">
+          <label>{label}</label>
+          {tooltip && <Tooltip text={tooltip} />}
+        </div>
+        <div className="relative rounded-xl shadow-sm">
+          {prefix && (
+            <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+              <span className="text-slate-400 font-semibold">{prefix}</span>
+            </div>
+          )}
+          <input
+            type="number"
+            className={`block w-full rounded-xl border-slate-200 border py-3 focus:ring-4 focus:ring-[#da3f0b20] focus:border-[#da3f0b] sm:text-sm font-semibold text-slate-800 transition-all ${prefix ? 'pl-9' : 'pl-4'} ${suffix ? 'pr-12' : 'pr-4'} bg-white`}
+            value={value}
+            onChange={(e) => onChange(e.target.value)}
+            onFocus={(e) => e.target.select()}
+            placeholder="0.00"
+          />
+          {suffix && (
+            <div className="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none">
+              <span className="text-slate-400 font-semibold">{suffix}</span>
+            </div>
+          )}
+        </div>
+      </div>
+    );
+
+    const StatCard = ({ label, value, subtext, type = 'neutral', isMain = false }) => {
+      let colorClass = 'text-slate-900';
+      if (type === 'profit') colorClass = 'text-[#16a34a]';
+      if (type === 'loss') colorClass = 'text-[#dc2626]';
+
+      return (
+        <div className={`${isMain ? 'hero-card p-8' : 'bg-white p-5 rounded-2xl border border-slate-100 shadow-sm'} flex flex-col items-center text-center`}>
+          {isMain ? (
+            <>
+              <p className="text-xs font-black text-[#da3f0b] uppercase tracking-[0.2em] mb-4">{label}</p>
+              <div className="flex items-center justify-center">
+                <span className={`text-5xl md:text-6xl font-black tracking-tighter leading-none ${colorClass}`}>{value}</span>
+              </div>
+              {subtext && <p className="text-sm text-slate-400 font-medium mt-4">{subtext}</p>}
+            </>
+          ) : (
+            <div className="w-full">
+              <div className="text-[10px] font-black text-slate-400 uppercase tracking-widest flex items-center justify-center mb-1">
+                {label}
+              </div>
+              <p className={`text-xl font-extrabold ${colorClass}`}>{value}</p>
+              {subtext && <p className="text-[10px] text-slate-400 font-medium mt-1 uppercase tracking-tight">{subtext}</p>}
+            </div>
+          )}
+        </div>
+      );
+    };
+
+    const ShareButton = ({ platform, icon, color, url, title }) => {
+        let shareUrl = '';
+        switch(platform) {
+            case 'facebook': shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${url}`; break;
+            case 'twitter': shareUrl = `https://twitter.com/intent/tweet?url=${url}&text=${title}`; break;
+            case 'linkedin': shareUrl = `https://www.linkedin.com/shareArticle?mini=true&url=${url}`; break;
+            case 'whatsapp': shareUrl = `https://api.whatsapp.com/send?text=${title}%20${url}`; break;
+            default: return null;
+        }
+        return (
+            <a href={shareUrl} target="_blank" rel="noopener noreferrer" className={`w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center text-white transition-transform hover:-translate-y-1 hover:shadow-lg ${color}`}>
+                <i className={`fab fa-${icon}`}></i>
+            </a>
+        );
+    };
+
+    const App = () => {
+      const [currency, setCurrency] = useState(currencies[0]);
+      const [revenue, setRevenue] = useState(1000);
+      const [cost, setCost] = useState(600);
+      const [showBookmarkToast, setShowBookmarkToast] = useState(false);
+
+      const calculations = useMemo(() => {
+        const rev = parseFloat(revenue) || 0;
+        const cst = parseFloat(cost) || 0;
+        
+        const grossProfit = rev - cst;
+        const margin = rev > 0 ? (grossProfit / rev) * 100 : 0;
+        const markup = cst > 0 ? (grossProfit / cst) * 100 : 0;
+
+        return { grossProfit, margin, markup };
+      }, [revenue, cost]);
+
+      const formatMoney = (amount) => {
+        return new Intl.NumberFormat(currency.locale, {
+          style: 'currency',
+          currency: currency.code,
+          maximumFractionDigits: 2
+        }).format(amount);
+      };
+
+      const applyPreset = (p) => {
+        if (p.margin !== undefined) {
+          // Revenue = Cost / (1 - Margin)
+          const newRev = cost / (1 - p.margin);
+          setRevenue(newRev.toFixed(2));
+        } else if (p.markup !== undefined) {
+          // Revenue = Cost * (1 + Markup)
+          const newRev = cost * (1 + p.markup);
+          setRevenue(newRev.toFixed(2));
+        }
+      };
+
+      const handleBookmark = () => {
+        setShowBookmarkToast(true);
+        setTimeout(() => setShowBookmarkToast(false), 3000);
+      };
+
+      const pageUrl = encodeURIComponent("https://simpliconvert.com/gross_margin_calculator/");
+      const pageTitle = encodeURIComponent("Check out this Gross Margin Calculator!");
+
+      return (
+        <div className="bg-white rounded-[2rem] shadow-2xl overflow-hidden border border-slate-100">
+          <header className="bg-slate-50/50 border-b border-slate-100 p-6 md:p-8 flex flex-col md:flex-row justify-between items-center gap-6">
+            <div className="text-center md:text-left">
+              <h2 className="text-2xl font-black text-slate-800 tracking-tight flex items-center justify-center md:justify-start gap-3">
+                <span className="bg-[#da3f0b] text-white p-2 rounded-xl text-lg shadow-lg shadow-[#da3f0b30]">
+                  <i className="fas fa-calculator"></i>
+                </span>
+                Business Profitability Tool
+              </h2>
+            </div>
+            <div className="relative group min-w-[140px]">
+              <select 
+                value={currency.code}
+                onChange={(e) => setCurrency(currencies.find(c => c.code === e.target.value))}
+                className="appearance-none w-full bg-white border border-slate-200 text-slate-700 py-2.5 pl-4 pr-10 rounded-xl text-xs font-bold focus:outline-none focus:ring-4 focus:ring-[#da3f0b15] focus:border-[#da3f0b] shadow-sm cursor-pointer hover:border-[#da3f0b40]"
+              >
+                {currencies.map(c => (
+                  <option key={c.code} value={c.code}>{c.code} ({c.symbol})</option>
+                ))}
+              </select>
+              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-slate-400">
+                <i className="fas fa-chevron-down text-[10px]"></i>
+              </div>
+            </div>
+          </header>
+
+          <main className="flex flex-col lg:flex-row">
+            <div className="lg:w-[50%] p-6 md:p-10 lg:p-12 border-r border-slate-100">
+              <div className="space-y-6">
+                <div className="bg-slate-50 p-6 rounded-2xl border border-slate-100">
+                  <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest mb-6"><i className="fas fa-file-invoice-dollar mr-2"></i>Financial Inputs</h3>
+                  <NumberInput 
+                    label="Revenue (Selling Price)" 
+                    value={revenue} 
+                    onChange={setRevenue} 
+                    prefix={currency.symbol}
+                    tooltip="The total amount of money received from sales."
+                  />
+                  <NumberInput 
+                    label="Cost of Goods Sold (COGS)" 
+                    value={cost} 
+                    onChange={setCost} 
+                    prefix={currency.symbol}
+                    tooltip="The direct costs of producing the goods sold by a company."
+                  />
+                </div>
+
+                <div className="bg-[#da3f0b08] p-6 rounded-2xl border border-[#da3f0b15]">
+                   <div className="flex justify-between items-center mb-6">
+                      <h3 className="text-xs font-black text-[#da3f0b] uppercase tracking-widest"><i className="fas fa-magic mr-2"></i>Quick Targets</h3>
+                   </div>
+                   <div className="grid grid-cols-2 gap-2">
+                      {Object.entries(presets).map(([key, p]) => (
+                        <button 
+                          key={key} 
+                          onClick={() => applyPreset(p)}
+                          className="text-[10px] bg-white border border-[#da3f0b20] text-[#da3f0b] px-3 py-2 rounded-lg font-bold hover:bg-[#da3f0b] hover:text-white transition-all shadow-sm"
+                        >
+                          {p.label}
+                        </button>
+                      ))}
+                   </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="lg:w-[50%] bg-slate-50/50 p-6 md:p-10 lg:p-12 flex flex-col justify-center">
+               <div className="space-y-6">
+                  <StatCard 
+                    isMain={true}
+                    label="Gross Margin Percentage"
+                    value={`${calculations.margin.toFixed(2)}%`}
+                    type={calculations.margin >= 0 ? 'profit' : 'loss'}
+                    subtext="Profit relative to selling price"
+                  />
+                  <div className="grid grid-cols-2 gap-4">
+                     <StatCard 
+                       label="Gross Profit" 
+                       value={formatMoney(calculations.grossProfit)}
+                       subtext="Total Earnings"
+                       type={calculations.grossProfit >= 0 ? 'profit' : 'loss'}
+                     />
+                     <StatCard 
+                       label="Markup" 
+                       value={`${calculations.markup.toFixed(2)}%`}
+                       subtext="Profit relative to cost"
+                     />
+                  </div>
+                  <div className="bg-white rounded-xl p-6 border border-slate-100 shadow-sm mt-4">
+                     <p className="text-xs text-slate-500 leading-relaxed">
+                       For every <strong>{currency.symbol}1.00</strong> in revenue, you keep <strong>{formatMoney(calculations.grossProfit / (revenue || 1))}</strong> after covering direct costs.
+                     </p>
+                  </div>
+               </div>
+            </div>
+          </main>
+
+          <footer className="bg-slate-50 border-t border-slate-100 p-6 md:p-8">
+             <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+                 <div className="text-center md:text-left">
+                     <h4 className="text-sm font-bold text-slate-700 mb-1">Share this tool</h4>
+                     <p className="text-xs text-slate-400">Help other entrepreneurs calculate their margins.</p>
+                 </div>
+                 <div className="flex flex-wrap justify-center gap-3">
+                     <ShareButton platform="facebook" icon="facebook-f" color="bg-[#1877F2]" url={pageUrl} title={pageTitle} />
+                     <ShareButton platform="twitter" icon="twitter" color="bg-[#1DA1F2]" url={pageUrl} title={pageTitle} />
+                     <ShareButton platform="linkedin" icon="linkedin-in" color="bg-[#0A66C2]" url={pageUrl} title={pageTitle} />
+                     <ShareButton platform="whatsapp" icon="whatsapp" color="bg-[#25D366]" url={pageUrl} title={pageTitle} />
+                 </div>
+                 <button onClick={handleBookmark} className="flex items-center gap-2 bg-white border border-slate-200 hover:border-[#da3f0b] hover:text-[#da3f0b] text-slate-600 px-4 py-2 rounded-lg text-sm font-bold transition-all shadow-sm">
+                    <i className="fas fa-bookmark"></i> Bookmark
+                 </button>
+             </div>
+          </footer>
+        </div>
+      );
+    };
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+    </script>
+
+    <section class="bg-white py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="prose prose-lg max-w-none prose-h2:text-gray-800 prose-p:text-gray-700">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">Master Your Business Finances with the Gross Margin Calculator</h2>
+                <p class="mb-6 leading-relaxed">
+                    Understanding your profitability is the first step toward building a sustainable business. Our <strong>Gross Margin Calculator</strong> provides instant clarity on your product pricing and financial health. Whether you are a retailer, a freelancer, or a manufacturing giant, knowing the difference between what you spend and what you earn is vital.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">What is Gross Margin?</h2>
+                <p class="mb-6 leading-relaxed">
+                    Gross margin is a financial metric that represents the percentage of revenue that exceeds the Cost of Goods Sold (COGS). It tells you how much of every dollar of sales you actually keep to cover your operating expenses and net profit. Unlike net profit, which accounts for all expenses (rent, marketing, salaries), gross margin focuses strictly on the direct costs of production or acquisition.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Margin vs. Markup: Don't Get Confused</h2>
+                <p class="mb-6 leading-relaxed">
+                    One of the most common mistakes in business is using margin and markup interchangeably. 
+                </p>
+                <ul class="list-disc pl-6 mb-6 space-y-2 text-gray-700">
+                    <li><strong>Gross Margin:</strong> Calculated as a percentage of the <em>selling price</em>. If you sell for $100 and it cost $70, your margin is 30%.</li>
+                    <li><strong>Markup:</strong> Calculated as a percentage of the <em>cost</em>. Using the same example, your markup is 42.8% ($30 profit divided by $70 cost).</li>
+                </ul>
+                <p class="mb-6 leading-relaxed">
+                    Our tool calculates both simultaneously, ensuring you never underprice your products again.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Key Features of Our Profit Margin Tool</h2>
+                <ul class="list-disc pl-6 mb-6 space-y-2 text-gray-700">
+                    <li><strong>Instant Calculations:</strong> See your gross profit and margin percentages update in real-time as you type.</li>
+                    <li><strong>Multi-Currency Support:</strong> Switch between USD, EUR, GBP, and more to suit your local market.</li>
+                    <li><strong>Quick Presets:</strong> Use our built-in buttons to see what revenue you need to hit specific margin targets like 20% or 50%.</li>
+                    <li><strong>Mobile Optimized:</strong> Calculate your margins on the go, whether you're at a trade show or in a client meeting.</li>
+                </ul>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">How to Improve Your Gross Margin</h2>
+                <p class="mb-6 leading-relaxed">
+                    If your margins are lower than industry standards, consider these strategies:
+                </p>
+                <ol class="list-decimal pl-6 mb-6 space-y-2 text-gray-700">
+                    <li><strong>Reduce COGS:</strong> Negotiate better rates with suppliers or find more efficient production methods.</li>
+                    <li><strong>Increase Prices:</strong> Even a small price increase can significantly boost your margin if your volume remains steady.</li>
+                    <li><strong>Optimize Product Mix:</strong> Focus on selling more of your high-margin items and phasing out low-margin products.</li>
+                </ol>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-center text-gray-900 mb-8">Gross Margin FAQ</h2>
+            <div class="space-y-4">
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>What is a "good" gross margin?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">
+                            A "good" margin varies by industry. Software companies often have margins above 80%, while grocery stores might operate on 5-10% margins. Compare your results against industry benchmarks to see how you stack up.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>Does gross margin include taxes?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">
+                            Generally, gross margin is calculated using revenue and COGS before income taxes. However, direct sales taxes or duties that are part of the cost of acquiring goods should be included in the COGS.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>How often should I calculate my margins?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">
+                            You should review your margins at least quarterly, or whenever your supplier costs change. Frequent monitoring allows you to adjust prices before a dip in profitability becomes a crisis.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 pb-16">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-slate-200 pt-16">
+            <h2 class="text-2xl font-bold text-center text-slate-800 mb-10">Explore More Business Tools</h2>
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+                <a href="/freelance_hourly_rate_calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0 group-hover:bg-emerald-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-calculator text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Rate Calc</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Calculate freelance hourly rates.</p>
+                    </div>
+                </a>
+                <a href="/crypto_profit_calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-orange-50 text-orange-600 flex items-center justify-center shrink-0 group-hover:bg-orange-600 group-hover:text-white transition-colors">
+                        <i class="fab fa-bitcoin text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Crypto Calc</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Track your crypto P&L.</p>
+                    </div>
+                </a>
+                <a href="/password_generator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-slate-50 text-slate-700 flex items-center justify-center shrink-0 group-hover:bg-slate-800 group-hover:text-white transition-colors">
+                        <i class="fas fa-key text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Password Gen</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Secure random passwords.</p>
+                    </div>
+                </a>
+                <a href="/meta_tag_generator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0 group-hover:bg-indigo-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-search text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Meta Tag Gen</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Optimize SEO with tags.</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <div id="footer"></div>
+
+    <script>
+    async function loadComponent(url, elementId, callback) {
+        try {
+            const response = await fetch(url);
+            if (!response.ok) throw new Error('Status: ' + response.status);
+            const text = await response.text();
+            const element = document.getElementById(elementId);
+            if (element) {
+                element.innerHTML = text;
+                if (callback) callback();
+            }
+        } catch (error) {
+            console.error('Error loading component:', error);
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        loadComponent('/components/navbar.html', 'navbar');
+        loadComponent('/components/footer.html', 'footer', () => {
+            const yearSpan = document.getElementById('current-year');
+            if(yearSpan) yearSpan.textContent = new Date().getFullYear();
+        });
+        
+        document.addEventListener('click', (e) => {
+            if (e.target.closest('[data-faq-toggle]')) {
+                const button = e.target.closest('[data-faq-toggle]');
+                const answer = button.nextElementSibling;
+                const icon = button.querySelector('.faq-icon');
+                const isOpening = !answer.style.maxHeight;
+
+                if (isOpening) {
+                    answer.style.maxHeight = answer.scrollHeight + "px";
+                    icon.classList.remove('-rotate-90');
+                    icon.classList.add('rotate-90');
+                } else {
+                    answer.style.maxHeight = null;
+                    icon.classList.remove('rotate-90');
+                    icon.classList.add('-rotate-90');
+                }
+            }
+        });
+    });
+    </script>
+</body>
+</html>

@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Image To Base64 Converter – Convert Images to Data URI | SimpliConvert</title>
+    <meta name="description" content="Convert image files into Base64 strings for direct HTML embedding using our Image To Base64 Converter. Supports PNG, JPG, and GIF formats.">
+    <meta name="keywords" content="image to base64, convert image to string, image data uri, base64 encoder image, png to base64, jpg to base64, base64 image encoder online">
+    <meta name="author" content="SimpliConvert">
+    <meta property="og:site_name" content="SimpliConvert">
+    <meta name="robots" content="index, follow">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://simpliconvert.com/image_to_base64_converter/">
+    <meta property="og:title" content="Image To Base64 Converter – Encode Images Online">
+    <meta property="og:description" content="Quickly convert any image into a Base64 string. Perfect for embedding images directly into HTML or CSS files.">
+    <meta property="og:image" content="https://simpliconvert.com/images/image-to-base64-og.jpg">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://simpliconvert.com/image_to_base64_converter/">
+    <meta name="twitter:title" content="Image To Base64 Converter – Fast & Secure">
+    <meta name="twitter:description" content="Free tool to encode images to Base64 strings. Supports JPG, PNG, GIF, and WebP. No server uploads required.">
+    <meta name="twitter:image" content="https://simpliconvert.com/images/image-to-base64-og.jpg">
+
+    <link rel="canonical" href="https://simpliconvert.com/image_to_base64_converter/">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Image To Base64 Converter",
+      "url": "https://simpliconvert.com/image_to_base64_converter/",
+      "description": "A free online tool to convert images (PNG, JPG, GIF, WebP) into Base64 encoded strings for use in HTML, CSS, and JSON.",
+      "applicationCategory": "DeveloperApplication",
+      "operatingSystem": "Web Browser",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "SimpliConvert",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://simpliconvert.com/logo.png"
+        }
+      }
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [{
+        "@type": "Question",
+        "name": "What is an Image to Base64 converter?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "It is a tool that transforms binary image data into a text-based string format. This allows you to embed images directly into HTML, CSS, or JSON files without needing to host a separate image file."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Does converting an image to Base64 increase its size?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes, Base64 encoding typically increases the file size by about 33% compared to the original binary file. It is best used for small icons or images to reduce HTTP requests."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Is my data safe when using this tool?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Absolutely. Our converter processes images locally in your browser using JavaScript. Your images are never uploaded to our servers, ensuring total privacy."
+        }
+      }]
+    }
+    </script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #da3f0b;
+            --primary-hover: #b53409;
+            --primary-light: #fff5f2;
+            --bg: #f8fafc;
+            --text-dark: #0f172a;
+            --success: #16a34a;
+            --danger: #dc2626;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text-dark);
+        }
+
+        .hero-card {
+            background: white;
+            border: 1px solid #f1f5f9;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background-color: var(--primary);
+        }
+
+        .prose a {
+            color: #da3f0b;
+            text-decoration: none; 
+        }
+        .prose a:hover {
+            text-decoration: underline; 
+        }
+
+        .animate-fade { animation: fadeIn 0.3s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+        .tool-card {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .tool-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+        }
+
+        .drop-zone {
+            border: 2px dashed #e2e8f0;
+            transition: all 0.2s ease;
+        }
+        .drop-zone.active {
+            border-color: var(--primary);
+            background-color: var(--primary-light);
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 min-h-screen flex flex-col">
+    <div id="navbar"></div>
+
+    <section class="hero-white text-black py-2 md:py-10">
+        <div class="container mx-auto px-4 text-center">
+            <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-2">Image To Base64 Converter</h1>
+            <p class="text-lg md:text-xl max-w-3x1 mx-auto mb-2">
+                Instantly encode your images into Base64 strings. Perfect for embedding icons and small graphics directly into your code.
+            </p>
+        </div>
+    </section>
+
+    <div id="root" class="w-full max-w-6xl mx-auto p-4 sm:p-6"></div>
+
+    <script type="text/babel">
+    const { useState, useCallback } = React;
+
+    const App = () => {
+      const [base64, setBase64] = useState('');
+      const [fileName, setFileName] = useState('');
+      const [fileSize, setFileSize] = useState('');
+      const [fileType, setFileType] = useState('');
+      const [isDragging, setIsDragging] = useState(false);
+      const [copySuccess, setCopySuccess] = useState(false);
+      const [preview, setPreview] = useState(null);
+
+      const processFile = (file) => {
+        if (!file || !file.type.startsWith('image/')) {
+          alert('Please upload a valid image file.');
+          return;
+        }
+
+        setFileName(file.name);
+        setFileType(file.type);
+        setFileSize((file.size / 1024).toFixed(2) + ' KB');
+        
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const result = e.target.result;
+          setBase64(result);
+          setPreview(result);
+        };
+        reader.readAsDataURL(file);
+      };
+
+      const onDrop = useCallback((e) => {
+        e.preventDefault();
+        setIsDragging(false);
+        const file = e.dataTransfer.files[0];
+        processFile(file);
+      }, []);
+
+      const onFileChange = (e) => {
+        const file = e.target.files[0];
+        processFile(file);
+      };
+
+      const copyToClipboard = () => {
+        navigator.clipboard.writeText(base64);
+        setCopySuccess(true);
+        setTimeout(() => setCopySuccess(false), 2000);
+      };
+
+      const downloadTxt = () => {
+        const element = document.createElement("a");
+        const file = new Blob([base64], {type: 'text/plain'});
+        element.href = URL.createObjectURL(file);
+        element.download = `${fileName.split('.')[0]}_base64.txt`;
+        document.body.appendChild(element);
+        element.click();
+      };
+
+      const reset = () => {
+        setBase64('');
+        setFileName('');
+        setPreview(null);
+      };
+
+      return (
+        <div className="bg-white rounded-[2rem] shadow-2xl overflow-hidden border border-slate-100">
+          <header className="bg-slate-50/50 border-b border-slate-100 p-6 md:p-8 flex flex-col md:flex-row justify-between items-center gap-6">
+            <div className="text-center md:text-left">
+              <h2 className="text-2xl font-black text-slate-800 tracking-tight flex items-center justify-center md:justify-start gap-3">
+                <span className="bg-[#da3f0b] text-white p-2 rounded-xl text-lg shadow-lg shadow-[#da3f0b30]">
+                  <i className="fas fa-code"></i>
+                </span>
+                Base64 Image Encoder
+              </h2>
+            </div>
+            <div className="flex gap-3">
+                {base64 && (
+                    <button onClick={reset} className="text-xs font-bold text-slate-400 hover:text-red-500 transition-colors uppercase tracking-widest">
+                        <i className="fas fa-trash-alt mr-1"></i> Clear
+                    </button>
+                )}
+            </div>
+          </header>
+
+          <main className="flex flex-col lg:flex-row">
+            {/* Input Panel */}
+            <div className="lg:w-[40%] p-6 md:p-10 lg:p-12 border-r border-slate-100">
+              <div 
+                className={`drop-zone rounded-3xl p-8 text-center cursor-pointer ${isDragging ? 'active' : ''}`}
+                onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
+                onDragLeave={() => setIsDragging(false)}
+                onDrop={onDrop}
+                onClick={() => document.getElementById('fileInput').click()}
+              >
+                <input 
+                  type="file" 
+                  id="fileInput" 
+                  className="hidden" 
+                  accept="image/*" 
+                  onChange={onFileChange}
+                />
+                <div className="mb-4">
+                  <i className={`fas fa-cloud-upload-alt text-5xl ${isDragging ? 'text-[#da3f0b]' : 'text-slate-300'}`}></i>
+                </div>
+                <h3 className="text-lg font-bold text-slate-700 mb-2">
+                  {fileName ? fileName : 'Select an Image'}
+                </h3>
+                <p className="text-sm text-slate-400">
+                  Drag and drop or click to browse<br/>
+                  <span className="text-[10px] uppercase font-bold tracking-widest mt-2 block">Supports PNG, JPG, GIF, WebP</span>
+                </p>
+              </div>
+
+              {preview && (
+                <div className="mt-8 animate-fade">
+                    <h4 className="text-xs font-black text-slate-400 uppercase tracking-widest mb-4">Image Preview</h4>
+                    <div className="bg-slate-50 rounded-2xl p-4 border border-slate-100 flex items-center justify-center min-h-[200px]">
+                        <img src={preview} alt="Preview" className="max-w-full max-h-[300px] rounded-lg shadow-sm" />
+                    </div>
+                    <div className="mt-4 grid grid-cols-2 gap-4">
+                        <div className="bg-slate-50 p-3 rounded-xl border border-slate-100">
+                            <p className="text-[10px] font-bold text-slate-400 uppercase">Size</p>
+                            <p className="text-sm font-bold text-slate-700">{fileSize}</p>
+                        </div>
+                        <div className="bg-slate-50 p-3 rounded-xl border border-slate-100">
+                            <p className="text-[10px] font-bold text-slate-400 uppercase">Type</p>
+                            <p className="text-sm font-bold text-slate-700">{fileType.split('/')[1].toUpperCase()}</p>
+                        </div>
+                    </div>
+                </div>
+              )}
+            </div>
+
+            {/* Output Panel */}
+            <div className="lg:w-[60%] bg-slate-50/50 p-6 md:p-10 lg:p-12">
+               <div className="h-full flex flex-col">
+                  <div className="flex justify-between items-center mb-4">
+                    <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest">Base64 String Output</h3>
+                    {base64 && (
+                        <div className="flex gap-2">
+                            <button 
+                                onClick={copyToClipboard}
+                                className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold transition-all ${copySuccess ? 'bg-green-500 text-white' : 'bg-white border border-slate-200 text-slate-600 hover:border-[#da3f0b] hover:text-[#da3f0b]'}`}
+                            >
+                                <i className={`fas ${copySuccess ? 'fa-check' : 'fa-copy'}`}></i>
+                                {copySuccess ? 'Copied!' : 'Copy String'}
+                            </button>
+                            <button 
+                                onClick={downloadTxt}
+                                className="flex items-center gap-2 bg-white border border-slate-200 text-slate-600 hover:border-[#da3f0b] hover:text-[#da3f0b] px-4 py-2 rounded-lg text-xs font-bold transition-all"
+                            >
+                                <i className="fas fa-download"></i> Download .txt
+                            </button>
+                        </div>
+                    )}
+                  </div>
+
+                  <div className="relative flex-grow min-h-[300px]">
+                    <textarea
+                        readOnly
+                        placeholder="Your Base64 string will appear here..."
+                        className="w-full h-full min-h-[400px] bg-white border border-slate-200 rounded-2xl p-6 text-xs font-mono text-slate-600 focus:ring-4 focus:ring-[#da3f0b10] focus:border-[#da3f0b] outline-none resize-none shadow-inner"
+                        value={base64}
+                    ></textarea>
+                    {!base64 && (
+                        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                            <div className="text-center opacity-20">
+                                <i className="fas fa-terminal text-6xl mb-4"></i>
+                                <p className="font-bold">Waiting for input...</p>
+                            </div>
+                        </div>
+                    )}
+                  </div>
+
+                  {base64 && (
+                    <div className="mt-6 p-4 bg-[#da3f0b08] rounded-xl border border-[#da3f0b15] animate-fade">
+                        <p className="text-[11px] text-slate-500 leading-relaxed">
+                            <strong className="text-[#da3f0b]">Pro Tip:</strong> Use this string in your HTML like this: 
+                            <code className="bg-white px-2 py-1 rounded ml-1 border border-slate-200 text-[10px] block mt-2">
+                                &lt;img src="data:image/png;base64,..." /&gt;
+                            </code>
+                        </p>
+                    </div>
+                  )}
+               </div>
+            </div>
+          </main>
+        </div>
+      );
+    };
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+    </script>
+
+    <section class="bg-white py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="prose prose-lg max-w-none prose-h2:text-gray-800 prose-p:text-gray-700">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">Image To Base64 Converter – Embed Images Anywhere</h2>
+                <p class="mb-6 leading-relaxed">
+                    Our <strong>Image To Base64 Converter</strong> is a powerful, browser-based utility designed for developers, designers, and content creators. 
+                    Base64 encoding allows you to transform binary image data into a text string, which can be embedded directly into HTML, CSS, or JSON files. 
+                    This technique is widely used to optimize website performance by reducing the number of HTTP requests required to load a page.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Why Use Base64 for Images?</h2>
+                <p class="mb-6 leading-relaxed">
+                    While hosting images as separate files is standard, there are several scenarios where a <strong>base64 encoder image</strong> tool is superior:
+                </p>
+                <ul class="list-disc pl-6 mb-6 space-y-2 text-gray-700">
+                    <li><strong>Reduce Latency:</strong> By embedding small icons or logos directly into your CSS or HTML, you eliminate the need for the browser to make extra server requests.</li>
+                    <li><strong>Email Templates:</strong> Many email clients struggle with external image hosting. Using a <em>convert image to string</em> method ensures your graphics show up instantly.</li>
+                    <li><strong>Data Portability:</strong> If you are sharing a single HTML file or a JSON object, embedding the image as Base64 ensures the file is self-contained and won't have broken links.</li>
+                    <li><strong>Offline Applications:</strong> For apps that need to work without an internet connection, Base64 strings allow images to be stored locally within the code.</li>
+                </ul>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">How to Convert Image to Base64 String</h2>
+                <p class="mb-6 leading-relaxed">
+                    Using our tool is simple and requires no technical knowledge. Follow these steps:
+                </p>
+                <ol class="list-decimal pl-6 mb-6 space-y-2 text-gray-700">
+                    <li><strong>Upload:</strong> Drag and drop your image (PNG, JPG, GIF, or WebP) into the upload zone or click to select a file.</li>
+                    <li><strong>Encode:</strong> The tool automatically generates the <strong>image data URI</strong> string instantly.</li>
+                    <li><strong>Copy:</strong> Click the "Copy String" button to save the result to your clipboard.</li>
+                    <li><strong>Implement:</strong> Paste the string into your <code>&lt;img src="..."&gt;</code> tag or CSS <code>background-image: url(...)</code> property.</li>
+                </ol>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Security and Privacy</h2>
+                <p class="mb-6 leading-relaxed">
+                    Unlike other online converters, our <strong>image to base64</strong> tool processes everything client-side. 
+                    This means your image never leaves your computer and is never uploaded to our servers. 
+                    It is the safest way to handle sensitive graphics or private assets.
+                </p>
+                
+                <p class="mb-6 leading-relaxed">
+                    Just as our <a href="https://simpliconvert.com/password_generator/" target="_blank">Password Generator</a> ensures your security through local generation, 
+                    this converter prioritizes your data privacy by keeping all processing within your browser session.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Best Practices for Base64 Encoding</h2>
+                <p class="mb-6 leading-relaxed">
+                    While Base64 is useful, it's important to use it correctly. Because Base64 strings are roughly 33% larger than the original binary files, 
+                    we recommend using this tool primarily for small assets like icons, cursors, or tiny decorative elements. 
+                    For large high-resolution photographs, traditional file hosting remains the better option for bandwidth efficiency.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-center text-gray-900 mb-8">Frequently Asked Questions</h2>
+            <div class="space-y-4">
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>What image formats are supported?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">
+                            Our converter supports all major web formats, including PNG, JPEG, JPG, GIF, WebP, and SVG.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>Is there a file size limit?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">
+                            While there is no hard limit, we recommend keeping images under 1MB for Base64 conversion. Large strings can slow down your code editors and increase page load times significantly.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>How do I use the Base64 string in CSS?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">
+                            In your CSS file, you can use it like this: <code>.my-class { background-image: url("data:image/png;base64,YOUR_STRING_HERE"); }</code>.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 pb-16">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-slate-200 pt-16">
+            <h2 class="text-2xl font-bold text-center text-slate-800 mb-10">Popular Tools on SimpliConvert</h2>
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+                <a href="/password_generator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-slate-50 text-slate-700 flex items-center justify-center shrink-0 group-hover:bg-slate-800 group-hover:text-white transition-colors">
+                        <i class="fas fa-key text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Password Gen</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Create secure, random passwords.</p>
+                    </div>
+                </a>
+
+                <a href="/image_resizer/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center shrink-0 group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-image text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Image Resizer</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Resize images without quality loss.</p>
+                    </div>
+                </a>
+
+                <a href="/qr_code_generator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-slate-50 text-slate-800 flex items-center justify-center shrink-0 group-hover:bg-slate-900 group-hover:text-white transition-colors">
+                        <i class="fas fa-qrcode text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">QR Creator</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Generate custom QR codes instantly.</p>
+                    </div>
+                </a>
+
+                <a href="/meta_tag_generator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0 group-hover:bg-indigo-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-search text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Meta Tag Gen</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Optimize SEO with custom tags.</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <div id="footer"></div>
+
+    <script>
+    async function loadComponent(url, elementId, callback) {
+        try {
+            const response = await fetch(url);
+            if (!response.ok) throw new Error('Status: ' + response.status);
+            const text = await response.text();
+            const element = document.getElementById(elementId);
+            if (element) {
+                element.innerHTML = text;
+                if (callback) callback();
+            }
+        } catch (error) {
+            console.error('Error loading component:', error);
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        loadComponent('/components/navbar.html', 'navbar');
+        loadComponent('/components/footer.html', 'footer', () => {
+            const yearSpan = document.getElementById('current-year');
+            if(yearSpan) yearSpan.textContent = new Date().getFullYear();
+        });
+        
+        const faqToggles = document.querySelectorAll('[data-faq-toggle]');
+        faqToggles.forEach(button => {
+            button.addEventListener('click', () => {
+                const answer = button.nextElementSibling;
+                const icon = button.querySelector('.faq-icon');
+                const isOpening = !answer.style.maxHeight;
+
+                faqToggles.forEach(other => {
+                    if (other !== button) {
+                        other.nextElementSibling.style.maxHeight = null;
+                        other.querySelector('.faq-icon').classList.remove('rotate-90');
+                        other.querySelector('.faq-icon').classList.add('-rotate-90');
+                    }
+                });
+
+                if (isOpening) {
+                    answer.style.maxHeight = answer.scrollHeight + "px";
+                    icon.classList.remove('-rotate-90');
+                    icon.classList.add('rotate-90');
+                } else {
+                    answer.style.maxHeight = null;
+                    icon.classList.remove('rotate-90');
+                    icon.classList.add('-rotate-90');
+                }
+            });
+        });
+    });
+    </script>
+</body>
+</html>
