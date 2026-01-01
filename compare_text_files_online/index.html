@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Compare Text Files Online – Free Text Diff Checker | SimpliConvert</title>
+    <meta name="description" content="Compare two text files or documents online. Instantly highlight differences, additions, and deletions with our free side-by-side text diff tool.">
+    <meta name="keywords" content="compare text files online, text diff checker, find differences in text, online diff tool, compare documents, line by line text comparison">
+    <meta name="author" content="SimpliConvert">
+    <meta property="og:site_name" content="SimpliConvert">
+    <meta name="robots" content="index, follow">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://simpliconvert.com/compare_text_files_online/">
+    <meta property="og:title" content="Compare Text Files Online – Spot Differences Instantly">
+    <meta property="og:description" content="Paste two documents to Compare Text Files Online. Instantly spot the differences, added lines, and removed text in a clear side-by-side view.">
+    <meta property="og:image" content="https://simpliconvert.com/images/text-compare-og.jpg">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://simpliconvert.com/compare_text_files_online/">
+    <meta name="twitter:title" content="Compare Text Files Online – Text Diff Checker">
+    <meta name="twitter:description" content="Free tool to compare two text snippets or files. Highlights changes line-by-line. Perfect for developers and writers.">
+    <meta name="twitter:image" content="https://simpliconvert.com/images/text-compare-og.jpg">
+
+    <link rel="canonical" href="https://simpliconvert.com/compare_text_files_online/">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Compare Text Files Online",
+      "url": "https://simpliconvert.com/compare_text_files_online/",
+      "description": "A free online tool to compare two text files or documents and highlight differences, additions, and deletions in a side-by-side view.",
+      "applicationCategory": "UtilityApplication",
+      "operatingSystem": "Web Browser",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "SimpliConvert",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://simpliconvert.com/logo.png"
+        }
+      }
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [{
+        "@type": "Question",
+        "name": "How do I compare two text files online?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Simply paste your original text into the 'Original Text' box and the modified version into the 'Changed Text' box. The tool will instantly highlight added lines in green and removed lines in red."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Is my data safe when using this text diff tool?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. All text comparison happens locally in your browser. Your text is never uploaded to our servers, ensuring your data remains private and secure."
+        }
+      }, {
+        "@type": "Question",
+        "name": "What does the red and green highlighting mean?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Red highlighting indicates text that was present in the original version but has been removed. Green highlighting indicates new text that has been added to the changed version."
+        }
+      }]
+    }
+    </script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #da3f0b;
+            --primary-hover: #b53409;
+            --primary-light: #fff5f2;
+            --bg: #f8fafc;
+            --text-dark: #0f172a;
+            --success: #16a34a;
+            --danger: #dc2626;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text-dark);
+        }
+
+        .hero-card {
+            background: white;
+            border: 1px solid #f1f5f9;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background-color: var(--primary);
+        }
+
+        .prose a {
+            color: #da3f0b;
+            text-decoration: none; 
+        }
+        .prose a:hover {
+            text-decoration: underline; 
+        }
+
+        .diff-added { background-color: #dcfce7; color: #166534; }
+        .diff-removed { background-color: #fee2e2; color: #991b1b; text-decoration: line-through; }
+        .diff-empty { background-color: #f1f5f9; }
+
+        .animate-fade { animation: fadeIn 0.3s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+        .tool-card {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .tool-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+        }
+        
+        textarea {
+            resize: vertical;
+            min-height: 200px;
+        }
+        
+        .diff-container {
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 min-h-screen flex flex-col">
+    <div id="navbar"></div>
+
+    <section class="hero-white text-black py-2 md:py-10">
+        <div class="container mx-auto px-4 text-center">
+            <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-2">Compare Text Files Online</h1>
+            <p class="text-lg md:text-xl max-w-3x1 mx-auto mb-2">
+                Instantly find differences between two documents. A clean, side-by-side text diff tool for writers, coders, and editors.
+            </p>
+        </div>
+    </section>
+
+    <div id="root" class="w-full max-w-6xl mx-auto p-4 sm:p-6"></div>
+
+    <script type="text/babel">
+    const { useState, useEffect, useMemo } = React;
+
+    const ShareButton = ({ platform, icon, color, url, title }) => {
+        let shareUrl = '';
+        switch(platform) {
+            case 'facebook': shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${url}`; break;
+            case 'twitter': shareUrl = `https://twitter.com/intent/tweet?url=${url}&text=${title}`; break;
+            case 'linkedin': shareUrl = `https://www.linkedin.com/shareArticle?mini=true&url=${url}`; break;
+            case 'whatsapp': shareUrl = `https://api.whatsapp.com/send?text=${title}%20${url}`; break;
+            case 'reddit': shareUrl = `https://www.reddit.com/submit?url=${url}&title=${title}`; break;
+            case 'telegram': shareUrl = `https://t.me/share/url?url=${url}&text=${title}`; break;
+            default: return null;
+        }
+
+        return (
+            <a 
+                href={shareUrl} 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className={`w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center text-white transition-transform hover:-translate-y-1 hover:shadow-lg ${color}`}
+            >
+                <i className={`fab fa-${icon}`}></i>
+            </a>
+        );
+    };
+
+    const App = () => {
+      const [text1, setText1] = useState('');
+      const [text2, setText2] = useState('');
+      const [diff, setDiff] = useState([]);
+      const [showBookmarkToast, setShowBookmarkToast] = useState(false);
+
+      const compareTexts = () => {
+        const lines1 = text1.split('\n');
+        const lines2 = text2.split('\n');
+        const maxLines = Math.max(lines1.length, lines2.length);
+        const result = [];
+
+        for (let i = 0; i < maxLines; i++) {
+          const l1 = lines1[i] || null;
+          const l2 = lines2[i] || null;
+
+          if (l1 === l2) {
+            result.push({ type: 'unchanged', left: l1, right: l2 });
+          } else {
+            result.push({ type: 'changed', left: l1, right: l2 });
+          }
+        }
+        setDiff(result);
+      };
+
+      const clearAll = () => {
+        setText1('');
+        setText2('');
+        setDiff([]);
+      };
+
+      const handleBookmark = () => {
+        setShowBookmarkToast(true);
+        setTimeout(() => setShowBookmarkToast(false), 3000);
+      };
+
+      const pageUrl = encodeURIComponent("https://simpliconvert.com/compare_text_files_online/");
+      const pageTitle = encodeURIComponent("Compare Text Files Online - Free Diff Tool");
+
+      return (
+        <div className="bg-white rounded-[2rem] shadow-2xl overflow-hidden border border-slate-100">
+          <header className="bg-slate-50/50 border-b border-slate-100 p-6 md:p-8 flex flex-col md:flex-row justify-between items-center gap-6">
+            <div className="text-center md:text-left">
+              <h2 className="text-2xl font-black text-slate-800 tracking-tight flex items-center justify-center md:justify-start gap-3">
+                <span className="bg-[#da3f0b] text-white p-2 rounded-xl text-lg shadow-lg shadow-[#da3f0b30]">
+                  <i className="fas fa-columns"></i>
+                </span>
+                Text Diff Checker
+              </h2>
+            </div>
+            <div className="flex gap-3">
+                <button 
+                    onClick={compareTexts}
+                    className="bg-[#da3f0b] text-white px-6 py-2.5 rounded-xl font-bold hover:bg-[#b53409] transition-all shadow-lg shadow-[#da3f0b30]"
+                >
+                    Compare Now
+                </button>
+                <button 
+                    onClick={clearAll}
+                    className="bg-white border border-slate-200 text-slate-600 px-6 py-2.5 rounded-xl font-bold hover:bg-slate-50 transition-all"
+                >
+                    Clear
+                </button>
+            </div>
+          </header>
+
+          <main className="p-6 md:p-10">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-10">
+                <div>
+                    <label className="block text-xs font-black text-slate-400 uppercase tracking-widest mb-3">Original Text (Left)</label>
+                    <textarea 
+                        className="w-full p-4 border border-slate-200 rounded-2xl focus:ring-4 focus:ring-[#da3f0b15] focus:border-[#da3f0b] outline-none font-mono text-sm"
+                        placeholder="Paste original text here..."
+                        value={text1}
+                        onChange={(e) => setText1(e.target.value)}
+                    ></textarea>
+                </div>
+                <div>
+                    <label className="block text-xs font-black text-slate-400 uppercase tracking-widest mb-3">Changed Text (Right)</label>
+                    <textarea 
+                        className="w-full p-4 border border-slate-200 rounded-2xl focus:ring-4 focus:ring-[#da3f0b15] focus:border-[#da3f0b] outline-none font-mono text-sm"
+                        placeholder="Paste modified text here..."
+                        value={text2}
+                        onChange={(e) => setText2(e.target.value)}
+                    ></textarea>
+                </div>
+            </div>
+
+            {diff.length > 0 && (
+                <div className="animate-fade">
+                    <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest mb-4 flex items-center gap-2">
+                        <i className="fas fa-eye text-[#da3f0b]"></i> Comparison Result
+                    </h3>
+                    <div className="border border-slate-200 rounded-2xl overflow-hidden shadow-sm">
+                        <div className="grid grid-cols-2 bg-slate-50 border-b border-slate-200 text-[10px] font-black text-slate-400 uppercase tracking-widest">
+                            <div className="p-3 border-r border-slate-200">Original</div>
+                            <div className="p-3">Modified</div>
+                        </div>
+                        <div className="diff-container bg-white divide-y divide-slate-100">
+                            {diff.map((line, idx) => (
+                                <div key={idx} className="grid grid-cols-2">
+                                    <div className={`p-2 border-r border-slate-200 break-all whitespace-pre-wrap ${line.type === 'changed' && line.left ? 'diff-removed' : (!line.left ? 'diff-empty' : '')}`}>
+                                        {line.left || ' '}
+                                    </div>
+                                    <div className={`p-2 break-all whitespace-pre-wrap ${line.type === 'changed' && line.right ? 'diff-added' : (!line.right ? 'diff-empty' : '')}`}>
+                                        {line.right || ' '}
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+            )}
+          </main>
+
+          <footer className="bg-slate-50 border-t border-slate-100 p-6 md:p-8">
+             <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+                 <div className="text-center md:text-left">
+                     <h4 className="text-sm font-bold text-slate-700 mb-1">Share this tool</h4>
+                     <p className="text-xs text-slate-400">Help others compare documents easily.</p>
+                 </div>
+                 
+                 <div className="flex flex-wrap justify-center gap-3">
+                     <ShareButton platform="facebook" icon="facebook-f" color="bg-[#1877F2]" url={pageUrl} title={pageTitle} />
+                     <ShareButton platform="twitter" icon="twitter" color="bg-[#1DA1F2]" url={pageUrl} title={pageTitle} />
+                     <ShareButton platform="linkedin" icon="linkedin-in" color="bg-[#0A66C2]" url={pageUrl} title={pageTitle} />
+                     <ShareButton platform="whatsapp" icon="whatsapp" color="bg-[#25D366]" url={pageUrl} title={pageTitle} />
+                     <ShareButton platform="reddit" icon="reddit-alien" color="bg-[#FF4500]" url={pageUrl} title={pageTitle} />
+                     <ShareButton platform="telegram" icon="telegram-plane" color="bg-[#0088cc]" url={pageUrl} title={pageTitle} />
+                 </div>
+
+                 <div className="relative">
+                     <button 
+                        onClick={handleBookmark}
+                        className="flex items-center gap-2 bg-white border border-slate-200 hover:border-[#da3f0b] hover:text-[#da3f0b] text-slate-600 px-4 py-2 rounded-lg text-sm font-bold transition-all shadow-sm active:scale-95"
+                     >
+                        <i className="fas fa-bookmark"></i> Bookmark
+                     </button>
+                     {showBookmarkToast && (
+                         <div className="absolute bottom-full mb-3 left-1/2 -translate-x-1/2 bg-slate-800 text-white text-xs py-2 px-4 rounded-lg shadow-lg whitespace-nowrap animate-fade">
+                             Press <span className="font-bold text-[#da3f0b]">Ctrl + D</span> to bookmark
+                         </div>
+                     )}
+                 </div>
+             </div>
+          </footer>
+        </div>
+      );
+    };
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+    </script>
+
+    <section class="bg-white py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="prose prose-lg max-w-none prose-h2:text-gray-800 prose-p:text-gray-700">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">Compare Text Files Online – Spot Every Change</h2>
+                <p class="mb-6 leading-relaxed">
+                    Manually comparing two versions of a document is tedious and prone to error. Whether you are a developer checking code changes, a writer reviewing edits, or a student comparing essay drafts, our <strong>Compare Text Files Online</strong> tool provides a fast, accurate, and visual way to see exactly what has changed.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Why Use an Online Text Diff Checker?</h2>
+                <p class="mb-6 leading-relaxed">
+                    A text diff tool (short for "difference") analyzes two sets of data and highlights the variations. Our tool is designed for simplicity and speed. Instead of opening complex software, you can simply paste your text and get a side-by-side comparison in seconds.
+                </p>
+                <ul class="list-disc pl-6 mb-6 space-y-2 text-gray-700">
+                    <li><strong>Visual Highlighting:</strong> Instantly see additions in green and deletions in red.</li>
+                    <li><strong>Side-by-Side View:</strong> Compare the original and modified versions line-by-line.</li>
+                    <li><strong>Privacy First:</strong> Your text is processed entirely in your browser. We never store or see your data.</li>
+                    <li><strong>Zero Installation:</strong> No need to download heavy software like WinMerge or DiffMerge.</li>
+                </ul>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">How to Use the Text Comparison Tool</h2>
+                <p class="mb-6 leading-relaxed">
+                    Using our tool is straightforward. Follow these simple steps to compare your documents:
+                </p>
+                <ol class="list-decimal pl-6 mb-6 space-y-2 text-gray-700">
+                    <li>Paste your original text into the left-hand box labeled "Original Text".</li>
+                    <li>Paste the updated or modified version into the right-hand box labeled "Changed Text".</li>
+                    <li>Click the <strong>"Compare Now"</strong> button.</li>
+                    <li>Review the results below, where differences are clearly highlighted.</li>
+                </ol>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Perfect for Developers, Writers, and Legal Professionals</h2>
+                <p class="mb-6 leading-relaxed">
+                    This tool is versatile enough for various professional needs. Developers can use it as a quick <em>online diff tool</em> to check code snippets. Writers can use it to track revisions in their manuscripts. Legal professionals can use it to compare contract versions to ensure no unauthorized changes were made.
+                </p>
+                <p class="mb-6 leading-relaxed">
+                    Just as our <a href="https://simpliconvert.com/meta_tag_generator/" target="_blank">Meta Tag Generator</a> helps you optimize your website's SEO, this comparison tool helps you maintain the integrity of your written content.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Key Features of Our Diff Tool</h2>
+                <p class="mb-6 leading-relaxed">
+                    We’ve built this tool to be the most efficient <strong>text diff checker</strong> available online. It handles large blocks of text smoothly and provides a clean interface that focuses on the content. By using a line-based comparison algorithm, we ensure that even small punctuation changes are caught.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-center text-gray-900 mb-8">Frequently Asked Questions</h2>
+            <div class="space-y-4">
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>Can I compare code with this tool?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">
+                            Absolutely. This tool works perfectly for comparing source code, JSON, HTML, or any other plain text format. It highlights changes line-by-line, making it easy to spot logic changes or syntax errors.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>Is there a character limit?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">
+                            While there is no hard limit, very large files (several megabytes) may slow down your browser. For standard documents, articles, and code files, the tool performs instantly.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>Does it support Word or PDF files?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">
+                            Currently, the tool supports plain text. To compare Word or PDF documents, simply copy the text from your document and paste it into the input fields.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 pb-16">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-slate-200 pt-16">
+            <h2 class="text-2xl font-bold text-center text-slate-800 mb-10">Explore More Tools</h2>
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+                <a href="/password_generator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-slate-50 text-slate-700 flex items-center justify-center shrink-0 group-hover:bg-slate-800 group-hover:text-white transition-colors">
+                        <i class="fas fa-key text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Password Gen</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Create secure, random passwords.</p>
+                    </div>
+                </a>
+                <a href="/image_resizer/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center shrink-0 group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-image text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Image Resizer</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Resize images without quality loss.</p>
+                    </div>
+                </a>
+                <a href="/split_pdf/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-red-50 text-red-600 flex items-center justify-center shrink-0 group-hover:bg-red-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-cut text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Split PDF</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Extract pages from PDF documents.</p>
+                    </div>
+                </a>
+                <a href="/qr_code_generator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-slate-50 text-slate-800 flex items-center justify-center shrink-0 group-hover:bg-slate-900 group-hover:text-white transition-colors">
+                        <i class="fas fa-qrcode text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">QR Creator</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Generate custom QR codes instantly.</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <div id="footer"></div>
+
+    <script>
+    async function loadComponent(url, elementId, callback) {
+        try {
+            const response = await fetch(url);
+            if (!response.ok) throw new Error('Status: ' + response.status);
+            const text = await response.text();
+            const element = document.getElementById(elementId);
+            if (element) {
+                element.innerHTML = text;
+                if (callback) callback();
+            }
+        } catch (error) {
+            console.error('Error loading component:', error);
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        loadComponent('/components/navbar.html', 'navbar');
+        loadComponent('/components/footer.html', 'footer');
+        
+        const faqToggles = document.querySelectorAll('[data-faq-toggle]');
+        faqToggles.forEach(button => {
+            button.addEventListener('click', () => {
+                const answer = button.nextElementSibling;
+                const icon = button.querySelector('.faq-icon');
+                const isOpening = !answer.style.maxHeight;
+
+                faqToggles.forEach(other => {
+                    if (other !== button) {
+                        other.nextElementSibling.style.maxHeight = null;
+                        other.querySelector('.faq-icon').classList.remove('rotate-90');
+                        other.querySelector('.faq-icon').classList.add('-rotate-90');
+                    }
+                });
+
+                if (isOpening) {
+                    answer.style.maxHeight = answer.scrollHeight + "px";
+                    icon.classList.remove('-rotate-90');
+                    icon.classList.add('rotate-90');
+                } else {
+                    answer.style.maxHeight = null;
+                    icon.classList.remove('rotate-90');
+                    icon.classList.add('-rotate-90');
+                }
+            });
+        });
+    });
+    </script>
+</body>
+</html>

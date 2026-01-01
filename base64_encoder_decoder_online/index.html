@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Base64 Encoder Decoder Online – Fast & Secure String Converter | SimpliConvert</title>
+    <meta name="description" content="Securely convert text to Base64 strings and back with our Base64 Encoder Decoder Online. A fast, client-side tool for developers to encode and decode strings instantly.">
+    <meta name="keywords" content="base64 encoder decoder online, convert text to base64, base64 decode, string converter, online base64 tool, developer tools, utf8 base64 converter">
+    <meta name="author" content="SimpliConvert">
+    <meta property="og:site_name" content="SimpliConvert">
+    <meta name="robots" content="index, follow">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://simpliconvert.com/base64_encoder_decoder_online/">
+    <meta property="og:title" content="Base64 Encoder Decoder Online – Fast & Secure">
+    <meta property="og:description" content="Instantly encode text to Base64 or decode Base64 strings. Secure, client-side processing for developers.">
+    <meta property="og:image" content="https://simpliconvert.com/images/base64-converter-og.jpg">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://simpliconvert.com/base64_encoder_decoder_online/">
+    <meta name="twitter:title" content="Base64 Encoder Decoder Online – String Converter">
+    <meta name="twitter:description" content="Free online tool to encode and decode Base64 strings. Fast, reliable, and handles UTF-8 characters.">
+    <meta name="twitter:image" content="https://simpliconvert.com/images/base64-converter-og.jpg">
+
+    <link rel="canonical" href="https://simpliconvert.com/base64_encoder_decoder_online/">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Base64 Encoder Decoder Online",
+      "url": "https://simpliconvert.com/base64_encoder_decoder_online/",
+      "description": "A free online tool for developers to encode text into Base64 format and decode Base64 strings back to plain text securely in the browser.",
+      "applicationCategory": "DeveloperApplication",
+      "operatingSystem": "Web Browser",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "SimpliConvert",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://simpliconvert.com/logo.png"
+        }
+      }
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [{
+        "@type": "Question",
+        "name": "What is Base64 encoding used for?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Base64 encoding is primarily used to transmit binary data over media that are designed to deal with textual data. This ensures that the data remains intact without modification during transport, commonly used in email attachments and Data URIs."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Is Base64 encoding the same as encryption?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "No, Base64 is an encoding scheme, not encryption. It does not use keys and is easily reversible. It should never be used to secure sensitive data; its purpose is data representation, not data secrecy."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Does this tool support UTF-8 characters?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes, our Base64 tool is designed to handle UTF-8 characters (like emojis and non-Latin scripts) correctly, ensuring that special characters are preserved during both encoding and decoding processes."
+        }
+      }]
+    }
+    </script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #da3f0b;
+            --primary-hover: #b53409;
+            --primary-light: #fff5f2;
+            --bg: #f8fafc;
+            --text-dark: #0f172a;
+            --success: #16a34a;
+            --danger: #dc2626;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text-dark);
+        }
+
+        .hero-card {
+            background: white;
+            border: 1px solid #f1f5f9;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background-color: var(--primary);
+        }
+
+        .prose a {
+            color: #da3f0b;
+            text-decoration: none; 
+        }
+        .prose a:hover {
+            text-decoration: underline; 
+        }
+
+        .animate-fade { animation: fadeIn 0.3s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+        .tool-card {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .tool-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 200px;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 min-h-screen flex flex-col">
+    <div id="navbar"></div>
+
+    <section class="hero-white text-black py-2 md:py-10">
+        <div class="container mx-auto px-4 text-center">
+            <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-2">Base64 Encoder Decoder Online</h1>
+            <p class="text-lg md:text-xl max-w-3x1 mx-auto mb-2">
+                Convert text to Base64 or decode Base64 strings instantly. Secure, browser-based processing for developers and data specialists.
+            </p>
+        </div>
+    </section>
+
+    <div id="root" class="w-full max-w-6xl mx-auto p-4 sm:p-6"></div>
+
+    <script type="text/babel">
+    const { useState, useEffect } = React;
+
+    const App = () => {
+      const [input, setInput] = useState('');
+      const [output, setOutput] = useState('');
+      const [mode, setMode] = useState('encode'); // 'encode' or 'decode'
+      const [error, setError] = useState('');
+      const [copyStatus, setCopyStatus] = useState(false);
+      const [showBookmarkToast, setShowBookmarkToast] = useState(false);
+
+      const handleConversion = (val, currentMode) => {
+        setInput(val);
+        setError('');
+        
+        if (!val) {
+          setOutput('');
+          return;
+        }
+
+        try {
+          if (currentMode === 'encode') {
+            // UTF-8 safe encoding
+            const encoded = btoa(unescape(encodeURIComponent(val)));
+            setOutput(encoded);
+          } else {
+            // UTF-8 safe decoding
+            const decoded = decodeURIComponent(escape(atob(val)));
+            setOutput(decoded);
+          }
+        } catch (e) {
+          setOutput('');
+          setError(currentMode === 'decode' ? 'Invalid Base64 string provided.' : 'Error encoding string.');
+        }
+      };
+
+      const toggleMode = (newMode) => {
+        setMode(newMode);
+        // Swap input and output for convenience
+        const currentOutput = output;
+        const currentInput = input;
+        setInput(currentOutput);
+        handleConversion(currentOutput, newMode);
+      };
+
+      const handleCopy = () => {
+        if (!output) return;
+        navigator.clipboard.writeText(output);
+        setCopyStatus(true);
+        setTimeout(() => setCopyStatus(false), 2000);
+      };
+
+      const handleClear = () => {
+        setInput('');
+        setOutput('');
+        setError('');
+      };
+
+      const handleBookmark = () => {
+        setShowBookmarkToast(true);
+        setTimeout(() => setShowBookmarkToast(false), 3000);
+      };
+
+      const pageUrl = encodeURIComponent("https://simpliconvert.com/base64_encoder_decoder_online/");
+      const pageTitle = encodeURIComponent("Base64 Encoder Decoder Online - Fast & Secure");
+
+      return (
+        <div className="bg-white rounded-[2rem] shadow-2xl overflow-hidden border border-slate-100">
+          <header className="bg-slate-50/50 border-b border-slate-100 p-6 md:p-8 flex flex-col md:flex-row justify-between items-center gap-6">
+            <div className="text-center md:text-left">
+              <h2 className="text-2xl font-black text-slate-800 tracking-tight flex items-center justify-center md:justify-start gap-3">
+                <span className="bg-[#da3f0b] text-white p-2 rounded-xl text-lg shadow-lg shadow-[#da3f0b30]">
+                  <i className="fas fa-code"></i>
+                </span>
+                Base64 String Converter
+              </h2>
+            </div>
+            
+            <div className="flex bg-slate-100 p-1 rounded-xl">
+              <button 
+                onClick={() => toggleMode('encode')}
+                className={`px-6 py-2 rounded-lg text-xs font-bold transition-all ${mode === 'encode' ? 'bg-white text-[#da3f0b] shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
+              >
+                ENCODE
+              </button>
+              <button 
+                onClick={() => toggleMode('decode')}
+                className={`px-6 py-2 rounded-lg text-xs font-bold transition-all ${mode === 'decode' ? 'bg-white text-[#da3f0b] shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
+              >
+                DECODE
+              </button>
+            </div>
+          </header>
+
+          <main className="flex flex-col lg:flex-row">
+            {/* Input Panel */}
+            <div className="lg:w-[50%] p-6 md:p-10 border-r border-slate-100">
+              <div className="flex justify-between items-center mb-4">
+                <label className="text-xs font-black text-slate-400 uppercase tracking-widest">
+                  {mode === 'encode' ? 'Plain Text Input' : 'Base64 Input'}
+                </label>
+                <button onClick={handleClear} className="text-xs font-bold text-slate-400 hover:text-[#dc2626] transition-colors">
+                  <i className="fas fa-trash-alt mr-1"></i> Clear
+                </button>
+              </div>
+              <textarea
+                className="w-full p-4 rounded-2xl border border-slate-200 focus:ring-4 focus:ring-[#da3f0b20] focus:border-[#da3f0b] outline-none font-mono text-sm text-slate-700 bg-slate-50/30 transition-all"
+                placeholder={mode === 'encode' ? "Enter text to encode..." : "Paste Base64 string here..."}
+                value={input}
+                onChange={(e) => handleConversion(e.target.value, mode)}
+              ></textarea>
+              {error && <p className="mt-2 text-xs font-bold text-[#dc2626] animate-fade"><i className="fas fa-exclamation-circle mr-1"></i> {error}</p>}
+            </div>
+
+            {/* Output Panel */}
+            <div className="lg:w-[50%] bg-slate-50/50 p-6 md:p-10 flex flex-col">
+              <div className="flex justify-between items-center mb-4">
+                <label className="text-xs font-black text-slate-400 uppercase tracking-widest">
+                  {mode === 'encode' ? 'Base64 Output' : 'Plain Text Output'}
+                </label>
+                <button 
+                  onClick={handleCopy}
+                  disabled={!output}
+                  className={`text-xs font-bold transition-colors ${copyStatus ? 'text-[#16a34a]' : 'text-[#da3f0b] hover:text-[#b53409]'} disabled:opacity-50`}
+                >
+                  <i className={`fas ${copyStatus ? 'fa-check' : 'fa-copy'} mr-1`}></i> {copyStatus ? 'Copied!' : 'Copy Result'}
+                </button>
+              </div>
+              <textarea
+                className="w-full p-4 rounded-2xl border border-slate-200 bg-white font-mono text-sm text-slate-700 outline-none cursor-default"
+                readOnly
+                placeholder="Result will appear here..."
+                value={output}
+              ></textarea>
+              
+              <div className="mt-6 p-4 bg-white rounded-xl border border-slate-100 shadow-sm">
+                <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Quick Info</h4>
+                <p className="text-xs text-slate-600 leading-relaxed">
+                  {mode === 'encode' 
+                    ? "Encoding converts your text into a format that uses only 64 characters, making it safe for URL parameters and data transmission." 
+                    : "Decoding reverses Base64 strings back into their original human-readable or binary format."}
+                </p>
+              </div>
+            </div>
+          </main>
+
+          {/* Share & Bookmark Footer */}
+          <footer className="bg-slate-50 border-t border-slate-100 p-6 md:p-8">
+             <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+                 <div className="text-center md:text-left">
+                     <h4 className="text-sm font-bold text-slate-700 mb-1">Share this tool</h4>
+                     <p className="text-xs text-slate-400">Help other developers with fast encoding.</p>
+                 </div>
+                 
+                 <div className="flex flex-wrap justify-center gap-3">
+                    <a href={`https://www.facebook.com/sharer/sharer.php?u=${pageUrl}`} target="_blank" className="w-10 h-10 rounded-full flex items-center justify-center text-white bg-[#1877F2] hover:-translate-y-1 transition-all"><i className="fab fa-facebook-f"></i></a>
+                    <a href={`https://twitter.com/intent/tweet?url=${pageUrl}&text=${pageTitle}`} target="_blank" className="w-10 h-10 rounded-full flex items-center justify-center text-white bg-[#1DA1F2] hover:-translate-y-1 transition-all"><i className="fab fa-twitter"></i></a>
+                    <a href={`https://api.whatsapp.com/send?text=${pageTitle}%20${pageUrl}`} target="_blank" className="w-10 h-10 rounded-full flex items-center justify-center text-white bg-[#25D366] hover:-translate-y-1 transition-all"><i className="fab fa-whatsapp"></i></a>
+                 </div>
+
+                 <div className="relative">
+                     <button 
+                        onClick={handleBookmark}
+                        className="flex items-center gap-2 bg-white border border-slate-200 hover:border-[#da3f0b] hover:text-[#da3f0b] text-slate-600 px-4 py-2 rounded-lg text-sm font-bold transition-all shadow-sm active:scale-95"
+                     >
+                        <i className="fas fa-bookmark"></i> Bookmark
+                     </button>
+                     {showBookmarkToast && (
+                         <div className="absolute bottom-full mb-3 left-1/2 -translate-x-1/2 bg-slate-800 text-white text-xs py-2 px-4 rounded-lg shadow-lg whitespace-nowrap animate-fade">
+                             Press <span className="font-bold text-[#da3f0b]">Ctrl + D</span> to bookmark
+                         </div>
+                     )}
+                 </div>
+             </div>
+          </footer>
+        </div>
+      );
+    };
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+    </script>
+
+
+  <section class="bg-white py-12 sm:py-16">
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="prose prose-lg max-w-none prose-h2:text-gray-800 prose-p:text-gray-700">
+
+      <h2 class="text-3xl font-bold text-gray-900 mb-4">Base64 Encoder Decoder Online – Essential Tool for Developers</h2>
+      <p class="mb-6 leading-relaxed">
+        In the world of web development and data transmission, <strong>Base64 encoding</strong> plays a vital role. 
+        Our <strong>Base64 Encoder Decoder Online</strong> provides a seamless way to transform plain text into 
+        Base64 format and vice versa. Whether you are embedding images into CSS, handling API authentication headers, 
+        or obfuscating simple strings for data transport, this tool offers a fast, secure, and client-side solution.
+      </p>
+
+      <h2 class="text-2xl font-bold mt-8 mb-4">What is Base64 Encoding?</h2>
+      <p class="mb-6 leading-relaxed">
+        Base64 is a group of binary-to-text encoding schemes that represent binary data in an ASCII string format. 
+        It works by dividing every three bits of binary data into four 6-bit units. These units are then mapped to 
+        the 64 characters in the Base64 alphabet (A-Z, a-z, 0-9, +, and /). This ensures that data remains 
+        unmodified during transport through systems that may not be 8-bit clean, such as email via SMTP.
+      </p>
+
+      <h2 class="text-2xl font-bold mt-8 mb-4">Key Features of Our Base64 Converter</h2>
+      <ul class="list-disc pl-6 mb-6 space-y-2 text-gray-700">
+        <li><strong>Real-time Conversion:</strong> Results appear instantly as you type or paste your content.</li>
+        <li><strong>UTF-8 Support:</strong> Unlike basic tools, we handle special characters and emojis correctly using modern browser standards.</li>
+        <li><strong>Privacy First:</strong> All processing happens locally in your browser. Your data is never sent to our servers.</li>
+        <li><strong>Two-Way Functionality:</strong> Easily switch between encoding and decoding modes with a single click.</li>
+        <li><strong>Clean Interface:</strong> Designed for productivity with "Copy to Clipboard" and "Clear" functions.</li>
+      </ul>
+
+      <h2 class="text-2xl font-bold mt-8 mb-4">Common Use Cases for Base64</h2>
+      <p class="mb-6 leading-relaxed">
+        Developers use Base64 for a variety of tasks every day:
+      </p>
+      <ul class="list-disc pl-6 mb-6 space-y-2 text-gray-700">
+        <li><strong>Data URIs:</strong> Embedding small images or fonts directly into HTML or CSS files to reduce HTTP requests.</li>
+        <li><strong>Basic Auth:</strong> Encoding usernames and passwords for HTTP Basic Authentication headers.</li>
+        <li><strong>Web APIs:</strong> Passing complex data structures through URL parameters safely.</li>
+        <li><strong>Email Attachments:</strong> Converting binary files into text format for transmission over legacy email protocols.</li>
+      </ul>
+        <p class="mb-6 leading-relaxed">
+  Just as our <a href="https://simpliconvert.com/meta_tag_generator/" target="_blank">Meta Tag Generator</a> helps you structure your website's metadata, 
+  the <strong>Base64 Encoder Decoder</strong> helps you structure your data for safe transmission across different platforms.
+</p>
+
+      <h2 class="text-2xl font-bold mt-8 mb-4">Is Base64 Secure?</h2>
+      <p class="mb-6 leading-relaxed">
+        It is a common misconception that Base64 is a form of encryption. <strong>It is not.</strong> 
+        Base64 is an encoding method used for data representation. Anyone with a decoder can easily revert a 
+        Base64 string back to its original form. You should never use Base64 to "secure" passwords or 
+        sensitive personal information without actual encryption layers like AES or RSA.
+      </p>
+
+      <h2 class="text-2xl font-bold mt-8 mb-4">How to Use the Base64 Tool</h2>
+      <p class="mb-6 leading-relaxed">
+        Using our tool is straightforward:
+      </p>
+      <ol class="list-decimal pl-6 mb-6 space-y-2 text-gray-700">
+        <li>Select either <strong>Encode</strong> or <strong>Decode</strong> mode from the top toggle.</li>
+        <li>Type or paste your text into the input box on the left.</li>
+        <li>The result will automatically appear in the output box on the right.</li>
+        <li>Click <strong>Copy Result</strong> to save the output to your clipboard.</li>
+      </ol>
+
+      <h2 class="text-2xl font-bold mt-8 mb-4">Final Thoughts</h2>
+      <p class="mb-6 leading-relaxed">
+        The <strong>Base64 Encoder Decoder Online</strong> is a must-have in your developer toolkit. 
+        By providing a reliable way to handle string conversions without server-side risks, SimpliConvert 
+        ensures your workflow remains fast and secure. Bookmark this page for your next debugging or 
+        development session!
+      </p>
+    </div>
+    </div>
+    </section>
+  
+
+    <section class="bg-gray-50 py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-center text-gray-900 mb-8">Frequently Asked Questions</h2>
+            <div class="space-y-4">
+                
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-primary">
+                        <span>What is the difference between encoding and decoding?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">
+                            Encoding is the process of converting plain text or binary data into the Base64 character set. Decoding is the reverse process, taking a Base64 string and converting it back to its original readable or binary format.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-primary">
+                        <span>Why does my Base64 string end with '='?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">
+                            The '=' character is used for padding. Since Base64 encoding requires groups of 3 bytes to create 4 characters, if the input data isn't a multiple of 3, padding characters are added to the end to complete the final group.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-primary">
+                        <span>Is it safe to paste my data here?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">
+                            Yes. This tool uses client-side JavaScript, meaning all encoding and decoding happens directly in your browser. Your data never leaves your computer and is never sent to our servers.
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 pb-16">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-slate-200 pt-16">
+            <h2 class="text-2xl font-bold text-center text-slate-800 mb-10">Popular Tools on SimpliConvert</h2>
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+                
+                <a href="/password_generator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-slate-50 text-slate-700 flex items-center justify-center shrink-0 group-hover:bg-slate-800 group-hover:text-white transition-colors">
+                        <i class="fas fa-key text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Password Gen</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Create secure, random passwords.</p>
+                    </div>
+                </a>
+
+                <a href="/qr_code_generator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-slate-50 text-slate-800 flex items-center justify-center shrink-0 group-hover:bg-slate-900 group-hover:text-white transition-colors">
+                        <i class="fas fa-qrcode text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">QR Creator</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Generate custom QR codes instantly.</p>
+                    </div>
+                </a>
+
+                <a href="/meta_tag_generator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0 group-hover:bg-indigo-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-search text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Meta Tag Gen</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Optimize SEO with custom tags.</p>
+                    </div>
+                </a>
+
+                <a href="/crypto_profit_calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-orange-50 text-orange-600 flex items-center justify-center shrink-0 group-hover:bg-orange-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-chart-line text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Crypto Calc</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Calculate crypto P&L and ROI.</p>
+                    </div>
+                </a>
+
+            </div>
+        </div>
+    </section>
+
+    <div id="footer"></div>
+
+    <script>
+    function initializeHeaderScripts() {
+        const header = document.getElementById('header');
+        if (header) {
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 10) {
+                    header.classList.add('scrolled-effect');
+                } else {
+                    header.classList.remove('scrolled-effect');
+                }
+            });
+        }
+    }
+    
+    function initializeFooterScripts() {
+        const yearSpan = document.getElementById('current-year');
+        if(yearSpan) {
+            yearSpan.textContent = new Date().getFullYear();
+        }
+    }
+
+    async function loadComponent(url, elementId, callback) {
+        try {
+            const response = await fetch(url);
+            if (!response.ok) throw new Error('Status: ' + response.status);
+            const text = await response.text();
+            const element = document.getElementById(elementId);
+            if (element) {
+                element.innerHTML = text;
+                if (callback) callback();
+            }
+        } catch (error) {
+            console.error('Error loading component:', error);
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        loadComponent('/components/navbar.html', 'navbar', initializeHeaderScripts);
+        loadComponent('/components/footer.html', 'footer', initializeFooterScripts);
+        
+        const faqToggles = document.querySelectorAll('[data-faq-toggle]');
+        faqToggles.forEach(button => {
+            button.addEventListener('click', () => {
+                const answer = button.nextElementSibling;
+                const icon = button.querySelector('.faq-icon');
+                const isOpening = !answer.style.maxHeight;
+
+                faqToggles.forEach(other => {
+                    if (other !== button) {
+                        other.nextElementSibling.style.maxHeight = null;
+                        other.querySelector('.faq-icon').classList.remove('rotate-90');
+                        other.querySelector('.faq-icon').classList.add('-rotate-90');
+                    }
+                });
+
+                if (isOpening) {
+                    answer.style.maxHeight = answer.scrollHeight + "px";
+                    icon.classList.remove('-rotate-90');
+                    icon.classList.add('rotate-90');
+                } else {
+                    answer.style.maxHeight = null;
+                    icon.classList.remove('rotate-90');
+                    icon.classList.add('-rotate-90');
+                }
+            });
+        });
+    });
+    </script>
+</body>
+</html>

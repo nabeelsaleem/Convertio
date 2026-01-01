@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Online Text Case Converter – Uppercase, Lowercase & Title Case | SimpliConvert</title>
+    <meta name="description" content="Easily switch between uppercase, lowercase, title case, and sentence case with our Online Text Case Converter. A simple tool to format your text instantly for free.">
+    <meta name="keywords" content="online text case converter, uppercase to lowercase, title case generator, convert text case, sentence case converter, text formatter, change case online">
+    <meta name="author" content="SimpliConvert">
+    <meta property="og:site_name" content="SimpliConvert">
+    <meta name="robots" content="index, follow">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://simpliconvert.com/online_text_case_converter/">
+    <meta property="og:title" content="Online Text Case Converter – Format Your Text Instantly">
+    <meta property="og:description" content="Quickly change text case online. Convert to uppercase, lowercase, title case, and more with one click.">
+    <meta property="og:image" content="https://simpliconvert.com/images/text-case-converter-og.jpg">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://simpliconvert.com/online_text_case_converter/">
+    <meta name="twitter:title" content="Online Text Case Converter – Free Text Formatter">
+    <meta name="twitter:description" content="Free tool to convert text to any case: Sentence case, Lowercase, Uppercase, and Title Case.">
+    <meta name="twitter:image" content="https://simpliconvert.com/images/text-case-converter-og.jpg">
+
+    <link rel="canonical" href="https://simpliconvert.com/online_text_case_converter/">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Online Text Case Converter",
+      "url": "https://simpliconvert.com/online_text_case_converter/",
+      "description": "A free online tool to convert text between different cases including uppercase, lowercase, sentence case, and title case.",
+      "applicationCategory": "UtilitiesApplication",
+      "operatingSystem": "Web Browser",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "SimpliConvert",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://simpliconvert.com/logo.png"
+        }
+      }
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [{
+        "@type": "Question",
+        "name": "What is Title Case?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Title Case capitalizes the first letter of every word in a string. It is commonly used for book titles, headlines, and formal documents."
+        }
+      }, {
+        "@type": "Question",
+        "name": "How do I convert uppercase text to lowercase?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Simply paste your text into our converter and click the 'lower case' button. All capital letters will be instantly transformed into small letters."
+        }
+      }, {
+        "@type": "Question",
+        "name": "What does Sentence Case do?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Sentence case capitalizes the first letter of the first word in every sentence and converts the rest to lowercase, following standard grammatical rules for sentences."
+        }
+      }]
+    }
+    </script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #da3f0b;
+            --primary-hover: #b53409;
+            --primary-light: #fff5f2;
+            --bg: #f8fafc;
+            --text-dark: #0f172a;
+            --success: #16a34a;
+            --danger: #dc2626;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text-dark);
+        }
+
+        .hero-card {
+            background: white;
+            border: 1px solid #f1f5f9;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background-color: var(--primary);
+        }
+
+        .prose a {
+            color: #da3f0b;
+            text-decoration: none; 
+        }
+        .prose a:hover {
+            text-decoration: underline; 
+        }
+
+        .animate-fade { animation: fadeIn 0.3s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+        .tool-card {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .tool-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+        }
+
+        textarea::placeholder {
+            color: #cbd5e1;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 min-h-screen flex flex-col">
+    <div id="navbar"></div>
+
+    <section class="hero-white text-black py-2 md:py-10">
+        <div class="container mx-auto px-4 text-center">
+            <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-2">Online Text Case Converter</h1>
+            <p class="text-lg md:text-xl max-w-3x1 mx-auto mb-2">
+                Instantly transform your text between uppercase, lowercase, title case, and sentence case. The simplest way to format your content for any platform.
+            </p>
+        </div>
+    </section>
+
+    <div id="root" class="w-full max-w-6xl mx-auto p-4 sm:p-6"></div>
+
+    <script type="text/babel">
+    const { useState, useEffect } = React;
+
+    const App = () => {
+      const [text, setText] = useState('');
+      const [copyStatus, setCopyStatus] = useState(false);
+      const [showBookmarkToast, setShowBookmarkToast] = useState(false);
+
+      const stats = {
+        characters: text.length,
+        words: text.trim() === '' ? 0 : text.trim().split(/\s+/).length,
+        lines: text.trim() === '' ? 0 : text.split('\n').length
+      };
+
+      const handleCopy = () => {
+        navigator.clipboard.writeText(text);
+        setCopyStatus(true);
+        setTimeout(() => setCopyStatus(false), 2000);
+      };
+
+      const handleClear = () => setText('');
+
+      const toSentenceCase = () => {
+        const result = text.toLowerCase().replace(/(^\s*\w|[\.\!\?]\s*\w)/g, c => c.toUpperCase());
+        setText(result);
+      };
+
+      const toLowerCase = () => setText(text.toLowerCase());
+      const toUpperCase = () => setText(text.toUpperCase());
+      
+      const toCapitalizedCase = () => {
+        const result = text.toLowerCase().split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+        setText(result);
+      };
+
+      const toTitleCase = () => {
+        const smallWords = /^(a|an|and|as|at|but|by|en|for|if|in|of|on|or|the|to|v\.?|via|vs\.?)$/i;
+        const result = text.toLowerCase().split(' ').map((word, index, array) => {
+          if (index > 0 && index < array.length - 1 && word.match(smallWords)) {
+            return word.toLowerCase();
+          }
+          return word.charAt(0).toUpperCase() + word.slice(1);
+        }).join(' ');
+        setText(result);
+      };
+
+      const toAlternatingCase = () => {
+        const result = text.split('').map((c, i) => i % 2 === 0 ? c.toLowerCase() : c.toUpperCase()).join('');
+        setText(result);
+      };
+
+      const handleBookmark = () => {
+        setShowBookmarkToast(true);
+        setTimeout(() => setShowBookmarkToast(false), 3000);
+      };
+
+      const pageUrl = encodeURIComponent("https://simpliconvert.com/online_text_case_converter/");
+      const pageTitle = encodeURIComponent("Check out this Online Text Case Converter!");
+
+      return (
+        <div className="bg-white rounded-[2rem] shadow-2xl overflow-hidden border border-slate-100">
+          <header className="bg-slate-50/50 border-b border-slate-100 p-6 md:p-8 flex flex-col md:flex-row justify-between items-center gap-6">
+            <div className="text-center md:text-left">
+              <h2 className="text-2xl font-black text-slate-800 tracking-tight flex items-center justify-center md:justify-start gap-3">
+                <span className="bg-[#da3f0b] text-white p-2 rounded-xl text-lg shadow-lg shadow-[#da3f0b30]">
+                  <i className="fas fa-font"></i>
+                </span>
+                Text Case Formatter
+              </h2>
+            </div>
+            
+            <div className="flex gap-4">
+                <div className="text-center">
+                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Words</p>
+                    <p className="text-lg font-bold text-slate-700">{stats.words}</p>
+                </div>
+                <div className="w-px h-8 bg-slate-200 self-center"></div>
+                <div className="text-center">
+                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Characters</p>
+                    <p className="text-lg font-bold text-slate-700">{stats.characters}</p>
+                </div>
+            </div>
+          </header>
+
+          <main className="p-6 md:p-10">
+            <div className="flex flex-col gap-6">
+              <div className="relative">
+                <textarea
+                  className="w-full h-64 md:h-80 p-6 rounded-2xl border border-slate-200 focus:ring-4 focus:ring-[#da3f0b10] focus:border-[#da3f0b] outline-none transition-all text-slate-700 font-medium resize-none text-lg"
+                  placeholder="Type or paste your content here..."
+                  value={text}
+                  onChange={(e) => setText(e.target.value)}
+                ></textarea>
+                
+                <div className="absolute bottom-4 right-4 flex gap-2">
+                    <button 
+                        onClick={handleClear}
+                        className="bg-slate-100 hover:bg-slate-200 text-slate-600 px-4 py-2 rounded-lg text-xs font-bold transition-all"
+                    >
+                        <i className="fas fa-trash-alt mr-2"></i>Clear
+                    </button>
+                    <button 
+                        onClick={handleCopy}
+                        className={`${copyStatus ? 'bg-green-500' : 'bg-slate-800'} hover:opacity-90 text-white px-4 py-2 rounded-lg text-xs font-bold transition-all flex items-center`}
+                    >
+                        <i className={`fas ${copyStatus ? 'fa-check' : 'fa-copy'} mr-2`}></i>
+                        {copyStatus ? 'Copied!' : 'Copy Text'}
+                    </button>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
+                <button onClick={toSentenceCase} className="bg-white border-2 border-slate-100 hover:border-[#da3f0b] hover:text-[#da3f0b] py-3 px-2 rounded-xl font-bold text-sm transition-all shadow-sm">Sentence case</button>
+                <button onClick={toLowerCase} className="bg-white border-2 border-slate-100 hover:border-[#da3f0b] hover:text-[#da3f0b] py-3 px-2 rounded-xl font-bold text-sm transition-all shadow-sm">lower case</button>
+                <button onClick={toUpperCase} className="bg-white border-2 border-slate-100 hover:border-[#da3f0b] hover:text-[#da3f0b] py-3 px-2 rounded-xl font-bold text-sm transition-all shadow-sm">UPPER CASE</button>
+                <button onClick={toCapitalizedCase} className="bg-white border-2 border-slate-100 hover:border-[#da3f0b] hover:text-[#da3f0b] py-3 px-2 rounded-xl font-bold text-sm transition-all shadow-sm">Capitalized Case</button>
+                <button onClick={toTitleCase} className="bg-white border-2 border-slate-100 hover:border-[#da3f0b] hover:text-[#da3f0b] py-3 px-2 rounded-xl font-bold text-sm transition-all shadow-sm">Title Case</button>
+                <button onClick={toAlternatingCase} className="bg-white border-2 border-slate-100 hover:border-[#da3f0b] hover:text-[#da3f0b] py-3 px-2 rounded-xl font-bold text-sm transition-all shadow-sm">aLtErNaTiNg cAsE</button>
+              </div>
+            </div>
+          </main>
+
+          <footer className="bg-slate-50 border-t border-slate-100 p-6 md:p-8">
+             <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+                 <div className="text-center md:text-left">
+                     <h4 className="text-sm font-bold text-slate-700 mb-1">Share this tool</h4>
+                     <p className="text-xs text-slate-400">Help others format text faster.</p>
+                 </div>
+                 
+                 <div className="flex flex-wrap justify-center gap-3">
+                    <a href={`https://www.facebook.com/sharer/sharer.php?u=${pageUrl}`} target="_blank" className="w-10 h-10 rounded-full flex items-center justify-center text-white bg-[#1877F2] hover:-translate-y-1 transition-transform"><i className="fab fa-facebook-f"></i></a>
+                    <a href={`https://twitter.com/intent/tweet?url=${pageUrl}&text=${pageTitle}`} target="_blank" className="w-10 h-10 rounded-full flex items-center justify-center text-white bg-[#1DA1F2] hover:-translate-y-1 transition-transform"><i className="fab fa-twitter"></i></a>
+                    <a href={`https://api.whatsapp.com/send?text=${pageTitle}%20${pageUrl}`} target="_blank" className="w-10 h-10 rounded-full flex items-center justify-center text-white bg-[#25D366] hover:-translate-y-1 transition-transform"><i className="fab fa-whatsapp"></i></a>
+                 </div>
+
+                 <div className="relative">
+                     <button 
+                        onClick={handleBookmark}
+                        className="flex items-center gap-2 bg-white border border-slate-200 hover:border-[#da3f0b] hover:text-[#da3f0b] text-slate-600 px-4 py-2 rounded-lg text-sm font-bold transition-all shadow-sm active:scale-95"
+                     >
+                        <i className="fas fa-bookmark"></i> Bookmark
+                     </button>
+                     {showBookmarkToast && (
+                         <div className="absolute bottom-full mb-3 left-1/2 -translate-x-1/2 bg-slate-800 text-white text-xs py-2 px-4 rounded-lg shadow-lg whitespace-nowrap animate-fade">
+                             Press <span className="font-bold text-[#da3f0b]">Ctrl + D</span> to bookmark
+                         </div>
+                     )}
+                 </div>
+             </div>
+          </footer>
+        </div>
+      );
+    };
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+    </script>
+
+    <section class="bg-white py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="prose prose-lg max-w-none prose-h2:text-gray-800 prose-p:text-gray-700">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">The Ultimate Online Text Case Converter</h2>
+                <p class="mb-6 leading-relaxed">
+                    Have you ever typed out a long paragraph only to realize you left the <strong>Caps Lock</strong> on? Or perhaps you need to convert a list of names into a professional <strong>Title Case</strong> format for a report? Our <strong>Online Text Case Converter</strong> is the perfect solution for writers, students, and developers who need to adjust text formatting quickly without manual retyping.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Key Features of Our Case Converter</h2>
+                <p class="mb-6 leading-relaxed">
+                    This tool offers multiple conversion modes to suit every need:
+                </p>
+                <ul class="list-disc pl-6 mb-6 space-y-2 text-gray-700">
+                    <li><strong>Sentence Case:</strong> Capitalizes the first letter of each sentence, making it perfect for cleaning up copied text.</li>
+                    <li><strong>Lower Case:</strong> Converts all characters into small letters, useful for coding or URL slugs.</li>
+                    <li><strong>Upper Case:</strong> Transforms all text into capital letters for emphasis or headings.</li>
+                    <li><strong>Title Case:</strong> Capitalizes the first letter of every word while keeping minor words (like "and" or "the") lowercase.</li>
+                    <li><strong>Capitalized Case:</strong> Capitalizes the first letter of every single word.</li>
+                    <li><strong>Alternating Case:</strong> Switches between upper and lower case for a stylized look.</li>
+                </ul>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Why Use a Text Case Converter?</h2>
+                <p class="mb-6 leading-relaxed">
+                    Efficiency is key in digital content creation. Instead of manually editing every word, our tool allows you to process thousands of words in milliseconds. It’s particularly useful for social media managers who need to format captions, or developers who need to normalize data. 
+                </p>
+                <p class="mb-6 leading-relaxed">
+                    Just as our <a href="https://simpliconvert.com/meta_tag_generator/" target="_blank">Meta Tag Generator</a> helps you optimize SEO, this text converter ensures your content looks professional and readable across all platforms.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">How to Use the Tool</h2>
+                <p class="mb-6 leading-relaxed">
+                    Using the converter is simple:
+                    1. Paste your text into the input area.
+                    2. Choose your desired case from the buttons below.
+                    3. Click "Copy Text" to save the result to your clipboard.
+                    The tool also provides a live word and character count, helping you stay within limits for platforms like Twitter or Meta descriptions.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-center text-gray-900 mb-8">Frequently Asked Questions</h2>
+            <div class="space-y-4">
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>Is this text converter free to use?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">Yes, our Online Text Case Converter is 100% free with no registration required. You can convert as much text as you need.</p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>Does the tool save my text?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">No. All processing happens locally in your browser. Your text is never sent to our servers, ensuring your privacy and data security.</p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>What is the difference between Title Case and Capitalized Case?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">Capitalized Case capitalizes every single word. Title Case follows standard titling rules, keeping short prepositions and conjunctions (like 'of', 'and', 'the') in lowercase unless they are the first or last word.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 pb-16">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-slate-200 pt-16">
+            <h2 class="text-2xl font-bold text-center text-slate-800 mb-10">Popular Tools on SimpliConvert</h2>
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+                <a href="/password_generator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-slate-50 text-slate-700 flex items-center justify-center shrink-0 group-hover:bg-slate-800 group-hover:text-white transition-colors"><i class="fas fa-key text-lg"></i></div>
+                    <div><h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Password Gen</h3><p class="text-xs text-slate-500 leading-snug">Create secure passwords.</p></div>
+                </a>
+                <a href="/qr_code_generator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-slate-50 text-slate-800 flex items-center justify-center shrink-0 group-hover:bg-slate-900 group-hover:text-white transition-colors"><i class="fas fa-qrcode text-lg"></i></div>
+                    <div><h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">QR Creator</h3><p class="text-xs text-slate-500 leading-snug">Generate custom QR codes.</p></div>
+                </a>
+                <a href="/meta_tag_generator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0 group-hover:bg-indigo-600 group-hover:text-white transition-colors"><i class="fas fa-search text-lg"></i></div>
+                    <div><h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Meta Tag Gen</h3><p class="text-xs text-slate-500 leading-snug">Optimize SEO with tags.</p></div>
+                </a>
+                <a href="/to_do_list/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-green-50 text-green-600 flex items-center justify-center shrink-0 group-hover:bg-green-600 group-hover:text-white transition-colors"><i class="fas fa-check-square text-lg"></i></div>
+                    <div><h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">To-Do List</h3><p class="text-xs text-slate-500 leading-snug">Stay organized easily.</p></div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <div id="footer"></div>
+
+    <script>
+    async function loadComponent(url, elementId, callback) {
+        try {
+            const response = await fetch(url);
+            if (!response.ok) throw new Error('Status: ' + response.status);
+            const text = await response.text();
+            const element = document.getElementById(elementId);
+            if (element) {
+                element.innerHTML = text;
+                if (callback) callback();
+            }
+        } catch (error) {
+            console.error('Error loading component:', error);
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        loadComponent('/components/navbar.html', 'navbar');
+        loadComponent('/components/footer.html', 'footer');
+        
+        const faqToggles = document.querySelectorAll('[data-faq-toggle]');
+        faqToggles.forEach(button => {
+            button.addEventListener('click', () => {
+                const answer = button.nextElementSibling;
+                const icon = button.querySelector('.faq-icon');
+                const isOpening = !answer.style.maxHeight;
+
+                faqToggles.forEach(other => {
+                    if (other !== button) {
+                        other.nextElementSibling.style.maxHeight = null;
+                        other.querySelector('.faq-icon').classList.remove('rotate-90');
+                        other.querySelector('.faq-icon').classList.add('-rotate-90');
+                    }
+                });
+
+                if (isOpening) {
+                    answer.style.maxHeight = answer.scrollHeight + "px";
+                    icon.classList.remove('-rotate-90');
+                    icon.classList.add('rotate-90');
+                } else {
+                    answer.style.maxHeight = null;
+                    icon.classList.remove('rotate-90');
+                    icon.classList.add('-rotate-90');
+                }
+            });
+        });
+    });
+    </script>
+</body>
+</html>

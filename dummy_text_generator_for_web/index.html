@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Dummy Text Generator For Web – Lorem Ipsum Placeholder Tool | SimpliConvert</title>
+    <meta name="description" content="Create placeholder content quickly with our Dummy Text Generator For Web. Generate standard Lorem Ipsum paragraphs, sentences, or words for your design projects.">
+    <meta name="keywords" content="dummy text generator for web, lorem ipsum generator, placeholder text, web design filler, developer text tool, HTML placeholder generator">
+    <meta name="author" content="SimpliConvert">
+    <meta property="og:site_name" content="SimpliConvert">
+    <meta name="robots" content="index, follow">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://simpliconvert.com/dummy_text_generator_for_web/">
+    <meta property="og:title" content="Dummy Text Generator For Web – Instant Placeholder Text">
+    <meta property="og:description" content="Need filler text for your website? Generate custom Lorem Ipsum paragraphs or sentences instantly with our free web design tool.">
+    <meta property="og:image" content="https://simpliconvert.com/images/dummy-text-generator-og.jpg">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://simpliconvert.com/dummy_text_generator_for_web/">
+    <meta name="twitter:title" content="Dummy Text Generator For Web – Lorem Ipsum Filler">
+    <meta name="twitter:description" content="Free tool to generate placeholder text for designers and developers. Customize length and format easily.">
+    <meta name="twitter:image" content="https://simpliconvert.com/images/dummy-text-generator-og.jpg">
+
+    <link rel="canonical" href="https://simpliconvert.com/dummy_text_generator_for_web/">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Dummy Text Generator For Web",
+      "url": "https://simpliconvert.com/dummy_text_generator_for_web/",
+      "description": "A free online tool for web designers and developers to generate Lorem Ipsum placeholder text, paragraphs, and sentences.",
+      "applicationCategory": "DesignApplication",
+      "operatingSystem": "Web Browser",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "SimpliConvert",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://simpliconvert.com/logo.png"
+        }
+      }
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [{
+        "@type": "Question",
+        "name": "What is the purpose of a dummy text generator?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "A dummy text generator provides placeholder content (like Lorem Ipsum) so designers can visualize the layout of a webpage or document before the actual content is ready."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Why is Lorem Ipsum used instead of English text?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Lorem Ipsum has a relatively normal distribution of letters, making it look like readable English. This prevents viewers from being distracted by the content of the text while focusing on the design."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Can I use this text for commercial projects?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. Lorem Ipsum is standard filler text used in the printing and publishing industry and is free to use for both personal and commercial design mockups."
+        }
+      }]
+    }
+    </script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #da3f0b;
+            --primary-hover: #b53409;
+            --primary-light: #fff5f2;
+            --bg: #f8fafc;
+            --text-dark: #0f172a;
+            --success: #16a34a;
+            --danger: #dc2626;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text-dark);
+        }
+
+        .hero-card {
+            background: white;
+            border: 1px solid #f1f5f9;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background-color: var(--primary);
+        }
+
+        .prose a {
+            color: #da3f0b;
+            text-decoration: none; 
+        }
+        .prose a:hover {
+            text-decoration: underline; 
+        }
+
+        .tooltip-container { position: relative; display: inline-block; }
+        .tooltip-text {
+            visibility: hidden; width: 220px; background-color: #1e293b; color: #fff;
+            text-align: center; border-radius: 8px; padding: 10px; position: absolute;
+            z-index: 50; bottom: 125%; left: 50%; margin-left: -110px; opacity: 0;
+            transition: opacity 0.2s; font-size: 0.75rem; font-weight: 400;
+            pointer-events: none; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+        .tooltip-container:hover .tooltip-text { visibility: visible; opacity: 1; }
+        .tooltip-text::after {
+            content: ""; position: absolute; top: 100%; left: 50%; margin-left: -5px;
+            border-width: 5px; border-style: solid; border-color: #1e293b transparent transparent transparent;
+        }
+
+        .animate-fade { animation: fadeIn 0.3s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+        .tool-card {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .tool-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+        }
+
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #f1f5f9; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    </style>
+</head>
+
+<body class="bg-gray-50 min-h-screen flex flex-col">
+    <div id="navbar"></div>
+
+    <section class="hero-white text-black py-2 md:py-10">
+        <div class="container mx-auto px-4 text-center">
+            <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-2">Dummy Text Generator For Web</h1>
+            <p class="text-lg md:text-xl max-w-3x1 mx-auto mb-2">
+                Generate professional Lorem Ipsum placeholder text for your web designs, mockups, and development projects instantly.
+            </p>
+        </div>
+    </section>
+
+    <div id="root" class="w-full max-w-6xl mx-auto p-4 sm:p-6"></div>
+
+    <script type="text/babel">
+    const { useState, useEffect, useMemo } = React;
+
+    const LOREM_WORDS = [
+        "lorem", "ipsum", "dolor", "sit", "amet", "consectetur", "adipiscing", "elit", "sed", "do", "eiusmod", "tempor", "incididunt", "ut", "labore", "et", "dolore", "magna", "aliqua", "enim", "ad", "minim", "veniam", "quis", "nostrud", "exercitation", "ullamco", "laboris", "nisi", "ut", "aliquip", "ex", "ea", "commodo", "consequat", "duis", "aute", "irure", "dolor", "in", "reprehenderit", "in", "voluptate", "velit", "esse", "cillum", "dolore", "eu", "fugiat", "nulla", "pariatur", "excepteur", "sint", "occaecat", "cupidatat", "non", "proident", "sunt", "in", "culpa", "qui", "officia", "deserunt", "mollit", "anim", "id", "est", "laborum"
+    ];
+
+    const Tooltip = ({ text }) => (
+      <span className="tooltip-container ml-2">
+        <i className="fas fa-info-circle text-slate-300 hover:text-[#da3f0b] cursor-help text-xs transition-colors"></i>
+        <span className="tooltip-text">{text}</span>
+      </span>
+    );
+
+    const ShareButton = ({ platform, icon, color, url, title }) => {
+        let shareUrl = '';
+        switch(platform) {
+            case 'facebook': shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${url}`; break;
+            case 'twitter': shareUrl = `https://twitter.com/intent/tweet?url=${url}&text=${title}`; break;
+            case 'linkedin': shareUrl = `https://www.linkedin.com/shareArticle?mini=true&url=${url}`; break;
+            case 'whatsapp': shareUrl = `https://api.whatsapp.com/send?text=${title}%20${url}`; break;
+            case 'reddit': shareUrl = `https://www.reddit.com/submit?url=${url}&title=${title}`; break;
+            case 'telegram': shareUrl = `https://t.me/share/url?url=${url}&text=${title}`; break;
+            default: return null;
+        }
+
+        return (
+            <a 
+                href={shareUrl} 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className={`w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center text-white transition-transform hover:-translate-y-1 hover:shadow-lg ${color}`}
+            >
+                <i className={`fab fa-${icon}`}></i>
+            </a>
+        );
+    };
+
+    const App = () => {
+      const [count, setCount] = useState(3);
+      const [type, setType] = useState('paragraphs');
+      const [startWithLorem, setStartWithLorem] = useState(true);
+      const [includeHtml, setIncludeHtml] = useState(false);
+      const [generatedText, setGeneratedText] = useState('');
+      const [copied, setCopied] = useState(false);
+      const [showBookmarkToast, setShowBookmarkToast] = useState(false);
+
+      const generateText = () => {
+        let result = [];
+        const generateSentence = () => {
+            const length = Math.floor(Math.random() * 10) + 5;
+            let sentence = [];
+            for (let i = 0; i < length; i++) {
+                sentence.push(LOREM_WORDS[Math.floor(Math.random() * LOREM_WORDS.length)]);
+            }
+            let str = sentence.join(' ');
+            return str.charAt(0).toUpperCase() + str.slice(1) + '.';
+        };
+
+        const generateParagraph = () => {
+            const length = Math.floor(Math.random() * 4) + 3;
+            let para = [];
+            for (let i = 0; i < length; i++) {
+                para.push(generateSentence());
+            }
+            return para.join(' ');
+        };
+
+        if (type === 'paragraphs') {
+            for (let i = 0; i < count; i++) {
+                let p = generateParagraph();
+                if (i === 0 && startWithLorem) {
+                    p = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. " + p;
+                }
+                result.push(includeHtml ? `<p>${p}</p>` : p);
+            }
+            setGeneratedText(result.join(includeHtml ? '\n\n' : '\n\n'));
+        } else if (type === 'sentences') {
+            for (let i = 0; i < count; i++) {
+                let s = generateSentence();
+                if (i === 0 && startWithLorem) {
+                    s = "Lorem ipsum dolor sit amet.";
+                }
+                result.push(s);
+            }
+            setGeneratedText(result.join(' '));
+        } else {
+            // Words
+            for (let i = 0; i < count; i++) {
+                result.push(LOREM_WORDS[Math.floor(Math.random() * LOREM_WORDS.length)]);
+            }
+            let w = result.join(' ');
+            if (startWithLorem) {
+                w = "Lorem ipsum " + w;
+            }
+            setGeneratedText(w);
+        }
+      };
+
+      useEffect(() => {
+        generateText();
+      }, [count, type, startWithLorem, includeHtml]);
+
+      const handleCopy = () => {
+        navigator.clipboard.writeText(generatedText);
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
+      };
+
+      const handleBookmark = () => {
+        setShowBookmarkToast(true);
+        setTimeout(() => setShowBookmarkToast(false), 3000);
+      };
+
+      const pageUrl = encodeURIComponent("https://simpliconvert.com/dummy_text_generator_for_web/");
+      const pageTitle = encodeURIComponent("Check out this Dummy Text Generator for Web!");
+
+      return (
+        <div className="bg-white rounded-[2rem] shadow-2xl overflow-hidden border border-slate-100">
+          <header className="bg-slate-50/50 border-b border-slate-100 p-6 md:p-8 flex flex-col md:flex-row justify-between items-center gap-6">
+            <div className="text-center md:text-left">
+              <h2 className="text-2xl font-black text-slate-800 tracking-tight flex items-center justify-center md:justify-start gap-3">
+                <span className="bg-[#da3f0b] text-white p-2 rounded-xl text-lg shadow-lg shadow-[#da3f0b30]">
+                  <i className="fas fa-font"></i>
+                </span>
+                Placeholder Content Generator
+              </h2>
+            </div>
+            
+            <div className="flex gap-2">
+                <button 
+                    onClick={generateText}
+                    className="bg-white border border-slate-200 text-slate-700 px-4 py-2 rounded-xl text-xs font-bold hover:bg-slate-50 transition-all shadow-sm"
+                >
+                    <i className="fas fa-sync-alt mr-2"></i> Regenerate
+                </button>
+            </div>
+          </header>
+
+          <main className="flex flex-col lg:flex-row">
+            {/* Input Panel */}
+            <div className="lg:w-[40%] p-6 md:p-10 lg:p-12 border-r border-slate-100">
+              <div className="space-y-8">
+                
+                <div>
+                  <label className="text-xs font-black text-slate-500 uppercase tracking-widest mb-4 block">Generation Settings</label>
+                  
+                  <div className="space-y-6">
+                    <div>
+                        <div className="flex justify-between mb-2">
+                            <span className="text-sm font-bold text-slate-700">Amount</span>
+                            <span className="text-sm font-black text-[#da3f0b]">{count}</span>
+                        </div>
+                        <input 
+                            type="range" 
+                            min="1" 
+                            max="50" 
+                            value={count} 
+                            onChange={(e) => setCount(e.target.value)}
+                            className="w-full h-2 bg-slate-100 rounded-lg appearance-none cursor-pointer accent-[#da3f0b]"
+                        />
+                    </div>
+
+                    <div className="grid grid-cols-3 gap-2">
+                        {['paragraphs', 'sentences', 'words'].map((t) => (
+                            <button
+                                key={t}
+                                onClick={() => setType(t)}
+                                className={`py-2 px-1 rounded-xl text-[10px] font-black uppercase tracking-tighter transition-all border ${type === t ? 'bg-[#da3f0b] text-white border-[#da3f0b]' : 'bg-white text-slate-500 border-slate-200 hover:border-[#da3f0b]'}`}
+                            >
+                                {t}
+                            </button>
+                        ))}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="space-y-4 pt-4 border-t border-slate-100">
+                    <label className="flex items-center cursor-pointer group">
+                        <div className="relative">
+                            <input type="checkbox" className="sr-only" checked={startWithLorem} onChange={() => setStartWithLorem(!startWithLorem)} />
+                            <div className={`block w-10 h-6 rounded-full transition-colors ${startWithLorem ? 'bg-[#da3f0b]' : 'bg-slate-200'}`}></div>
+                            <div className={`absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition-transform ${startWithLorem ? 'translate-x-4' : ''}`}></div>
+                        </div>
+                        <div className="ml-3 text-sm font-bold text-slate-700 group-hover:text-[#da3f0b] transition-colors">
+                            Start with "Lorem ipsum..."
+                        </div>
+                    </label>
+
+                    <label className="flex items-center cursor-pointer group">
+                        <div className="relative">
+                            <input type="checkbox" className="sr-only" checked={includeHtml} onChange={() => setIncludeHtml(!includeHtml)} />
+                            <div className={`block w-10 h-6 rounded-full transition-colors ${includeHtml ? 'bg-[#da3f0b]' : 'bg-slate-200'}`}></div>
+                            <div className={`absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition-transform ${includeHtml ? 'translate-x-4' : ''}`}></div>
+                        </div>
+                        <div className="ml-3 text-sm font-bold text-slate-700 group-hover:text-[#da3f0b] transition-colors">
+                            Include HTML &lt;p&gt; tags
+                        </div>
+                    </label>
+                </div>
+
+                <div className="bg-[#da3f0b08] p-6 rounded-2xl border border-[#da3f0b15]">
+                    <h4 className="text-[10px] font-black text-[#da3f0b] uppercase tracking-widest mb-2">Quick Tip</h4>
+                    <p className="text-xs text-slate-600 leading-relaxed">
+                        Use "Paragraphs" for body text areas and "Words" or "Sentences" for headings and short UI elements.
+                    </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Results Panel */}
+            <div className="lg:w-[60%] bg-slate-50/50 p-6 md:p-10 lg:p-12 flex flex-col">
+               <div className="flex justify-between items-center mb-4">
+                  <span className="text-xs font-black text-slate-400 uppercase tracking-widest">Generated Output</span>
+                  <button 
+                    onClick={handleCopy}
+                    className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold transition-all ${copied ? 'bg-green-500 text-white' : 'bg-slate-800 text-white hover:bg-slate-700'}`}
+                  >
+                    <i className={`fas ${copied ? 'fa-check' : 'fa-copy'}`}></i>
+                    {copied ? 'Copied!' : 'Copy Text'}
+                  </button>
+               </div>
+               
+               <div className="flex-grow bg-white rounded-2xl border border-slate-200 shadow-inner p-6 overflow-y-auto max-h-[400px] custom-scrollbar">
+                  <pre className="whitespace-pre-wrap text-sm text-slate-700 font-medium leading-relaxed font-mono">
+                    {generatedText}
+                  </pre>
+               </div>
+
+               <div className="mt-6 flex items-center justify-between text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                  <span>Characters: {generatedText.length}</span>
+                  <span>Words: {generatedText.split(/\s+/).filter(x => x.length > 0).length}</span>
+               </div>
+            </div>
+          </main>
+
+          {/* Share & Bookmark Footer */}
+          <footer className="bg-slate-50 border-t border-slate-100 p-6 md:p-8">
+             <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+                 <div className="text-center md:text-left">
+                     <h4 className="text-sm font-bold text-slate-700 mb-1">Share this tool</h4>
+                     <p className="text-xs text-slate-400">Help other designers find filler text.</p>
+                 </div>
+                 
+                 <div className="flex flex-wrap justify-center gap-3">
+                     <ShareButton platform="facebook" icon="facebook-f" color="bg-[#1877F2]" url={pageUrl} title={pageTitle} />
+                     <ShareButton platform="twitter" icon="twitter" color="bg-[#1DA1F2]" url={pageUrl} title={pageTitle} />
+                     <ShareButton platform="linkedin" icon="linkedin-in" color="bg-[#0A66C2]" url={pageUrl} title={pageTitle} />
+                     <ShareButton platform="whatsapp" icon="whatsapp" color="bg-[#25D366]" url={pageUrl} title={pageTitle} />
+                     <ShareButton platform="reddit" icon="reddit-alien" color="bg-[#FF4500]" url={pageUrl} title={pageTitle} />
+                     <ShareButton platform="telegram" icon="telegram-plane" color="bg-[#0088cc]" url={pageUrl} title={pageTitle} />
+                 </div>
+
+                 <div className="relative">
+                     <button 
+                        onClick={handleBookmark}
+                        className="flex items-center gap-2 bg-white border border-slate-200 hover:border-[#da3f0b] hover:text-[#da3f0b] text-slate-600 px-4 py-2 rounded-lg text-sm font-bold transition-all shadow-sm active:scale-95"
+                     >
+                        <i className="fas fa-bookmark"></i> Bookmark
+                     </button>
+                     {showBookmarkToast && (
+                         <div className="absolute bottom-full mb-3 left-1/2 -translate-x-1/2 bg-slate-800 text-white text-xs py-2 px-4 rounded-lg shadow-lg whitespace-nowrap animate-fade">
+                             Press <span className="font-bold text-[#da3f0b]">Ctrl + D</span> to bookmark
+                         </div>
+                     )}
+                 </div>
+             </div>
+          </footer>
+        </div>
+      );
+    };
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+    </script>
+
+    <section class="bg-white py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="prose prose-lg max-w-none prose-h2:text-gray-800 prose-p:text-gray-700">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">Dummy Text Generator For Web – The Ultimate Design Filler</h2>
+                <p class="mb-6 leading-relaxed">
+                    When designing a website, the visual layout is often ready before the actual copy. Using a <strong>Dummy Text Generator For Web</strong> allows you to fill those empty spaces with neutral content, helping you and your clients focus on the typography, spacing, and overall user interface without being distracted by the meaning of the words.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Why Use Lorem Ipsum for Web Design?</h2>
+                <p class="mb-6 leading-relaxed">
+                    Lorem Ipsum has been the industry standard for placeholder text since the 1500s. Its primary advantage is the <strong>natural distribution of letters</strong>. Unlike repeating "Content goes here" or "This is a test," Lorem Ipsum mimics the flow of real language. This makes it an essential tool for:
+                </p>
+                <ul class="list-disc pl-6 mb-6 space-y-2 text-gray-700">
+                    <li><strong>UI/UX Mockups:</strong> Visualizing how text blocks interact with images and buttons.</li>
+                    <li><strong>Typography Testing:</strong> Checking how different fonts look in large paragraphs.</li>
+                    <li><strong>Client Presentations:</strong> Providing a professional look to unfinished projects.</li>
+                    <li><strong>Backend Development:</strong> Testing database outputs and text overflow scenarios.</li>
+                </ul>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">How to Use Our Lorem Ipsum Generator</h2>
+                <p class="mb-6 leading-relaxed">
+                    Our tool is designed to be the fastest <em>placeholder text generator</em> on the web. Simply follow these steps:
+                </p>
+                <ol class="list-decimal pl-6 mb-6 space-y-2 text-gray-700">
+                    <li><strong>Select the Amount:</strong> Use the slider to choose how many units you need.</li>
+                    <li><strong>Choose the Type:</strong> Select between Paragraphs (for body text), Sentences (for descriptions), or Words (for labels).</li>
+                    <li><strong>Toggle HTML:</strong> If you are a developer, enable HTML tags to get your text wrapped in <code>&lt;p&gt;</code> tags instantly.</li>
+                    <li><strong>Copy & Paste:</strong> Click the copy button and move directly to your design software or code editor.</li>
+                </ol>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Features for Developers and Designers</h2>
+                <p class="mb-6 leading-relaxed">
+                    We understand that different projects have different needs. That's why our <em>web design filler tool</em> includes advanced options like the "Start with Lorem Ipsum" toggle. This ensures your mockups look traditional or unique depending on your preference. Furthermore, the character and word count indicators help you stay within the limits of your design containers.
+                </p>
+                <p class="mb-6 leading-relaxed">
+                    Just as our <a href="https://simpliconvert.com/meta_tag_generator/" target="_blank">Meta Tag Generator</a> helps with SEO structure, this tool helps with visual structure. Combining both ensures your website is both beautiful and technically sound from day one.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-center text-gray-900 mb-8">Dummy Text – Frequently Asked Questions</h2>
+            <div class="space-y-4">
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>What does "Lorem Ipsum" actually mean?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">
+                            It is derived from a 1st-century BC Latin text by Cicero. While it looks like Latin, it is actually nonsensical. The most common version starts with "Lorem ipsum dolor sit amet," which translates roughly to "Pain itself is love, let it be pursued."
+                        </p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>Is this generator free to use?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">
+                            Yes, the SimpliConvert Dummy Text Generator is 100% free for personal and commercial use. You can generate as much text as you need for your web projects.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>Why should I use HTML tags in the generator?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">
+                            Enabling HTML tags wraps each paragraph in <code>&lt;p&gt;</code> tags. This is extremely helpful for developers who want to paste the text directly into their HTML or React code without manually adding tags later.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 pb-16">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-slate-200 pt-16">
+            <h2 class="text-2xl font-bold text-center text-slate-800 mb-10">Explore More Tools</h2>
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+                <a href="/password_generator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-slate-50 text-slate-700 flex items-center justify-center shrink-0 group-hover:bg-slate-800 group-hover:text-white transition-colors">
+                        <i class="fas fa-key text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Password Gen</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Create secure, random passwords.</p>
+                    </div>
+                </a>
+                <a href="/qr_code_generator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-slate-50 text-slate-800 flex items-center justify-center shrink-0 group-hover:bg-slate-900 group-hover:text-white transition-colors">
+                        <i class="fas fa-qrcode text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">QR Creator</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Generate custom QR codes instantly.</p>
+                    </div>
+                </a>
+                <a href="/meta_tag_generator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0 group-hover:bg-indigo-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-search text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Meta Tag Gen</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Optimize SEO with custom tags.</p>
+                    </div>
+                </a>
+                <a href="/to_do_list/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-green-50 text-green-600 flex items-center justify-center shrink-0 group-hover:bg-green-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-check-square text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">To-Do List</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Manage tasks and stay organized.</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <div id="footer"></div>
+
+    <script>
+    function initializeHeaderScripts() {
+        const header = document.getElementById('header');
+        if (header) {
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 10) {
+                    header.classList.add('scrolled-effect');
+                } else {
+                    header.classList.remove('scrolled-effect');
+                }
+            });
+        }
+    }
+    
+    function initializeFooterScripts() {
+        const yearSpan = document.getElementById('current-year');
+        if(yearSpan) {
+            yearSpan.textContent = new Date().getFullYear();
+        }
+    }
+
+    async function loadComponent(url, elementId, callback) {
+        try {
+            const response = await fetch(url);
+            if (!response.ok) throw new Error('Status: ' + response.status);
+            const text = await response.text();
+            const element = document.getElementById(elementId);
+            if (element) {
+                element.innerHTML = text;
+                if (callback) callback();
+            }
+        } catch (error) {
+            console.error('Error loading component:', error);
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        loadComponent('/components/navbar.html', 'navbar', initializeHeaderScripts);
+        loadComponent('/components/footer.html', 'footer', initializeFooterScripts);
+        
+        const faqToggles = document.querySelectorAll('[data-faq-toggle]');
+        faqToggles.forEach(button => {
+            button.addEventListener('click', () => {
+                const answer = button.nextElementSibling;
+                const icon = button.querySelector('.faq-icon');
+                const isOpening = !answer.style.maxHeight;
+
+                faqToggles.forEach(other => {
+                    if (other !== button) {
+                        other.nextElementSibling.style.maxHeight = null;
+                        other.querySelector('.faq-icon').classList.remove('rotate-90');
+                        other.querySelector('.faq-icon').classList.add('-rotate-90');
+                    }
+                });
+
+                if (isOpening) {
+                    answer.style.maxHeight = answer.scrollHeight + "px";
+                    icon.classList.remove('-rotate-90');
+                    icon.classList.add('rotate-90');
+                } else {
+                    answer.style.maxHeight = null;
+                    icon.classList.remove('rotate-90');
+                    icon.classList.add('-rotate-90');
+                }
+            });
+        });
+    });
+    </script>
+</body>
+</html>

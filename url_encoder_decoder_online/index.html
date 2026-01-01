@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>URL Encoder Decoder Online – Percent Encoding Tool | SimpliConvert</title>
+    <meta name="description" content="Clean up special characters in links using our URL Encoder Decoder Online. Ensure your URLs are safe, valid, and ready for sharing with percent encoding.">
+    <meta name="keywords" content="url encoder decoder online, escape url characters, percent encoding tool, fix broken links, rfc 3986 encoder, web safe url tool, decode percent encoding">
+    <meta name="author" content="SimpliConvert">
+    <meta property="og:site_name" content="SimpliConvert">
+    <meta name="robots" content="index, follow">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://simpliconvert.com/url_encoder_decoder_online/">
+    <meta property="og:title" content="URL Encoder Decoder Online – Escape URL Characters">
+    <meta property="og:description" content="Quickly encode or decode URLs to ensure they are web-safe. Fix broken links and handle special characters instantly.">
+    <meta property="og:image" content="https://simpliconvert.com/images/url-encoder-decoder-og.jpg">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://simpliconvert.com/url_encoder_decoder_online/">
+    <meta name="twitter:title" content="URL Encoder Decoder Online – Percent Encoding Tool">
+    <meta name="twitter:description" content="Free tool to encode and decode URLs. Perfect for developers and marketers fixing link issues.">
+    <meta name="twitter:image" content="https://simpliconvert.com/images/url-encoder-decoder-og.jpg">
+
+    <link rel="canonical" href="https://simpliconvert.com/url_encoder_decoder_online/">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "URL Encoder Decoder Online",
+      "url": "https://simpliconvert.com/url_encoder_decoder_online/",
+      "description": "A free online tool to encode and decode URLs using percent-encoding, ensuring special characters are handled correctly for web browsers.",
+      "applicationCategory": "DeveloperApplication",
+      "operatingSystem": "Web Browser",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "SimpliConvert",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://simpliconvert.com/logo.png"
+        }
+      }
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [{
+        "@type": "Question",
+        "name": "What is URL encoding?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "URL encoding, also known as percent-encoding, is a mechanism for encoding information in a Uniform Resource Identifier (URI). Characters that are not allowed in a URL are replaced with a '%' followed by two hexadecimal digits."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Why do I need to encode a URL?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "URLs can only contain a limited set of characters from the US-ASCII character set. Special characters like spaces, brackets, or ampersands used in query parameters must be encoded to prevent browsers from misinterpreting the link."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Is this URL decoder safe to use?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. Our tool processes all encoding and decoding locally in your browser. Your data is not sent to our servers, making it safe for handling sensitive URL parameters."
+        }
+      }]
+    }
+    </script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #da3f0b;
+            --primary-hover: #b53409;
+            --primary-light: #fff5f2;
+            --bg: #f8fafc;
+            --text-dark: #0f172a;
+            --success: #16a34a;
+            --danger: #dc2626;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text-dark);
+        }
+
+        .hero-card {
+            background: white;
+            border: 1px solid #f1f5f9;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background-color: var(--primary);
+        }
+
+        .prose a {
+            color: #da3f0b;
+            text-decoration: none; 
+        }
+        .prose a:hover {
+            text-decoration: underline; 
+        }
+
+        .animate-fade { animation: fadeIn 0.3s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+        .tool-card {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .tool-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 min-h-screen flex flex-col">
+    <div id="navbar"></div>
+
+    <section class="hero-white text-black py-2 md:py-10">
+        <div class="container mx-auto px-4 text-center">
+            <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-2">URL Encoder Decoder Online</h1>
+            <p class="text-lg md:text-xl max-w-3xl mx-auto mb-2">
+                Instantly convert special characters into web-safe percent-encoded strings or decode them back to readable text.
+            </p>
+        </div>
+    </section>
+
+    <div id="root" class="w-full max-w-6xl mx-auto p-4 sm:p-6"></div>
+
+    <script type="text/babel">
+    const { useState, useEffect } = React;
+
+    const App = () => {
+      const [input, setInput] = useState('');
+      const [output, setOutput] = useState('');
+      const [error, setError] = useState('');
+      const [showBookmarkToast, setShowBookmarkToast] = useState(false);
+      const [copySuccess, setCopySuccess] = useState(false);
+
+      const handleEncode = () => {
+        try {
+          setOutput(encodeURIComponent(input));
+          setError('');
+        } catch (e) {
+          setError('Failed to encode. Please check your input.');
+        }
+      };
+
+      const handleDecode = () => {
+        try {
+          // Replace + with space as some systems use + for spaces in URLs
+          const decoded = decodeURIComponent(input.replace(/\+/g, ' '));
+          setOutput(decoded);
+          setError('');
+        } catch (e) {
+          setError('Malformed URL detected. Could not decode properly.');
+        }
+      };
+
+      const handleClear = () => {
+        setInput('');
+        setOutput('');
+        setError('');
+      };
+
+      const handleCopy = () => {
+        if (!output) return;
+        navigator.clipboard.writeText(output);
+        setCopySuccess(true);
+        setTimeout(() => setCopySuccess(false), 2000);
+      };
+
+      const handleBookmark = () => {
+        setShowBookmarkToast(true);
+        setTimeout(() => setShowBookmarkToast(false), 3000);
+      };
+
+      const pageUrl = encodeURIComponent("https://simpliconvert.com/url_encoder_decoder_online/");
+      const pageTitle = encodeURIComponent("Free URL Encoder Decoder Online Tool");
+
+      return (
+        <div className="bg-white rounded-[2rem] shadow-2xl overflow-hidden border border-slate-100">
+          <header className="bg-slate-50/50 border-b border-slate-100 p-6 md:p-8 flex flex-col md:flex-row justify-between items-center gap-6">
+            <div className="text-center md:text-left">
+              <h2 className="text-2xl font-black text-slate-800 tracking-tight flex items-center justify-center md:justify-start gap-3">
+                <span className="bg-[#da3f0b] text-white p-2 rounded-xl text-lg shadow-lg shadow-[#da3f0b30]">
+                  <i className="fas fa-link"></i>
+                </span>
+                URL String Processor
+              </h2>
+            </div>
+            <div className="flex gap-2">
+                <span className="text-xs font-bold text-slate-400 uppercase tracking-widest">Web-Safe Encoding</span>
+            </div>
+          </header>
+
+          <main className="flex flex-col lg:flex-row">
+            {/* Input Panel */}
+            <div className="lg:w-[50%] p-6 md:p-10 lg:p-12 border-r border-slate-100">
+              <div className="space-y-6">
+                <div>
+                  <label className="text-xs font-black text-slate-500 uppercase tracking-widest mb-3 block">
+                    Enter URL or Text
+                  </label>
+                  <textarea 
+                    className="w-full h-64 p-4 rounded-2xl border border-slate-200 focus:ring-4 focus:ring-[#da3f0b20] focus:border-[#da3f0b] outline-none transition-all resize-none font-mono text-sm"
+                    placeholder="Paste your URL or text here..."
+                    value={input}
+                    onChange={(e) => setInput(e.target.value)}
+                  ></textarea>
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <button 
+                    onClick={handleEncode}
+                    className="bg-[#da3f0b] text-white font-bold py-4 rounded-xl shadow-lg shadow-[#da3f0b30] hover:bg-[#b53409] transition-all active:scale-95"
+                  >
+                    <i className="fas fa-lock mr-2"></i> Encode
+                  </button>
+                  <button 
+                    onClick={handleDecode}
+                    className="bg-slate-800 text-white font-bold py-4 rounded-xl shadow-lg shadow-slate-200 hover:bg-slate-900 transition-all active:scale-95"
+                  >
+                    <i className="fas fa-unlock mr-2"></i> Decode
+                  </button>
+                </div>
+                
+                <button 
+                  onClick={handleClear}
+                  className="w-full text-xs font-bold text-slate-400 hover:text-red-500 transition-colors uppercase tracking-widest"
+                >
+                  <i className="fas fa-trash-alt mr-1"></i> Clear Input
+                </button>
+              </div>
+            </div>
+
+            {/* Results Panel */}
+            <div className="lg:w-[50%] bg-slate-50/50 p-6 md:p-10 lg:p-12 flex flex-col">
+               <div className="flex-1 flex flex-col">
+                  <div className="flex justify-between items-center mb-3">
+                    <label className="text-xs font-black text-slate-500 uppercase tracking-widest">
+                      Result
+                    </label>
+                    {copySuccess && <span className="text-[10px] font-bold text-green-600 animate-fade">Copied to clipboard!</span>}
+                  </div>
+                  
+                  <div className="relative flex-1">
+                    <textarea 
+                      readOnly
+                      className={`w-full h-64 lg:h-full p-4 rounded-2xl border ${error ? 'border-red-200 bg-red-50' : 'border-slate-200 bg-white'} outline-none font-mono text-sm resize-none`}
+                      value={error || output}
+                      placeholder="Output will appear here..."
+                    ></textarea>
+                    
+                    {output && !error && (
+                      <button 
+                        onClick={handleCopy}
+                        className="absolute top-4 right-4 bg-slate-100 hover:bg-slate-200 text-slate-600 p-2 rounded-lg transition-all"
+                        title="Copy to clipboard"
+                      >
+                        <i className="fas fa-copy"></i>
+                      </button>
+                    )}
+                  </div>
+
+                  {output && !error && (
+                    <div className="mt-6 p-4 bg-white rounded-xl border border-slate-100 shadow-sm animate-fade">
+                        <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Quick Tip</h4>
+                        <p className="text-xs text-slate-600 leading-relaxed">
+                            {output.includes('%') ? 
+                                "This string contains percent-encoded characters, making it safe for use in URL query parameters." : 
+                                "This is a plain-text string. Use the Encode button to make it URL-safe."}
+                        </p>
+                    </div>
+                  )}
+               </div>
+            </div>
+          </main>
+
+          {/* Share & Bookmark Footer */}
+          <footer className="bg-slate-50 border-t border-slate-100 p-6 md:p-8">
+             <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+                 <div className="text-center md:text-left">
+                     <h4 className="text-sm font-bold text-slate-700 mb-1">Share this tool</h4>
+                     <p className="text-xs text-slate-400">Help developers and marketers fix links.</p>
+                 </div>
+                 
+                 <div className="flex flex-wrap justify-center gap-3">
+                     <a href={`https://www.facebook.com/sharer/sharer.php?u=${pageUrl}`} target="_blank" className="w-10 h-10 rounded-full flex items-center justify-center text-white bg-[#1877F2] hover:-translate-y-1 transition-transform"><i className="fab fa-facebook-f"></i></a>
+                     <a href={`https://twitter.com/intent/tweet?url=${pageUrl}&text=${pageTitle}`} target="_blank" className="w-10 h-10 rounded-full flex items-center justify-center text-white bg-[#1DA1F2] hover:-translate-y-1 transition-transform"><i className="fab fa-twitter"></i></a>
+                     <a href={`https://api.whatsapp.com/send?text=${pageTitle}%20${pageUrl}`} target="_blank" className="w-10 h-10 rounded-full flex items-center justify-center text-white bg-[#25D366] hover:-translate-y-1 transition-transform"><i className="fab fa-whatsapp"></i></a>
+                     <a href={`https://t.me/share/url?url=${pageUrl}&text=${pageTitle}`} target="_blank" className="w-10 h-10 rounded-full flex items-center justify-center text-white bg-[#0088cc] hover:-translate-y-1 transition-transform"><i className="fab fa-telegram-plane"></i></a>
+                 </div>
+
+                 <div className="relative">
+                     <button 
+                        onClick={handleBookmark}
+                        className="flex items-center gap-2 bg-white border border-slate-200 hover:border-[#da3f0b] hover:text-[#da3f0b] text-slate-600 px-4 py-2 rounded-lg text-sm font-bold transition-all shadow-sm active:scale-95"
+                     >
+                        <i className="fas fa-bookmark"></i> Bookmark
+                     </button>
+                     {showBookmarkToast && (
+                         <div className="absolute bottom-full mb-3 left-1/2 -translate-x-1/2 bg-slate-800 text-white text-xs py-2 px-4 rounded-lg shadow-lg whitespace-nowrap animate-fade">
+                             Press <span className="font-bold text-[#da3f0b]">Ctrl + D</span> to bookmark
+                         </div>
+                     )}
+                 </div>
+             </div>
+          </footer>
+        </div>
+      );
+    };
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+    </script>
+
+
+  <section class="bg-white py-12 sm:py-16">
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="prose prose-lg max-w-none prose-h2:text-gray-800 prose-p:text-gray-700">
+
+      <h2 class="text-3xl font-bold text-gray-900 mb-4">URL Encoder Decoder Online – Fix Your Links Instantly</h2>
+      <p class="mb-6 leading-relaxed">
+        In the digital world, URLs are the backbone of navigation. However, browsers can only interpret a specific set of characters. When your link contains spaces, symbols, or non-ASCII characters, it can break or lead to errors. Our <strong>URL Encoder Decoder Online</strong> is a professional-grade tool designed to handle <em>percent-encoding</em> (URL encoding) and decoding with a single click.
+      </p>
+
+      <h2 class="text-2xl font-bold mt-8 mb-4">What is URL Encoding (Percent Encoding)?</h2>
+      <p class="mb-6 leading-relaxed">
+        URL encoding is a mechanism for translating special characters into a format that can be transmitted over the internet. According to RFC 3986, certain characters are "reserved" because they have special meanings (like <code>?</code> for queries or <code>&</code> for parameters). If you want to include these characters as actual data within a URL, they must be escaped.
+      </p>
+      <p class="mb-6 leading-relaxed">
+        For example, a space is converted to <code>%20</code>, and an exclamation mark becomes <code>%21</code>. Our <strong>percent encoding tool</strong> ensures your data remains intact while following web standards.
+      </p>
+
+      <h2 class="text-2xl font-bold mt-8 mb-4">How to Use the URL Encoder Decoder</h2>
+      <p class="mb-6 leading-relaxed">
+        Using our tool is straightforward and requires no technical expertise:
+      </p>
+      <ul class="list-disc pl-6 mb-6 space-y-2 text-gray-700">
+        <li><strong>To Encode:</strong> Paste your plain text or URL into the input box and click "Encode". This is perfect for creating query strings for APIs or tracking links.</li>
+        <li><strong>To Decode:</strong> Paste a link containing percent signs (e.g., <code>https://example.com/?q=hello%20world</code>) and click "Decode" to see the original, readable text.</li>
+        <li><strong>Copy & Clear:</strong> Use the built-in buttons to quickly manage your results and start fresh.</li>
+      </ul>
+
+      <h2 class="text-2xl font-bold mt-8 mb-4">Why Developers and Marketers Love This Tool</h2>
+      <p class="mb-6 leading-relaxed">
+        Whether you are a developer debugging an API response or a digital marketer setting up UTM parameters, encoding is essential. 
+      </p>
+      <ul class="list-disc pl-6 mb-6 space-y-2 text-gray-700">
+        <li><strong>Fix Broken Links:</strong> Stop "404 Not Found" errors caused by unescaped characters in your URLs.</li>
+        <li><strong>Data Integrity:</strong> Ensure that special characters in user-generated content don't break your web applications.</li>
+        <li><strong>SEO Friendly:</strong> Clean, valid URLs are easier for search engines to crawl and index.</li>
+      </ul>
+      <p class="mb-6 leading-relaxed">
+        Just as our <a href="https://simpliconvert.com/meta_tag_generator/" target="_blank">Meta Tag Generator</a> helps optimize your site's SEO, the <strong>URL Encoder Decoder</strong> ensures your technical infrastructure remains robust and error-free.
+      </p>
+
+      <h2 class="text-2xl font-bold mt-8 mb-4">Is it Safe to Decode Sensitive URLs?</h2>
+      <p class="mb-6 leading-relaxed">
+        Security is our priority. Unlike other online tools that send your data to a server for processing, our <strong>URL Encoder Decoder Online</strong> works entirely within your browser. Your URLs never leave your computer, making it safe to decode links that might contain sensitive tokens, email addresses, or internal parameters.
+      </p>
+      <p class="mb-6 leading-relaxed">
+        For users who manage sensitive data, we also recommend our <a href="https://simpliconvert.com/password_generator/" target="_blank">Secure Password Generator</a> to maintain high security standards across your digital assets.
+      </p>
+
+      <h2 class="text-2xl font-bold mt-8 mb-4">Common URL Encoding Examples</h2>
+      <div class="overflow-x-auto">
+        <table class="min-w-full bg-white border border-gray-200 mb-6">
+            <thead>
+                <tr class="bg-gray-50">
+                    <th class="py-2 px-4 border-b text-left">Character</th>
+                    <th class="py-2 px-4 border-b text-left">Encoded Value</th>
+                    <th class="py-2 px-4 border-b text-left">Usage</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="py-2 px-4 border-b">Space</td>
+                    <td class="py-2 px-4 border-b"><code>%20</code></td>
+                    <td class="py-2 px-4 border-b">Separating words in queries</td>
+                </tr>
+                <tr>
+                    <td class="py-2 px-4 border-b">&</td>
+                    <td class="py-2 px-4 border-b"><code>%26</code></td>
+                    <td class="py-2 px-4 border-b">Including an ampersand in data</td>
+                </tr>
+                <tr>
+                    <td class="py-2 px-4 border-b">#</td>
+                    <td class="py-2 px-4 border-b"><code>%23</code></td>
+                    <td class="py-2 px-4 border-b">Preventing accidental fragment jumps</td>
+                </tr>
+            </tbody>
+        </table>
+      </div>
+
+      <h2 class="text-2xl font-bold mt-8 mb-4">Final Thoughts</h2>
+      <p class="mb-6 leading-relaxed">
+        Don't let special characters stand in the way of a perfect user experience. Use our <strong>URL Encoder Decoder Online</strong> to escape URL characters, fix broken links, and ensure your web traffic flows smoothly. It is the fastest, safest, and most reliable way to manage percent encoding on the web.
+      </p>
+    </div>
+    </div>
+    </section>
+  
+
+    <section class="bg-gray-50 py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-center text-gray-900 mb-8">URL Tool – Frequently Asked Questions</h2>
+            <div class="space-y-4">
+                
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-primary">
+                        <span>What characters are encoded in a URL?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">
+                            Characters that are not "unreserved" (A-Z, a-z, 0-9, -, _, ., ~) are typically encoded. This includes spaces, punctuation, and non-ASCII characters like emojis or accented letters.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-primary">
+                        <span>Is there a difference between URL encoding and HTML encoding?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">
+                            Yes. URL encoding (Percent-encoding) is used for URIs to ensure they are valid for web transmission. HTML encoding (Entities) is used to display special characters inside an HTML document without the browser interpreting them as code (e.g., <code>&lt;</code> for <code><</code>).
+                        </p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-primary">
+                        <span>Can I decode a URL that uses + for spaces?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">
+                            Yes. Our decoder is designed to handle both <code>%20</code> and <code>+</code> as space characters, which is common in query strings from various web forms and legacy systems.
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 pb-16">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-slate-200 pt-16">
+            <h2 class="text-2xl font-bold text-center text-slate-800 mb-10">Popular Tools on SimpliConvert</h2>
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+                
+                <a href="/password_generator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-slate-50 text-slate-700 flex items-center justify-center shrink-0 group-hover:bg-slate-800 group-hover:text-white transition-colors">
+                        <i class="fas fa-key text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Password Gen</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Create secure, random passwords.</p>
+                    </div>
+                </a>
+
+                <a href="/image_resizer/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center shrink-0 group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-image text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Image Resizer</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Resize images without quality loss.</p>
+                    </div>
+                </a>
+
+                <a href="/split_pdf/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-red-50 text-red-600 flex items-center justify-center shrink-0 group-hover:bg-red-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-cut text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Split PDF</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Extract pages from PDF documents.</p>
+                    </div>
+                </a>
+
+                <a href="/qr_code_generator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-slate-50 text-slate-800 flex items-center justify-center shrink-0 group-hover:bg-slate-900 group-hover:text-white transition-colors">
+                        <i class="fas fa-qrcode text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">QR Creator</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Generate custom QR codes instantly.</p>
+                    </div>
+                </a>
+
+                <a href="/to_do_list/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-green-50 text-green-600 flex items-center justify-center shrink-0 group-hover:bg-green-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-check-square text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">To-Do List</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Manage tasks and stay organized.</p>
+                    </div>
+                </a>
+
+                <a href="/merge_pdf_online/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-red-50 text-red-600 flex items-center justify-center shrink-0 group-hover:bg-red-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-object-group text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Merge PDF</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Combine multiple PDFs into one.</p>
+                    </div>
+                </a>
+
+                <a href="/meta_tag_generator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0 group-hover:bg-indigo-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-search text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Meta Tag Gen</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Optimize SEO with custom tags.</p>
+                    </div>
+                </a>
+
+                <a href="/freelance_hourly_rate_calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0 group-hover:bg-emerald-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-calculator text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Rate Calc</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Calculate freelance hourly rates.</p>
+                    </div>
+                </a>
+
+            </div>
+        </div>
+    </section>
+
+    <div id="footer"></div>
+
+    <script>
+    function initializeHeaderScripts() {
+        const header = document.getElementById('header');
+        if (header) {
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 10) {
+                    header.classList.add('scrolled-effect');
+                } else {
+                    header.classList.remove('scrolled-effect');
+                }
+            });
+        }
+    }
+    
+    function initializeFooterScripts() {
+        const yearSpan = document.getElementById('current-year');
+        if(yearSpan) {
+            yearSpan.textContent = new Date().getFullYear();
+        }
+    }
+
+    async function loadComponent(url, elementId, callback) {
+        try {
+            const response = await fetch(url);
+            if (!response.ok) throw new Error('Status: ' + response.status);
+            const text = await response.text();
+            const element = document.getElementById(elementId);
+            if (element) {
+                element.innerHTML = text;
+                if (callback) callback();
+            }
+        } catch (error) {
+            console.error('Error loading component:', error);
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        loadComponent('/components/navbar.html', 'navbar', initializeHeaderScripts);
+        loadComponent('/components/footer.html', 'footer', initializeFooterScripts);
+        
+        const faqToggles = document.querySelectorAll('[data-faq-toggle]');
+        faqToggles.forEach(button => {
+            button.addEventListener('click', () => {
+                const answer = button.nextElementSibling;
+                const icon = button.querySelector('.faq-icon');
+                const isOpening = !answer.style.maxHeight;
+
+                faqToggles.forEach(other => {
+                    if (other !== button) {
+                        other.nextElementSibling.style.maxHeight = null;
+                        other.querySelector('.faq-icon').classList.remove('rotate-90');
+                        other.querySelector('.faq-icon').classList.add('-rotate-90');
+                    }
+                });
+
+                if (isOpening) {
+                    answer.style.maxHeight = answer.scrollHeight + "px";
+                    icon.classList.remove('-rotate-90');
+                    icon.classList.add('rotate-90');
+                } else {
+                    answer.style.maxHeight = null;
+                    icon.classList.remove('rotate-90');
+                    icon.classList.add('-rotate-90');
+                }
+            });
+        });
+    });
+    </script>
+</body>
+</html>

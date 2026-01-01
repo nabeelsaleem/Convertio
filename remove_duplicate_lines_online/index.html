@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Remove Duplicate Lines Online – Clean & Deduplicate Lists | SimpliConvert</title>
+    <meta name="description" content="Clean up your data lists with our tool to Remove Duplicate Lines Online. Paste your text and instantly get a unique list with no repeats. Fast, secure, and free.">
+    <meta name="keywords" content="remove duplicate lines online, deduplicate list, clean text list, unique line generator, remove repeats from text, list cleaner tool">
+    <meta name="author" content="SimpliConvert">
+    <meta property="og:site_name" content="SimpliConvert">
+    <meta name="robots" content="index, follow">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://simpliconvert.com/remove_duplicate_lines_online/">
+    <meta property="og:title" content="Remove Duplicate Lines Online – Clean Your Lists Instantly">
+    <meta property="og:description" content="Instantly remove duplicate lines from any text or list. Features include case sensitivity toggles, trimming, and sorting.">
+    <meta property="og:image" content="https://simpliconvert.com/images/remove-duplicate-lines-og.jpg">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://simpliconvert.com/remove_duplicate_lines_online/">
+    <meta name="twitter:title" content="Remove Duplicate Lines Online – Unique Line Generator">
+    <meta name="twitter:description" content="Free online tool to deduplicate lists. Clean up email lists, code, or data sets in seconds.">
+    <meta name="twitter:image" content="https://simpliconvert.com/images/remove-duplicate-lines-og.jpg">
+
+    <link rel="canonical" href="https://simpliconvert.com/remove_duplicate_lines_online/">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Remove Duplicate Lines Online",
+      "url": "https://simpliconvert.com/remove_duplicate_lines_online/",
+      "description": "A free online tool to remove duplicate lines from text files and lists. Clean data, remove repeats, and sort unique lines instantly.",
+      "applicationCategory": "UtilitiesApplication",
+      "operatingSystem": "Web Browser",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "SimpliConvert",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://simpliconvert.com/logo.png"
+        }
+      }
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [{
+        "@type": "Question",
+        "name": "Is my data safe when using this tool?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. This tool processes all text locally in your browser using JavaScript. Your data is never uploaded to our servers, ensuring 100% privacy."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Can I remove duplicates regardless of case?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes, you can toggle the 'Case Sensitive' option. When disabled, 'Apple' and 'apple' will be treated as duplicates."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Is there a limit to how many lines I can process?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "There is no hard limit, but performance depends on your device's memory. It can comfortably handle lists with tens of thousands of lines."
+        }
+      }]
+    }
+    </script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #da3f0b;
+            --primary-hover: #b53409;
+            --primary-light: #fff5f2;
+            --bg: #f8fafc;
+            --text-dark: #0f172a;
+            --success: #16a34a;
+            --danger: #dc2626;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text-dark);
+        }
+
+        .hero-card {
+            background: white;
+            border: 1px solid #f1f5f9;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background-color: var(--primary);
+        }
+
+        .prose a {
+            color: #da3f0b;
+            text-decoration: none; 
+        }
+        .prose a:hover {
+            text-decoration: underline; 
+        }
+
+        .tooltip-container { position: relative; display: inline-block; }
+        .tooltip-text {
+            visibility: hidden; width: 220px; background-color: #1e293b; color: #fff;
+            text-align: center; border-radius: 8px; padding: 10px; position: absolute;
+            z-index: 50; bottom: 125%; left: 50%; margin-left: -110px; opacity: 0;
+            transition: opacity 0.2s; font-size: 0.75rem; font-weight: 400;
+            pointer-events: none; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+        .tooltip-container:hover .tooltip-text { visibility: visible; opacity: 1; }
+        .tooltip-text::after {
+            content: ""; position: absolute; top: 100%; left: 50%; margin-left: -5px;
+            border-width: 5px; border-style: solid; border-color: #1e293b transparent transparent transparent;
+        }
+
+        .animate-fade { animation: fadeIn 0.3s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+        .tool-card {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .tool-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+        }
+
+        textarea {
+            scrollbar-width: thin;
+            scrollbar-color: #e2e8f0 transparent;
+        }
+        textarea::-webkit-scrollbar { width: 6px; }
+        textarea::-webkit-scrollbar-thumb { background-color: #e2e8f0; border-radius: 10px; }
+    </style>
+</head>
+
+<body class="bg-gray-50 min-h-screen flex flex-col">
+    <div id="navbar"></div>
+
+    <section class="hero-white text-black py-2 md:py-10">
+        <div class="container mx-auto px-4 text-center">
+            <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-2">Remove Duplicate Lines Online</h1>
+            <p class="text-lg md:text-xl max-w-3x1 mx-auto mb-2">
+                Clean your data instantly. Paste your list to remove repeats, trim whitespace, and sort unique lines.
+            </p>
+        </div>
+    </section>
+
+    <div id="root" class="w-full max-w-6xl mx-auto p-4 sm:p-6"></div>
+
+    <script type="text/babel">
+    const { useState, useEffect, useMemo } = React;
+
+    const Tooltip = ({ text }) => (
+      <span className="tooltip-container ml-2">
+        <i className="fas fa-info-circle text-slate-300 hover:text-[#da3f0b] cursor-help text-xs transition-colors"></i>
+        <span className="tooltip-text">{text}</span>
+      </span>
+    );
+
+    const StatCard = ({ label, value, subtext, isMain = false }) => {
+      return (
+        <div className={`${isMain ? 'hero-card p-6' : 'bg-white p-4 rounded-2xl border border-slate-100 shadow-sm'} flex flex-col items-center text-center`}>
+          <p className={`text-[10px] font-black uppercase tracking-widest mb-1 ${isMain ? 'text-[#da3f0b]' : 'text-slate-400'}`}>{label}</p>
+          <p className={`${isMain ? 'text-4xl' : 'text-2xl'} font-black text-slate-800`}>{value}</p>
+          {subtext && <p className="text-[10px] text-slate-400 font-medium mt-1 uppercase">{subtext}</p>}
+        </div>
+      );
+    };
+
+    const ShareButton = ({ platform, icon, color, url, title }) => {
+        let shareUrl = '';
+        switch(platform) {
+            case 'facebook': shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${url}`; break;
+            case 'twitter': shareUrl = `https://twitter.com/intent/tweet?url=${url}&text=${title}`; break;
+            case 'linkedin': shareUrl = `https://www.linkedin.com/shareArticle?mini=true&url=${url}`; break;
+            case 'whatsapp': shareUrl = `https://api.whatsapp.com/send?text=${title}%20${url}`; break;
+            case 'reddit': shareUrl = `https://www.reddit.com/submit?url=${url}&title=${title}`; break;
+            case 'telegram': shareUrl = `https://t.me/share/url?url=${url}&text=${title}`; break;
+            default: return null;
+        }
+
+        return (
+            <a href={shareUrl} target="_blank" rel="noopener noreferrer" className={`w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center text-white transition-transform hover:-translate-y-1 hover:shadow-lg ${color}`}>
+                <i className={`fab fa-${icon}`}></i>
+            </a>
+        );
+    };
+
+    const App = () => {
+      const [input, setInput] = useState('');
+      const [options, setOptions] = useState({
+        caseSensitive: true,
+        trimLines: true,
+        removeEmpty: true,
+        sort: 'none' // none, alpha, reverse
+      });
+      const [showBookmarkToast, setShowBookmarkToast] = useState(false);
+      const [copyStatus, setCopyStatus] = useState('Copy Results');
+
+      const results = useMemo(() => {
+        if (!input) return { text: '', original: 0, unique: 0, removed: 0 };
+
+        let lines = input.split(/\r?\n/);
+        const originalCount = lines.length;
+
+        if (options.trimLines) {
+          lines = lines.map(l => l.trim());
+        }
+
+        if (options.removeEmpty) {
+          lines = lines.filter(l => l.length > 0);
+        }
+
+        const seen = new Set();
+        const uniqueLines = [];
+
+        lines.forEach(line => {
+          const compareKey = options.caseSensitive ? line : line.toLowerCase();
+          if (!seen.has(compareKey)) {
+            seen.add(compareKey);
+            uniqueLines.push(line);
+          }
+        });
+
+        if (options.sort === 'alpha') {
+          uniqueLines.sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }));
+        } else if (options.sort === 'reverse') {
+          uniqueLines.sort((a, b) => b.localeCompare(a, undefined, { sensitivity: 'base' }));
+        }
+
+        const finalText = uniqueLines.join('\n');
+        return {
+          text: finalText,
+          original: originalCount,
+          unique: uniqueLines.length,
+          removed: originalCount - uniqueLines.length
+        };
+      }, [input, options]);
+
+      const handleCopy = () => {
+        navigator.clipboard.writeText(results.text);
+        setCopyStatus('Copied!');
+        setTimeout(() => setCopyStatus('Copy Results'), 2000);
+      };
+
+      const handleDownload = () => {
+        const element = document.createElement("a");
+        const file = new Blob([results.text], {type: 'text/plain'});
+        element.href = URL.createObjectURL(file);
+        element.download = "cleaned_list.txt";
+        document.body.appendChild(element);
+        element.click();
+      };
+
+      const handleBookmark = () => {
+        setShowBookmarkToast(true);
+        setTimeout(() => setShowBookmarkToast(false), 3000);
+      };
+
+      const pageUrl = encodeURIComponent("https://simpliconvert.com/remove_duplicate_lines_online/");
+      const pageTitle = encodeURIComponent("Check out this Duplicate Line Remover tool!");
+
+      return (
+        <div className="bg-white rounded-[2rem] shadow-2xl overflow-hidden border border-slate-100">
+          <header className="bg-slate-50/50 border-b border-slate-100 p-6 md:p-8 flex flex-col md:flex-row justify-between items-center gap-6">
+            <div className="text-center md:text-left">
+              <h2 className="text-2xl font-black text-slate-800 tracking-tight flex items-center justify-center md:justify-start gap-3">
+                <span className="bg-[#da3f0b] text-white p-2 rounded-xl text-lg shadow-lg shadow-[#da3f0b30]">
+                  <i className="fas fa-broom"></i>
+                </span>
+                List Deduplicator & Cleaner
+              </h2>
+            </div>
+            <div className="flex gap-2">
+                <button onClick={() => setInput('')} className="text-xs font-bold text-slate-400 hover:text-red-500 transition-colors px-4 py-2">
+                    <i className="fas fa-trash-alt mr-2"></i>Clear All
+                </button>
+            </div>
+          </header>
+
+          <main className="flex flex-col lg:flex-row">
+            {/* Input Panel */}
+            <div className="lg:w-[60%] p-6 md:p-8 border-r border-slate-100">
+              <div className="flex flex-col h-full">
+                <div className="flex justify-between items-center mb-3 px-1">
+                    <label className="text-xs font-black text-slate-400 uppercase tracking-widest">Paste your list below</label>
+                    <span className="text-[10px] font-bold text-slate-300">{input.length} characters</span>
+                </div>
+                <textarea 
+                  className="w-full h-80 lg:h-[450px] p-4 rounded-2xl border border-slate-200 focus:ring-4 focus:ring-[#da3f0b10] focus:border-[#da3f0b] outline-none transition-all font-mono text-sm bg-slate-50/30"
+                  placeholder="Paste your lines here...&#10;Example:&#10;Apple&#10;Banana&#10;Apple&#10;Orange"
+                  value={input}
+                  onChange={(e) => setInput(e.target.value)}
+                ></textarea>
+
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-6">
+                    <label className="flex items-center gap-2 cursor-pointer group">
+                        <input type="checkbox" checked={options.caseSensitive} onChange={(e) => setOptions({...options, caseSensitive: e.target.checked})} className="w-4 h-4 accent-[#da3f0b]" />
+                        <span className="text-xs font-bold text-slate-600 group-hover:text-[#da3f0b]">Case Sensitive</span>
+                    </label>
+                    <label className="flex items-center gap-2 cursor-pointer group">
+                        <input type="checkbox" checked={options.trimLines} onChange={(e) => setOptions({...options, trimLines: e.target.checked})} className="w-4 h-4 accent-[#da3f0b]" />
+                        <span className="text-xs font-bold text-slate-600 group-hover:text-[#da3f0b]">Trim Spaces</span>
+                    </label>
+                    <label className="flex items-center gap-2 cursor-pointer group">
+                        <input type="checkbox" checked={options.removeEmpty} onChange={(e) => setOptions({...options, removeEmpty: e.target.checked})} className="w-4 h-4 accent-[#da3f0b]" />
+                        <span className="text-xs font-bold text-slate-600 group-hover:text-[#da3f0b]">Remove Empty</span>
+                    </label>
+                    <div className="relative">
+                        <select 
+                            value={options.sort} 
+                            onChange={(e) => setOptions({...options, sort: e.target.value})}
+                            className="w-full bg-white border border-slate-200 text-slate-600 py-1 px-2 rounded-lg text-[10px] font-bold focus:outline-none focus:border-[#da3f0b] appearance-none"
+                        >
+                            <option value="none">No Sorting</option>
+                            <option value="alpha">A-Z Sort</option>
+                            <option value="reverse">Z-A Sort</option>
+                        </select>
+                    </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Results Panel */}
+            <div className="lg:w-[40%] bg-slate-50/50 p-6 md:p-8 flex flex-col">
+               <div className="space-y-4 mb-6">
+                  <StatCard 
+                    isMain={true}
+                    label="Unique Lines"
+                    value={results.unique}
+                    subtext="Cleaned Result"
+                  />
+                  <div className="grid grid-cols-2 gap-4">
+                     <StatCard label="Original" value={results.original} />
+                     <StatCard label="Removed" value={results.removed} />
+                  </div>
+               </div>
+
+               <div className="flex-grow flex flex-col">
+                  <div className="flex justify-between items-center mb-2 px-1">
+                    <label className="text-xs font-black text-slate-400 uppercase tracking-widest">Cleaned Result</label>
+                  </div>
+                  <textarea 
+                    readOnly
+                    className="w-full flex-grow h-48 lg:h-auto p-4 rounded-2xl border border-slate-200 bg-white font-mono text-sm outline-none"
+                    value={results.text}
+                    placeholder="Results will appear here..."
+                  ></textarea>
+                  
+                  <div className="grid grid-cols-2 gap-3 mt-4">
+                    <button 
+                        onClick={handleCopy}
+                        disabled={!results.text}
+                        className="flex items-center justify-center gap-2 bg-slate-800 text-white py-3 rounded-xl font-bold text-sm hover:bg-slate-900 transition-all disabled:opacity-50"
+                    >
+                        <i className={`fas ${copyStatus === 'Copied!' ? 'fa-check' : 'fa-copy'}`}></i> {copyStatus}
+                    </button>
+                    <button 
+                        onClick={handleDownload}
+                        disabled={!results.text}
+                        className="flex items-center justify-center gap-2 bg-[#da3f0b] text-white py-3 rounded-xl font-bold text-sm hover:bg-[#b53409] transition-all disabled:opacity-50"
+                    >
+                        <i className="fas fa-download"></i> Download .txt
+                    </button>
+                  </div>
+               </div>
+            </div>
+          </main>
+
+          <footer className="bg-slate-50 border-t border-slate-100 p-6 md:p-8">
+             <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+                 <div className="text-center md:text-left">
+                     <h4 className="text-sm font-bold text-slate-700 mb-1">Share this tool</h4>
+                     <p className="text-xs text-slate-400">Help others clean their data faster.</p>
+                 </div>
+                 
+                 <div className="flex flex-wrap justify-center gap-3">
+                     <ShareButton platform="facebook" icon="facebook-f" color="bg-[#1877F2]" url={pageUrl} title={pageTitle} />
+                     <ShareButton platform="twitter" icon="twitter" color="bg-[#1DA1F2]" url={pageUrl} title={pageTitle} />
+                     <ShareButton platform="linkedin" icon="linkedin-in" color="bg-[#0A66C2]" url={pageUrl} title={pageTitle} />
+                     <ShareButton platform="whatsapp" icon="whatsapp" color="bg-[#25D366]" url={pageUrl} title={pageTitle} />
+                     <ShareButton platform="reddit" icon="reddit-alien" color="bg-[#FF4500]" url={pageUrl} title={pageTitle} />
+                     <ShareButton platform="telegram" icon="telegram-plane" color="bg-[#0088cc]" url={pageUrl} title={pageTitle} />
+                 </div>
+
+                 <div className="relative">
+                     <button onClick={handleBookmark} className="flex items-center gap-2 bg-white border border-slate-200 hover:border-[#da3f0b] hover:text-[#da3f0b] text-slate-600 px-4 py-2 rounded-lg text-sm font-bold transition-all shadow-sm active:scale-95">
+                        <i className="fas fa-bookmark"></i> Bookmark
+                     </button>
+                     {showBookmarkToast && (
+                         <div className="absolute bottom-full mb-3 left-1/2 -translate-x-1/2 bg-slate-800 text-white text-xs py-2 px-4 rounded-lg shadow-lg whitespace-nowrap animate-fade">
+                             Press <span className="font-bold text-[#da3f0b]">Ctrl + D</span> to bookmark
+                         </div>
+                     )}
+                 </div>
+             </div>
+          </footer>
+        </div>
+      );
+    };
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+    </script>
+
+    <section class="bg-white py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="prose prose-lg max-w-none prose-h2:text-gray-800 prose-p:text-gray-700">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">Remove Duplicate Lines Online – The Ultimate List Cleaner</h2>
+                <p class="mb-6 leading-relaxed">
+                    Managing large sets of data often leads to redundant information. Whether you are dealing with email lists, 
+                    coding arrays, or simple text notes, duplicates can clutter your work and lead to errors. Our 
+                    <strong>Remove Duplicate Lines Online</strong> tool provides a seamless, browser-based solution to 
+                    deduplicate any list instantly. No software installation is required, and your data remains private.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Why Use a Unique Line Generator?</h2>
+                <p class="mb-6 leading-relaxed">
+                    Manually searching for repeats in a list of hundreds or thousands of lines is nearly impossible. 
+                    A <strong>deduplicate list</strong> tool automates this process, saving you hours of tedious work. 
+                    This is particularly useful for:
+                </p>
+                <ul class="list-disc pl-6 mb-6 space-y-2 text-gray-700">
+                    <li><strong>Data Cleaning:</strong> Preparing CSV or text data for database imports.</li>
+                    <li><strong>Marketing:</strong> Removing duplicate email addresses or phone numbers from lead lists.</li>
+                    <li><strong>Programming:</strong> Cleaning up logs, CSS classes, or configuration files.</li>
+                    <li><strong>SEO:</strong> Deduplicating keyword lists or URL sets for site audits.</li>
+                </ul>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Advanced Features for Precise Cleaning</h2>
+                <p class="mb-6 leading-relaxed">
+                    Our tool goes beyond simple deduplication. We offer several options to ensure your list is exactly how you need it:
+                </p>
+                <ul class="list-disc pl-6 mb-6 space-y-2 text-gray-700">
+                    <li><strong>Case Sensitivity:</strong> Choose whether "TEXT" and "text" should be treated as the same line.</li>
+                    <li><strong>Trim Whitespace:</strong> Automatically remove leading and trailing spaces that often cause "hidden" duplicates.</li>
+                    <li><strong>Remove Empty Lines:</strong> Keep your list compact by stripping out blank rows.</li>
+                    <li><strong>Instant Sorting:</strong> Organize your unique results alphabetically (A-Z or Z-A) with a single click.</li>
+                </ul>
+
+                <p class="mb-6 leading-relaxed">
+                    Just as our <a href="https://simpliconvert.com/meta_tag_generator/" target="_blank">Meta Tag Generator</a> helps you organize your website's SEO data, 
+                    this tool ensures your raw text data is clean and professional.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">How to Remove Duplicate Lines Online</h2>
+                <ol class="list-decimal pl-6 mb-6 space-y-2 text-gray-700">
+                    <li><strong>Paste:</strong> Copy your text and paste it into the input box.</li>
+                    <li><strong>Configure:</strong> Toggle options like "Trim Spaces" or "Case Sensitive" based on your needs.</li>
+                    <li><strong>Review:</strong> Watch the real-time stats update to see how many duplicates were removed.</li>
+                    <li><strong>Export:</strong> Copy the result to your clipboard or download it as a .txt file.</li>
+                </ol>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">100% Private and Secure</h2>
+                <p class="mb-6 leading-relaxed">
+                    We understand that your data might be sensitive. Unlike other online tools that upload your text to a server, 
+                    our <strong>unique line generator</strong> works entirely within your web browser. Your text never leaves 
+                    your computer, making it safe for cleaning private lists, internal logs, or personal data.
+                </p>
+                <p class="mb-6 leading-relaxed">
+                    For users managing digital documents, you might also find our 
+                    <a href="https://simpliconvert.com/merge_pdf_online/" target="_blank">Merge PDF Online</a> tool useful for 
+                    organizing your cleaned data reports into single files.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-center text-gray-900 mb-8">Frequently Asked Questions</h2>
+            <div class="space-y-4">
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>Is there a limit to the number of lines I can paste?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">
+                            There is no specific line limit. The tool can handle thousands of lines easily. However, extremely large files (e.g., millions of lines) may slow down your browser depending on your computer's RAM.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>Does "Trim Spaces" remove spaces inside the line?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">
+                            No, "Trim Spaces" only removes whitespace from the very beginning and the very end of each line. It does not affect spaces between words within the line.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>Can I undo a clear action?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">
+                            Currently, the "Clear All" button permanently wipes the input. We recommend copying your data elsewhere before clearing if you aren't sure you're finished.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 pb-16">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-slate-200 pt-16">
+            <h2 class="text-2xl font-bold text-center text-slate-800 mb-10">Explore More Tools</h2>
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+                <a href="/password_generator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-slate-50 text-slate-700 flex items-center justify-center shrink-0 group-hover:bg-slate-800 group-hover:text-white transition-colors">
+                        <i class="fas fa-key text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Password Gen</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Create secure passwords.</p>
+                    </div>
+                </a>
+                <a href="/qr_code_generator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-slate-50 text-slate-800 flex items-center justify-center shrink-0 group-hover:bg-slate-900 group-hover:text-white transition-colors">
+                        <i class="fas fa-qrcode text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">QR Creator</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Generate custom QR codes.</p>
+                    </div>
+                </a>
+                <a href="/meta_tag_generator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0 group-hover:bg-indigo-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-search text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Meta Tag Gen</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Optimize SEO tags.</p>
+                    </div>
+                </a>
+                <a href="/to_do_list/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-green-50 text-green-600 flex items-center justify-center shrink-0 group-hover:bg-green-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-check-square text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">To-Do List</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Stay organized online.</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <div id="footer"></div>
+
+    <script>
+    function initializeHeaderScripts() {
+        const header = document.getElementById('header');
+        if (header) {
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 10) {
+                    header.classList.add('scrolled-effect');
+                } else {
+                    header.classList.remove('scrolled-effect');
+                }
+            });
+        }
+    }
+    
+    function initializeFooterScripts() {
+        const yearSpan = document.getElementById('current-year');
+        if(yearSpan) {
+            yearSpan.textContent = new Date().getFullYear();
+        }
+    }
+
+    async function loadComponent(url, elementId, callback) {
+        try {
+            const response = await fetch(url);
+            if (!response.ok) throw new Error('Status: ' + response.status);
+            const text = await response.text();
+            const element = document.getElementById(elementId);
+            if (element) {
+                element.innerHTML = text;
+                if (callback) callback();
+            }
+        } catch (error) {
+            console.error('Error loading component:', error);
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        loadComponent('/components/navbar.html', 'navbar', initializeHeaderScripts);
+        loadComponent('/components/footer.html', 'footer', initializeFooterScripts);
+        
+        const faqToggles = document.querySelectorAll('[data-faq-toggle]');
+        faqToggles.forEach(button => {
+            button.addEventListener('click', () => {
+                const answer = button.nextElementSibling;
+                const icon = button.querySelector('.faq-icon');
+                const isOpening = !answer.style.maxHeight;
+
+                faqToggles.forEach(other => {
+                    if (other !== button) {
+                        other.nextElementSibling.style.maxHeight = null;
+                        other.querySelector('.faq-icon').classList.remove('rotate-90');
+                        other.querySelector('.faq-icon').classList.add('-rotate-90');
+                    }
+                });
+
+                if (isOpening) {
+                    answer.style.maxHeight = answer.scrollHeight + "px";
+                    icon.classList.remove('-rotate-90');
+                    icon.classList.add('rotate-90');
+                } else {
+                    answer.style.maxHeight = null;
+                    icon.classList.remove('rotate-90');
+                    icon.classList.add('-rotate-90');
+                }
+            });
+        });
+    });
+    </script>
+</body>
+</html>
