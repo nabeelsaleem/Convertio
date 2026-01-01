@@ -50,6 +50,35 @@
     }
     </script>
 
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [{
+        "@type": "Question",
+        "name": "How do I calculate profit on Bitcoin?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The basic formula is: (Sell Price - Buy Price) * Quantity of Coins. However, to get your Net Profit, you must subtract trading fees. Our calculator handles this automatically: Net Profit = (Total Sale Value - Exit Fees) - (Initial Investment + Entry Fees)."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Does this tool work for Ethereum and Altcoins?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. The math for profit and loss is the same regardless of the coin. You can use this for Ethereum (ETH), Solana (SOL), Pepe, or any other token. Simply enter the price per unit in the Buy/Sell fields."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Why is my break-even price higher than my buy price?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "This is due to exchange fees. If you pay a 0.5% fee to buy and a 0.5% fee to sell, the coin price must increase by more than 1% just for you to get your original money back. This calculator shows you that exact price floor."
+        }
+      }]
+    }
+    </script>
+
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
@@ -118,16 +147,13 @@
             background: var(--primary-hover);
         }
 
-
-        
-  .prose a {
-    color: #da3f0b;
-    text-decoration: none; /* optional: removes underline */
-  }
-  .prose a:hover {
-    text-decoration: underline; /* optional: adds underline on hover */
-  }
-
+        .prose a {
+            color: #da3f0b;
+            text-decoration: none; 
+        }
+        .prose a:hover {
+            text-decoration: underline; 
+        }
 
         /* Tooltip styling */
         .tooltip-container { position: relative; display: inline-block; }
@@ -150,6 +176,15 @@
         /* Custom scrollbar for dropdowns */
         select::-webkit-scrollbar { width: 8px; }
         select::-webkit-scrollbar-thumb { background-color: #e2e8f0; border-radius: 4px; }
+        
+        /* Tool Card Hover Effect */
+        .tool-card {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .tool-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+        }
     </style>
 </head>
 
@@ -252,6 +287,31 @@
       );
     };
 
+    const ShareButton = ({ platform, icon, color, url, title }) => {
+        let shareUrl = '';
+        switch(platform) {
+            case 'facebook': shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${url}`; break;
+            case 'twitter': shareUrl = `https://twitter.com/intent/tweet?url=${url}&text=${title}`; break;
+            case 'linkedin': shareUrl = `https://www.linkedin.com/shareArticle?mini=true&url=${url}`; break;
+            case 'whatsapp': shareUrl = `https://api.whatsapp.com/send?text=${title}%20${url}`; break;
+            case 'reddit': shareUrl = `https://www.reddit.com/submit?url=${url}&title=${title}`; break;
+            case 'telegram': shareUrl = `https://t.me/share/url?url=${url}&text=${title}`; break;
+            default: return null;
+        }
+
+        return (
+            <a 
+                href={shareUrl} 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className={`w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center text-white transition-transform hover:-translate-y-1 hover:shadow-lg ${color}`}
+                title={`Share on ${platform.charAt(0).toUpperCase() + platform.slice(1)}`}
+            >
+                <i className={`fab fa-${icon}`}></i>
+            </a>
+        );
+    };
+
     const App = () => {
       const [currency, setCurrency] = useState(currencies[0]);
       const [investment, setInvestment] = useState(1000);
@@ -259,6 +319,7 @@
       const [sellPrice, setSellPrice] = useState(55000);
       const [buyFeePercent, setBuyFeePercent] = useState(0.1);
       const [sellFeePercent, setSellFeePercent] = useState(0.1);
+      const [showBookmarkToast, setShowBookmarkToast] = useState(false);
 
       const calculations = useMemo(() => {
         const investVal = parseFloat(investment) || 0;
@@ -269,33 +330,15 @@
 
         if (buyVal === 0) return { profit: 0, roi: 0, totalFees: 0, netReturn: 0, breakEven: 0 };
 
-        // Logic: 
-        // 1. Calculate coins bought. Usually fees are deducted from the investment amount or added to cost.
-        // Simple approach: Investment is the total cash out of pocket. 
-        // Fee is taken from that cash, remainder buys coins.
         const entryFeeAmount = investVal * (buyFeeVal / 100);
         const netInvestmentForCoins = investVal - entryFeeAmount;
         const coins = netInvestmentForCoins / buyVal;
-
-        // 2. Calculate Gross Sale
         const grossSaleVal = coins * sellVal;
-        
-        // 3. Exit Fees
         const exitFeeAmount = grossSaleVal * (sellFeeVal / 100);
-        
-        // 4. Net Return (Cash in pocket after sale)
         const netReturn = grossSaleVal - exitFeeAmount;
-        
-        // 5. Profit/Loss
         const totalProfit = netReturn - investVal;
         const totalFees = entryFeeAmount + exitFeeAmount;
-        
-        // 6. ROI
         const roi = investVal > 0 ? (totalProfit / investVal) * 100 : 0;
-
-        // 7. Break Even Price
-        // Need (coins * Price) * (1 - sellFee) = Investment
-        // Price = Investment / (coins * (1 - sellFee))
         const breakEvenPrice = coins > 0 ? investVal / (coins * (1 - (sellFeeVal/100))) : 0;
 
         return {
@@ -330,6 +373,14 @@
           setSellPrice((parseFloat(buyPrice) * multiplier).toFixed(2));
         }
       };
+
+      const handleBookmark = () => {
+        setShowBookmarkToast(true);
+        setTimeout(() => setShowBookmarkToast(false), 3000);
+      };
+
+      const pageUrl = encodeURIComponent("https://simpliconvert.com/crypto_profit_calculator/");
+      const pageTitle = encodeURIComponent("Check out this Crypto Profit Calculator!");
 
       return (
         <div className="bg-white rounded-[2rem] shadow-2xl overflow-hidden border border-slate-100">
@@ -477,7 +528,7 @@
                         {/* Visual marker relative to Buy Price */}
                         <div 
                            className="bg-slate-400 h-2 rounded-full transition-all duration-500" 
-                           style={{width: '100%'}} // Simplified visual
+                           style={{width: '100%'}} 
                         ></div>
                      </div>
                      <p className="text-[10px] text-slate-400">
@@ -494,6 +545,39 @@
                </div>
             </div>
           </main>
+
+          {/* Share & Bookmark Footer */}
+          <footer className="bg-slate-50 border-t border-slate-100 p-6 md:p-8">
+             <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+                 <div className="text-center md:text-left">
+                     <h4 className="text-sm font-bold text-slate-700 mb-1">Share this calculator</h4>
+                     <p className="text-xs text-slate-400">Help others trade smarter.</p>
+                 </div>
+                 
+                 <div className="flex flex-wrap justify-center gap-3">
+                     <ShareButton platform="facebook" icon="facebook-f" color="bg-[#1877F2]" url={pageUrl} title={pageTitle} />
+                     <ShareButton platform="twitter" icon="twitter" color="bg-[#1DA1F2]" url={pageUrl} title={pageTitle} />
+                     <ShareButton platform="linkedin" icon="linkedin-in" color="bg-[#0A66C2]" url={pageUrl} title={pageTitle} />
+                     <ShareButton platform="whatsapp" icon="whatsapp" color="bg-[#25D366]" url={pageUrl} title={pageTitle} />
+                     <ShareButton platform="reddit" icon="reddit-alien" color="bg-[#FF4500]" url={pageUrl} title={pageTitle} />
+                     <ShareButton platform="telegram" icon="telegram-plane" color="bg-[#0088cc]" url={pageUrl} title={pageTitle} />
+                 </div>
+
+                 <div className="relative">
+                     <button 
+                        onClick={handleBookmark}
+                        className="flex items-center gap-2 bg-white border border-slate-200 hover:border-[#da3f0b] hover:text-[#da3f0b] text-slate-600 px-4 py-2 rounded-lg text-sm font-bold transition-all shadow-sm active:scale-95"
+                     >
+                        <i className="fas fa-bookmark"></i> Bookmark
+                     </button>
+                     {showBookmarkToast && (
+                         <div className="absolute bottom-full mb-3 left-1/2 -translate-x-1/2 bg-slate-800 text-white text-xs py-2 px-4 rounded-lg shadow-lg whitespace-nowrap animate-fade">
+                             Press <span className="font-bold text-[#da3f0b]">Ctrl + D</span> to bookmark
+                         </div>
+                     )}
+                 </div>
+             </div>
+          </footer>
         </div>
       );
     };
@@ -507,7 +591,6 @@
   <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="prose prose-lg max-w-none prose-h2:text-gray-800 prose-p:text-gray-700">
 
-      <!-- Intro -->
       <h2 class="text-3xl font-bold text-gray-900 mb-4">Crypto Profit & Loss Calculator – Track Your Gains Instantly</h2>
       <p class="mb-6 leading-relaxed">
         Cryptocurrency trading can be exciting, but it’s also risky if you don’t track your numbers carefully. 
@@ -517,7 +600,6 @@
         how to use our calculator effectively and improve your trading decisions.
       </p>
 
-      <!-- Section 1 -->
       <h2 class="text-2xl font-bold mt-8 mb-4">Why You Need a Crypto Investment Return Calculator</h2>
       <p class="mb-6 leading-relaxed">
         Many traders focus only on the buy and sell price, forgetting that exchange fees, taxes, and market volatility 
@@ -531,7 +613,6 @@
         making informed financial decisions.
       </p>
 
-      <!-- Section 2 -->
       <h2 class="text-2xl font-bold mt-8 mb-4">How to Calculate Crypto Profits and ROI</h2>
       <p class="mb-6 leading-relaxed">
         Calculating crypto profits isn’t complicated once you understand the formula. Our <strong>Crypto Profit Calculator</strong> 
@@ -553,7 +634,6 @@
 </p>
 
 
-      <!-- Section 3 -->
       <h2 class="text-2xl font-bold mt-8 mb-4">Understanding the Crypto Exit Strategy Calculator</h2>
       <p class="mb-6 leading-relaxed">
         An exit strategy is crucial for every trader. Our <strong>exit strategy calculator for crypto</strong> helps you 
@@ -570,7 +650,6 @@
         strategy instead of relying on guesswork.
       </p>
 
-      <!-- Section 4 -->
       <h2 class="text-2xl font-bold mt-8 mb-4">How to Calculate Crypto Gains for Tax Reporting</h2>
       <p class="mb-6 leading-relaxed">
         Taxes are one of the most overlooked aspects of crypto trading. In most countries, selling crypto is a taxable event. 
@@ -591,7 +670,6 @@
 </p>
 
 
-      <!-- Section 5 -->
       <h2 class="text-2xl font-bold mt-8 mb-4">Crypto Profit Calculator with Fees</h2>
       <p class="mb-6 leading-relaxed">
         Exchange fees can drastically reduce profits. Our <strong>crypto profit calculator with fees</strong> allows you 
@@ -600,7 +678,6 @@
         Adjusting these values in the calculator gives you a realistic net profit figure.
       </p>
 
-      <!-- Section 6 -->
       <h2 class="text-2xl font-bold mt-8 mb-4">Using the Calculator for Different Cryptocurrencies</h2>
       <p class="mb-6 leading-relaxed">
         While Bitcoin and Ethereum are the most popular, our calculator works for all altcoins. Whether you’re trading 
@@ -608,7 +685,6 @@
         for tracking multiple assets at once.
       </p>
 
-      <!-- Section 7 -->
       <h2 class="text-2xl font-bold mt-8 mb-4">Pro Tips for Maximizing Your Crypto ROI</h2>
       <ul class="list-disc pl-6 mb-6 space-y-2 text-gray-700">
         <li>Always factor in fees before calculating profits.</li>
@@ -629,7 +705,6 @@
 
     
 
-      <!-- Closing -->
       <h2 class="text-2xl font-bold mt-8 mb-4">Final Thoughts</h2>
       <p class="mb-6 leading-relaxed">
         The <strong>Crypto Profit & Loss Calculator</strong> is more than just a tool—it’s a trading companion. 
@@ -638,7 +713,10 @@
         you cover all aspects of trading and investing. Whether you’re a beginner or an experienced trader, 
         this calculator ensures your decisions are backed by accurate numbers, helping you maximize ROI and 
         minimize risk.
-      </
+      </p>
+    </div>
+    </div>
+    </section>
   
 
     <section class="bg-gray-50 py-12 sm:py-16">
@@ -687,6 +765,75 @@
                         </p>
                     </div>
                 </div>
+
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 pb-16">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-slate-200 pt-16">
+            <h2 class="text-2xl font-bold text-center text-slate-800 mb-10">Popular Tools on SimpliConvert</h2>
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6">
+                
+                <a href="/freelance_hourly_rate_calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-orange-50 text-[#da3f0b] flex items-center justify-center shrink-0 group-hover:bg-[#da3f0b] group-hover:text-white transition-colors">
+                        <i class="fas fa-calculator text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Rate Calculator</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Calculate your ideal freelance hourly rate.</p>
+                    </div>
+                </a>
+
+                <a href="/youtube_thumbnail_downloader/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-red-50 text-red-600 flex items-center justify-center shrink-0 group-hover:bg-red-600 group-hover:text-white transition-colors">
+                        <i class="fab fa-youtube text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Thumbnail Grabber</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Download 4K & HD YouTube cover images.</p>
+                    </div>
+                </a>
+
+                <a href="/markdown_editor/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-slate-50 text-slate-700 flex items-center justify-center shrink-0 group-hover:bg-slate-800 group-hover:text-white transition-colors">
+                        <i class="fab fa-markdown text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Markdown Editor</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Write, preview, and export markdown files.</p>
+                    </div>
+                </a>
+
+                <a href="/json-formatter-validator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-yellow-50 text-yellow-600 flex items-center justify-center shrink-0 group-hover:bg-yellow-500 group-hover:text-white transition-colors">
+                        <i class="fas fa-code text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">JSON Formatter</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Validate and beautify messy JSON code.</p>
+                    </div>
+                </a>
+
+                <a href="/css_box_shadow_generator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center shrink-0 group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-swatchbook text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Box Shadow Gen</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Create smooth CSS shadows and layers.</p>
+                    </div>
+                </a>
+
+                <a href="/instagram_caption_line_break/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-pink-50 text-pink-600 flex items-center justify-center shrink-0 group-hover:bg-pink-600 group-hover:text-white transition-colors">
+                        <i class="fab fa-instagram text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Caption Spacer</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Fix Instagram caption line breaks.</p>
+                    </div>
+                </a>
 
             </div>
         </div>
