@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Online Stopwatch & Timer – Precise Digital Lap Timer | SimpliConvert</title>
+    <meta name="description" content="Track time precisely with our Online Stopwatch and Timer. Features a clear digital display, start/stop controls, and lap tracking for any task.">
+    <meta name="keywords" content="online stopwatch and timer, digital stopwatch, count up timer, lap timer online, web stopwatch, productivity timer">
+    <meta name="author" content="SimpliConvert">
+    <meta property="og:site_name" content="SimpliConvert">
+    <meta name="robots" content="index, follow">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://simpliconvert.com/online_stopwatch_and_timer/">
+    <meta property="og:title" content="Online Stopwatch & Timer – Track Time Precisely">
+    <meta property="og:description" content="A free, accurate online stopwatch and timer with lap tracking. Perfect for workouts, cooking, studying, and productivity.">
+    <meta property="og:image" content="https://simpliconvert.com/images/stopwatch-timer-og.jpg">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://simpliconvert.com/online_stopwatch_and_timer/">
+    <meta name="twitter:title" content="Online Stopwatch & Timer – Precise Digital Lap Timer">
+    <meta name="twitter:description" content="Free tool to track time with millisecond precision. Includes lap recording and countdown timer modes.">
+    <meta name="twitter:image" content="https://simpliconvert.com/images/stopwatch-timer-og.jpg">
+
+    <link rel="canonical" href="https://simpliconvert.com/online_stopwatch_and_timer/">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Online Stopwatch And Timer",
+      "url": "https://simpliconvert.com/online_stopwatch_and_timer/",
+      "description": "A free online digital stopwatch and countdown timer with lap tracking capabilities for sports, cooking, and productivity.",
+      "applicationCategory": "UtilitiesApplication",
+      "operatingSystem": "Web Browser",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "SimpliConvert",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://simpliconvert.com/logo.png"
+        }
+      }
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [{
+        "@type": "Question",
+        "name": "How accurate is this online stopwatch?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Our online stopwatch uses high-precision browser timestamps (Date.now()) to track time down to the millisecond, ensuring accuracy for most daily tasks, workouts, and study sessions."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Can I record laps with the stopwatch?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. While the stopwatch is running, you can click the 'Lap' button to record the current time without stopping the main clock. All laps are listed below the timer for easy review."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Does the timer sound an alarm when it finishes?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes, in Timer mode, the display will flash and a notification sound will play once the countdown reaches zero to alert you that the time is up."
+        }
+      }]
+    }
+    </script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #da3f0b;
+            --primary-hover: #b53409;
+            --primary-light: #fff5f2;
+            --bg: #f8fafc;
+            --text-dark: #0f172a;
+            --success: #16a34a;
+            --danger: #dc2626;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text-dark);
+        }
+
+        .mono-font {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .hero-card {
+            background: white;
+            border: 1px solid #f1f5f9;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background-color: var(--primary);
+        }
+
+        .prose a {
+            color: #da3f0b;
+            text-decoration: none; 
+        }
+        .prose a:hover {
+            text-decoration: underline; 
+        }
+
+        .animate-fade { animation: fadeIn 0.3s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+        .tool-card {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .tool-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+        }
+
+        .timer-input::-webkit-inner-spin-button,
+        .timer-input::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 min-h-screen flex flex-col">
+    <div id="navbar"></div>
+
+    <section class="hero-white text-black py-2 md:py-10">
+        <div class="container mx-auto px-4 text-center">
+            <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-2">Online Stopwatch & Timer</h1>
+            <p class="text-lg md:text-xl max-w-3x1 mx-auto mb-2">
+                A precise, easy-to-use digital tool for tracking time, recording laps, and setting countdowns.
+            </p>
+        </div>
+    </section>
+
+    <div id="root" class="w-full max-w-6xl mx-auto p-4 sm:p-6"></div>
+
+    <script type="text/babel">
+    const { useState, useEffect, useRef } = React;
+
+    const App = () => {
+      const [mode, setMode] = useState('stopwatch'); // 'stopwatch' or 'timer'
+      const [isRunning, setIsRunning] = useState(false);
+      const [time, setTime] = useState(0); // milliseconds
+      const [laps, setLaps] = useState([]);
+      const [timerInput, setTimerInput] = useState({ h: 0, m: 0, s: 0 });
+      const [showBookmarkToast, setShowBookmarkToast] = useState(false);
+      
+      const timerRef = useRef(null);
+      const startTimeRef = useRef(0);
+      const audioRef = useRef(new Audio('https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3'));
+
+      useEffect(() => {
+        if (isRunning) {
+          startTimeRef.current = Date.now() - time;
+          timerRef.current = setInterval(() => {
+            const now = Date.now();
+            const elapsed = now - startTimeRef.current;
+            
+            if (mode === 'timer') {
+              const remaining = Math.max(0, time - (now - startTimeRef.current + time)); // Logic handled in setTime
+              // For timer, we actually want to subtract from the initial set time
+            }
+            
+            setTime(prev => {
+                if (mode === 'stopwatch') return elapsed;
+                const newTime = prev - 10;
+                if (newTime <= 0) {
+                    setIsRunning(false);
+                    audioRef.current.play();
+                    return 0;
+                }
+                return newTime;
+            });
+          }, 10);
+        } else {
+          clearInterval(timerRef.current);
+        }
+        return () => clearInterval(timerRef.current);
+      }, [isRunning, mode]);
+
+      const formatTime = (ms) => {
+        const hours = Math.floor(ms / 3600000);
+        const minutes = Math.floor((ms % 3600000) / 60000);
+        const seconds = Math.floor((ms % 60000) / 1000);
+        const centiseconds = Math.floor((ms % 1000) / 10);
+
+        return {
+          h: String(hours).padStart(2, '0'),
+          m: String(minutes).padStart(2, '0'),
+          s: String(seconds).padStart(2, '0'),
+          cs: String(centiseconds).padStart(2, '0')
+        };
+      };
+
+      const handleStartPause = () => {
+        if (mode === 'timer' && time === 0 && !isRunning) {
+            const totalMs = (timerInput.h * 3600 + timerInput.m * 60 + timerInput.s) * 1000;
+            if (totalMs > 0) setTime(totalMs);
+            else return;
+        }
+        setIsRunning(!isRunning);
+      };
+
+      const handleReset = () => {
+        setIsRunning(false);
+        setTime(0);
+        setLaps([]);
+      };
+
+      const handleLap = () => {
+        if (mode === 'stopwatch' && isRunning) {
+          setLaps([time, ...laps]);
+        }
+      };
+
+      const handleModeChange = (newMode) => {
+        setIsRunning(false);
+        setTime(0);
+        setLaps([]);
+        setMode(newMode);
+      };
+
+      const handleBookmark = () => {
+        setShowBookmarkToast(true);
+        setTimeout(() => setShowBookmarkToast(false), 3000);
+      };
+
+      const t = formatTime(time);
+      const pageUrl = encodeURIComponent("https://simpliconvert.com/online_stopwatch_and_timer/");
+      const pageTitle = encodeURIComponent("Check out this Online Stopwatch & Timer!");
+
+      return (
+        <div className="bg-white rounded-[2rem] shadow-2xl overflow-hidden border border-slate-100">
+          <header className="bg-slate-50/50 border-b border-slate-100 p-6 md:p-8 flex flex-col md:flex-row justify-between items-center gap-6">
+            <div className="flex bg-slate-200 p-1 rounded-xl">
+                <button 
+                    onClick={() => handleModeChange('stopwatch')}
+                    className={`px-6 py-2 rounded-lg text-sm font-bold transition-all ${mode === 'stopwatch' ? 'bg-white text-[#da3f0b] shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
+                >
+                    <i className="fas fa-stopwatch mr-2"></i>Stopwatch
+                </button>
+                <button 
+                    onClick={() => handleModeChange('timer')}
+                    className={`px-6 py-2 rounded-lg text-sm font-bold transition-all ${mode === 'timer' ? 'bg-white text-[#da3f0b] shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
+                >
+                    <i className="fas fa-hourglass-half mr-2"></i>Timer
+                </button>
+            </div>
+            
+            <div className="text-slate-400 text-xs font-bold uppercase tracking-widest">
+                <i className="fas fa-circle text-[#da3f0b] animate-pulse mr-2"></i> Live Precision
+            </div>
+          </header>
+
+          <main className="flex flex-col lg:flex-row min-h-[450px]">
+            {/* Display Panel */}
+            <div className="lg:w-[65%] p-6 md:p-12 flex flex-col items-center justify-center border-r border-slate-100">
+              
+              {mode === 'timer' && !isRunning && time === 0 && (
+                <div className="flex gap-4 mb-8 animate-fade">
+                    {['h', 'm', 's'].map((unit) => (
+                        <div key={unit} className="flex flex-col items-center">
+                            <input 
+                                type="number" 
+                                min="0" 
+                                max={unit === 'h' ? '99' : '59'}
+                                value={timerInput[unit]}
+                                onChange={(e) => setTimerInput({...timerInput, [unit]: parseInt(e.target.value) || 0})}
+                                className="timer-input w-20 h-20 text-3xl font-black text-center border-2 border-slate-100 rounded-2xl focus:border-[#da3f0b] focus:ring-0 transition-all"
+                            />
+                            <span className="text-[10px] font-black text-slate-400 uppercase mt-2">{unit === 'h' ? 'Hours' : unit === 'm' ? 'Mins' : 'Secs'}</span>
+                        </div>
+                    ))}
+                </div>
+              )}
+
+              <div className={`mono-font text-6xl md:text-8xl lg:text-9xl font-black tracking-tighter mb-12 ${time === 0 && mode === 'timer' && !isRunning ? 'text-slate-200' : 'text-slate-800'}`}>
+                {t.h > 0 && <span>{t.h}<span className="text-4xl md:text-6xl text-slate-300">:</span></span>}
+                {t.m}<span className="text-4xl md:text-6xl text-slate-300">:</span>{t.s}
+                <span className="text-3xl md:text-5xl text-[#da3f0b]">.{t.cs}</span>
+              </div>
+
+              <div className="flex gap-4 w-full max-w-md">
+                <button 
+                    onClick={handleStartPause}
+                    className={`flex-1 py-4 rounded-2xl font-black text-lg shadow-lg transition-all active:scale-95 ${isRunning ? 'bg-slate-100 text-slate-600 hover:bg-slate-200' : 'bg-[#da3f0b] text-white hover:bg-[#b53409] shadow-[#da3f0b30]'}`}
+                >
+                    {isRunning ? <><i className="fas fa-pause mr-2"></i> PAUSE</> : <><i className="fas fa-play mr-2"></i> START</>}
+                </button>
+                
+                {mode === 'stopwatch' ? (
+                    <button 
+                        onClick={handleLap}
+                        disabled={!isRunning}
+                        className="flex-1 py-4 rounded-2xl font-black text-lg bg-white border-2 border-slate-100 text-slate-400 hover:border-[#da3f0b] hover:text-[#da3f0b] disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+                    >
+                        <i className="fas fa-flag mr-2"></i> LAP
+                    </button>
+                ) : null}
+
+                <button 
+                    onClick={handleReset}
+                    className="w-20 py-4 rounded-2xl font-black text-lg bg-white border-2 border-slate-100 text-slate-400 hover:border-red-100 hover:text-red-500 transition-all"
+                >
+                    <i className="fas fa-redo"></i>
+                </button>
+              </div>
+            </div>
+
+            {/* Laps/Info Panel */}
+            <div className="lg:w-[35%] bg-slate-50/50 p-6 md:p-8 overflow-y-auto max-h-[500px]">
+                <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest mb-6 flex items-center">
+                    <i className={`fas ${mode === 'stopwatch' ? 'fa-list-ol' : 'fa-info-circle'} mr-2`}></i>
+                    {mode === 'stopwatch' ? 'Lap Records' : 'Timer Details'}
+                </h3>
+
+                {mode === 'stopwatch' ? (
+                    <div className="space-y-3">
+                        {laps.length === 0 ? (
+                            <div className="text-center py-12 text-slate-300 italic text-sm">
+                                No laps recorded yet
+                            </div>
+                        ) : (
+                            laps.map((lapTime, index) => {
+                                const lt = formatTime(lapTime);
+                                return (
+                                    <div key={index} className="bg-white p-4 rounded-xl border border-slate-100 shadow-sm flex justify-between items-center animate-fade">
+                                        <span className="text-xs font-black text-slate-300">LAP {laps.length - index}</span>
+                                        <span className="mono-font font-bold text-slate-700">
+                                            {lt.h !== '00' && `${lt.h}:`}{lt.m}:{lt.s}<span className="text-[#da3f0b]">.{lt.cs}</span>
+                                        </span>
+                                    </div>
+                                );
+                            })
+                        )}
+                    </div>
+                ) : (
+                    <div className="space-y-6">
+                        <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm">
+                            <h4 className="text-sm font-bold text-slate-800 mb-2">How to use</h4>
+                            <p className="text-xs text-slate-500 leading-relaxed">
+                                Enter the desired hours, minutes, and seconds, then press Start. The timer will count down and alert you when finished.
+                            </p>
+                        </div>
+                        <div className="bg-[#da3f0b08] p-6 rounded-2xl border border-[#da3f0b15]">
+                            <h4 className="text-sm font-bold text-[#da3f0b] mb-2">Quick Presets</h4>
+                            <div className="grid grid-cols-2 gap-2">
+                                {[5, 10, 15, 30].map(mins => (
+                                    <button 
+                                        key={mins}
+                                        onClick={() => {
+                                            handleReset();
+                                            setTime(mins * 60000);
+                                        }}
+                                        className="bg-white border border-[#da3f0b20] text-[#da3f0b] py-2 rounded-lg text-xs font-bold hover:bg-[#da3f0b] hover:text-white transition-all"
+                                    >
+                                        {mins} Min
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+                )}
+            </div>
+          </main>
+
+          {/* Share & Bookmark Footer */}
+          <footer className="bg-slate-50 border-t border-slate-100 p-6 md:p-8">
+             <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+                 <div className="text-center md:text-left">
+                     <h4 className="text-sm font-bold text-slate-700 mb-1">Share this tool</h4>
+                     <p className="text-xs text-slate-400">Accurate timing for everyone.</p>
+                 </div>
+                 
+                 <div className="flex flex-wrap justify-center gap-3">
+                     <ShareButton platform="facebook" icon="facebook-f" color="bg-[#1877F2]" url={pageUrl} title={pageTitle} />
+                     <ShareButton platform="twitter" icon="twitter" color="bg-[#1DA1F2]" url={pageUrl} title={pageTitle} />
+                     <ShareButton platform="whatsapp" icon="whatsapp" color="bg-[#25D366]" url={pageUrl} title={pageTitle} />
+                     <ShareButton platform="reddit" icon="reddit-alien" color="bg-[#FF4500]" url={pageUrl} title={pageTitle} />
+                     <ShareButton platform="telegram" icon="telegram-plane" color="bg-[#0088cc]" url={pageUrl} title={pageTitle} />
+                 </div>
+
+                 <div className="relative">
+                     <button 
+                        onClick={handleBookmark}
+                        className="flex items-center gap-2 bg-white border border-slate-200 hover:border-[#da3f0b] hover:text-[#da3f0b] text-slate-600 px-4 py-2 rounded-lg text-sm font-bold transition-all shadow-sm active:scale-95"
+                     >
+                        <i className="fas fa-bookmark"></i> Bookmark
+                     </button>
+                     {showBookmarkToast && (
+                         <div className="absolute bottom-full mb-3 left-1/2 -translate-x-1/2 bg-slate-800 text-white text-xs py-2 px-4 rounded-lg shadow-lg whitespace-nowrap animate-fade">
+                             Press <span className="font-bold text-[#da3f0b]">Ctrl + D</span> to bookmark
+                         </div>
+                     )}
+                 </div>
+             </div>
+          </footer>
+        </div>
+      );
+    };
+
+    const ShareButton = ({ platform, icon, color, url, title }) => {
+        let shareUrl = '';
+        switch(platform) {
+            case 'facebook': shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${url}`; break;
+            case 'twitter': shareUrl = `https://twitter.com/intent/tweet?url=${url}&text=${title}`; break;
+            case 'whatsapp': shareUrl = `https://api.whatsapp.com/send?text=${title}%20${url}`; break;
+            case 'reddit': shareUrl = `https://www.reddit.com/submit?url=${url}&title=${title}`; break;
+            case 'telegram': shareUrl = `https://t.me/share/url?url=${url}&text=${title}`; break;
+            default: return null;
+        }
+
+        return (
+            <a href={shareUrl} target="_blank" rel="noopener noreferrer" className={`w-10 h-10 rounded-full flex items-center justify-center text-white transition-transform hover:-translate-y-1 hover:shadow-lg ${color}`}>
+                <i className={`fab fa-${icon}`}></i>
+            </a>
+        );
+    };
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+    </script>
+
+    <section class="bg-white py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="prose prose-lg max-w-none prose-h2:text-gray-800 prose-p:text-gray-700">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">Precision Timing with Our Online Stopwatch & Timer</h2>
+                <p class="mb-6 leading-relaxed">
+                    In a world where every second counts, having a reliable way to track time is essential. Our <strong>Online Stopwatch And Timer</strong> is a versatile, browser-based utility designed for athletes, students, chefs, and professionals who need millisecond precision. Whether you are timing a 100-meter dash, managing a Pomodoro study session, or ensuring your soft-boiled eggs are perfect, this tool provides the accuracy you need without requiring any downloads.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Key Features of the Digital Stopwatch</h2>
+                <p class="mb-6 leading-relaxed">
+                    Our digital stopwatch mode is built for high-performance tracking. It features:
+                </p>
+                <ul class="list-disc pl-6 mb-6 space-y-2 text-gray-700">
+                    <li><strong>Millisecond Accuracy:</strong> Track time down to 1/100th of a second.</li>
+                    <li><strong>Lap Tracking:</strong> Record multiple intervals without stopping the main clock—ideal for circuit training or multi-step processes.</li>
+                    <li><strong>Clean Interface:</strong> A distraction-free, large display that is easy to read from a distance.</li>
+                    <li><strong>Mobile Optimized:</strong> Works perfectly on smartphones, tablets, and desktops.</li>
+                </ul>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Versatile Countdown Timer for Daily Tasks</h2>
+                <p class="mb-6 leading-relaxed">
+                    Switch to Timer mode to set specific countdowns. This is perfect for productivity techniques like time-blocking or for use as a kitchen timer. Simply input your hours, minutes, and seconds, and let the tool handle the rest. Once the time reaches zero, a clear visual and audio alert will notify you, ensuring you never miss a deadline or overcook a meal.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Why Use a Web-Based Timer?</h2>
+                <p class="mb-6 leading-relaxed">
+                    Unlike physical stopwatches or phone apps that can drain battery and clutter your device, our web-based tool is always available. It requires no installation and respects your privacy. It’s a great companion for the <a href="https://simpliconvert.com/to_do_list/">SimpliConvert To-Do List</a>, helping you allocate specific time slots to your tasks for maximum efficiency.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Pro Tips for Better Time Management</h2>
+                <ul class="list-disc pl-6 mb-6 space-y-2 text-gray-700">
+                    <li><strong>Study Sessions:</strong> Use the timer for 25-minute intervals followed by 5-minute breaks (The Pomodoro Technique).</li>
+                    <li><strong>Fitness:</strong> Use the lap feature to track your rest periods between sets in the gym.</li>
+                    <li><strong>Presentations:</strong> Practice your speeches with the stopwatch to ensure you stay within your allotted time.</li>
+                    <li><strong>Cooking:</strong> Keep multiple tabs open if you need to time different dishes simultaneously.</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-center text-gray-900 mb-8">Frequently Asked Questions</h2>
+            <div class="space-y-4">
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>Will the timer keep running if I switch tabs?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">
+                            Yes, the timer and stopwatch will continue to run in the background as long as the tab remains open. However, some browsers may "sleep" inactive tabs to save power, so we recommend keeping the tab visible if precision is critical.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>Is there a limit to how many laps I can record?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">
+                            There is no hard limit. You can record as many laps as you need during your session. The list will scroll automatically to show your most recent laps.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>Can I use this tool offline?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">
+                            This tool requires an initial internet connection to load. Once loaded, the core timing logic runs locally in your browser, but for the best experience and to ensure all features work, an active connection is recommended.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 pb-16">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-slate-200 pt-16">
+            <h2 class="text-2xl font-bold text-center text-slate-800 mb-10">Explore More Tools</h2>
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+                <a href="/to_do_list/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-green-50 text-green-600 flex items-center justify-center shrink-0 group-hover:bg-green-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-check-square text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">To-Do List</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Organize your daily tasks.</p>
+                    </div>
+                </a>
+                <a href="/password_generator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-slate-50 text-slate-700 flex items-center justify-center shrink-0 group-hover:bg-slate-800 group-hover:text-white transition-colors">
+                        <i class="fas fa-key text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Password Gen</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Secure random passwords.</p>
+                    </div>
+                </a>
+                <a href="/qr_code_generator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-slate-50 text-slate-800 flex items-center justify-center shrink-0 group-hover:bg-slate-900 group-hover:text-white transition-colors">
+                        <i class="fas fa-qrcode text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">QR Creator</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Generate custom QR codes.</p>
+                    </div>
+                </a>
+                <a href="/freelance_hourly_rate_calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0 group-hover:bg-emerald-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-calculator text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Rate Calc</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Calculate your worth.</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <div id="footer"></div>
+
+    <script>
+    async function loadComponent(url, elementId, callback) {
+        try {
+            const response = await fetch(url);
+            if (!response.ok) throw new Error('Status: ' + response.status);
+            const text = await response.text();
+            const element = document.getElementById(elementId);
+            if (element) {
+                element.innerHTML = text;
+                if (callback) callback();
+            }
+        } catch (error) {
+            console.error('Error loading component:', error);
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        loadComponent('/components/navbar.html', 'navbar');
+        loadComponent('/components/footer.html', 'footer', () => {
+            const yearSpan = document.getElementById('current-year');
+            if(yearSpan) yearSpan.textContent = new Date().getFullYear();
+        });
+        
+        document.addEventListener('click', (e) => {
+            if (e.target.closest('[data-faq-toggle]')) {
+                const button = e.target.closest('[data-faq-toggle]');
+                const answer = button.nextElementSibling;
+                const icon = button.querySelector('.faq-icon');
+                const isOpening = !answer.style.maxHeight;
+
+                if (isOpening) {
+                    answer.style.maxHeight = answer.scrollHeight + "px";
+                    icon.classList.remove('-rotate-90');
+                    icon.classList.add('rotate-90');
+                } else {
+                    answer.style.maxHeight = null;
+                    icon.classList.remove('rotate-90');
+                    icon.classList.add('-rotate-90');
+                }
+            }
+        });
+    });
+    </script>
+</body>
+</html>

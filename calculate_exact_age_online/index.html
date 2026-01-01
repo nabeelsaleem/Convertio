@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Calculate Exact Age Online – Precise Age in Years, Months, Days | SimpliConvert</title>
+    <meta name="description" content="Find out your precise age in years, months, and days. Use our tool to Calculate Exact Age Online simply by entering your date of birth.">
+    <meta name="keywords" content="calculate exact age online, date of birth calculator, age in days, how old am i, chronological age calculator, birthday countdown, age in weeks">
+    <meta name="author" content="SimpliConvert">
+    <meta property="og:site_name" content="SimpliConvert">
+    <meta name="robots" content="index, follow">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://simpliconvert.com/calculate_exact_age_online/">
+    <meta property="og:title" content="Calculate Exact Age Online – Precise Age Finder">
+    <meta property="og:description" content="Instantly find your exact age in years, months, days, and even minutes. Perfect for applications, milestones, or just curiosity.">
+    <meta property="og:image" content="https://simpliconvert.com/images/age-calculator-og.jpg">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://simpliconvert.com/calculate_exact_age_online/">
+    <meta name="twitter:title" content="Calculate Exact Age Online – How Old Am I?">
+    <meta name="twitter:description" content="Free tool to calculate your chronological age down to the day. Includes birthday countdown and total life statistics.">
+    <meta name="twitter:image" content="https://simpliconvert.com/images/age-calculator-og.jpg">
+
+    <link rel="canonical" href="https://simpliconvert.com/calculate_exact_age_online/">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Calculate Exact Age Online",
+      "url": "https://simpliconvert.com/calculate_exact_age_online/",
+      "description": "A free online tool to calculate your exact age in years, months, and days based on your date of birth.",
+      "applicationCategory": "UtilityApplication",
+      "operatingSystem": "Web Browser",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "SimpliConvert",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://simpliconvert.com/logo.png"
+        }
+      }
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [{
+        "@type": "Question",
+        "name": "How is my exact age calculated?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The tool calculates the difference between your date of birth and the current date (or a specific target date), accounting for leap years and the varying number of days in each month to provide a precise breakdown of years, months, and days."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Can I calculate my age on a specific future date?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. Our tool allows you to change the 'Age at Date' field, so you can find out exactly how old you will be on a future anniversary, retirement date, or any upcoming event."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Does this age calculator account for leap years?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Absolutely. The algorithm uses standard calendar logic which correctly identifies leap years (February 29th) to ensure the total day count and year transitions are 100% accurate."
+        }
+      }]
+    }
+    </script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #da3f0b;
+            --primary-hover: #b53409;
+            --primary-light: #fff5f2;
+            --bg: #f8fafc;
+            --text-dark: #0f172a;
+            --success: #16a34a;
+            --danger: #dc2626;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text-dark);
+        }
+
+        .hero-card {
+            background: white;
+            border: 1px solid #f1f5f9;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background-color: var(--primary);
+        }
+
+        .prose a {
+            color: #da3f0b;
+            text-decoration: none; 
+        }
+        .prose a:hover {
+            text-decoration: underline; 
+        }
+
+        .animate-fade { animation: fadeIn 0.3s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+        .tool-card {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .tool-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+        }
+
+        input[type="date"]::-webkit-calendar-picker-indicator {
+            cursor: pointer;
+            filter: invert(32%) sepia(95%) saturate(2345%) hue-rotate(355deg) brightness(91%) contrast(101%);
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 min-h-screen flex flex-col">
+    <div id="navbar"></div>
+
+    <section class="hero-white text-black py-2 md:py-10">
+        <div class="container mx-auto px-4 text-center">
+            <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-2">Calculate Exact Age Online</h1>
+            <p class="text-lg md:text-xl max-w-3x1 mx-auto mb-2">
+                Find out exactly how old you are in years, months, and days. Track your life milestones and see the countdown to your next birthday.
+            </p>
+        </div>
+    </section>
+
+    <div id="root" class="w-full max-w-6xl mx-auto p-4 sm:p-6"></div>
+
+    <script type="text/babel">
+    const { useState, useEffect, useMemo } = React;
+
+    const StatCard = ({ label, value, subtext, isMain = false }) => {
+      return (
+        <div className={`${isMain ? 'hero-card p-8' : 'bg-white p-5 rounded-2xl border border-slate-100 shadow-sm'} flex flex-col items-center text-center`}>
+          {isMain ? (
+            <>
+              <p className="text-xs font-black text-[#da3f0b] uppercase tracking-[0.2em] mb-4">{label}</p>
+              <div className="flex flex-col items-center justify-center">
+                <span className="text-4xl md:text-5xl font-black tracking-tighter leading-tight text-slate-900">{value}</span>
+              </div>
+              {subtext && <p className="text-sm text-slate-400 font-medium mt-4">{subtext}</p>}
+            </>
+          ) : (
+            <div className="w-full">
+              <div className="text-[10px] font-black text-slate-400 uppercase tracking-widest flex items-center justify-center mb-1">
+                {label}
+              </div>
+              <p className="text-xl font-extrabold text-slate-800">{value}</p>
+              {subtext && <p className="text-[10px] text-slate-400 font-medium mt-1 uppercase tracking-tight">{subtext}</p>}
+            </div>
+          )}
+        </div>
+      );
+    };
+
+    const ShareButton = ({ platform, icon, color, url, title }) => {
+        let shareUrl = '';
+        switch(platform) {
+            case 'facebook': shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${url}`; break;
+            case 'twitter': shareUrl = `https://twitter.com/intent/tweet?url=${url}&text=${title}`; break;
+            case 'linkedin': shareUrl = `https://www.linkedin.com/shareArticle?mini=true&url=${url}`; break;
+            case 'whatsapp': shareUrl = `https://api.whatsapp.com/send?text=${title}%20${url}`; break;
+            case 'reddit': shareUrl = `https://www.reddit.com/submit?url=${url}&title=${title}`; break;
+            case 'telegram': shareUrl = `https://t.me/share/url?url=${url}&text=${title}`; break;
+            default: return null;
+        }
+
+        return (
+            <a href={shareUrl} target="_blank" rel="noopener noreferrer" className={`w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center text-white transition-transform hover:-translate-y-1 hover:shadow-lg ${color}`}>
+                <i className={`fab fa-${icon}`}></i>
+            </a>
+        );
+    };
+
+    const App = () => {
+      const today = new Date().toISOString().split('T')[0];
+      const [birthDate, setBirthDate] = useState('1995-01-01');
+      const [targetDate, setTargetDate] = useState(today);
+      const [showBookmarkToast, setShowBookmarkToast] = useState(false);
+
+      const calculations = useMemo(() => {
+        const birth = new Date(birthDate);
+        const target = new Date(targetDate);
+
+        if (isNaN(birth.getTime()) || isNaN(target.getTime())) return null;
+
+        let years = target.getFullYear() - birth.getFullYear();
+        let months = target.getMonth() - birth.getMonth();
+        let days = target.getDate() - birth.getDate();
+
+        if (days < 0) {
+          months--;
+          const lastMonth = new Date(target.getFullYear(), target.getMonth(), 0);
+          days += lastMonth.getDate();
+        }
+        if (months < 0) {
+          years--;
+          months += 12;
+        }
+
+        const totalDays = Math.floor((target - birth) / (1000 * 60 * 60 * 24));
+        const totalWeeks = Math.floor(totalDays / 7);
+        const totalMonths = (years * 12) + months;
+        
+        // Next Birthday
+        let nextBday = new Date(target.getFullYear(), birth.getMonth(), birth.getDate());
+        if (nextBday < target) {
+          nextBday.setFullYear(target.getFullYear() + 1);
+        }
+        const daysToBday = Math.ceil((nextBday - target) / (1000 * 60 * 60 * 24));
+
+        return { years, months, days, totalDays, totalWeeks, totalMonths, daysToBday };
+      }, [birthDate, targetDate]);
+
+      const handleBookmark = () => {
+        setShowBookmarkToast(true);
+        setTimeout(() => setShowBookmarkToast(false), 3000);
+      };
+
+      const pageUrl = encodeURIComponent("https://simpliconvert.com/calculate_exact_age_online/");
+      const pageTitle = encodeURIComponent("Check out this Exact Age Calculator!");
+
+      return (
+        <div className="bg-white rounded-[2rem] shadow-2xl overflow-hidden border border-slate-100">
+          <header className="bg-slate-50/50 border-b border-slate-100 p-6 md:p-8 flex flex-col md:flex-row justify-between items-center gap-6">
+            <div className="text-center md:text-left">
+              <h2 className="text-2xl font-black text-slate-800 tracking-tight flex items-center justify-center md:justify-start gap-3">
+                <span className="bg-[#da3f0b] text-white p-2 rounded-xl text-lg shadow-lg shadow-[#da3f0b30]">
+                  <i className="fas fa-birthday-cake"></i>
+                </span>
+                Chronological Age Calculator
+              </h2>
+            </div>
+          </header>
+
+          <main className="flex flex-col lg:flex-row">
+            {/* Input Panel */}
+            <div className="lg:w-[40%] p-6 md:p-10 lg:p-12 border-r border-slate-100">
+              <div className="space-y-8">
+                <div>
+                  <label className="text-xs font-black text-slate-400 uppercase tracking-widest mb-3 block">Date of Birth</label>
+                  <input 
+                    type="date" 
+                    value={birthDate}
+                    onChange={(e) => setBirthDate(e.target.value)}
+                    className="block w-full rounded-xl border-slate-200 border py-4 px-4 focus:ring-4 focus:ring-[#da3f0b20] focus:border-[#da3f0b] font-semibold text-slate-800 transition-all bg-white"
+                  />
+                </div>
+
+                <div>
+                  <label className="text-xs font-black text-slate-400 uppercase tracking-widest mb-3 block">Age at the Date of</label>
+                  <input 
+                    type="date" 
+                    value={targetDate}
+                    onChange={(e) => setTargetDate(e.target.value)}
+                    className="block w-full rounded-xl border-slate-200 border py-4 px-4 focus:ring-4 focus:ring-[#da3f0b20] focus:border-[#da3f0b] font-semibold text-slate-800 transition-all bg-white"
+                  />
+                </div>
+
+                <div className="bg-[#da3f0b08] p-6 rounded-2xl border border-[#da3f0b15]">
+                  <h3 className="text-xs font-black text-[#da3f0b] uppercase tracking-widest mb-2">Next Birthday</h3>
+                  <p className="text-2xl font-black text-slate-800">
+                    {calculations?.daysToBday === 0 || calculations?.daysToBday === 365 ? "Happy Birthday! 🎉" : `${calculations?.daysToBday} Days to go`}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Results Panel */}
+            <div className="lg:w-[60%] bg-slate-50/50 p-6 md:p-10 lg:p-12 flex flex-col justify-center">
+               {calculations ? (
+                 <div className="space-y-6 animate-fade">
+                    <StatCard 
+                      isMain={true}
+                      label="Your Exact Age"
+                      value={`${calculations.years} Years, ${calculations.months} Months, ${calculations.days} Days`}
+                      subtext="Calculated based on standard calendar rules"
+                    />
+
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                       <StatCard 
+                         label="Total Months" 
+                         value={calculations.totalMonths.toLocaleString()}
+                         subtext="Life in Months"
+                       />
+                       <StatCard 
+                         label="Total Weeks" 
+                         value={calculations.totalWeeks.toLocaleString()}
+                         subtext="Life in Weeks"
+                       />
+                       <StatCard 
+                         label="Total Days" 
+                         value={calculations.totalDays.toLocaleString()}
+                         subtext="Life in Days"
+                       />
+                    </div>
+
+                    <div className="bg-white rounded-xl p-6 border border-slate-100 shadow-sm">
+                       <h4 className="text-xs font-black text-slate-400 uppercase tracking-widest mb-4">Time Summary</h4>
+                       <div className="space-y-3">
+                          <div className="flex justify-between text-sm">
+                             <span className="text-slate-500 font-medium">Total Hours (Approx)</span>
+                             <span className="text-slate-800 font-bold">{(calculations.totalDays * 24).toLocaleString()}</span>
+                          </div>
+                          <div className="flex justify-between text-sm">
+                             <span className="text-slate-500 font-medium">Total Minutes (Approx)</span>
+                             <span className="text-slate-800 font-bold">{(calculations.totalDays * 1440).toLocaleString()}</span>
+                          </div>
+                       </div>
+                    </div>
+                 </div>
+               ) : (
+                 <div className="text-center py-20">
+                    <i className="fas fa-calendar-alt text-4xl text-slate-200 mb-4"></i>
+                    <p className="text-slate-400 font-medium">Please enter a valid date of birth</p>
+                 </div>
+               )}
+            </div>
+          </main>
+
+          <footer className="bg-slate-50 border-t border-slate-100 p-6 md:p-8">
+             <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+                 <div className="text-center md:text-left">
+                     <h4 className="text-sm font-bold text-slate-700 mb-1">Share your age stats</h4>
+                     <p className="text-xs text-slate-400">Let your friends know your precise milestones.</p>
+                 </div>
+                 
+                 <div className="flex flex-wrap justify-center gap-3">
+                     <ShareButton platform="facebook" icon="facebook-f" color="bg-[#1877F2]" url={pageUrl} title={pageTitle} />
+                     <ShareButton platform="twitter" icon="twitter" color="bg-[#1DA1F2]" url={pageUrl} title={pageTitle} />
+                     <ShareButton platform="linkedin" icon="linkedin-in" color="bg-[#0A66C2]" url={pageUrl} title={pageTitle} />
+                     <ShareButton platform="whatsapp" icon="whatsapp" color="bg-[#25D366]" url={pageUrl} title={pageTitle} />
+                     <ShareButton platform="reddit" icon="reddit-alien" color="bg-[#FF4500]" url={pageUrl} title={pageTitle} />
+                     <ShareButton platform="telegram" icon="telegram-plane" color="bg-[#0088cc]" url={pageUrl} title={pageTitle} />
+                 </div>
+
+                 <div className="relative">
+                     <button onClick={handleBookmark} className="flex items-center gap-2 bg-white border border-slate-200 hover:border-[#da3f0b] hover:text-[#da3f0b] text-slate-600 px-4 py-2 rounded-lg text-sm font-bold transition-all shadow-sm active:scale-95">
+                        <i className="fas fa-bookmark"></i> Bookmark
+                     </button>
+                     {showBookmarkToast && (
+                         <div className="absolute bottom-full mb-3 left-1/2 -translate-x-1/2 bg-slate-800 text-white text-xs py-2 px-4 rounded-lg shadow-lg whitespace-nowrap animate-fade">
+                             Press <span className="font-bold text-[#da3f0b]">Ctrl + D</span> to bookmark
+                         </div>
+                     )}
+                 </div>
+             </div>
+          </footer>
+        </div>
+      );
+    };
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+    </script>
+
+    <section class="bg-white py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="prose prose-lg max-w-none prose-h2:text-gray-800 prose-p:text-gray-700">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">Calculate Exact Age Online – More Than Just a Number</h2>
+                <p class="mb-6 leading-relaxed">
+                    Knowing your age in years is common, but have you ever wondered exactly how many days, weeks, or months you've been alive? Our <strong>Calculate Exact Age Online</strong> tool provides a comprehensive breakdown of your chronological age. Whether you need it for a legal document, a medical form, or simply to celebrate a unique milestone like your 10,000th day on Earth, this tool delivers precision instantly.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Why Use a Precise Date of Birth Calculator?</h2>
+                <p class="mb-6 leading-relaxed">
+                    Manual age calculation can be tricky because our calendar isn't uniform. Between leap years (adding a day to February every four years) and months having 28, 30, or 31 days, a simple subtraction often leads to errors. Our <em>date of birth calculator</em> automates this complex logic, ensuring that every leap day is accounted for.
+                </p>
+                <p class="mb-6 leading-relaxed">
+                    This tool is particularly useful for parents tracking their child's development milestones, HR professionals verifying employment eligibility, or students filling out university applications that require an exact age as of a specific start date.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Key Features of Our Age Finder</h2>
+                <ul class="list-disc pl-6 mb-6 space-y-2 text-gray-700">
+                    <li><strong>Years, Months, and Days:</strong> Get the standard chronological breakdown.</li>
+                    <li><strong>Total Life Stats:</strong> See your age converted entirely into months, weeks, or days.</li>
+                    <li><strong>Target Date Flexibility:</strong> Calculate how old you were on a past date or how old you will be in the future.</li>
+                    <li><strong>Birthday Countdown:</strong> Instantly see how many days are left until your next big celebration.</li>
+                </ul>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">How to Calculate Your Age Manually</h2>
+                <p class="mb-6 leading-relaxed">
+                    If you want to <em>calculate exact age online</em> manually, you would subtract the birth year from the current year. Then, you adjust based on whether the current month and day have passed your birthday. However, to get the "days" and "months" correct, you must look at the specific number of days in the preceding month. It's much easier to let our algorithm handle the heavy lifting!
+                </p>
+                <p class="mb-6 leading-relaxed">
+                    Just as our <a href="https://simpliconvert.com/roblox_devex_calculator/" target="_blank">Roblox DevEx Calculator</a> helps developers track their earnings with precision, this age tool ensures your personal records are always accurate.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Fun Milestones to Track</h2>
+                <p class="mb-6 leading-relaxed">
+                    Did you know that most people celebrate their 1,000,000,000th second of life around age 31? Or that you reach 500 months of age at approximately 41 and a half years? Using an <em>age in days</em> calculator allows you to find and celebrate these "hidden" birthdays that most people miss.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-center text-gray-900 mb-8">Age Calculator – Frequently Asked Questions</h2>
+            <div class="space-y-4">
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>How accurate is this age calculator?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">
+                            Our tool is 100% accurate. It uses the JavaScript Date object logic which follows the Gregorian calendar, correctly accounting for leap years and the specific number of days in every month of the year.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>Can I use this for official applications?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">
+                            Yes, this tool provides the standard chronological age used by government agencies, insurance companies, and schools. It calculates age based on the "birthday" method common in most Western countries.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>What is the "Age at the Date of" field?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">
+                            This field allows you to set a custom "end date." By default, it is set to today. However, you can change it to a future date (to see how old you will be) or a past date (to see how old you were during a specific event).
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 pb-16">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-slate-200 pt-16">
+            <h2 class="text-2xl font-bold text-center text-slate-800 mb-10">Popular Tools on SimpliConvert</h2>
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+                <a href="/password_generator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-slate-50 text-slate-700 flex items-center justify-center shrink-0 group-hover:bg-slate-800 group-hover:text-white transition-colors">
+                        <i class="fas fa-key text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Password Gen</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Create secure, random passwords.</p>
+                    </div>
+                </a>
+
+                <a href="/image_resizer/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center shrink-0 group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-image text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Image Resizer</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Resize images without quality loss.</p>
+                    </div>
+                </a>
+
+                <a href="/split_pdf/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-red-50 text-red-600 flex items-center justify-center shrink-0 group-hover:bg-red-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-cut text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Split PDF</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Extract pages from PDF documents.</p>
+                    </div>
+                </a>
+
+                <a href="/qr_code_generator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-slate-50 text-slate-800 flex items-center justify-center shrink-0 group-hover:bg-slate-900 group-hover:text-white transition-colors">
+                        <i class="fas fa-qrcode text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">QR Creator</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Generate custom QR codes instantly.</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <div id="footer"></div>
+
+    <script>
+    async function loadComponent(url, elementId, callback) {
+        try {
+            const response = await fetch(url);
+            if (!response.ok) throw new Error('Status: ' + response.status);
+            const text = await response.text();
+            const element = document.getElementById(elementId);
+            if (element) {
+                element.innerHTML = text;
+                if (callback) callback();
+            }
+        } catch (error) {
+            console.error('Error loading component:', error);
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        loadComponent('/components/navbar.html', 'navbar');
+        loadComponent('/components/footer.html', 'footer');
+        
+        const faqToggles = document.querySelectorAll('[data-faq-toggle]');
+        faqToggles.forEach(button => {
+            button.addEventListener('click', () => {
+                const answer = button.nextElementSibling;
+                const icon = button.querySelector('.faq-icon');
+                const isOpening = !answer.style.maxHeight;
+
+                faqToggles.forEach(other => {
+                    if (other !== button) {
+                        other.nextElementSibling.style.maxHeight = null;
+                        other.querySelector('.faq-icon').classList.remove('rotate-90');
+                        other.querySelector('.faq-icon').classList.add('-rotate-90');
+                    }
+                });
+
+                if (isOpening) {
+                    answer.style.maxHeight = answer.scrollHeight + "px";
+                    icon.classList.remove('-rotate-90');
+                    icon.classList.add('rotate-90');
+                } else {
+                    answer.style.maxHeight = null;
+                    icon.classList.remove('rotate-90');
+                    icon.classList.add('-rotate-90');
+                }
+            });
+        });
+    });
+    </script>
+</body>
+</html>

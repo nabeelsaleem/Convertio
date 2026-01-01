@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Internet Download Speed Test – Check Your Connection Speed | SimpliConvert</title>
+    <meta name="description" content="Test your connection quality with this Internet Download Speed Test. Get a quick estimation of your current download speed, ping, and latency directly in your browser.">
+    <meta name="keywords" content="internet download speed test, check connection speed, wifi speed test, bandwidth checker, internet speed meter, broadband speed test, fast speed test">
+    <meta name="author" content="SimpliConvert">
+    <meta property="og:site_name" content="SimpliConvert">
+    <meta name="robots" content="index, follow">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://simpliconvert.com/internet_download_speed_test/">
+    <meta property="og:title" content="Internet Download Speed Test – Fast & Accurate">
+    <meta property="og:description" content="Check your internet performance in seconds. Measure download speed and latency with our free online bandwidth checker.">
+    <meta property="og:image" content="https://simpliconvert.com/images/speed-test-og.jpg">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://simpliconvert.com/internet_download_speed_test/">
+    <meta name="twitter:title" content="Internet Download Speed Test – Check Your Connection">
+    <meta name="twitter:description" content="Free tool to estimate your current internet download speed. Works on mobile and desktop browsers.">
+    <meta name="twitter:image" content="https://simpliconvert.com/images/speed-test-og.jpg">
+
+    <link rel="canonical" href="https://simpliconvert.com/internet_download_speed_test/">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Internet Download Speed Test",
+      "url": "https://simpliconvert.com/internet_download_speed_test/",
+      "description": "A free online tool to measure your internet download speed and connection latency in real-time.",
+      "applicationCategory": "UtilitiesApplication",
+      "operatingSystem": "Web Browser",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "SimpliConvert",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://simpliconvert.com/logo.png"
+        }
+      }
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [{
+        "@type": "Question",
+        "name": "How does this speed test work?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The tool downloads a small sample file from a high-speed server to your browser. It measures the time taken to complete the download and calculates your speed in Megabits per second (Mbps)."
+        }
+      }, {
+        "@type": "Question",
+        "name": "What is a good download speed?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "For basic browsing, 10 Mbps is sufficient. For 4K streaming or gaming, 25-50 Mbps is recommended. High-performance households usually require 100 Mbps or more."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Why is my speed lower than my ISP plan?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Factors like WiFi interference, distance from the router, background applications, and network congestion can cause your actual speed to be lower than the maximum advertised by your provider."
+        }
+      }]
+    }
+    </script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #da3f0b;
+            --primary-hover: #b53409;
+            --primary-light: #fff5f2;
+            --bg: #f8fafc;
+            --text-dark: #0f172a;
+            --success: #16a34a;
+            --danger: #dc2626;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text-dark);
+        }
+
+        .hero-card {
+            background: white;
+            border: 1px solid #f1f5f9;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background-color: var(--primary);
+        }
+
+        .prose a {
+            color: #da3f0b;
+            text-decoration: none; 
+        }
+        .prose a:hover {
+            text-decoration: underline; 
+        }
+
+        .animate-fade { animation: fadeIn 0.3s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+        .tool-card {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .tool-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+        }
+
+        .speed-gauge {
+            width: 200px;
+            height: 100px;
+            border-top-left-radius: 100px;
+            border-top-right-radius: 100px;
+            border: 10px solid #e2e8f0;
+            border-bottom: 0;
+            position: relative;
+        }
+        .speed-needle {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 4px;
+            height: 80px;
+            background: var(--primary);
+            transform-origin: bottom center;
+            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 4px;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 min-h-screen flex flex-col">
+    <div id="navbar"></div>
+
+    <section class="hero-white text-black py-2 md:py-10">
+        <div class="container mx-auto px-4 text-center">
+            <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-2">Internet Download Speed Test</h1>
+            <p class="text-lg md:text-xl max-w-3x1 mx-auto mb-2">
+                Check your connection quality instantly. Get a real-time estimation of your download bandwidth and latency.
+            </p>
+        </div>
+    </section>
+
+    <div id="root" class="w-full max-w-6xl mx-auto p-4 sm:p-6"></div>
+
+    <script type="text/babel">
+    const { useState, useEffect, useRef } = React;
+
+    const StatCard = ({ label, value, subtext, type = 'neutral', isMain = false }) => {
+      let colorClass = 'text-slate-900';
+      if (type === 'primary') colorClass = 'text-[#da3f0b]';
+
+      return (
+        <div className={`${isMain ? 'hero-card p-8' : 'bg-white p-5 rounded-2xl border border-slate-100 shadow-sm'} flex flex-col items-center text-center`}>
+          {isMain ? (
+            <>
+              <p className="text-xs font-black text-[#da3f0b] uppercase tracking-[0.2em] mb-4">{label}</p>
+              <div className="flex items-baseline justify-center">
+                <span className={`text-6xl md:text-8xl font-black tracking-tighter leading-none ${colorClass}`}>{value}</span>
+                <span className="text-xl font-bold text-slate-400 ml-2">Mbps</span>
+              </div>
+              {subtext && <p className="text-sm text-slate-400 font-medium mt-4">{subtext}</p>}
+            </>
+          ) : (
+            <div className="w-full">
+              <div className="text-[10px] font-black text-slate-400 uppercase tracking-widest flex items-center justify-center mb-1">
+                {label}
+              </div>
+              <p className={`text-xl font-extrabold ${colorClass}`}>{value}</p>
+              {subtext && <p className="text-[10px] text-slate-400 font-medium mt-1 uppercase tracking-tight">{subtext}</p>}
+            </div>
+          )}
+        </div>
+      );
+    };
+
+    const ShareButton = ({ platform, icon, color, url, title }) => {
+        let shareUrl = '';
+        switch(platform) {
+            case 'facebook': shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${url}`; break;
+            case 'twitter': shareUrl = `https://twitter.com/intent/tweet?url=${url}&text=${title}`; break;
+            case 'linkedin': shareUrl = `https://www.linkedin.com/shareArticle?mini=true&url=${url}`; break;
+            case 'whatsapp': shareUrl = `https://api.whatsapp.com/send?text=${title}%20${url}`; break;
+            case 'reddit': shareUrl = `https://www.reddit.com/submit?url=${url}&title=${title}`; break;
+            case 'telegram': shareUrl = `https://t.me/share/url?url=${url}&text=${title}`; break;
+            default: return null;
+        }
+
+        return (
+            <a href={shareUrl} target="_blank" rel="noopener noreferrer" className={`w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center text-white transition-transform hover:-translate-y-1 hover:shadow-lg ${color}`}>
+                <i className={`fab fa-${icon}`}></i>
+            </a>
+        );
+    };
+
+    const App = () => {
+      const [status, setStatus] = useState('idle'); // idle, testing, finished
+      const [speed, setSpeed] = useState(0);
+      const [ping, setPing] = useState(0);
+      const [progress, setProgress] = useState(0);
+      const [showBookmarkToast, setShowBookmarkToast] = useState(false);
+
+      const runTest = async () => {
+        setStatus('testing');
+        setSpeed(0);
+        setProgress(0);
+        
+        // 1. Test Ping (Latency)
+        const startPing = performance.now();
+        try {
+            await fetch('https://www.google.com/favicon.ico', { mode: 'no-cors', cache: 'no-store' });
+            setPing(Math.round(performance.now() - startPing));
+        } catch (e) {
+            setPing('--');
+        }
+
+        // 2. Test Download Speed
+        // We use a high-res image from Unsplash for testing (approx 5MB)
+        const testImageUrl = "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?q=80&w=5000"; 
+        const startTime = performance.now();
+        
+        try {
+            const response = await fetch(testImageUrl + "&cb=" + Math.random(), { cache: 'no-store' });
+            const reader = response.body.getReader();
+            let receivedLength = 0;
+            const chunks = [];
+
+            while(true) {
+                const {done, value} = await reader.read();
+                if (done) break;
+                chunks.push(value);
+                receivedLength += value.length;
+                
+                // Update progress and intermediate speed
+                const currentTime = performance.now();
+                const durationInSeconds = (currentTime - startTime) / 1000;
+                const bitsLoaded = receivedLength * 8;
+                const bps = bitsLoaded / durationInSeconds;
+                const mbps = bps / 1000000;
+                
+                setSpeed(mbps.toFixed(1));
+                setProgress(Math.min(95, (receivedLength / 5000000) * 100)); // Estimate 5MB
+            }
+
+            const endTime = performance.now();
+            const totalDuration = (endTime - startTime) / 1000;
+            const totalBits = receivedLength * 8;
+            const finalMbps = (totalBits / totalDuration) / 1000000;
+            
+            setSpeed(finalMbps.toFixed(1));
+            setProgress(100);
+            setStatus('finished');
+        } catch (error) {
+            console.error("Speed test failed", error);
+            setStatus('idle');
+            alert("Speed test failed. Please check your connection or disable ad-blockers.");
+        }
+      };
+
+      const handleBookmark = () => {
+        setShowBookmarkToast(true);
+        setTimeout(() => setShowBookmarkToast(false), 3000);
+      };
+
+      const pageUrl = encodeURIComponent("https://simpliconvert.com/internet_download_speed_test/");
+      const pageTitle = encodeURIComponent("Check your internet speed with this free tool!");
+
+      return (
+        <div className="bg-white rounded-[2rem] shadow-2xl overflow-hidden border border-slate-100">
+          <header className="bg-slate-50/50 border-b border-slate-100 p-6 md:p-8 flex flex-col md:flex-row justify-between items-center gap-6">
+            <div className="text-center md:text-left">
+              <h2 className="text-2xl font-black text-slate-800 tracking-tight flex items-center justify-center md:justify-start gap-3">
+                <span className="bg-[#da3f0b] text-white p-2 rounded-xl text-lg shadow-lg shadow-[#da3f0b30]">
+                  <i className="fas fa-tachometer-alt"></i>
+                </span>
+                Network Performance Tool
+              </h2>
+            </div>
+            <div className="text-xs font-bold text-slate-400 uppercase tracking-widest">
+                Server: Closest CDN Node
+            </div>
+          </header>
+
+          <main className="flex flex-col lg:flex-row">
+            {/* Control Panel */}
+            <div className="lg:w-[40%] p-6 md:p-10 lg:p-12 border-r border-slate-100 flex flex-col justify-center items-center">
+              <div className="text-center space-y-8 w-full">
+                <div className="relative inline-block">
+                    <div className="speed-gauge mx-auto">
+                        <div 
+                            className="speed-needle" 
+                            style={{ transform: `translateX(-50%) rotate(${Math.min(180, (speed / 100) * 180) - 90}deg)` }}
+                        ></div>
+                    </div>
+                    <div className="mt-4 text-slate-400 font-bold text-sm uppercase tracking-widest">0 Mbps &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 100+ Mbps</div>
+                </div>
+
+                <button 
+                    onClick={runTest}
+                    disabled={status === 'testing'}
+                    className={`w-full py-6 rounded-2xl text-xl font-black transition-all shadow-xl flex items-center justify-center gap-3 ${status === 'testing' ? 'bg-slate-100 text-slate-400 cursor-not-allowed' : 'bg-[#da3f0b] text-white hover:bg-[#b53409] hover:-translate-y-1 active:scale-95'}`}
+                >
+                    {status === 'testing' ? (
+                        <><i className="fas fa-circle-notch animate-spin"></i> Testing...</>
+                    ) : (
+                        <><i className="fas fa-play"></i> Start Speed Test</>
+                    )}
+                </button>
+
+                <p className="text-xs text-slate-400 font-medium">
+                    * This test measures your browser's download capability by fetching a sample file.
+                </p>
+              </div>
+            </div>
+
+            {/* Results Panel */}
+            <div className="lg:w-[60%] bg-slate-50/50 p-6 md:p-10 lg:p-12 flex flex-col justify-center">
+               <div className="space-y-6">
+                  
+                  <StatCard 
+                    isMain={true}
+                    label="Current Download Speed"
+                    value={speed}
+                    type="primary"
+                    subtext={status === 'testing' ? "Measuring bandwidth..." : "Test complete"}
+                  />
+
+                  <div className="grid grid-cols-2 gap-4">
+                     <StatCard 
+                       label="Latency (Ping)" 
+                       value={ping !== '--' ? `${ping} ms` : '--'}
+                       subtext="Server Response"
+                     />
+                     <StatCard 
+                       label="Progress" 
+                       value={`${Math.round(progress)}%`}
+                       subtext="Data Transferred"
+                     />
+                  </div>
+
+                  <div className="bg-white rounded-xl p-6 border border-slate-100 shadow-sm mt-4">
+                     <h4 className="text-xs font-black text-slate-400 uppercase tracking-widest mb-4">Connection Quality</h4>
+                     <div className="flex items-center gap-4">
+                        <div className={`h-3 flex-1 rounded-full bg-slate-100 overflow-hidden`}>
+                            <div className="h-full bg-[#da3f0b] transition-all duration-500" style={{ width: `${Math.min(100, (speed / 50) * 100)}%` }}></div>
+                        </div>
+                        <span className="text-sm font-bold text-slate-700">
+                            {speed > 50 ? 'Excellent' : speed > 20 ? 'Good' : speed > 5 ? 'Fair' : 'Poor'}
+                        </span>
+                     </div>
+                  </div>
+               </div>
+            </div>
+          </main>
+
+          <footer className="bg-slate-50 border-t border-slate-100 p-6 md:p-8">
+             <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+                 <div className="text-center md:text-left">
+                     <h4 className="text-sm font-bold text-slate-700 mb-1">Share your results</h4>
+                     <p className="text-xs text-slate-400">Let others know your connection speed.</p>
+                 </div>
+                 
+                 <div className="flex flex-wrap justify-center gap-3">
+                     <ShareButton platform="facebook" icon="facebook-f" color="bg-[#1877F2]" url={pageUrl} title={pageTitle} />
+                     <ShareButton platform="twitter" icon="twitter" color="bg-[#1DA1F2]" url={pageUrl} title={pageTitle} />
+                     <ShareButton platform="linkedin" icon="linkedin-in" color="bg-[#0A66C2]" url={pageUrl} title={pageTitle} />
+                     <ShareButton platform="whatsapp" icon="whatsapp" color="bg-[#25D366]" url={pageUrl} title={pageTitle} />
+                     <ShareButton platform="reddit" icon="reddit-alien" color="bg-[#FF4500]" url={pageUrl} title={pageTitle} />
+                     <ShareButton platform="telegram" icon="telegram-plane" color="bg-[#0088cc]" url={pageUrl} title={pageTitle} />
+                 </div>
+
+                 <div className="relative">
+                     <button onClick={handleBookmark} className="flex items-center gap-2 bg-white border border-slate-200 hover:border-[#da3f0b] hover:text-[#da3f0b] text-slate-600 px-4 py-2 rounded-lg text-sm font-bold transition-all shadow-sm active:scale-95">
+                        <i className="fas fa-bookmark"></i> Bookmark
+                     </button>
+                     {showBookmarkToast && (
+                         <div className="absolute bottom-full mb-3 left-1/2 -translate-x-1/2 bg-slate-800 text-white text-xs py-2 px-4 rounded-lg shadow-lg whitespace-nowrap animate-fade">
+                             Press <span className="font-bold text-[#da3f0b]">Ctrl + D</span> to bookmark
+                         </div>
+                     )}
+                 </div>
+             </div>
+          </footer>
+        </div>
+      );
+    };
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+    </script>
+
+    <section class="bg-white py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="prose prose-lg max-w-none prose-h2:text-gray-800 prose-p:text-gray-700">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">Internet Download Speed Test – Measure Your Performance</h2>
+                <p class="mb-6 leading-relaxed">
+                    In today's digital world, a fast and stable internet connection is essential for everything from remote work to 4K streaming. Our <strong>Internet Download Speed Test</strong> provides a quick, accurate, and easy way to check your current connection quality. Whether you are troubleshooting a slow connection or verifying that your ISP is delivering the speeds you pay for, this tool gives you real-time data directly in your browser.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Why Should You Check Your Connection Speed?</h2>
+                <p class="mb-6 leading-relaxed">
+                    Many factors can influence your internet performance. A <strong>wifi speed test</strong> helps you identify if your router is placed correctly or if there is interference from other devices. By using a <strong>bandwidth checker</strong>, you can determine if your network can handle high-demand tasks like video conferencing, online gaming, or large file downloads.
+                </p>
+                <p class="mb-6 leading-relaxed">
+                    Regularly testing your speed allows you to keep a record of your network's performance over time. If you notice a consistent drop in speed, it might be time to contact your provider or upgrade your hardware.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Key Features of Our Speed Test Tool</h2>
+                <ul class="list-disc pl-6 mb-6 space-y-2 text-gray-700">
+                    <li><strong>Real-Time Results:</strong> Watch your download speed fluctuate in real-time as the test runs.</li>
+                    <li><strong>Latency Measurement:</strong> Check your "Ping" to see how quickly your connection responds to requests.</li>
+                    <li><strong>No Installation Required:</strong> Runs entirely in your web browser on desktop, tablet, or mobile.</li>
+                    <li><strong>Privacy Focused:</strong> We don't store your personal data or IP address after the test.</li>
+                </ul>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">How to Get the Most Accurate Results</h2>
+                <p class="mb-6 leading-relaxed">
+                    To ensure your <strong>check connection speed</strong> results are as accurate as possible, follow these simple steps:
+                </p>
+                <ul class="list-disc pl-6 mb-6 space-y-2 text-gray-700">
+                    <li>Close background applications that might be using data (like Netflix, Steam, or cloud backups).</li>
+                    <li>Disconnect other devices from your WiFi during the test.</li>
+                    <li>If possible, use a wired Ethernet connection for the most stable reading.</li>
+                    <li>Run the test at different times of the day to account for peak usage hours.</li>
+                </ul>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Understanding Mbps and Latency</h2>
+                <p class="mb-6 leading-relaxed">
+                    <strong>Mbps (Megabits per second):</strong> This is the standard unit for measuring download speed. The higher the number, the faster you can download files or stream content. 
+                </p>
+                <p class="mb-6 leading-relaxed">
+                    <strong>Ping (ms):</strong> This measures latency, or the time it takes for data to travel from your device to a server and back. Low ping (under 50ms) is vital for online gaming and smooth video calls.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-center text-gray-900 mb-8">Frequently Asked Questions</h2>
+            <div class="space-y-4">
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>How does this speed test work?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">
+                            The tool downloads a sample file from a high-speed CDN to your browser. By measuring how long it takes to transfer that data, we can calculate your download speed in Megabits per second (Mbps).
+                        </p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>What is a good download speed?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">
+                            A "good" speed depends on your needs. 10-25 Mbps is great for HD streaming and browsing. 50-100 Mbps is ideal for families with multiple devices. 200+ Mbps is perfect for power users and 4K enthusiasts.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>Why is my speed lower than what I pay for?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">
+                            ISPs usually advertise "up to" speeds. Actual speeds can be lower due to network congestion, old hardware, weak WiFi signals, or background data usage on your devices.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 pb-16">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-slate-200 pt-16">
+            <h2 class="text-2xl font-bold text-center text-slate-800 mb-10">Explore More Tools</h2>
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+                <a href="/password_generator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-slate-50 text-slate-700 flex items-center justify-center shrink-0 group-hover:bg-slate-800 group-hover:text-white transition-colors">
+                        <i class="fas fa-key text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Password Gen</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Create secure, random passwords.</p>
+                    </div>
+                </a>
+                <a href="/qr_code_generator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-slate-50 text-slate-800 flex items-center justify-center shrink-0 group-hover:bg-slate-900 group-hover:text-white transition-colors">
+                        <i class="fas fa-qrcode text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">QR Creator</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Generate custom QR codes instantly.</p>
+                    </div>
+                </a>
+                <a href="/crypto_profit_calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-orange-50 text-orange-600 flex items-center justify-center shrink-0 group-hover:bg-orange-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-chart-line text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Crypto Calc</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Calculate trading profit and ROI.</p>
+                    </div>
+                </a>
+                <a href="/meta_tag_generator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0 group-hover:bg-indigo-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-search text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Meta Tag Gen</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Optimize SEO with custom tags.</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <div id="footer"></div>
+
+    <script>
+    async function loadComponent(url, elementId, callback) {
+        try {
+            const response = await fetch(url);
+            if (!response.ok) throw new Error('Status: ' + response.status);
+            const text = await response.text();
+            const element = document.getElementById(elementId);
+            if (element) {
+                element.innerHTML = text;
+                if (callback) callback();
+            }
+        } catch (error) {
+            console.error('Error loading component:', error);
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        loadComponent('/components/navbar.html', 'navbar');
+        loadComponent('/components/footer.html', 'footer');
+        
+        const faqToggles = document.querySelectorAll('[data-faq-toggle]');
+        faqToggles.forEach(button => {
+            button.addEventListener('click', () => {
+                const answer = button.nextElementSibling;
+                const icon = button.querySelector('.faq-icon');
+                const isOpening = !answer.style.maxHeight;
+
+                faqToggles.forEach(other => {
+                    if (other !== button) {
+                        other.nextElementSibling.style.maxHeight = null;
+                        other.querySelector('.faq-icon').classList.remove('rotate-90');
+                        other.querySelector('.faq-icon').classList.add('-rotate-90');
+                    }
+                });
+
+                if (isOpening) {
+                    answer.style.maxHeight = answer.scrollHeight + "px";
+                    icon.classList.remove('-rotate-90');
+                    icon.classList.add('rotate-90');
+                } else {
+                    answer.style.maxHeight = null;
+                    icon.classList.remove('rotate-90');
+                    icon.classList.add('-rotate-90');
+                }
+            });
+        });
+    });
+    </script>
+</body>
+</html>

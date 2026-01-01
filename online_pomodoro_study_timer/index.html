@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Online Pomodoro Study Timer – Focus & Productivity Clock | SimpliConvert</title>
+    <meta name="description" content="Boost your focus with the Online Pomodoro Study Timer. Use the proven 25-minute work and 5-minute break cycle to study or work more effectively.">
+    <meta name="keywords" content="online pomodoro study timer, focus timer, 25 minute timer, productivity clock, study clock, pomodoro technique, work timer">
+    <meta name="author" content="SimpliConvert">
+    <meta property="og:site_name" content="SimpliConvert">
+    <meta name="robots" content="index, follow">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://simpliconvert.com/online_pomodoro_study_timer/">
+    <meta property="og:title" content="Online Pomodoro Study Timer – Boost Your Productivity">
+    <meta property="og:description" content="Master your time with our free Pomodoro timer. Perfect for students and professionals looking to improve focus and reduce burnout.">
+    <meta property="og:image" content="https://simpliconvert.com/images/pomodoro-timer-og.jpg">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://simpliconvert.com/online_pomodoro_study_timer/">
+    <meta name="twitter:title" content="Online Pomodoro Study Timer – Focus & Break Clock">
+    <meta name="twitter:description" content="Free online focus timer using the Pomodoro technique. 25 minutes of work, 5 minutes of rest.">
+    <meta name="twitter:image" content="https://simpliconvert.com/images/pomodoro-timer-og.jpg">
+
+    <link rel="canonical" href="https://simpliconvert.com/online_pomodoro_study_timer/">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Online Pomodoro Study Timer",
+      "url": "https://simpliconvert.com/online_pomodoro_study_timer/",
+      "description": "A free online productivity tool that uses the Pomodoro Technique to help users focus on tasks through timed intervals of work and rest.",
+      "applicationCategory": "ProductivityApplication",
+      "operatingSystem": "Web Browser",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "SimpliConvert",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://simpliconvert.com/logo.png"
+        }
+      }
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [{
+        "@type": "Question",
+        "name": "What is the Pomodoro Technique?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The Pomodoro Technique is a time management method developed by Francesco Cirillo. It uses a timer to break work into intervals, traditionally 25 minutes in length, separated by short breaks."
+        }
+      }, {
+        "@type": "Question",
+        "name": "How long should a Pomodoro break be?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Standard Pomodoro practice suggests a 5-minute short break after every 25-minute work session. After completing four 'pomodoros', you should take a longer break of 15 to 30 minutes."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Does this timer work on mobile devices?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes, our Online Pomodoro Study Timer is fully responsive and works on all smartphones, tablets, and desktop browsers without requiring any installation."
+        }
+      }]
+    }
+    </script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #da3f0b;
+            --primary-hover: #b53409;
+            --primary-light: #fff5f2;
+            --bg: #f8fafc;
+            --text-dark: #0f172a;
+            --success: #16a34a;
+            --danger: #dc2626;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text-dark);
+        }
+
+        .hero-card {
+            background: white;
+            border: 1px solid #f1f5f9;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background-color: var(--primary);
+        }
+
+        .prose a {
+            color: #da3f0b;
+            text-decoration: none; 
+        }
+        .prose a:hover {
+            text-decoration: underline; 
+        }
+
+        .tooltip-container { position: relative; display: inline-block; }
+        .tooltip-text {
+            visibility: hidden; width: 220px; background-color: #1e293b; color: #fff;
+            text-align: center; border-radius: 8px; padding: 10px; position: absolute;
+            z-index: 50; bottom: 125%; left: 50%; margin-left: -110px; opacity: 0;
+            transition: opacity 0.2s; font-size: 0.75rem; font-weight: 400;
+            pointer-events: none; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+        .tooltip-container:hover .tooltip-text { visibility: visible; opacity: 1; }
+        .tooltip-text::after {
+            content: ""; position: absolute; top: 100%; left: 50%; margin-left: -5px;
+            border-width: 5px; border-style: solid; border-color: #1e293b transparent transparent transparent;
+        }
+
+        .animate-fade { animation: fadeIn 0.3s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+        .tool-card {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .tool-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+        }
+
+        .timer-btn-active {
+            background-color: var(--primary);
+            color: white;
+            box-shadow: 0 4px 12px rgba(218, 63, 11, 0.3);
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 min-h-screen flex flex-col">
+    <div id="navbar"></div>
+
+    <section class="hero-white text-black py-2 md:py-10">
+        <div class="container mx-auto px-4 text-center">
+            <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-2">Online Pomodoro Study Timer</h1>
+            <p class="text-lg md:text-xl max-w-3x1 mx-auto mb-2">
+                Boost your productivity and focus. Use the 25-minute work and 5-minute break cycle to study effectively and avoid burnout.
+            </p>
+        </div>
+    </section>
+
+    <div id="root" class="w-full max-w-6xl mx-auto p-4 sm:p-6"></div>
+
+    <script type="text/babel">
+    const { useState, useEffect, useRef } = React;
+
+    const Tooltip = ({ text }) => (
+      <span className="tooltip-container ml-2">
+        <i className="fas fa-info-circle text-slate-300 hover:text-[#da3f0b] cursor-help text-xs transition-colors"></i>
+        <span className="tooltip-text">{text}</span>
+      </span>
+    );
+
+    const NumberInput = ({ value, onChange, label, tooltip, min, max }) => (
+      <div className="mb-5">
+        <div className="flex items-center text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">
+          <label>{label}</label>
+          {tooltip && <Tooltip text={tooltip} />}
+        </div>
+        <div className="relative rounded-xl shadow-sm">
+          <input
+            type="number"
+            min={min}
+            max={max}
+            className="block w-full rounded-xl border-slate-200 border py-3 px-4 focus:ring-4 focus:ring-[#da3f0b20] focus:border-[#da3f0b] sm:text-sm font-semibold text-slate-800 transition-all bg-white"
+            value={value}
+            onChange={(e) => onChange(parseInt(e.target.value) || 0)}
+          />
+          <div className="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none">
+            <span className="text-slate-400 font-semibold text-xs">MIN</span>
+          </div>
+        </div>
+      </div>
+    );
+
+    const StatCard = ({ label, value, subtext, type = 'neutral', isMain = false }) => {
+      let colorClass = 'text-slate-900';
+      if (type === 'work') colorClass = 'text-[#da3f0b]';
+      if (type === 'break') colorClass = 'text-[#16a34a]';
+
+      return (
+        <div className={`${isMain ? 'hero-card p-8' : 'bg-white p-5 rounded-2xl border border-slate-100 shadow-sm'} flex flex-col items-center text-center`}>
+          {isMain ? (
+            <>
+              <p className="text-xs font-black text-[#da3f0b] uppercase tracking-[0.2em] mb-4">{label}</p>
+              <div className="flex items-center justify-center">
+                <span className={`text-7xl md:text-8xl font-black tracking-tighter leading-none tabular-nums ${colorClass}`}>{value}</span>
+              </div>
+              {subtext && <p className="text-sm text-slate-400 font-medium mt-6">{subtext}</p>}
+            </>
+          ) : (
+            <div className="w-full">
+              <div className="text-[10px] font-black text-slate-400 uppercase tracking-widest flex items-center justify-center mb-1">
+                {label}
+              </div>
+              <p className={`text-xl font-extrabold ${colorClass}`}>{value}</p>
+              {subtext && <p className="text-[10px] text-slate-400 font-medium mt-1 uppercase tracking-tight">{subtext}</p>}
+            </div>
+          )}
+        </div>
+      );
+    };
+
+    const ShareButton = ({ platform, icon, color, url, title }) => {
+        let shareUrl = '';
+        switch(platform) {
+            case 'facebook': shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${url}`; break;
+            case 'twitter': shareUrl = `https://twitter.com/intent/tweet?url=${url}&text=${title}`; break;
+            case 'linkedin': shareUrl = `https://www.linkedin.com/shareArticle?mini=true&url=${url}`; break;
+            case 'whatsapp': shareUrl = `https://api.whatsapp.com/send?text=${title}%20${url}`; break;
+            case 'reddit': shareUrl = `https://www.reddit.com/submit?url=${url}&title=${title}`; break;
+            case 'telegram': shareUrl = `https://t.me/share/url?url=${url}&text=${title}`; break;
+            default: return null;
+        }
+
+        return (
+            <a href={shareUrl} target="_blank" rel="noopener noreferrer" className={`w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center text-white transition-transform hover:-translate-y-1 hover:shadow-lg ${color}`}>
+                <i className={`fab fa-${icon}`}></i>
+            </a>
+        );
+    };
+
+    const App = () => {
+      const [workTime, setWorkTime] = useState(25);
+      const [shortBreak, setShortBreak] = useState(5);
+      const [longBreak, setLongBreak] = useState(15);
+      
+      const [mode, setMode] = useState('work'); // 'work', 'short', 'long'
+      const [timeLeft, setTimeLeft] = useState(workTime * 60);
+      const [isActive, setIsActive] = useState(false);
+      const [sessions, setSessions] = useState(0);
+      const [showBookmarkToast, setShowBookmarkToast] = useState(false);
+
+      const timerRef = useRef(null);
+
+      useEffect(() => {
+        if (isActive && timeLeft > 0) {
+          timerRef.current = setInterval(() => {
+            setTimeLeft((prev) => prev - 1);
+          }, 1000);
+        } else if (timeLeft === 0) {
+          handleTimerEnd();
+        } else {
+          clearInterval(timerRef.current);
+        }
+        return () => clearInterval(timerRef.current);
+      }, [isActive, timeLeft]);
+
+      useEffect(() => {
+        if (!isActive) {
+            if (mode === 'work') setTimeLeft(workTime * 60);
+            if (mode === 'short') setTimeLeft(shortBreak * 60);
+            if (mode === 'long') setTimeLeft(longBreak * 60);
+        }
+      }, [workTime, shortBreak, longBreak, mode]);
+
+      const handleTimerEnd = () => {
+        setIsActive(false);
+        clearInterval(timerRef.current);
+        
+        if (mode === 'work') {
+            const newSessions = sessions + 1;
+            setSessions(newSessions);
+            if (newSessions % 4 === 0) {
+                setMode('long');
+                setTimeLeft(longBreak * 60);
+            } else {
+                setMode('short');
+                setTimeLeft(shortBreak * 60);
+            }
+        } else {
+            setMode('work');
+            setTimeLeft(workTime * 60);
+        }
+        
+        // Simple notification
+        if ("Notification" in window && Notification.permission === "granted") {
+            new Notification("Timer Finished!", { body: "Time to switch tasks." });
+        } else {
+            alert("Timer Finished!");
+        }
+      };
+
+      const toggleTimer = () => setIsActive(!isActive);
+
+      const resetTimer = () => {
+        setIsActive(false);
+        if (mode === 'work') setTimeLeft(workTime * 60);
+        if (mode === 'short') setTimeLeft(shortBreak * 60);
+        if (mode === 'long') setTimeLeft(longBreak * 60);
+      };
+
+      const changeMode = (newMode) => {
+        setMode(newMode);
+        setIsActive(false);
+        if (newMode === 'work') setTimeLeft(workTime * 60);
+        if (newMode === 'short') setTimeLeft(shortBreak * 60);
+        if (newMode === 'long') setTimeLeft(longBreak * 60);
+      };
+
+      const formatTime = (seconds) => {
+        const m = Math.floor(seconds / 60);
+        const s = seconds % 60;
+        return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+      };
+
+      const getProgress = () => {
+        let total = workTime * 60;
+        if (mode === 'short') total = shortBreak * 60;
+        if (mode === 'long') total = longBreak * 60;
+        return ((total - timeLeft) / total) * 100;
+      };
+
+      const handleBookmark = () => {
+        setShowBookmarkToast(true);
+        setTimeout(() => setShowBookmarkToast(false), 3000);
+      };
+
+      const pageUrl = encodeURIComponent("https://simpliconvert.com/online_pomodoro_study_timer/");
+      const pageTitle = encodeURIComponent("Boost your focus with this Pomodoro Study Timer!");
+
+      return (
+        <div className="bg-white rounded-[2rem] shadow-2xl overflow-hidden border border-slate-100">
+          <header className="bg-slate-50/50 border-b border-slate-100 p-6 md:p-8 flex flex-col md:flex-row justify-between items-center gap-6">
+            <div className="text-center md:text-left">
+              <h2 className="text-2xl font-black text-slate-800 tracking-tight flex items-center justify-center md:justify-start gap-3">
+                <span className="bg-[#da3f0b] text-white p-2 rounded-xl text-lg shadow-lg shadow-[#da3f0b30]">
+                  <i className="fas fa-clock"></i>
+                </span>
+                Focus Session Manager
+              </h2>
+            </div>
+            
+            <div className="flex bg-white p-1 rounded-xl border border-slate-200 shadow-sm">
+                <button 
+                    onClick={() => changeMode('work')}
+                    className={`px-4 py-2 rounded-lg text-xs font-bold transition-all ${mode === 'work' ? 'timer-btn-active' : 'text-slate-500 hover:text-slate-800'}`}
+                >Work</button>
+                <button 
+                    onClick={() => changeMode('short')}
+                    className={`px-4 py-2 rounded-lg text-xs font-bold transition-all ${mode === 'short' ? 'timer-btn-active' : 'text-slate-500 hover:text-slate-800'}`}
+                >Short Break</button>
+                <button 
+                    onClick={() => changeMode('long')}
+                    className={`px-4 py-2 rounded-lg text-xs font-bold transition-all ${mode === 'long' ? 'timer-btn-active' : 'text-slate-500 hover:text-slate-800'}`}
+                >Long Break</button>
+            </div>
+          </header>
+
+          <main className="flex flex-col lg:flex-row">
+            {/* Settings Panel */}
+            <div className="lg:w-[40%] p-6 md:p-10 lg:p-12 border-r border-slate-100">
+              <div className="space-y-6">
+                <div className="bg-slate-50 p-6 rounded-2xl border border-slate-100">
+                  <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest mb-6"><i className="fas fa-cog mr-2"></i>Timer Settings</h3>
+                  <NumberInput label="Work Duration" value={workTime} onChange={setWorkTime} tooltip="Standard is 25 minutes." min={1} max={60} />
+                  <NumberInput label="Short Break" value={shortBreak} onChange={setShortBreak} tooltip="Standard is 5 minutes." min={1} max={30} />
+                  <NumberInput label="Long Break" value={longBreak} onChange={setLongBreak} tooltip="Standard is 15-30 minutes." min={1} max={60} />
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                     <StatCard label="Sessions" value={sessions} subtext="Completed Today" />
+                     <StatCard label="Total Focus" value={`${sessions * workTime}m`} subtext="Minutes Productive" />
+                </div>
+              </div>
+            </div>
+
+            {/* Timer Panel */}
+            <div className="lg:w-[60%] bg-slate-50/50 p-6 md:p-10 lg:p-12 flex flex-col justify-center">
+               <div className="space-y-8">
+                  
+                  <StatCard 
+                    isMain={true}
+                    label={mode === 'work' ? "Focus Time" : "Rest Time"}
+                    value={formatTime(timeLeft)}
+                    type={mode === 'work' ? 'work' : 'break'}
+                    subtext={isActive ? "Keep going, you're doing great!" : "Ready to start?"}
+                  />
+
+                  <div className="flex flex-col items-center gap-6">
+                    <div className="flex gap-4 w-full max-w-md">
+                        <button 
+                            onClick={toggleTimer}
+                            className={`flex-1 py-4 rounded-2xl font-black text-lg shadow-lg transition-all active:scale-95 ${isActive ? 'bg-slate-800 text-white hover:bg-slate-900' : 'bg-[#da3f0b] text-white hover:bg-[#b53409]'}`}
+                        >
+                            {isActive ? <><i className="fas fa-pause mr-2"></i> PAUSE</> : <><i className="fas fa-play mr-2"></i> START</>}
+                        </button>
+                        <button 
+                            onClick={resetTimer}
+                            className="px-6 py-4 bg-white border border-slate-200 text-slate-600 rounded-2xl font-black text-lg shadow-sm hover:bg-slate-50 transition-all active:scale-95"
+                        >
+                            <i className="fas fa-redo"></i>
+                        </button>
+                    </div>
+
+                    <div className="w-full max-w-md bg-slate-200 rounded-full h-3 overflow-hidden shadow-inner">
+                        <div 
+                           className={`h-full transition-all duration-1000 ease-linear ${mode === 'work' ? 'bg-[#da3f0b]' : 'bg-[#16a34a]'}`}
+                           style={{width: `${getProgress()}%`}} 
+                        ></div>
+                    </div>
+                  </div>
+               </div>
+            </div>
+          </main>
+
+          <footer className="bg-slate-50 border-t border-slate-100 p-6 md:p-8">
+             <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+                 <div className="text-center md:text-left">
+                     <h4 className="text-sm font-bold text-slate-700 mb-1">Share this focus tool</h4>
+                     <p className="text-xs text-slate-400">Help your friends study better.</p>
+                 </div>
+                 
+                 <div className="flex flex-wrap justify-center gap-3">
+                     <ShareButton platform="facebook" icon="facebook-f" color="bg-[#1877F2]" url={pageUrl} title={pageTitle} />
+                     <ShareButton platform="twitter" icon="twitter" color="bg-[#1DA1F2]" url={pageUrl} title={pageTitle} />
+                     <ShareButton platform="linkedin" icon="linkedin-in" color="bg-[#0A66C2]" url={pageUrl} title={pageTitle} />
+                     <ShareButton platform="whatsapp" icon="whatsapp" color="bg-[#25D366]" url={pageUrl} title={pageTitle} />
+                     <ShareButton platform="reddit" icon="reddit-alien" color="bg-[#FF4500]" url={pageUrl} title={pageTitle} />
+                     <ShareButton platform="telegram" icon="telegram-plane" color="bg-[#0088cc]" url={pageUrl} title={pageTitle} />
+                 </div>
+
+                 <div className="relative">
+                     <button onClick={handleBookmark} className="flex items-center gap-2 bg-white border border-slate-200 hover:border-[#da3f0b] hover:text-[#da3f0b] text-slate-600 px-4 py-2 rounded-lg text-sm font-bold transition-all shadow-sm active:scale-95">
+                        <i className="fas fa-bookmark"></i> Bookmark
+                     </button>
+                     {showBookmarkToast && (
+                         <div className="absolute bottom-full mb-3 left-1/2 -translate-x-1/2 bg-slate-800 text-white text-xs py-2 px-4 rounded-lg shadow-lg whitespace-nowrap animate-fade">
+                             Press <span className="font-bold text-[#da3f0b]">Ctrl + D</span> to bookmark
+                         </div>
+                     )}
+                 </div>
+             </div>
+          </footer>
+        </div>
+      );
+    };
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+    </script>
+
+    <section class="bg-white py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="prose prose-lg max-w-none prose-h2:text-gray-800 prose-p:text-gray-700">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">Online Pomodoro Study Timer – Master Your Focus</h2>
+                <p class="mb-6 leading-relaxed">
+                    In a world full of digital distractions, staying focused on a single task can feel impossible. The <strong>Online Pomodoro Study Timer</strong> is a simple yet powerful tool designed to help you reclaim your productivity. Based on the world-renowned Pomodoro Technique, this timer breaks your work into manageable 25-minute chunks, followed by short breaks to keep your mind fresh and alert.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">How the Pomodoro Technique Works</h2>
+                <p class="mb-6 leading-relaxed">
+                    The core of the Pomodoro method is the "Pomodoro"—a 25-minute interval of deep work. Here is the standard workflow:
+                </p>
+                <ul class="list-disc pl-6 mb-6 space-y-2 text-gray-700">
+                    <li><strong>Choose a Task:</strong> Pick one specific thing you want to accomplish.</li>
+                    <li><strong>Set the Timer:</strong> Start your 25-minute focus session.</li>
+                    <li><strong>Work Deeply:</strong> Avoid all distractions until the timer rings.</li>
+                    <li><strong>Take a Short Break:</strong> Rest for 5 minutes to recharge.</li>
+                    <li><strong>Repeat:</strong> After four sessions, take a longer 15-30 minute break.</li>
+                </ul>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Benefits of Using a Focus Timer</h2>
+                <p class="mb-6 leading-relaxed">
+                    Using a <strong>productivity clock</strong> isn't just about tracking time; it's about training your brain. By committing to short bursts of effort, you reduce the mental resistance to starting difficult tasks. This method helps prevent burnout, improves attention span, and provides a clear sense of accomplishment as you track your completed sessions.
+                </p>
+                <p class="mb-6 leading-relaxed">
+                    Just as our <a href="https://simpliconvert.com/to_do_list/" target="_blank">To-Do List tool</a> helps you organize your tasks, the Pomodoro timer ensures you actually execute them with high efficiency.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Customizing Your Study Sessions</h2>
+                <p class="mb-6 leading-relaxed">
+                    While 25 minutes is the standard, everyone's focus threshold is different. Our <strong>online pomodoro study timer</strong> allows you to customize your work and break durations. If you find that you work better in 50-minute blocks (the "Double Pomodoro"), you can easily adjust the settings to fit your personal flow.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Perfect for Students and Professionals</h2>
+                <p class="mb-6 leading-relaxed">
+                    Whether you are studying for exams, writing code, or managing a project, the <strong>25 minute timer</strong> is your best ally. It creates a sense of urgency that discourages procrastination. For professionals working from home, it provides a necessary structure to the day, ensuring that work time and rest time are clearly defined.
+                </p>
+                <p class="mb-6 leading-relaxed">
+                    If you're a freelancer managing multiple clients, combining this timer with our <a href="https://simpliconvert.com/freelance_hourly_rate_calculator/" target="_blank">Freelance Rate Calculator</a> can help you understand exactly how much you're earning per focus session.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-center text-gray-900 mb-8">Pomodoro Timer – Frequently Asked Questions</h2>
+            <div class="space-y-4">
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>Why is it called the Pomodoro Technique?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">
+                            "Pomodoro" is the Italian word for tomato. The creator, Francesco Cirillo, used a kitchen timer shaped like a tomato when he was a university student, which gave the technique its name.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>What should I do during the breaks?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">
+                            The best breaks involve stepping away from your screen. Stretch, grab a glass of water, do a quick breathing exercise, or walk around the room. Avoid checking social media, as it can trap your attention and make it harder to return to work.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>Can I change the 25-minute interval?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">
+                            Yes! While 25 minutes is the traditional length, our tool allows you to adjust the "Work Duration" in the settings panel to whatever length suits your concentration level best.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 pb-16">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-slate-200 pt-16">
+            <h2 class="text-2xl font-bold text-center text-slate-800 mb-10">More Productivity Tools</h2>
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+                <a href="/to_do_list/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-green-50 text-green-600 flex items-center justify-center shrink-0 group-hover:bg-green-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-check-square text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">To-Do List</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Organize your daily tasks.</p>
+                    </div>
+                </a>
+                <a href="/password_generator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-slate-50 text-slate-700 flex items-center justify-center shrink-0 group-hover:bg-slate-800 group-hover:text-white transition-colors">
+                        <i class="fas fa-key text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Password Gen</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Secure random passwords.</p>
+                    </div>
+                </a>
+                <a href="/qr_code_generator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-slate-50 text-slate-800 flex items-center justify-center shrink-0 group-hover:bg-slate-900 group-hover:text-white transition-colors">
+                        <i class="fas fa-qrcode text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">QR Creator</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Generate custom QR codes.</p>
+                    </div>
+                </a>
+                <a href="/freelance_hourly_rate_calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0 group-hover:bg-emerald-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-calculator text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Rate Calc</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Calculate your hourly rate.</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <div id="footer"></div>
+
+    <script>
+    function initializeHeaderScripts() {
+        const header = document.getElementById('header');
+        if (header) {
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 10) {
+                    header.classList.add('scrolled-effect');
+                } else {
+                    header.classList.remove('scrolled-effect');
+                }
+            });
+        }
+    }
+    
+    function initializeFooterScripts() {
+        const yearSpan = document.getElementById('current-year');
+        if(yearSpan) {
+            yearSpan.textContent = new Date().getFullYear();
+        }
+    }
+
+    async function loadComponent(url, elementId, callback) {
+        try {
+            const response = await fetch(url);
+            if (!response.ok) throw new Error('Status: ' + response.status);
+            const text = await response.text();
+            const element = document.getElementById(elementId);
+            if (element) {
+                element.innerHTML = text;
+                if (callback) callback();
+            }
+        } catch (error) {
+            console.error('Error loading component:', error);
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        loadComponent('/components/navbar.html', 'navbar', initializeHeaderScripts);
+        loadComponent('/components/footer.html', 'footer', initializeFooterScripts);
+        
+        const faqToggles = document.querySelectorAll('[data-faq-toggle]');
+        faqToggles.forEach(button => {
+            button.addEventListener('click', () => {
+                const answer = button.nextElementSibling;
+                const icon = button.querySelector('.faq-icon');
+                const isOpening = !answer.style.maxHeight;
+
+                faqToggles.forEach(other => {
+                    if (other !== button) {
+                        other.nextElementSibling.style.maxHeight = null;
+                        other.querySelector('.faq-icon').classList.remove('rotate-90');
+                        other.querySelector('.faq-icon').classList.add('-rotate-90');
+                    }
+                });
+
+                if (isOpening) {
+                    answer.style.maxHeight = answer.scrollHeight + "px";
+                    icon.classList.remove('-rotate-90');
+                    icon.classList.add('rotate-90');
+                } else {
+                    answer.style.maxHeight = null;
+                    icon.classList.remove('rotate-90');
+                    icon.classList.add('-rotate-90');
+                }
+            });
+        });
+    });
+    </script>
+</body>
+</html>

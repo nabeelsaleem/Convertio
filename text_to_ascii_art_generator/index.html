@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Text To ASCII Art Generator – Create Cool ASCII Text Art | SimpliConvert</title>
+    <meta name="description" content="Convert normal text into cool visual styles with our free Text To ASCII Art Generator. Create unique banners, headers, and stylized text for code or social media.">
+    <meta name="keywords" content="text to ascii art generator, ascii text maker, copy paste ascii, text art tool, figlet online, ascii banner generator, terminal text art">
+    <meta name="author" content="SimpliConvert">
+    <meta property="og:site_name" content="SimpliConvert">
+    <meta name="robots" content="index, follow">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://simpliconvert.com/text_to_ascii_art_generator/">
+    <meta property="og:title" content="Text To ASCII Art Generator – Stylize Your Text">
+    <meta property="og:description" content="Transform plain text into artistic ASCII banners. Perfect for developers, social media, and terminal headers.">
+    <meta property="og:image" content="https://simpliconvert.com/images/text-to-ascii-art-og.jpg">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://simpliconvert.com/text_to_ascii_art_generator/">
+    <meta name="twitter:title" content="Text To ASCII Art Generator – Copy & Paste Text Art">
+    <meta name="twitter:description" content="Free online tool to generate ASCII art from text. Choose from multiple fonts and styles instantly.">
+    <meta name="twitter:image" content="https://simpliconvert.com/images/text-to-ascii-art-og.jpg">
+
+    <link rel="canonical" href="https://simpliconvert.com/text_to_ascii_art_generator/">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Text To ASCII Art Generator",
+      "url": "https://simpliconvert.com/text_to_ascii_art_generator/",
+      "description": "A free online tool to convert plain text into stylized ASCII art banners using various fonts and styles.",
+      "applicationCategory": "DesignApplication",
+      "operatingSystem": "Web Browser",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "SimpliConvert",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://simpliconvert.com/logo.png"
+        }
+      }
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [{
+        "@type": "Question",
+        "name": "What is ASCII Art?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "ASCII art is a graphic design technique that uses characters from the ASCII standard to create visual images or stylized text. It is commonly used in programming source code, terminal banners, and social media."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Can I copy and paste this ASCII art?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes! Our tool generates plain text ASCII art that can be easily copied and pasted into code editors, command line interfaces, or social media platforms that support monospaced fonts."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Why does the art look messy on mobile?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "ASCII art relies on monospaced (fixed-width) fonts and specific line lengths. On mobile devices, text wrapping or variable-width fonts can break the alignment. For best results, view the art in a code editor or a terminal."
+        }
+      }]
+    }
+    </script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/figlet/1.7.0/figlet.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #da3f0b;
+            --primary-hover: #b53409;
+            --primary-light: #fff5f2;
+            --bg: #f8fafc;
+            --text-dark: #0f172a;
+            --success: #16a34a;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text-dark);
+        }
+
+        .hero-card {
+            background: white;
+            border: 1px solid #f1f5f9;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background-color: var(--primary);
+        }
+
+        .ascii-output {
+            font-family: 'Fira Code', 'Courier New', Courier, monospace;
+            white-space: pre;
+            overflow-x: auto;
+            line-height: 1.2;
+            tab-size: 4;
+        }
+
+        .prose a {
+            color: #da3f0b;
+            text-decoration: none; 
+        }
+        .prose a:hover {
+            text-decoration: underline; 
+        }
+
+        .animate-fade { animation: fadeIn 0.3s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+        .tool-card {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .tool-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 min-h-screen flex flex-col">
+    <div id="navbar"></div>
+
+    <section class="hero-white text-black py-2 md:py-10">
+        <div class="container mx-auto px-4 text-center">
+            <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-2">Text To ASCII Art Generator</h1>
+            <p class="text-lg md:text-xl max-w-3x1 mx-auto mb-2">
+                Turn your text into visual masterpieces. Create unique ASCII banners and headers for your code, terminal, or social media profiles.
+            </p>
+        </div>
+    </section>
+
+    <div id="root" class="w-full max-w-6xl mx-auto p-4 sm:p-6"></div>
+
+    <script type="text/babel">
+    const { useState, useEffect, useCallback } = React;
+
+    const fonts = [
+      "Standard", "Slant", "Shadow", "Small", "Script", "Ogre", "Ivrit", "Graffiti", "Epic", "Doom", "Bulbhead", "Block", "Banner"
+    ];
+
+    const App = () => {
+      const [inputText, setInputText] = useState("SimpliConvert");
+      const [selectedFont, setSelectedFont] = useState("Standard");
+      const [asciiArt, setAsciiArt] = useState("");
+      const [copyStatus, setCopyStatus] = useState("Copy Art");
+      const [showBookmarkToast, setShowBookmarkToast] = useState(false);
+
+      const generateArt = useCallback(() => {
+        if (!inputText.trim()) {
+          setAsciiArt("");
+          return;
+        }
+        
+        figlet.text(inputText, {
+          font: selectedFont,
+          horizontalLayout: 'default',
+          verticalLayout: 'default',
+          width: 80,
+          whitespaceBreak: true
+        }, function(err, data) {
+          if (err) {
+            console.log('Something went wrong...');
+            console.dir(err);
+            return;
+          }
+          setAsciiArt(data);
+        });
+      }, [inputText, selectedFont]);
+
+      useEffect(() => {
+        generateArt();
+      }, [generateArt]);
+
+      const handleCopy = () => {
+        navigator.clipboard.writeText(asciiArt);
+        setCopyStatus("Copied!");
+        setTimeout(() => setCopyStatus("Copy Art"), 2000);
+      };
+
+      const handleBookmark = () => {
+        setShowBookmarkToast(true);
+        setTimeout(() => setShowBookmarkToast(false), 3000);
+      };
+
+      const pageUrl = encodeURIComponent("https://simpliconvert.com/text_to_ascii_art_generator/");
+      const pageTitle = encodeURIComponent("Check out this Text To ASCII Art Generator!");
+
+      return (
+        <div className="bg-white rounded-[2rem] shadow-2xl overflow-hidden border border-slate-100">
+          <header className="bg-slate-50/50 border-b border-slate-100 p-6 md:p-8 flex flex-col md:flex-row justify-between items-center gap-6">
+            <div className="text-center md:text-left">
+              <h2 className="text-2xl font-black text-slate-800 tracking-tight flex items-center justify-center md:justify-start gap-3">
+                <span className="bg-[#da3f0b] text-white p-2 rounded-xl text-lg shadow-lg shadow-[#da3f0b30]">
+                  <i className="fas fa-font"></i>
+                </span>
+                ASCII Text Maker
+              </h2>
+            </div>
+          </header>
+
+          <main className="flex flex-col lg:flex-row">
+            {/* Input Panel */}
+            <div className="lg:w-[40%] p-6 md:p-10 border-r border-slate-100">
+              <div className="space-y-6">
+                <div>
+                  <label className="text-xs font-black text-slate-500 uppercase tracking-widest mb-2 block">Your Text</label>
+                  <textarea
+                    className="w-full h-32 p-4 rounded-xl border border-slate-200 focus:ring-4 focus:ring-[#da3f0b20] focus:border-[#da3f0b] outline-none transition-all font-medium text-slate-700 bg-white resize-none"
+                    placeholder="Type something here..."
+                    value={inputText}
+                    onChange={(e) => setInputText(e.target.value)}
+                  />
+                </div>
+
+                <div>
+                  <label className="text-xs font-black text-slate-500 uppercase tracking-widest mb-2 block">Select Style</label>
+                  <div className="grid grid-cols-2 gap-2">
+                    {fonts.map(font => (
+                      <button
+                        key={font}
+                        onClick={() => setSelectedFont(font)}
+                        className={`px-4 py-2 rounded-lg text-xs font-bold transition-all border ${
+                          selectedFont === font 
+                          ? 'bg-[#da3f0b] text-white border-[#da3f0b]' 
+                          : 'bg-white text-slate-600 border-slate-200 hover:border-[#da3f0b]'
+                        }`}
+                      >
+                        {font}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Output Panel */}
+            <div className="lg:w-[60%] bg-slate-50/50 p-6 md:p-10 flex flex-col">
+              <div className="flex justify-between items-center mb-4">
+                <span className="text-xs font-black text-slate-400 uppercase tracking-widest">Preview</span>
+                <button 
+                  onClick={handleCopy}
+                  className="bg-slate-800 text-white px-4 py-2 rounded-lg text-xs font-bold hover:bg-slate-700 transition-all flex items-center gap-2"
+                >
+                  <i className={copyStatus === "Copied!" ? "fas fa-check" : "fas fa-copy"}></i>
+                  {copyStatus}
+                </button>
+              </div>
+              
+              <div className="flex-grow bg-white rounded-2xl border border-slate-200 shadow-inner p-6 overflow-hidden flex flex-col">
+                <div className="ascii-output text-[10px] sm:text-xs md:text-sm text-slate-800 flex-grow overflow-auto">
+                  {asciiArt || "Start typing to see magic..."}
+                </div>
+              </div>
+              
+              <p className="mt-4 text-[10px] text-slate-400 font-medium italic">
+                * Note: ASCII art displays best in monospaced environments like code editors or terminals.
+              </p>
+            </div>
+          </main>
+
+          {/* Share & Bookmark Footer */}
+          <footer className="bg-slate-50 border-t border-slate-100 p-6 md:p-8">
+             <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+                 <div className="text-center md:text-left">
+                     <h4 className="text-sm font-bold text-slate-700 mb-1">Share this tool</h4>
+                     <p className="text-xs text-slate-400">Help others create cool text art.</p>
+                 </div>
+                 
+                 <div className="flex flex-wrap justify-center gap-3">
+                     <ShareButton platform="facebook" icon="facebook-f" color="bg-[#1877F2]" url={pageUrl} title={pageTitle} />
+                     <ShareButton platform="twitter" icon="twitter" color="bg-[#1DA1F2]" url={pageUrl} title={pageTitle} />
+                     <ShareButton platform="linkedin" icon="linkedin-in" color="bg-[#0A66C2]" url={pageUrl} title={pageTitle} />
+                     <ShareButton platform="whatsapp" icon="whatsapp" color="bg-[#25D366]" url={pageUrl} title={pageTitle} />
+                     <ShareButton platform="reddit" icon="reddit-alien" color="bg-[#FF4500]" url={pageUrl} title={pageTitle} />
+                     <ShareButton platform="telegram" icon="telegram-plane" color="bg-[#0088cc]" url={pageUrl} title={pageTitle} />
+                 </div>
+
+                 <div className="relative">
+                     <button 
+                        onClick={handleBookmark}
+                        className="flex items-center gap-2 bg-white border border-slate-200 hover:border-[#da3f0b] hover:text-[#da3f0b] text-slate-600 px-4 py-2 rounded-lg text-sm font-bold transition-all shadow-sm active:scale-95"
+                     >
+                        <i className="fas fa-bookmark"></i> Bookmark
+                     </button>
+                     {showBookmarkToast && (
+                         <div className="absolute bottom-full mb-3 left-1/2 -translate-x-1/2 bg-slate-800 text-white text-xs py-2 px-4 rounded-lg shadow-lg whitespace-nowrap animate-fade">
+                             Press <span className="font-bold text-[#da3f0b]">Ctrl + D</span> to bookmark
+                         </div>
+                     )}
+                 </div>
+             </div>
+          </footer>
+        </div>
+      );
+    };
+
+    const ShareButton = ({ platform, icon, color, url, title }) => {
+        let shareUrl = '';
+        switch(platform) {
+            case 'facebook': shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${url}`; break;
+            case 'twitter': shareUrl = `https://twitter.com/intent/tweet?url=${url}&text=${title}`; break;
+            case 'linkedin': shareUrl = `https://www.linkedin.com/shareArticle?mini=true&url=${url}`; break;
+            case 'whatsapp': shareUrl = `https://api.whatsapp.com/send?text=${title}%20${url}`; break;
+            case 'reddit': shareUrl = `https://www.reddit.com/submit?url=${url}&title=${title}`; break;
+            case 'telegram': shareUrl = `https://t.me/share/url?url=${url}&text=${title}`; break;
+            default: return null;
+        }
+
+        return (
+            <a 
+                href={shareUrl} 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className={`w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center text-white transition-transform hover:-translate-y-1 hover:shadow-lg ${color}`}
+            >
+                <i className={`fab fa-${icon}`}></i>
+            </a>
+        );
+    };
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+    </script>
+
+    <section class="bg-white py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="prose prose-lg max-w-none prose-h2:text-gray-800 prose-p:text-gray-700">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">Text To ASCII Art Generator – Stylize Your Digital Presence</h2>
+                <p class="mb-6 leading-relaxed">
+                    In the early days of computing, before high-resolution graphics were common, developers and users relied on <strong>ASCII art</strong> to create visual elements. Today, this retro aesthetic is more popular than ever. Our <strong>Text To ASCII Art Generator</strong> allows you to instantly transform plain text into stylized banners, headers, and creative art pieces using standard keyboard characters.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Why Use an ASCII Text Maker?</h2>
+                <p class="mb-6 leading-relaxed">
+                    Whether you are a developer looking to add a professional touch to your source code comments or a social media enthusiast wanting to stand out, our <em>ASCII text maker</em> is the perfect tool. ASCII art is lightweight, text-based, and works in environments where images might not be supported, such as terminal windows, README files, and plain-text emails.
+                </p>
+                <ul class="list-disc pl-6 mb-6 space-y-2 text-gray-700">
+                    <li><strong>Code Documentation:</strong> Use large ASCII banners to separate sections in your scripts.</li>
+                    <li><strong>Terminal Personalization:</strong> Create custom "Message of the Day" (MOTD) headers for your Linux or macOS terminal.</li>
+                    <li><strong>Social Media:</strong> Stand out on platforms like Reddit or Discord with unique text styles.</li>
+                    <li><strong>Retro Design:</strong> Embrace the 80s and 90s aesthetic in your digital projects.</li>
+                </ul>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">How to Generate ASCII Art Online</h2>
+                <p class="mb-6 leading-relaxed">
+                    Using our tool is incredibly simple. Just type your desired text into the input field, and the <strong>ASCII banner generator</strong> will update the preview in real-time. You can experiment with different fonts like <em>Standard, Slant, Shadow,</em> and <em>Graffiti</em> to find the style that fits your project. Once you're happy with the result, simply click the "Copy Art" button and paste it wherever you need.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Best Practices for Copy-Paste ASCII Art</h2>
+                <p class="mb-6 leading-relaxed">
+                    To ensure your ASCII art looks perfect, remember that it relies on <strong>monospaced fonts</strong>. These are fonts where every character takes up the exact same amount of horizontal space (like Courier, Consolas, or Fira Code). If you paste your art into a variable-width font environment (like a standard Word document), the characters will shift, and the image will break. Always use a code block or a monospaced setting for the best visual result.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-center text-gray-900 mb-8">Frequently Asked Questions</h2>
+            <div class="space-y-4">
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>Is this ASCII generator free to use?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">Yes, our Text To ASCII Art Generator is 100% free. You can generate and copy as many banners as you like without any limitations or sign-ups.</p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>Which font works best for coding comments?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">The "Standard" and "Small" fonts are generally best for code comments as they are legible and don't take up too much horizontal space, preventing line-wrapping issues in IDEs.</p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>Will this work on Discord or Reddit?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">Yes! On Discord, wrap your ASCII art in triple backticks (```) to use a code block. On Reddit, use the "Code Block" formatting option to ensure the characters align correctly.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 pb-16">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-slate-200 pt-16">
+            <h2 class="text-2xl font-bold text-center text-slate-800 mb-10">Popular Tools on SimpliConvert</h2>
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+                <a href="/password_generator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-slate-50 text-slate-700 flex items-center justify-center shrink-0 group-hover:bg-slate-800 group-hover:text-white transition-colors">
+                        <i class="fas fa-key text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Password Gen</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Create secure, random passwords.</p>
+                    </div>
+                </a>
+                <a href="/qr_code_generator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-slate-50 text-slate-800 flex items-center justify-center shrink-0 group-hover:bg-slate-900 group-hover:text-white transition-colors">
+                        <i class="fas fa-qrcode text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">QR Creator</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Generate custom QR codes instantly.</p>
+                    </div>
+                </a>
+                <a href="/meta_tag_generator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0 group-hover:bg-indigo-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-search text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Meta Tag Gen</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Optimize SEO with custom tags.</p>
+                    </div>
+                </a>
+                <a href="/image_resizer/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center shrink-0 group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-image text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Image Resizer</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Resize images without quality loss.</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <div id="footer"></div>
+
+    <script>
+    async function loadComponent(url, elementId, callback) {
+        try {
+            const response = await fetch(url);
+            if (!response.ok) throw new Error('Status: ' + response.status);
+            const text = await response.text();
+            const element = document.getElementById(elementId);
+            if (element) {
+                element.innerHTML = text;
+                if (callback) callback();
+            }
+        } catch (error) {
+            console.error('Error loading component:', error);
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        loadComponent('/components/navbar.html', 'navbar');
+        loadComponent('/components/footer.html', 'footer', () => {
+            const yearSpan = document.getElementById('current-year');
+            if(yearSpan) yearSpan.textContent = new Date().getFullYear();
+        });
+        
+        const faqToggles = document.querySelectorAll('[data-faq-toggle]');
+        faqToggles.forEach(button => {
+            button.addEventListener('click', () => {
+                const answer = button.nextElementSibling;
+                const icon = button.querySelector('.faq-icon');
+                const isOpening = !answer.style.maxHeight;
+
+                faqToggles.forEach(other => {
+                    if (other !== button) {
+                        other.nextElementSibling.style.maxHeight = null;
+                        other.querySelector('.faq-icon').classList.remove('rotate-90');
+                        other.querySelector('.faq-icon').classList.add('-rotate-90');
+                    }
+                });
+
+                if (isOpening) {
+                    answer.style.maxHeight = answer.scrollHeight + "px";
+                    icon.classList.remove('-rotate-90');
+                    icon.classList.add('rotate-90');
+                } else {
+                    answer.style.maxHeight = null;
+                    icon.classList.remove('rotate-90');
+                    icon.classList.add('-rotate-90');
+                }
+            });
+        });
+    });
+    </script>
+</body>
+</html>
