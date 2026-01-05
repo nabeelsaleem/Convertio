@@ -9,7 +9,10 @@
             transition: opacity 0.2s ease-out, visibility 0.2s ease-out, transform 0.2s ease-out;
         }
 
-        #mega-menu-trigger:hover #mega-menu,
+        /* Logic: When hovering the specific trigger OR the menu itself, keep it open.
+           Note: We use the 'group' class on the parent nav item to handle the hover state cleanly.
+        */
+        .mega-menu-group:hover #mega-menu,
         #mega-menu:hover {
             opacity: 1;
             visibility: visible;
@@ -23,7 +26,7 @@
 
         .tool-link:hover {
             transform: translateX(4px);
-            background-color: #f3f4f6; /* gray-100 */
+            background-color: #f3f4f6;
         }
 
         .tool-icon {
@@ -34,7 +37,6 @@
             transform: scale(1.1);
         }
         
-        /* Scrollbar for mega menu if needed */
         .mega-menu-scroll::-webkit-scrollbar {
             width: 6px;
         }
@@ -64,17 +66,21 @@
                 </a>
             </div>
 
-            <nav class="hidden lg:flex items-center space-x-1 h-full ml-8">
+            <nav class="hidden lg:flex items-center space-x-2 h-full ml-auto">
                 
-                <div id="mega-menu-trigger" class="relative h-full flex items-center group">
-                    <button class="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-semibold text-gray-700 hover:text-primary hover:bg-gray-50 rounded-lg transition-all duration-200 focus:outline-none ring-offset-2 focus:ring-2 ring-primary/20">
+                <a href="https://simpliconvert.com/all_tools/" class="px-4 py-2 text-sm font-semibold text-gray-700 hover:text-primary hover:bg-gray-50 rounded-lg transition-colors duration-200">Full Directory</a>
+                
+                <a href="/blog/" class="px-4 py-2 text-sm font-semibold text-gray-700 hover:text-primary hover:bg-gray-50 rounded-lg transition-colors duration-200">Blog</a>
+
+                <div class="mega-menu-group static h-full flex items-center">
+                    <button id="mega-menu-trigger" class="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-semibold text-gray-700 hover:text-primary hover:bg-gray-50 rounded-lg transition-all duration-200 focus:outline-none ring-offset-2 focus:ring-2 ring-primary/20">
                         Tools Categories
-                        <svg class="h-4 w-4 text-gray-400 group-hover:text-primary transition-transform duration-200 group-hover:rotate-180" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                        <svg class="h-4 w-4 text-gray-400 transition-transform duration-200 group-hover:rotate-180" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
                             <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
                         </svg>
                     </button>
 
-                    <div id="mega-menu" class="absolute top-full left-1/2 -translate-x-1/2 w-[90vw] max-w-6xl mt-1 bg-white rounded-xl shadow-2xl border border-gray-100 overflow-hidden z-50">
+                    <div id="mega-menu" class="absolute top-full left-0 w-full mt-0 bg-white rounded-b-xl shadow-2xl border-x border-b border-gray-100 overflow-hidden z-50">
                         <div class="flex flex-col h-full max-h-[80vh]">
                             <div class="flex-1 overflow-y-auto mega-menu-scroll p-6 lg:p-8">
                                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -148,34 +154,28 @@
                             
                             <div class="bg-gray-50 p-4 border-t border-gray-100 flex justify-between items-center text-sm">
                                 <span class="text-gray-500">Need a custom tool?</span>
-                                <a href="https://simpliconvert.com/contact/" class="text-primary hover:text-primaryLight font-medium">Request a Feature</a>
+                                <a href="https://simpliconvert.com/contact/" class="text-primary hover:text-primaryLight font-medium flex items-center">Request a Feature <svg class="w-3 h-3 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></a>
                             </div>
                         </div>
                     </div>
                 </div>
-
-                <a href="https://simpliconvert.com/all_tools/" class="px-4 py-2 text-sm font-semibold text-gray-700 hover:text-primary hover:bg-gray-50 rounded-lg transition-colors duration-200">Full Directory</a>
-                <a href="/blog/" class="px-4 py-2 text-sm font-semibold text-gray-700 hover:text-primary hover:bg-gray-50 rounded-lg transition-colors duration-200">Blog</a>
             </nav>
 
-            <div class="flex items-center ml-auto lg:ml-0 gap-4">
-                <div class="lg:hidden">
-                    <button id="mobile-menu-button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-600 hover:text-primary hover:bg-gray-50 focus:outline-none" aria-label="Menu">
-                        <svg id="mobile-menu-icon-open" class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
-                        </svg>
-                        <svg id="mobile-menu-icon-close" class="h-6 w-6 hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                        </svg>
-                    </button>
-                </div>
+            <div class="lg:hidden ml-auto">
+                <button id="mobile-menu-button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-600 hover:text-primary hover:bg-gray-50 focus:outline-none" aria-label="Menu">
+                    <svg id="mobile-menu-icon-open" class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+                    </svg>
+                    <svg id="mobile-menu-icon-close" class="h-6 w-6 hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
             </div>
         </div>
     </div>
 
     <div id="mobile-menu" class="lg:hidden hidden bg-white border-t border-gray-100 absolute w-full left-0 top-full shadow-xl max-h-[85vh] overflow-y-auto">
         <div class="px-4 pt-2 pb-6 space-y-1">
-            
             <a href="https://simpliconvert.com/all_tools/" class="block px-3 py-3 rounded-md text-base font-semibold text-gray-900 hover:bg-gray-50">Browse All Tools</a>
             
             <div class="border-t border-gray-100 pt-2 mt-2">
@@ -205,40 +205,3 @@
         </div>
     </div>
 </header>
-
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Mobile Menu Toggle
-        const btn = document.getElementById('mobile-menu-button');
-        const menu = document.getElementById('mobile-menu');
-        const iconOpen = document.getElementById('mobile-menu-icon-open');
-        const iconClose = document.getElementById('mobile-menu-icon-close');
-
-        if(btn) {
-            btn.addEventListener('click', () => {
-                const isOpen = !menu.classList.contains('hidden');
-                if(isOpen) {
-                    menu.classList.add('hidden');
-                    iconOpen.classList.remove('hidden');
-                    iconClose.classList.add('hidden');
-                } else {
-                    menu.classList.remove('hidden');
-                    iconOpen.classList.add('hidden');
-                    iconClose.classList.remove('hidden');
-                }
-            });
-        }
-
-        // Mobile Accordion
-        const accBtns = document.querySelectorAll('.accordion-button');
-        accBtns.forEach(accBtn => {
-            accBtn.addEventListener('click', function() {
-                const content = this.nextElementSibling;
-                const icon = this.querySelector('svg:last-child');
-                
-                content.classList.toggle('hidden');
-                icon.classList.toggle('rotate-180');
-            });
-        });
-    });
-</script>
