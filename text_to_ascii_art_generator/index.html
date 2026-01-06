@@ -83,7 +83,7 @@
     <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/figlet/1.7.0/figlet.min.js"></script>
+       <script src="https://unpkg.com/figlet@1.7.0/lib/figlet.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
     
@@ -167,6 +167,8 @@
     <script type="text/babel">
     const { useState, useEffect, useCallback } = React;
 
+    // --- IMPORTANT FIX: Point Figlet to the CDN for fonts ---
+figlet.defaults({ fontPath: 'https://unpkg.com/figlet@1.7.0/fonts' });
     const fonts = [
       "Standard", "Slant", "Shadow", "Small", "Script", "Ogre", "Ivrit", "Graffiti", "Epic", "Doom", "Bulbhead", "Block", "Banner"
     ];
@@ -174,7 +176,7 @@
     const App = () => {
       const [inputText, setInputText] = useState("SimpliConvert");
       const [selectedFont, setSelectedFont] = useState("Standard");
-      const [asciiArt, setAsciiArt] = useState("");
+      const [asciiArt, setAsciiArt] = useState("Generating...");
       const [copyStatus, setCopyStatus] = useState("Copy Art");
       const [showBookmarkToast, setShowBookmarkToast] = useState(false);
 
@@ -194,6 +196,7 @@
           if (err) {
             console.log('Something went wrong...');
             console.dir(err);
+            setAsciiArt("Error loading font. Please try again.");
             return;
           }
           setAsciiArt(data);
@@ -310,8 +313,8 @@
 
                  <div className="relative">
                      <button 
-                        onClick={handleBookmark}
-                        className="flex items-center gap-2 bg-white border border-slate-200 hover:border-[#da3f0b] hover:text-[#da3f0b] text-slate-600 px-4 py-2 rounded-lg text-sm font-bold transition-all shadow-sm active:scale-95"
+                       onClick={handleBookmark}
+                       className="flex items-center gap-2 bg-white border border-slate-200 hover:border-[#da3f0b] hover:text-[#da3f0b] text-slate-600 px-4 py-2 rounded-lg text-sm font-bold transition-all shadow-sm active:scale-95"
                      >
                         <i className="fas fa-bookmark"></i> Bookmark
                      </button>
