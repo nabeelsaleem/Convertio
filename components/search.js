@@ -47,4 +47,3 @@ document.addEventListener('DOMContentLoaded', function () {
     resultsBox.classList.remove('hidden');
   });
 });
-console.log('search.js loaded');
