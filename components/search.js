@@ -1,7 +1,7 @@
 let tools = [];
 
 // Load tools list
-fetch('/convertio/tools.json')
+fetch('/tools.json')
   .then(response => response.json())
   .then(data => {
     tools = data;
