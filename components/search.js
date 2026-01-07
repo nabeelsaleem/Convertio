@@ -1,7 +1,7 @@
 let tools = [];
 
 // Load tools list
-fetch('https://simpliconvert.com/tools.json')
+fetch('/tools.json')
   .then(response => response.json())
   .then(data => {
     tools = data;
