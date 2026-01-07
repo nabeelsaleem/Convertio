@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Ideal Weight Calculator – Find Your Healthy Weight Range | SimpliConvert</title>
+    <meta name="description" content="Calculate your ideal body weight (IBW) based on height and gender using the Devine, Robinson, Miller, and Hamwi formulas. Find your healthy weight range instantly.">
+    <meta name="author" content="SimpliConvert">
+    <meta property="og:site_name" content="SimpliConvert">
+    <meta name="robots" content="index, follow">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://simpliconvert.com/ideal_weight_calculator/">
+    <meta property="og:title" content="Ideal Weight Calculator – Find Your Healthy Weight Range">
+    <meta property="og:description" content="Use our free tool to determine your ideal weight based on medical formulas. Supports both Metric and Imperial units.">
+    <meta property="og:image" content="https://simpliconvert.com/images/ideal-weight-og.jpg">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://simpliconvert.com/ideal_weight_calculator/">
+    <meta name="twitter:title" content="Ideal Weight Calculator – Healthy Weight Range Finder">
+    <meta name="twitter:description" content="Quickly find your ideal body weight using standard medical formulas. Free, private, and easy to use.">
+    <meta name="twitter:image" content="https://simpliconvert.com/images/ideal-weight-og.jpg">
+
+    <link rel="canonical" href="https://simpliconvert.com/ideal_weight_calculator/">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Ideal Weight Calculator",
+      "url": "https://simpliconvert.com/ideal_weight_calculator/",
+      "description": "A health tool to calculate ideal body weight using various scientific formulas like Devine, Robinson, and Miller.",
+      "applicationCategory": "HealthApplication",
+      "operatingSystem": "Web Browser",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "SimpliConvert",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://simpliconvert.com/logo.png"
+        }
+      }
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [{
+        "@type": "Question",
+        "name": "What is the most accurate ideal weight formula?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "There is no single 'perfect' formula. The Devine formula is the most commonly used in clinical settings, while the Robinson and Miller formulas are often considered more modern refinements."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Is ideal weight the same as healthy weight?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Ideal weight is a mathematical estimate based on height. A 'healthy weight' is a broader range often determined by BMI and body composition. It is best to use this tool alongside a BMI calculator."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Does this calculator account for muscle mass?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "No. These formulas are based solely on height and gender. They do not distinguish between muscle mass and body fat, so athletes may find the results lower than their actual healthy weight."
+        }
+      }]
+    }
+    </script>
+
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://simpliconvert.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Health Tools",
+      "item": "https://simpliconvert.com/health_tools/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "Ideal Weight Calculator",
+      "item": "https://simpliconvert.com/ideal_weight_calculator/"
+    }
+  ]
+}
+</script>
+
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #da3f0b;
+            --primary-hover: #b53409;
+            --primary-light: #fff5f2;
+            --bg: #f8fafc;
+            --text-dark: #0f172a;
+            --success: #16a34a;
+            --danger: #dc2626;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text-dark);
+        }
+
+        .hero-card {
+            background: white;
+            border: 1px solid #f1f5f9;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background-color: var(--primary);
+        }
+
+        .prose a {
+            color: #da3f0b;
+            text-decoration: none; 
+        }
+        .prose a:hover {
+            text-decoration: underline; 
+        }
+
+        .animate-fade { animation: fadeIn 0.3s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+        .tool-card {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .tool-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+        }
+        
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        input[type="number"]::-webkit-inner-spin-button,
+        input[type="number"]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 min-h-screen flex flex-col">
+    <div id="navbar"></div>
+
+    <section class="hero-white text-black py-2 md:py-10">
+        <div class="container mx-auto px-4 text-center">
+            <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-2">Ideal Weight Calculator</h1>
+            <p class="text-base text-gray-700 leading-relaxed">
+                Find your <strong>healthy weight range</strong> based on medical formulas. Our <strong>Ideal Weight Calculator</strong> 
+                uses height and gender to provide estimates from the Devine, Robinson, Miller, and Hamwi equations.
+            </p>
+        </div>
+    </section>
+
+    <div id="root" class="w-full max-w-6xl mx-auto p-4 sm:p-6"></div>
+
+    <script type="text/babel">
+    const { useState, useEffect } = React;
+
+    const App = () => {
+      const [gender, setGender] = useState('male');
+      const [unit, setUnit] = useState('metric'); // metric or imperial
+      const [heightCm, setHeightCm] = useState('175');
+      const [heightFt, setHeightFt] = useState('5');
+      const [heightIn, setHeightIn] = useState('9');
+      const [results, setResults] = useState(null);
+      const [showBookmarkToast, setShowBookmarkToast] = useState(false);
+
+      const calculateIBW = () => {
+        let hInches = 0;
+        if (unit === 'metric') {
+          hInches = parseFloat(heightCm) / 2.54;
+        } else {
+          hInches = (parseFloat(heightFt) * 12) + parseFloat(heightIn);
+        }
+
+        if (isNaN(hInches) || hInches <= 0) return;
+
+        const baseHeight = 60; // 5 feet
+        const diff = hInches - baseHeight;
+
+        const formulas = {
+          devine: gender === 'male' ? 50 + (2.3 * diff) : 45.5 + (2.3 * diff),
+          robinson: gender === 'male' ? 52 + (1.9 * diff) : 49 + (1.7 * diff),
+          miller: gender === 'male' ? 56.2 + (1.41 * diff) : 53.1 + (1.36 * diff),
+          hamwi: gender === 'male' ? 48 + (2.7 * diff) : 45.5 + (2.2 * diff)
+        };
+
+        // Convert to lbs if needed for display, but logic is in kg
+        const formatVal = (kg) => {
+            const val = unit === 'metric' ? kg : kg * 2.20462;
+            return val.toFixed(1) + (unit === 'metric' ? ' kg' : ' lbs');
+        };
+
+        setResults({
+          devine: formatVal(formulas.devine),
+          robinson: formatVal(formulas.robinson),
+          miller: formatVal(formulas.miller),
+          hamwi: formatVal(formulas.hamwi),
+          range: `${formatVal(formulas.robinson * 0.9)} - ${formatVal(formulas.miller * 1.1)}`
+        });
+      };
+
+      useEffect(() => {
+        calculateIBW();
+      }, [gender, unit, heightCm, heightFt, heightIn]);
+
+      const handleBookmark = () => {
+        setShowBookmarkToast(true);
+        setTimeout(() => setShowBookmarkToast(false), 3000);
+      };
+
+      return (
+        <div className="bg-white rounded-[2rem] shadow-2xl overflow-hidden border border-slate-100">
+          <header className="bg-slate-50/50 border-b border-slate-100 p-6 md:p-8 flex flex-col md:flex-row justify-between items-center gap-6">
+            <div className="text-center md:text-left">
+              <h2 className="text-2xl font-black text-slate-800 tracking-tight flex items-center justify-center md:justify-start gap-3">
+                <span className="bg-[#da3f0b] text-white p-2 rounded-xl text-lg shadow-lg shadow-[#da3f0b30]">
+                  <i className="fas fa-weight"></i>
+                </span>
+                Healthy Weight Finder
+              </h2>
+            </div>
+            
+            <div className="flex flex-wrap justify-center gap-4">
+              <div className="flex bg-slate-100 p-1 rounded-xl">
+                <button 
+                  onClick={() => setUnit('metric')}
+                  className={`px-4 py-2 rounded-lg text-xs font-bold transition-all ${unit === 'metric' ? 'bg-white text-[#da3f0b] shadow-sm' : 'text-slate-500'}`}
+                >
+                  METRIC
+                </button>
+                <button 
+                  onClick={() => setUnit('imperial')}
+                  className={`px-4 py-2 rounded-lg text-xs font-bold transition-all ${unit === 'imperial' ? 'bg-white text-[#da3f0b] shadow-sm' : 'text-slate-500'}`}
+                >
+                  IMPERIAL
+                </button>
+              </div>
+            </div>
+          </header>
+
+          <main className="flex flex-col lg:flex-row min-h-[450px]">
+            {/* Input Panel */}
+            <div className="lg:w-1/2 p-6 md:p-10 border-r border-slate-100 flex flex-col gap-8">
+              <div>
+                <label className="block text-xs font-black text-slate-400 uppercase tracking-widest mb-4">Select Gender</label>
+                <div className="grid grid-cols-2 gap-4">
+                  <button 
+                    onClick={() => setGender('male')}
+                    aria-label="Select Male"
+                    className={`flex items-center justify-center gap-3 p-4 rounded-2xl border-2 transition-all ${gender === 'male' ? 'border-[#da3f0b] bg-[#fff5f2] text-[#da3f0b]' : 'border-slate-100 text-slate-500 hover:border-slate-200'}`}
+                  >
+                    <i className="fas fa-mars text-xl"></i>
+                    <span className="font-bold">Male</span>
+                  </button>
+                  <button 
+                    onClick={() => setGender('female')}
+                    aria-label="Select Female"
+                    className={`flex items-center justify-center gap-3 p-4 rounded-2xl border-2 transition-all ${gender === 'female' ? 'border-[#da3f0b] bg-[#fff5f2] text-[#da3f0b]' : 'border-slate-100 text-slate-500 hover:border-slate-200'}`}
+                  >
+                    <i className="fas fa-venus text-xl"></i>
+                    <span className="font-bold">Female</span>
+                  </button>
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-black text-slate-400 uppercase tracking-widest mb-4">Your Height</label>
+                {unit === 'metric' ? (
+                  <div className="relative">
+                    <input 
+                      type="number"
+                      value={heightCm}
+                      onChange={(e) => setHeightCm(e.target.value)}
+                      aria-label="Height in Centimeters"
+                      className="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-4 focus:ring-[#da3f0b15] focus:border-[#da3f0b] outline-none font-bold text-lg"
+                      placeholder="175"
+                    />
+                    <span className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 font-bold">cm</span>
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="relative">
+                      <input 
+                        type="number"
+                        value={heightFt}
+                        onChange={(e) => setHeightFt(e.target.value)}
+                        aria-label="Height in Feet"
+                        className="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-4 focus:ring-[#da3f0b15] focus:border-[#da3f0b] outline-none font-bold text-lg"
+                        placeholder="5"
+                      />
+                      <span className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 font-bold">ft</span>
+                    </div>
+                    <div className="relative">
+                      <input 
+                        type="number"
+                        value={heightIn}
+                        onChange={(e) => setHeightIn(e.target.value)}
+                        aria-label="Height in Inches"
+                        className="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-4 focus:ring-[#da3f0b15] focus:border-[#da3f0b] outline-none font-bold text-lg"
+                        placeholder="9"
+                      />
+                      <span className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 font-bold">in</span>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Output Panel */}
+            <div className="lg:w-1/2 p-6 md:p-10 bg-slate-50/50 flex flex-col justify-center">
+              <div className="bg-white p-8 rounded-[2rem] shadow-xl border border-slate-100">
+                <div className="text-center mb-8">
+                  <span className="text-xs font-black text-slate-400 uppercase tracking-widest">Estimated Ideal Weight Range</span>
+                  <div className="text-4xl font-black text-slate-800 mt-2">{results?.range}</div>
+                </div>
+
+                <div className="space-y-4">
+                  <div className="flex justify-between items-center p-3 rounded-xl bg-slate-50">
+                    <span className="text-sm font-semibold text-slate-600">Devine Formula</span>
+                    <span className="font-bold text-[#da3f0b]">{results?.devine}</span>
+                  </div>
+                  <div className="flex justify-between items-center p-3 rounded-xl bg-slate-50">
+                    <span className="text-sm font-semibold text-slate-600">Robinson Formula</span>
+                    <span className="font-bold text-[#da3f0b]">{results?.robinson}</span>
+                  </div>
+                  <div className="flex justify-between items-center p-3 rounded-xl bg-slate-50">
+                    <span className="text-sm font-semibold text-slate-600">Miller Formula</span>
+                    <span className="font-bold text-[#da3f0b]">{results?.miller}</span>
+                  </div>
+                  <div className="flex justify-between items-center p-3 rounded-xl bg-slate-50">
+                    <span className="text-sm font-semibold text-slate-600">Hamwi Formula</span>
+                    <span className="font-bold text-[#da3f0b]">{results?.hamwi}</span>
+                  </div>
+                </div>
+                
+                <p className="text-[10px] text-slate-400 mt-6 text-center leading-relaxed italic">
+                  *These results are estimates for adults. Consult a medical professional for personalized health advice.
+                </p>
+              </div>
+            </div>
+          </main>
+
+          {/* Share & Bookmark Footer */}
+          <footer className="bg-slate-50 border-t border-slate-100 p-6 md:p-8">
+             <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+                 <div className="text-center md:text-left">
+                     <h4 className="text-sm font-bold text-slate-700 mb-1">Share this health tool</h4>
+                     <p className="text-xs text-slate-400">Help others find their healthy weight range.</p>
+                 </div>
+                 
+                 <div className="flex flex-wrap justify-center gap-3">
+                     <a href={`https://twitter.com/intent/tweet?text=Check out this Ideal Weight Calculator!&url=${encodeURIComponent(window.location.href)}`} target="_blank" className="w-10 h-10 rounded-full flex items-center justify-center text-white bg-[#1DA1F2] hover:-translate-y-1 transition-transform"><i className="fab fa-twitter"></i></a>
+                     <a href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`} target="_blank" className="w-10 h-10 rounded-full flex items-center justify-center text-white bg-[#1877F2] hover:-translate-y-1 transition-transform"><i className="fab fa-facebook-f"></i></a>
+                     <a href={`https://api.whatsapp.com/send?text=Ideal Weight Calculator: ${encodeURIComponent(window.location.href)}`} target="_blank" className="w-10 h-10 rounded-full flex items-center justify-center text-white bg-[#25D366] hover:-translate-y-1 transition-transform"><i className="fab fa-whatsapp"></i></a>
+                 </div>
+
+                 <div className="relative">
+                     <button 
+                        onClick={handleBookmark}
+                        className="flex items-center gap-2 bg-white border border-slate-200 hover:border-[#da3f0b] hover:text-[#da3f0b] text-slate-600 px-4 py-2 rounded-lg text-sm font-bold transition-all shadow-sm active:scale-95"
+                     >
+                        <i className="fas fa-bookmark"></i> Bookmark
+                     </button>
+                     {showBookmarkToast && (
+                         <div className="absolute bottom-full mb-3 left-1/2 -translate-x-1/2 bg-slate-800 text-white text-xs py-2 px-4 rounded-lg shadow-lg whitespace-nowrap animate-fade">
+                             Press <span className="font-bold text-[#da3f0b]">Ctrl + D</span> to bookmark
+                         </div>
+                     )}
+                 </div>
+             </div>
+          </footer>
+        </div>
+      );
+    };
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+    </script>
+
+    <p class="text-center mt-4 mb-10">
+        <a href="https://simpliconvert.com/calculator_tools/" class="text-primary font-medium hover:underline">
+            ← Back to All Calculator Tools
+        </a>
+    </p>
+
+    <section class="bg-white py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="prose prose-lg max-w-none prose-h2:text-gray-800 prose-p:text-gray-700">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">Understanding the Ideal Weight Calculator</h2>
+                <p class="mb-6 leading-relaxed">
+                    Finding your <strong>ideal body weight (IBW)</strong> is more than just a matter of aesthetics; it is a helpful metric for medical professionals to determine medication dosages and assess general health risks. Our <strong>Ideal Weight Calculator</strong> provides a comprehensive view by utilizing the four most respected mathematical formulas in the medical community.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">The Science Behind the Formulas</h2>
+                <p class="mb-6 leading-relaxed">
+                    While the concept of a "perfect" weight is subjective, researchers have developed several equations over the decades to standardize health assessments. This tool calculates results based on:
+                </p>
+                <ul class="list-disc pl-6 mb-6 space-y-2 text-gray-700">
+                    <li><strong>Devine Formula (1974):</strong> Originally intended for medicinal dosage, it is now the most widely used formula for IBW.</li>
+                    <li><strong>Robinson Formula (1983):</strong> A modification of the Devine formula intended to be more accurate for men and women.</li>
+                    <li><strong>Miller Formula (1983):</strong> Another refinement that often yields slightly different results for shorter individuals.</li>
+                    <li><strong>Hamwi Formula (1964):</strong> One of the earliest formulas used to establish a baseline for healthy weight.</li>
+                </ul>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Why Height and Gender Matter</h2>
+                <p class="mb-6 leading-relaxed">
+                    Biological differences between men and women, specifically regarding bone density and muscle distribution, mean that "ideal" ranges differ by gender. Similarly, height is the primary factor in determining the frame size your body can healthily support. To get a more complete picture of your health, we recommend pairing these results with our <a href="https://simpliconvert.com/bmi_calculator_for_men_women/" target="_blank">BMI Calculator</a>.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">How to Use This Tool</h2>
+                <ol class="list-decimal pl-6 mb-6 space-y-2 text-gray-700">
+                    <li><strong>Select Gender:</strong> Choose between Male or Female to apply the correct biological constants.</li>
+                    <li><strong>Choose Units:</strong> Switch between Metric (cm) or Imperial (ft/in) based on your preference.</li>
+                    <li><strong>Enter Height:</strong> Input your current height accurately.</li>
+                    <li><strong>Analyze Results:</strong> View the range and specific formula outputs instantly.</li>
+                </ol>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Limitations of IBW</h2>
+                <p class="mb-6 leading-relaxed">
+                    It is important to remember that these formulas do not account for body fat percentage or muscle mass. A professional athlete may weigh significantly more than their "ideal" weight due to muscle density but still be in peak health. Use this tool as a guideline, and consider using our <a href="https://simpliconvert.com/calculate_exact_age_online/" target="_blank">Age Calculator</a> to see how your health goals might shift as you get older.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-center text-gray-900 mb-8">Frequently Asked Questions</h2>
+            <div class="space-y-4">
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>Is the Devine formula better than Robinson?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">
+                            The Devine formula is the clinical standard, but the Robinson and Miller formulas were created to address perceived inaccuracies in the original Devine data. Most people find the average of all four formulas to be the most realistic target.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>Does this calculator work for children?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">
+                            No, these formulas are designed for adults (typically aged 18 and over). Children and adolescents require growth charts that account for age-specific developmental stages.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>Can I use this for weight loss goals?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">
+                            Yes, it provides a helpful "north star" for weight loss. However, remember that a healthy weight is a range, not a single number. Focus on how you feel and your overall body composition rather than just hitting a specific formula's output.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 pb-16">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-slate-200 pt-16">
+            <h2 class="text-2xl font-bold text-center text-slate-800 mb-10">Popular Tools on SimpliConvert</h2>
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+                <a href="/bmi_calculator_for_men_women/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center shrink-0 group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-heartbeat text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">BMI Calc</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Check your Body Mass Index.</p>
+                    </div>
+                </a>
+                <a href="/calculate_exact_age_online/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-green-50 text-green-600 flex items-center justify-center shrink-0 group-hover:bg-green-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-birthday-cake text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Age Calc</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Find your exact age in days.</p>
+                    </div>
+                </a>
+                <a href="/zakat_calculator_gold_silver/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-yellow-50 text-yellow-600 flex items-center justify-center shrink-0 group-hover:bg-yellow-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-coins text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Zakat Calc</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Calculate Zakat on wealth.</p>
+                    </div>
+                </a>
+                <a href="/water_intake_calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-blue-50 text-blue-400 flex items-center justify-center shrink-0 group-hover:bg-blue-400 group-hover:text-white transition-colors">
+                        <i class="fas fa-tint text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Water Calc</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Daily hydration needs.</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <div id="footer"></div>
+
+    <script>
+    function initializeHeaderScripts() {
+        const header = document.getElementById('header');
+        if (header) {
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 10) {
+                    header.classList.add('scrolled-effect');
+                } else {
+                    header.classList.remove('scrolled-effect');
+                }
+            });
+        }
+    }
+    
+    function initializeFooterScripts() {
+        const yearSpan = document.getElementById('current-year');
+        if(yearSpan) {
+            yearSpan.textContent = new Date().getFullYear();
+        }
+    }
+
+    async function loadComponent(url, elementId, callback) {
+        try {
+            const response = await fetch(url);
+            if (!response.ok) throw new Error('Status: ' + response.status);
+            const text = await response.text();
+            const element = document.getElementById(elementId);
+            if (element) {
+                element.innerHTML = text;
+                if (callback) callback();
+            }
+        } catch (error) {
+            console.error('Error loading component:', error);
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        loadComponent('/components/navbar.html', 'navbar', initializeHeaderScripts);
+        loadComponent('/components/footer.html', 'footer', initializeFooterScripts);
+        
+        const faqToggles = document.querySelectorAll('[data-faq-toggle]');
+        faqToggles.forEach(button => {
+            button.addEventListener('click', () => {
+                const answer = button.nextElementSibling;
+                const icon = button.querySelector('.faq-icon');
+                const isOpening = !answer.style.maxHeight;
+
+                faqToggles.forEach(other => {
+                    if (other !== button) {
+                        other.nextElementSibling.style.maxHeight = null;
+                        other.querySelector('.faq-icon').classList.remove('rotate-90');
+                        other.querySelector('.faq-icon').classList.add('-rotate-90');
+                    }
+                });
+
+                if (isOpening) {
+                    answer.style.maxHeight = answer.scrollHeight + "px";
+                    icon.classList.remove('-rotate-90');
+                    icon.classList.add('rotate-90');
+                } else {
+                    answer.style.maxHeight = null;
+                    icon.classList.remove('rotate-90');
+                    icon.classList.add('-rotate-90');
+                }
+            });
+        });
+    });
+    </script>
+</body>
+</html>

@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Savings Growth Calculator – Compound Savings & Interest Planner | SimpliConvert</title>
+    <meta name="description" content="Calculate how your savings grow over time with our free Savings Growth Calculator. Estimate compound interest, monthly contributions, and future wealth instantly.">
+    <meta name="author" content="SimpliConvert">
+    <meta property="og:site_name" content="SimpliConvert">
+    <meta name="robots" content="index, follow">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://simpliconvert.com/savings_growth_calculator/">
+    <meta property="og:title" content="Savings Growth Calculator – Forecast Your Future Wealth">
+    <meta property="og:description" content="Plan your financial future. See how small monthly contributions and compound interest turn into significant savings over time.">
+    <meta property="og:image" content="https://simpliconvert.com/images/savings-growth-og.jpg">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://simpliconvert.com/savings_growth_calculator/">
+    <meta name="twitter:title" content="Savings Growth Calculator – Compound Interest Tool">
+    <meta name="twitter:description" content="Free online tool to calculate savings growth. Visualize your financial progress with compound interest and regular deposits.">
+    <meta name="twitter:image" content="https://simpliconvert.com/images/savings-growth-og.jpg">
+
+    <link rel="canonical" href="https://simpliconvert.com/savings_growth_calculator/">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Savings Growth Calculator",
+      "url": "https://simpliconvert.com/savings_growth_calculator/",
+      "description": "A free online tool to calculate the future value of savings based on initial deposit, monthly contributions, and compound interest.",
+      "applicationCategory": "FinanceApplication",
+      "operatingSystem": "Web Browser",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "SimpliConvert",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://simpliconvert.com/logo.png"
+        }
+      }
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [{
+        "@type": "Question",
+        "name": "What is compound interest in savings?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Compound interest is the interest calculated on the initial principal, which also includes all of the accumulated interest from previous periods. It essentially means 'interest on interest,' which accelerates savings growth over time."
+        }
+      }, {
+        "@type": "Question",
+        "name": "How often should I contribute to my savings?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Consistency is key. Monthly contributions are standard for most savers as they align with paycheck cycles. Even small, regular amounts can grow significantly due to the power of compounding."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Does this calculator account for taxes or inflation?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "This basic Savings Growth Calculator focuses on nominal growth. It does not automatically deduct taxes on interest or adjust for inflation. To see your 'real' purchasing power, you should subtract the expected inflation rate from your annual interest rate."
+        }
+      }]
+    }
+    </script>
+
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://simpliconvert.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Calculator Tools",
+      "item": "https://simpliconvert.com/calculator_tools/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "Savings Growth Calculator",
+      "item": "https://simpliconvert.com/savings_growth_calculator/"
+    }
+  ]
+}
+</script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #da3f0b;
+            --primary-hover: #b53409;
+            --primary-light: #fff5f2;
+            --bg: #f8fafc;
+            --text-dark: #0f172a;
+            --success: #16a34a;
+            --danger: #dc2626;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text-dark);
+        }
+
+        .hero-card {
+            background: white;
+            border: 1px solid #f1f5f9;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background-color: var(--primary);
+        }
+
+        .prose a {
+            color: #da3f0b;
+            text-decoration: none; 
+        }
+        .prose a:hover {
+            text-decoration: underline; 
+        }
+
+        .animate-fade { animation: fadeIn 0.3s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+        .tool-card {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .tool-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+        }
+
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        input[type="number"]::-webkit-inner-spin-button,
+        input[type="number"]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 min-h-screen flex flex-col">
+    <div id="navbar"></div>
+
+    <section class="hero-white text-black py-2 md:py-10">
+        <div class="container mx-auto px-4 text-center">
+            <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-2">Savings Growth Calculator</h1>
+            <p class="text-base text-gray-700 leading-relaxed max-w-2xl mx-auto">
+                Plan your financial future with our <strong>Savings Growth Calculator</strong>. 
+                Visualize how compound interest and regular contributions can build your wealth over time.
+            </p>
+        </div>
+    </section>
+
+    <div id="root" class="w-full max-w-6xl mx-auto p-4 sm:p-6"></div>
+
+    <script type="text/babel">
+    const { useState, useEffect } = React;
+
+    const App = () => {
+      const [initialDeposit, setInitialDeposit] = useState(1000);
+      const [monthlyContribution, setMonthlyContribution] = useState(100);
+      const [interestRate, setInterestRate] = useState(5);
+      const [years, setYears] = useState(10);
+      const [results, setResults] = useState({
+        totalBalance: 0,
+        totalContributions: 0,
+        totalInterest: 0,
+        yearlyBreakdown: []
+      });
+
+      const calculateGrowth = () => {
+        const p = parseFloat(initialDeposit) || 0;
+        const pmt = parseFloat(monthlyContribution) || 0;
+        const r = (parseFloat(interestRate) || 0) / 100;
+        const t = parseInt(years) || 0;
+        const n = 12; // Monthly compounding
+
+        let yearlyData = [];
+        let currentBalance = p;
+        let totalContributed = p;
+
+        for (let year = 1; year <= t; year++) {
+          for (let month = 1; month <= 12; month++) {
+            currentBalance = currentBalance * (1 + r / n) + pmt;
+            totalContributed += pmt;
+          }
+          yearlyData.push({
+            year,
+            balance: currentBalance.toFixed(2),
+            contributions: totalContributed.toFixed(2),
+            interest: (currentBalance - totalContributed).toFixed(2)
+          });
+        }
+
+        setResults({
+          totalBalance: currentBalance.toFixed(2),
+          totalContributions: totalContributed.toFixed(2),
+          totalInterest: (currentBalance - totalContributed).toFixed(2),
+          yearlyBreakdown: yearlyData
+        });
+      };
+
+      useEffect(() => {
+        calculateGrowth();
+      }, [initialDeposit, monthlyContribution, interestRate, years]);
+
+      const formatCurrency = (num) => {
+        return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(num);
+      };
+
+      return (
+        <div className="bg-white rounded-[2rem] shadow-2xl overflow-hidden border border-slate-100">
+          <header className="bg-slate-50/50 border-b border-slate-100 p-6 md:p-8">
+            <h2 className="text-2xl font-black text-slate-800 tracking-tight flex items-center gap-3">
+              <span className="bg-[#da3f0b] text-white p-2 rounded-xl text-lg shadow-lg shadow-[#da3f0b30]">
+                <i className="fas fa-chart-line"></i>
+              </span>
+              Compound Savings Planner
+            </h2>
+          </header>
+
+          <main className="flex flex-col lg:flex-row">
+            {/* Inputs Panel */}
+            <div className="lg:w-1/3 p-6 md:p-8 border-r border-slate-100 bg-white">
+              <div className="space-y-6">
+                <div>
+                  <label className="block text-xs font-black text-slate-400 uppercase tracking-widest mb-2">Initial Deposit ($)</label>
+                  <input 
+                    type="number" 
+                    value={initialDeposit}
+                    onChange={(e) => setInitialDeposit(e.target.value)}
+                    aria-label="Initial Deposit"
+                    className="w-full p-3 rounded-xl border border-slate-200 focus:ring-4 focus:ring-[#da3f0b15] focus:border-[#da3f0b] outline-none font-bold text-slate-700"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-black text-slate-400 uppercase tracking-widest mb-2">Monthly Contribution ($)</label>
+                  <input 
+                    type="number" 
+                    value={monthlyContribution}
+                    onChange={(e) => setMonthlyContribution(e.target.value)}
+                    aria-label="Monthly Contribution"
+                    className="w-full p-3 rounded-xl border border-slate-200 focus:ring-4 focus:ring-[#da3f0b15] focus:border-[#da3f0b] outline-none font-bold text-slate-700"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-black text-slate-400 uppercase tracking-widest mb-2">Annual Interest Rate (%)</label>
+                  <input 
+                    type="number" 
+                    step="0.1"
+                    value={interestRate}
+                    onChange={(e) => setInterestRate(e.target.value)}
+                    aria-label="Annual Interest Rate"
+                    className="w-full p-3 rounded-xl border border-slate-200 focus:ring-4 focus:ring-[#da3f0b15] focus:border-[#da3f0b] outline-none font-bold text-slate-700"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-black text-slate-400 uppercase tracking-widest mb-2">Duration (Years)</label>
+                  <input 
+                    type="number" 
+                    value={years}
+                    onChange={(e) => setYears(e.target.value)}
+                    aria-label="Duration in Years"
+                    className="w-full p-3 rounded-xl border border-slate-200 focus:ring-4 focus:ring-[#da3f0b15] focus:border-[#da3f0b] outline-none font-bold text-slate-700"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Results Panel */}
+            <div className="lg:w-2/3 p-6 md:p-8 bg-slate-50/30">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+                <div className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm">
+                  <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Total Balance</p>
+                  <p className="text-2xl font-black text-[#da3f0b]">{formatCurrency(results.totalBalance)}</p>
+                </div>
+                <div className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm">
+                  <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Total Contributions</p>
+                  <p className="text-2xl font-black text-slate-700">{formatCurrency(results.totalContributions)}</p>
+                </div>
+                <div className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm">
+                  <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Total Interest</p>
+                  <p className="text-2xl font-black text-success">{formatCurrency(results.totalInterest)}</p>
+                </div>
+              </div>
+
+              <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+                <div className="p-4 border-b border-slate-100 bg-slate-50/50">
+                  <h3 className="text-xs font-black text-slate-500 uppercase tracking-widest">Yearly Growth Breakdown</h3>
+                </div>
+                <div className="max-h-[300px] overflow-y-auto custom-scrollbar">
+                  <table className="w-full text-left text-sm">
+                    <thead className="sticky top-0 bg-white shadow-sm">
+                      <tr className="text-slate-400 font-bold border-b border-slate-100">
+                        <th className="p-4">Year</th>
+                        <th className="p-4">Contributions</th>
+                        <th className="p-4">Interest</th>
+                        <th className="p-4">Balance</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-slate-50">
+                      {results.yearlyBreakdown.map((row) => (
+                        <tr key={row.year} className="hover:bg-slate-50 transition-colors">
+                          <td className="p-4 font-bold text-slate-600">{row.year}</td>
+                          <td className="p-4 text-slate-500">{formatCurrency(row.contributions)}</td>
+                          <td className="p-4 text-success font-medium">+{formatCurrency(row.interest)}</td>
+                          <td className="p-4 font-black text-slate-800">{formatCurrency(row.balance)}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </main>
+
+          <footer className="bg-slate-50 border-t border-slate-100 p-6 md:p-8">
+             <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+                 <div className="text-center md:text-left">
+                     <h4 className="text-sm font-bold text-slate-700 mb-1">Share your financial goals</h4>
+                     <p className="text-xs text-slate-400">Help others plan their savings journey.</p>
+                 </div>
+                 
+                 <div className="flex flex-wrap justify-center gap-3">
+                     <a href={`https://twitter.com/intent/tweet?text=Planning my savings with this tool!&url=${encodeURIComponent(window.location.href)}`} target="_blank" className="w-10 h-10 rounded-full flex items-center justify-center text-white bg-[#1DA1F2] hover:-translate-y-1 transition-transform"><i className="fab fa-twitter"></i></a>
+                     <a href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`} target="_blank" className="w-10 h-10 rounded-full flex items-center justify-center text-white bg-[#1877F2] hover:-translate-y-1 transition-transform"><i className="fab fa-facebook-f"></i></a>
+                     <a href={`https://api.whatsapp.com/send?text=Savings Growth Calculator: ${encodeURIComponent(window.location.href)}`} target="_blank" className="w-10 h-10 rounded-full flex items-center justify-center text-white bg-[#25D366] hover:-translate-y-1 transition-transform"><i className="fab fa-whatsapp"></i></a>
+                 </div>
+             </div>
+          </footer>
+        </div>
+      );
+    };
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+    </script>
+
+    <p class="text-center mt-4 mb-10">
+        <a href="https://simpliconvert.com/calculator_tools/" class="text-primary font-medium hover:underline">
+            ← Back to All Calculator Tools
+        </a>
+    </p>
+
+    <section class="bg-white py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="prose prose-lg max-w-none prose-h2:text-gray-800 prose-p:text-gray-700">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">Savings Growth Calculator – Visualize Your Financial Future</h2>
+                <p class="mb-6 leading-relaxed">
+                    Building wealth is rarely about a single windfall; it's about the consistency of saving and the magic of compound interest. Our <strong>Savings Growth Calculator</strong> is designed to help you see the long-term impact of your financial decisions. By entering a few simple variables, you can forecast how much your money will be worth in 5, 10, or even 30 years.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">The Power of Compound Interest</h2>
+                <p class="mb-6 leading-relaxed">
+                    Compound interest is often called the "eighth wonder of the world." Unlike simple interest, which is calculated only on the principal amount, compound interest is calculated on the principal plus the interest that has already been added. This creates a snowball effect where your savings grow at an accelerating rate. 
+                </p>
+                <p class="mb-6 leading-relaxed">
+                    If you are a freelancer planning for inconsistent income, using our <a href="https://simpliconvert.com/freelance_hourly_rate_calculator/" target="_blank">Freelance Hourly Rate Calculator</a> can help you determine how much you need to charge to meet the monthly contribution goals set in this savings tool.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">How to Use the Savings Growth Tool</h2>
+                <ul class="list-disc pl-6 mb-6 space-y-2 text-gray-700">
+                    <li><strong>Initial Deposit:</strong> The amount of money you currently have ready to save.</li>
+                    <li><strong>Monthly Contribution:</strong> The amount you plan to add to your savings every month.</li>
+                    <li><strong>Annual Interest Rate:</strong> The expected yearly return from your bank account or investment.</li>
+                    <li><strong>Duration:</strong> How many years you plan to let the money grow.</li>
+                </ul>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Why Planning Matters</h2>
+                <p class="mb-6 leading-relaxed">
+                    Financial health is just as important as physical health. Just as you might use a <a href="https://simpliconvert.com/bmi_calculator_for_men_women/" target="_blank">BMI Calculator</a> to track your physical fitness, this savings planner helps you track your fiscal fitness. Knowing your "end number" makes it much easier to stay motivated and stick to a budget.
+                </p>
+                <p class="mb-6 leading-relaxed">
+                    For those running online businesses or selling services, remember to account for transaction costs. Use our <a href="https://simpliconvert.com/paypal_fee_calculator/" target="_blank">Paypal Fee Calculator</a> to ensure your net profit matches the monthly contribution you intend to save.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-center text-gray-900 mb-8">Savings Growth – Frequently Asked Questions</h2>
+            <div class="space-y-4">
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>How does compounding frequency affect my savings?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">
+                            The more frequently interest is compounded (daily vs. monthly vs. annually), the faster your balance grows. This calculator uses monthly compounding, which is the standard for most high-yield savings accounts.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>Is the interest rate guaranteed?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">
+                            No. Interest rates for savings accounts can fluctuate based on central bank policies. For investments like stocks or bonds, the rate is an estimate based on historical averages. It's always wise to run "best-case" and "worst-case" scenarios.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>What is a good annual interest rate to assume?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">
+                            High-yield savings accounts typically offer 3-5%, while long-term stock market investments (like the S&P 500) have historically averaged around 7-10% before inflation.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 pb-16">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-slate-200 pt-16">
+            <h2 class="text-2xl font-bold text-center text-slate-800 mb-10">Explore More Financial & Productivity Tools</h2>
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+                <a href="/freelance_hourly_rate_calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0 group-hover:bg-emerald-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-calculator text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Rate Calc</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Calculate freelance hourly rates.</p>
+                    </div>
+                </a>
+                <a href="/paypal_fee_calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center shrink-0 group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                        <i class="fab fa-paypal text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">PayPal Fee</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Calculate merchant fees easily.</p>
+                    </div>
+                </a>
+                <a href="/bmi_calculator_for_men_women/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-red-50 text-red-600 flex items-center justify-center shrink-0 group-hover:bg-red-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-heartbeat text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">BMI Calc</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Check your body mass index.</p>
+                    </div>
+                </a>
+                <a href="/to_do_list/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-green-50 text-green-600 flex items-center justify-center shrink-0 group-hover:bg-green-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-check-square text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">To-Do List</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Manage tasks and stay organized.</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <div id="footer"></div>
+
+    <script>
+    function initializeHeaderScripts() {
+        const header = document.getElementById('header');
+        if (header) {
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 10) {
+                    header.classList.add('scrolled-effect');
+                } else {
+                    header.classList.remove('scrolled-effect');
+                }
+            });
+        }
+    }
+    
+    function initializeFooterScripts() {
+        const yearSpan = document.getElementById('current-year');
+        if(yearSpan) {
+            yearSpan.textContent = new Date().getFullYear();
+        }
+    }
+
+    async function loadComponent(url, elementId, callback) {
+        try {
+            const response = await fetch(url);
+            if (!response.ok) throw new Error('Status: ' + response.status);
+            const text = await response.text();
+            const element = document.getElementById(elementId);
+            if (element) {
+                element.innerHTML = text;
+                if (callback) callback();
+            }
+        } catch (error) {
+            console.error('Error loading component:', error);
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        loadComponent('/components/navbar.html', 'navbar', initializeHeaderScripts);
+        loadComponent('/components/footer.html', 'footer', initializeFooterScripts);
+        
+        const faqToggles = document.querySelectorAll('[data-faq-toggle]');
+        faqToggles.forEach(button => {
+            button.addEventListener('click', () => {
+                const answer = button.nextElementSibling;
+                const icon = button.querySelector('.faq-icon');
+                const isOpening = !answer.style.maxHeight;
+
+                faqToggles.forEach(other => {
+                    if (other !== button) {
+                        other.nextElementSibling.style.maxHeight = null;
+                        other.querySelector('.faq-icon').classList.remove('rotate-90');
+                        other.querySelector('.faq-icon').classList.add('-rotate-90');
+                    }
+                });
+
+                if (isOpening) {
+                    answer.style.maxHeight = answer.scrollHeight + "px";
+                    icon.classList.remove('-rotate-90');
+                    icon.classList.add('rotate-90');
+                } else {
+                    answer.style.maxHeight = null;
+                    icon.classList.remove('rotate-90');
+                    icon.classList.add('-rotate-90');
+                }
+            });
+        });
+    });
+    </script>
+</body>
+</html>

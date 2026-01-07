@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Mortgage Calculator – Estimate Monthly Home Loan Payments | SimpliConvert</title>
+    <meta name="description" content="Estimate your monthly mortgage payments with our free Mortgage Calculator. Calculate principal, interest, taxes, and insurance for your new home loan instantly.">
+    <meta name="author" content="SimpliConvert">
+    <meta property="og:site_name" content="SimpliConvert">
+    <meta name="robots" content="index, follow">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://simpliconvert.com/mortgage_calculator/">
+    <meta property="og:title" content="Mortgage Calculator – Plan Your Home Purchase">
+    <meta property="og:description" content="Quickly calculate monthly mortgage payments. Adjust interest rates, down payments, and loan terms to see your total home ownership costs.">
+    <meta property="og:image" content="https://simpliconvert.com/images/mortgage-calculator-og.jpg">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://simpliconvert.com/mortgage_calculator/">
+    <meta name="twitter:title" content="Mortgage Calculator – Free Home Loan Estimator">
+    <meta name="twitter:description" content="Free online tool to estimate mortgage payments. Plan your budget for principal, interest, and property taxes.">
+    <meta name="twitter:image" content="https://simpliconvert.com/images/mortgage-calculator-og.jpg">
+
+    <link rel="canonical" href="https://simpliconvert.com/mortgage_calculator/">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Mortgage Calculator",
+      "url": "https://simpliconvert.com/mortgage_calculator/",
+      "description": "A free online tool to estimate monthly mortgage payments including principal, interest, taxes, and insurance.",
+      "applicationCategory": "FinanceApplication",
+      "operatingSystem": "Web Browser",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "SimpliConvert",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://simpliconvert.com/logo.png"
+        }
+      }
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [{
+        "@type": "Question",
+        "name": "How is the monthly mortgage payment calculated?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The monthly payment is calculated using the standard amortization formula: M = P [ i(1 + i)^n ] / [ (1 + i)^n – 1 ], where P is the principal loan amount, i is the monthly interest rate, and n is the total number of months."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Does this calculator include property taxes and insurance?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. You can optionally input your annual property taxes and homeowners insurance to get a more accurate 'PITI' (Principal, Interest, Taxes, and Insurance) estimate."
+        }
+      }, {
+        "@type": "Question",
+        "name": "What is a typical down payment for a home?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "While 20% is often recommended to avoid private mortgage insurance (PMI), many buyers put down as little as 3% to 5% depending on the loan type (FHA vs. Conventional)."
+        }
+      }]
+    }
+    </script>
+
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://simpliconvert.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Calculator Tools",
+      "item": "https://simpliconvert.com/calculator_tools/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "Mortgage Calculator",
+      "item": "https://simpliconvert.com/mortgage_calculator/"
+    }
+  ]
+}
+</script>
+
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #da3f0b;
+            --primary-hover: #b53409;
+            --primary-light: #fff5f2;
+            --bg: #f8fafc;
+            --text-dark: #0f172a;
+            --success: #16a34a;
+            --danger: #dc2626;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text-dark);
+        }
+
+        .hero-card {
+            background: white;
+            border: 1px solid #f1f5f9;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background-color: var(--primary);
+        }
+
+        .prose a {
+            color: #da3f0b;
+            text-decoration: none; 
+        }
+        .prose a:hover {
+            text-decoration: underline; 
+        }
+
+        .animate-fade { animation: fadeIn 0.3s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+        .tool-card {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .tool-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            background: var(--primary);
+            cursor: pointer;
+            border-radius: 50%;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 min-h-screen flex flex-col">
+    <div id="navbar"></div>
+
+    <section class="hero-white text-black py-2 md:py-10">
+        <div class="container mx-auto px-4 text-center">
+            <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-2">Mortgage Calculator</h1>
+            <p class="text-base text-gray-700 leading-relaxed">
+                Use our free <strong>Mortgage Calculator</strong> to estimate your monthly home loan payments. 
+                Calculate principal, interest, taxes, and insurance (PITI) to plan your home buying budget with confidence.
+            </p>
+        </div>
+    </section>
+
+    <div id="root" class="w-full max-w-6xl mx-auto p-4 sm:p-6"></div>
+
+    <script type="text/babel">
+    const { useState, useEffect } = React;
+
+    const App = () => {
+      const [homePrice, setHomePrice] = useState(350000);
+      const [downPayment, setDownPayment] = useState(70000);
+      const [loanTerm, setLoanTerm] = useState(30);
+      const [interestRate, setInterestRate] = useState(6.5);
+      const [propertyTax, setPropertyTax] = useState(3000);
+      const [insurance, setInsurance] = useState(1200);
+      
+      const [monthlyPI, setMonthlyPI] = useState(0);
+      const [monthlyTax, setMonthlyTax] = useState(0);
+      const [monthlyInsurance, setMonthlyInsurance] = useState(0);
+      const [totalMonthly, setTotalMonthly] = useState(0);
+
+      useEffect(() => {
+        const principal = homePrice - downPayment;
+        const monthlyRate = interestRate / 100 / 12;
+        const numberOfPayments = loanTerm * 12;
+
+        let pi = 0;
+        if (monthlyRate === 0) {
+            pi = principal / numberOfPayments;
+        } else {
+            pi = (principal * monthlyRate * Math.pow(1 + monthlyRate, numberOfPayments)) / (Math.pow(1 + monthlyRate, numberOfPayments) - 1);
+        }
+
+        const tax = propertyTax / 12;
+        const ins = insurance / 12;
+
+        setMonthlyPI(pi);
+        setMonthlyTax(tax);
+        setMonthlyInsurance(ins);
+        setTotalMonthly(pi + tax + ins);
+      }, [homePrice, downPayment, loanTerm, interestRate, propertyTax, insurance]);
+
+      const formatCurrency = (val) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(val);
+
+      return (
+        <div className="bg-white rounded-[2rem] shadow-2xl overflow-hidden border border-slate-100">
+          <header className="bg-slate-50/50 border-b border-slate-100 p-6 md:p-8">
+            <h2 className="text-2xl font-black text-slate-800 tracking-tight flex items-center gap-3">
+              <span className="bg-[#da3f0b] text-white p-2 rounded-xl text-lg shadow-lg shadow-[#da3f0b30]">
+                <i className="fas fa-home"></i>
+              </span>
+              Home Loan Estimator
+            </h2>
+          </header>
+
+          <main className="flex flex-col lg:flex-row">
+            {/* Input Panel */}
+            <div className="lg:w-1/2 p-6 md:p-8 border-r border-slate-100 space-y-6">
+              <div>
+                <label className="block text-xs font-black text-slate-400 uppercase tracking-widest mb-2">Home Price: {formatCurrency(homePrice)}</label>
+                <input 
+                  type="range" min="50000" max="2000000" step="5000" 
+                  value={homePrice} onChange={(e) => setHomePrice(Number(e.target.value))}
+                  className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-[#da3f0b]"
+                  aria-label="Home Price Slider"
+                />
+                <input 
+                  type="number" value={homePrice} onChange={(e) => setHomePrice(Number(e.target.value))}
+                  className="mt-2 w-full p-2 border border-slate-200 rounded-lg text-sm font-bold focus:ring-2 focus:ring-[#da3f0b]"
+                  aria-label="Home Price Input"
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs font-black text-slate-400 uppercase tracking-widest mb-2">Down Payment ($)</label>
+                  <input 
+                    type="number" value={downPayment} onChange={(e) => setDownPayment(Number(e.target.value))}
+                    className="w-full p-2 border border-slate-200 rounded-lg text-sm font-bold focus:ring-2 focus:ring-[#da3f0b]"
+                    aria-label="Down Payment Amount"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-black text-slate-400 uppercase tracking-widest mb-2">Interest Rate (%)</label>
+                  <input 
+                    type="number" step="0.1" value={interestRate} onChange={(e) => setInterestRate(Number(e.target.value))}
+                    className="w-full p-2 border border-slate-200 rounded-lg text-sm font-bold focus:ring-2 focus:ring-[#da3f0b]"
+                    aria-label="Interest Rate"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs font-black text-slate-400 uppercase tracking-widest mb-2">Loan Term (Years)</label>
+                  <select 
+                    value={loanTerm} onChange={(e) => setLoanTerm(Number(e.target.value))}
+                    className="w-full p-2 border border-slate-200 rounded-lg text-sm font-bold focus:ring-2 focus:ring-[#da3f0b]"
+                    aria-label="Loan Term"
+                  >
+                    <option value="10">10 Years</option>
+                    <option value="15">15 Years</option>
+                    <option value="20">20 Years</option>
+                    <option value="30">30 Years</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-xs font-black text-slate-400 uppercase tracking-widest mb-2">Property Tax (Yearly)</label>
+                  <input 
+                    type="number" value={propertyTax} onChange={(e) => setPropertyTax(Number(e.target.value))}
+                    className="w-full p-2 border border-slate-200 rounded-lg text-sm font-bold focus:ring-2 focus:ring-[#da3f0b]"
+                    aria-label="Annual Property Tax"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-black text-slate-400 uppercase tracking-widest mb-2">Home Insurance (Yearly)</label>
+                <input 
+                  type="number" value={insurance} onChange={(e) => setInsurance(Number(e.target.value))}
+                  className="w-full p-2 border border-slate-200 rounded-lg text-sm font-bold focus:ring-2 focus:ring-[#da3f0b]"
+                  aria-label="Annual Home Insurance"
+                />
+              </div>
+            </div>
+
+            {/* Output Panel */}
+            <div className="lg:w-1/2 p-6 md:p-8 bg-slate-50/50 flex flex-col justify-center">
+              <div className="text-center mb-8">
+                <span className="text-xs font-black text-slate-400 uppercase tracking-widest">Estimated Monthly Payment</span>
+                <div className="text-5xl md:text-6xl font-black text-[#da3f0b] mt-2">
+                  {formatCurrency(totalMonthly)}
+                </div>
+              </div>
+
+              <div className="space-y-4">
+                <div className="flex justify-between items-center p-4 bg-white rounded-2xl border border-slate-100 shadow-sm">
+                  <div className="flex items-center gap-3">
+                    <div className="w-3 h-3 rounded-full bg-[#da3f0b]"></div>
+                    <span className="text-sm font-bold text-slate-600">Principal & Interest</span>
+                  </div>
+                  <span className="font-black text-slate-800">{formatCurrency(monthlyPI)}</span>
+                </div>
+
+                <div className="flex justify-between items-center p-4 bg-white rounded-2xl border border-slate-100 shadow-sm">
+                  <div className="flex items-center gap-3">
+                    <div className="w-3 h-3 rounded-full bg-blue-500"></div>
+                    <span className="text-sm font-bold text-slate-600">Property Taxes</span>
+                  </div>
+                  <span className="font-black text-slate-800">{formatCurrency(monthlyTax)}</span>
+                </div>
+
+                <div className="flex justify-between items-center p-4 bg-white rounded-2xl border border-slate-100 shadow-sm">
+                  <div className="flex items-center gap-3">
+                    <div className="w-3 h-3 rounded-full bg-emerald-500"></div>
+                    <span className="text-sm font-bold text-slate-600">Home Insurance</span>
+                  </div>
+                  <span className="font-black text-slate-800">{formatCurrency(monthlyInsurance)}</span>
+                </div>
+              </div>
+
+              <div className="mt-8 p-4 bg-[#da3f0b10] rounded-2xl border border-[#da3f0b20]">
+                <p className="text-xs text-center text-slate-600 font-medium">
+                  <i className="fas fa-info-circle mr-1"></i>
+                  This estimate does not include Private Mortgage Insurance (PMI) or HOA fees.
+                </p>
+              </div>
+            </div>
+          </main>
+
+          <footer className="bg-slate-50 border-t border-slate-100 p-6 md:p-8 text-center">
+            <p className="text-sm text-slate-500">
+              Planning your finances? Try our <a href="https://simpliconvert.com/freelance_hourly_rate_calculator/" className="text-[#da3f0b] font-bold hover:underline">Freelance Rate Calculator</a> to see how your income matches your new mortgage.
+            </p>
+          </footer>
+        </div>
+      );
+    };
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+    </script>
+
+    <p class="text-center mt-4 mb-10">
+        <a href="https://simpliconvert.com/calculator_tools/" class="text-primary font-medium hover:underline">
+            ← Back to All Calculator Tools
+        </a>
+    </p>
+
+    <section class="bg-white py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="prose prose-lg max-w-none prose-h2:text-gray-800 prose-p:text-gray-700">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">Mortgage Calculator – Plan Your Path to Homeownership</h2>
+                <p class="mb-6 leading-relaxed">
+                    Buying a home is likely the most significant financial decision you will ever make. Our <strong>Mortgage Calculator</strong> is designed to take the guesswork out of the process. By providing a clear breakdown of your monthly obligations, you can determine exactly how much house you can afford before you even step foot in an open house.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Why Use a Home Loan Calculator?</h2>
+                <p class="mb-6 leading-relaxed">
+                    A mortgage is more than just the principal loan amount. It involves interest rates that fluctuate with the market, property taxes that vary by location, and insurance premiums. Using a <strong>home loan calculator</strong> allows you to experiment with different scenarios. For instance, you can see how a slightly higher down payment or a shorter loan term affects your long-term interest savings.
+                </p>
+                <p class="mb-6 leading-relaxed">
+                    Calculating your down payment is a critical first step, much like how you would <a href="https://simpliconvert.com/calculate_percentage_of_number/" target="_blank">calculate a percentage of a number</a> to determine your savings goals. Our tool integrates these variables to give you a comprehensive "PITI" (Principal, Interest, Taxes, and Insurance) estimate.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Key Features of Our Mortgage Estimator</h2>
+                <ul class="list-disc pl-6 mb-6 space-y-2 text-gray-700">
+                    <li><strong>Real-Time Updates:</strong> See your monthly payment change instantly as you adjust the sliders.</li>
+                    <li><strong>Tax & Insurance Integration:</strong> Don't get blindsided by "hidden" costs; include your annual property tax and insurance.</li>
+                    <li><strong>Flexible Loan Terms:</strong> Compare 15-year vs. 30-year mortgages to see the difference in monthly cash flow.</li>
+                    <li><strong>Down Payment Analysis:</strong> Input your available cash to see how it reduces your monthly principal.</li>
+                    <li><strong>Privacy Guaranteed:</strong> Like our <a href="https://simpliconvert.com/bmi_calculator_for_men_women/" target="_blank">BMI Calculator</a>, all financial data stays in your browser.</li>
+                </ul>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">How to Use the Mortgage Calculator</h2>
+                <ol class="list-decimal pl-6 mb-6 space-y-2 text-gray-700">
+                    <li><strong>Home Price:</strong> Enter the total purchase price of the property.</li>
+                    <li><strong>Down Payment:</strong> Input the amount of cash you plan to pay upfront.</li>
+                    <li><strong>Interest Rate:</strong> Enter the annual interest rate provided by your lender.</li>
+                    <li><strong>Loan Term:</strong> Choose the duration of the loan (typically 30 years for lower payments or 15 years for lower interest).</li>
+                    <li><strong>Additional Costs:</strong> Add your estimated annual property taxes and homeowners insurance for a full budget view.</li>
+                </ol>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Understanding Your Results</h2>
+                <p class="mb-6 leading-relaxed">
+                    The result provided is an estimate of your monthly payment. It's important to remember that lenders may also require Private Mortgage Insurance (PMI) if your down payment is less than 20%. Additionally, Homeowners Association (HOA) fees are common in many neighborhoods and should be added to your personal budget separately.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-center text-gray-900 mb-8">Mortgage Calculator – Frequently Asked Questions</h2>
+            <div class="space-y-4">
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>What is the difference between a 15-year and 30-year mortgage?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">
+                            A 30-year mortgage offers lower monthly payments because the debt is spread over a longer period. However, a 15-year mortgage usually has a lower interest rate and allows you to pay off the home faster, saving you tens of thousands of dollars in interest over the life of the loan.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>What is PITI?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">
+                            PITI stands for Principal, Interest, Taxes, and Insurance. These are the four main components of a monthly mortgage payment. Principal and interest go toward the loan, while taxes and insurance are often held in an escrow account by your lender to pay your local government and insurance provider.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>Does this calculator include PMI?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">
+                            No, this basic calculator does not automatically calculate Private Mortgage Insurance (PMI). PMI is typically required if your down payment is less than 20% of the home's purchase price. You should consult with a lender to see how PMI might increase your monthly total.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 pb-16">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-slate-200 pt-16">
+            <h2 class="text-2xl font-bold text-center text-slate-800 mb-10">Popular Tools on SimpliConvert</h2>
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+                <a href="/freelance_hourly_rate_calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0 group-hover:bg-emerald-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-calculator text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Rate Calc</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Calculate freelance hourly rates.</p>
+                    </div>
+                </a>
+                <a href="/calculate_percentage_of_number/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center shrink-0 group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-percent text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Percentage Calc</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Quickly find percentages.</p>
+                    </div>
+                </a>
+                <a href="/crypto_profit_calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-orange-50 text-orange-600 flex items-center justify-center shrink-0 group-hover:bg-orange-600 group-hover:text-white transition-colors">
+                        <i class="fab fa-bitcoin text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Crypto Profit</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Calculate investment gains.</p>
+                    </div>
+                </a>
+                <a href="/bmi_calculator_for_men_women/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-red-50 text-red-600 flex items-center justify-center shrink-0 group-hover:bg-red-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-weight text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">BMI Calc</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Check your health index.</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <div id="footer"></div>
+
+    <script>
+    function initializeHeaderScripts() {
+        const header = document.getElementById('header');
+        if (header) {
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 10) {
+                    header.classList.add('scrolled-effect');
+                } else {
+                    header.classList.remove('scrolled-effect');
+                }
+            });
+        }
+    }
+    
+    function initializeFooterScripts() {
+        const yearSpan = document.getElementById('current-year');
+        if(yearSpan) {
+            yearSpan.textContent = new Date().getFullYear();
+        }
+    }
+
+    async function loadComponent(url, elementId, callback) {
+        try {
+            const response = await fetch(url);
+            if (!response.ok) throw new Error('Status: ' + response.status);
+            const text = await response.text();
+            const element = document.getElementById(elementId);
+            if (element) {
+                element.innerHTML = text;
+                if (callback) callback();
+            }
+        } catch (error) {
+            console.error('Error loading component:', error);
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        loadComponent('/components/navbar.html', 'navbar', initializeHeaderScripts);
+        loadComponent('/components/footer.html', 'footer', initializeFooterScripts);
+        
+        const faqToggles = document.querySelectorAll('[data-faq-toggle]');
+        faqToggles.forEach(button => {
+            button.addEventListener('click', () => {
+                const answer = button.nextElementSibling;
+                const icon = button.querySelector('.faq-icon');
+                const isOpening = !answer.style.maxHeight;
+
+                faqToggles.forEach(other => {
+                    if (other !== button) {
+                        other.nextElementSibling.style.maxHeight = null;
+                        other.querySelector('.faq-icon').classList.remove('rotate-90');
+                        other.querySelector('.faq-icon').classList.add('-rotate-90');
+                    }
+                });
+
+                if (isOpening) {
+                    answer.style.maxHeight = answer.scrollHeight + "px";
+                    icon.classList.remove('-rotate-90');
+                    icon.classList.add('rotate-90');
+                } else {
+                    answer.style.maxHeight = null;
+                    icon.classList.remove('rotate-90');
+                    icon.classList.add('-rotate-90');
+                }
+            });
+        });
+    });
+    </script>
+</body>
+</html>

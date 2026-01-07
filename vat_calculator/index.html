@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>VAT Calculator – Calculate Add or Remove VAT Online | SimpliConvert</title>
+    <meta name="description" content="Calculate VAT inclusive or exclusive prices easily using this free VAT Calculator. Instantly add or remove VAT from any amount with custom tax rates.">
+    <meta name="author" content="SimpliConvert">
+    <meta property="og:site_name" content="SimpliConvert">
+    <meta name="robots" content="index, follow">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://simpliconvert.com/vat_calculator/">
+    <meta property="og:title" content="VAT Calculator – Add or Remove VAT Instantly">
+    <meta property="og:description" content="Quickly calculate Value Added Tax. Toggle between adding VAT to a net price or removing it from a gross price. Supports custom percentages.">
+    <meta property="og:image" content="https://simpliconvert.com/images/vat-calculator-og.jpg">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://simpliconvert.com/vat_calculator/">
+    <meta name="twitter:title" content="Online VAT Calculator – Free Tax Tool">
+    <meta name="twitter:description" content="Free tool to calculate VAT inclusive and exclusive amounts. Perfect for business owners and shoppers.">
+    <meta name="twitter:image" content="https://simpliconvert.com/images/vat-calculator-og.jpg">
+
+    <link rel="canonical" href="https://simpliconvert.com/vat_calculator/">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "VAT Calculator",
+      "url": "https://simpliconvert.com/vat_calculator/",
+      "description": "A free online tool to calculate VAT inclusive and exclusive prices by adding or removing tax percentages.",
+      "applicationCategory": "FinanceApplication",
+      "operatingSystem": "Web Browser",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "SimpliConvert",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://simpliconvert.com/logo.png"
+        }
+      }
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [{
+        "@type": "Question",
+        "name": "How do I calculate VAT inclusive price?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "To add VAT, multiply the net amount by (1 + VAT rate/100). For example, with a 20% VAT rate, multiply the net price by 1.20."
+        }
+      }, {
+        "@type": "Question",
+        "name": "How do I remove VAT from a total price?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "To remove VAT, divide the gross amount by (1 + VAT rate/100). For example, to remove 20% VAT, divide the total price by 1.20."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Can I use this for different countries?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. Our VAT calculator allows you to input any custom percentage rate, making it compatible with VAT, GST, or Sales Tax systems worldwide."
+        }
+      }]
+    }
+    </script>
+
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://simpliconvert.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Calculator Tools",
+      "item": "https://simpliconvert.com/calculator_tools/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "VAT Calculator",
+      "item": "https://simpliconvert.com/vat_calculator/"
+    }
+  ]
+}
+</script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #da3f0b;
+            --primary-hover: #b53409;
+            --primary-light: #fff5f2;
+            --bg: #f8fafc;
+            --text-dark: #0f172a;
+            --success: #16a34a;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text-dark);
+        }
+
+        .hero-card {
+            background: white;
+            border: 1px solid #f1f5f9;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background-color: var(--primary);
+        }
+
+        .prose a {
+            color: #da3f0b;
+            text-decoration: none; 
+        }
+        .prose a:hover {
+            text-decoration: underline; 
+        }
+
+        .animate-fade { animation: fadeIn 0.3s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+        .tool-card {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .tool-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 min-h-screen flex flex-col">
+    <div id="navbar"></div>
+
+    <section class="hero-white text-black py-2 md:py-10">
+        <div class="container mx-auto px-4 text-center">
+            <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-2">VAT Calculator – Add or Remove Value Added Tax</h1>
+            <p class="text-base text-gray-700 leading-relaxed max-w-2xl mx-auto">
+                Easily calculate <strong>VAT inclusive or exclusive</strong> prices. Whether you need to add tax to a net amount or extract VAT from a total price, our tool provides instant, accurate results.
+            </p>
+        </div>
+    </section>
+
+    <div id="root" class="w-full max-w-4xl mx-auto p-4 sm:p-6"></div>
+
+    <script type="text/babel">
+    const { useState, useEffect } = React;
+
+    const App = () => {
+      const [amount, setAmount] = useState('');
+      const [vatRate, setVatRate] = useState('20');
+      const [mode, setMode] = useState('add'); // 'add' or 'remove'
+      const [results, setResults] = useState({ net: 0, vat: 0, gross: 0 });
+      const [showBookmarkToast, setShowBookmarkToast] = useState(false);
+
+      useEffect(() => {
+        calculateVAT();
+      }, [amount, vatRate, mode]);
+
+      const calculateVAT = () => {
+        const val = parseFloat(amount);
+        const rate = parseFloat(vatRate);
+
+        if (isNaN(val) || isNaN(rate)) {
+          setResults({ net: 0, vat: 0, gross: 0 });
+          return;
+        }
+
+        if (mode === 'add') {
+          const vatAmt = val * (rate / 100);
+          setResults({
+            net: val,
+            vat: vatAmt,
+            gross: val + vatAmt
+          });
+        } else {
+          const netAmt = val / (1 + (rate / 100));
+          setResults({
+            net: netAmt,
+            vat: val - netAmt,
+            gross: val
+          });
+        }
+      };
+
+      const handleBookmark = () => {
+        setShowBookmarkToast(true);
+        setTimeout(() => setShowBookmarkToast(false), 3000);
+      };
+
+      const formatCurrency = (num) => {
+        return new Intl.NumberFormat('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(num);
+      };
+
+      return (
+        <div className="bg-white rounded-[2rem] shadow-2xl overflow-hidden border border-slate-100">
+          <header className="bg-slate-50/50 border-b border-slate-100 p-6 md:p-8">
+            <div className="flex flex-col md:flex-row justify-between items-center gap-6">
+              <h2 className="text-2xl font-black text-slate-800 tracking-tight flex items-center gap-3">
+                <span className="bg-[#da3f0b] text-white p-2 rounded-xl text-lg shadow-lg shadow-[#da3f0b30]">
+                  <i className="fas fa-calculator"></i>
+                </span>
+                VAT Tax Tool
+              </h2>
+              
+              <div className="flex bg-slate-200 p-1 rounded-xl w-full md:w-auto">
+                <button 
+                  onClick={() => setMode('add')}
+                  className={`flex-1 md:flex-none px-6 py-2 rounded-lg text-sm font-bold transition-all ${mode === 'add' ? 'bg-white text-[#da3f0b] shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
+                  aria-label="Add VAT mode"
+                >
+                  Add VAT
+                </button>
+                <button 
+                  onClick={() => setMode('remove')}
+                  className={`flex-1 md:flex-none px-6 py-2 rounded-lg text-sm font-bold transition-all ${mode === 'remove' ? 'bg-white text-[#da3f0b] shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
+                  aria-label="Remove VAT mode"
+                >
+                  Remove VAT
+                </button>
+              </div>
+            </div>
+          </header>
+
+          <main className="p-6 md:p-10">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              {/* Input Section */}
+              <div className="space-y-6">
+                <div>
+                  <label className="block text-xs font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">
+                    {mode === 'add' ? 'Net Amount (Excl. VAT)' : 'Gross Amount (Incl. VAT)'}
+                  </label>
+                  <div className="relative">
+                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 font-bold">$</span>
+                    <input 
+                      type="number"
+                      value={amount}
+                      onChange={(e) => setAmount(e.target.value)}
+                      placeholder="0.00"
+                      className="w-full pl-8 pr-4 py-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-4 focus:ring-[#da3f0b15] focus:border-[#da3f0b] outline-none font-bold text-lg transition-all"
+                      aria-label="Enter amount"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">VAT Rate (%)</label>
+                  <div className="grid grid-cols-4 gap-2">
+                    {['5', '10', '15', '20'].map(rate => (
+                      <button 
+                        key={rate}
+                        onClick={() => setVatRate(rate)}
+                        className={`py-2 rounded-lg text-xs font-bold border transition-all ${vatRate === rate ? 'bg-[#da3f0b] border-[#da3f0b] text-white' : 'bg-white border-slate-200 text-slate-600 hover:border-[#da3f0b]'}`}
+                      >
+                        {rate}%
+                      </button>
+                    ))}
+                  </div>
+                  <input 
+                    type="number"
+                    value={vatRate}
+                    onChange={(e) => setVatRate(e.target.value)}
+                    className="w-full mt-3 px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-4 focus:ring-[#da3f0b15] focus:border-[#da3f0b] outline-none font-bold text-sm"
+                    placeholder="Custom Rate"
+                    aria-label="Enter VAT percentage"
+                  />
+                </div>
+              </div>
+
+              {/* Results Section */}
+              <div className="bg-slate-50 rounded-3xl p-6 border border-slate-100 flex flex-col justify-center space-y-4">
+                <div className="flex justify-between items-center pb-4 border-b border-slate-200">
+                  <span className="text-sm font-medium text-slate-500">Net Amount</span>
+                  <span className="text-xl font-bold text-slate-800">${formatCurrency(results.net)}</span>
+                </div>
+                <div className="flex justify-between items-center pb-4 border-b border-slate-200">
+                  <span className="text-sm font-medium text-slate-500">VAT Amount ({vatRate}%)</span>
+                  <span className="text-xl font-bold text-[#da3f0b]">+ ${formatCurrency(results.vat)}</span>
+                </div>
+                <div className="flex justify-between items-center pt-2">
+                  <span className="text-base font-black text-slate-800 uppercase tracking-tight">Total Gross</span>
+                  <span className="text-3xl font-black text-slate-900">${formatCurrency(results.gross)}</span>
+                </div>
+              </div>
+            </div>
+          </main>
+
+          <footer className="bg-slate-50 border-t border-slate-100 p-6 md:p-8">
+             <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+                 <div className="text-center md:text-left">
+                     <h4 className="text-sm font-bold text-slate-700 mb-1">Share this calculator</h4>
+                     <p className="text-xs text-slate-400">Help others calculate tax inclusive prices easily.</p>
+                 </div>
+                 
+                 <div className="flex flex-wrap justify-center gap-3">
+                     <a href={`https://twitter.com/intent/tweet?text=Check out this VAT Calculator!&url=${encodeURIComponent(window.location.href)}`} target="_blank" className="w-10 h-10 rounded-full flex items-center justify-center text-white bg-[#1DA1F2] hover:-translate-y-1 transition-transform" aria-label="Share on Twitter"><i className="fab fa-twitter"></i></a>
+                     <a href={`https://api.whatsapp.com/send?text=VAT Calculator: ${encodeURIComponent(window.location.href)}`} target="_blank" className="w-10 h-10 rounded-full flex items-center justify-center text-white bg-[#25D366] hover:-translate-y-1 transition-transform" aria-label="Share on WhatsApp"><i className="fab fa-whatsapp"></i></a>
+                 </div>
+
+                 <div className="relative">
+                     <button 
+                        onClick={handleBookmark}
+                        className="flex items-center gap-2 bg-white border border-slate-200 hover:border-[#da3f0b] hover:text-[#da3f0b] text-slate-600 px-4 py-2 rounded-lg text-sm font-bold transition-all shadow-sm active:scale-95"
+                        aria-label="Bookmark this tool"
+                     >
+                        <i className="fas fa-bookmark"></i> Bookmark
+                     </button>
+                     {showBookmarkToast && (
+                         <div className="absolute bottom-full mb-3 left-1/2 -translate-x-1/2 bg-slate-800 text-white text-xs py-2 px-4 rounded-lg shadow-lg whitespace-nowrap animate-fade">
+                             Press <span className="font-bold text-[#da3f0b]">Ctrl + D</span> to bookmark
+                         </div>
+                     )}
+                 </div>
+             </div>
+          </footer>
+        </div>
+      );
+    };
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+    </script>
+
+    <p class="text-center mt-4 mb-10">
+        <a href="https://simpliconvert.com/calculator_tools/" class="text-primary font-medium hover:underline">
+            ← Back to All Calculator Tools
+        </a>
+    </p>
+
+    <section class="bg-white py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="prose prose-lg max-w-none prose-h2:text-gray-800 prose-p:text-gray-700">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">How to Use the VAT Calculator</h2>
+                <p class="mb-6 leading-relaxed">
+                    Value Added Tax (VAT) can be tricky to calculate manually, especially when you need to switch between inclusive and exclusive pricing. Our <strong>VAT Calculator</strong> simplifies this process for business owners, freelancers, and consumers alike. Whether you are pricing a new service or checking a receipt, this tool provides precision in seconds.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Add VAT vs. Remove VAT</h2>
+                <p class="mb-6 leading-relaxed">
+                    Understanding the difference between adding and removing VAT is crucial for accurate bookkeeping. 
+                    When you <strong>Add VAT</strong>, you are starting with a "Net" price and calculating the total "Gross" price that the customer will pay. 
+                    Conversely, when you <strong>Remove VAT</strong>, you are starting with the "Gross" total and working backward to find the original price before tax was applied. This is often necessary when using our <a href="https://simpliconvert.com/gross_margin_calculator/" target="_blank">Gross Margin Calculator</a> to determine your actual profit after taxes.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Key Features of Our Tax Tool</h2>
+                <ul class="list-disc pl-6 mb-6 space-y-2 text-gray-700">
+                    <li><strong>Dual Mode:</strong> Seamlessly toggle between adding tax and extracting tax.</li>
+                    <li><strong>Custom Rates:</strong> While we provide presets for common rates (5%, 20%), you can enter any custom percentage.</li>
+                    <li><strong>Instant Results:</strong> Calculations happen in real-time as you type.</li>
+                    <li><strong>Clean Interface:</strong> No clutter, just the numbers you need for your business.</li>
+                    <li><strong>Global Compatibility:</strong> Works for VAT, GST, and standard Sales Tax systems.</li>
+                </ul>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Practical Applications</h2>
+                <p class="mb-6 leading-relaxed">
+                    This tool is an essential part of a professional toolkit. For example, if you are a freelancer using our <a href="https://simpliconvert.com/freelance_hourly_rate_calculator/" target="_blank">Freelance Hourly Rate Calculator</a>, you might need to add VAT to your final invoice. Similarly, if you are calculating business expenses paid via digital platforms, you might use this alongside the <a href="https://simpliconvert.com/paypal_fee_calculator/" target="_blank">PayPal Fee Calculator</a> to understand the full cost of a transaction.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Is My Data Secure?</h2>
+                <p class="mb-6 leading-relaxed">
+                    Yes. All calculations are performed locally within your browser. We do not store your financial data or transmit it to any servers. Your privacy and security are our top priorities.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-center text-gray-900 mb-8">VAT Calculator – Frequently Asked Questions</h2>
+            <div class="space-y-4">
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>What is the formula for adding VAT?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">
+                            To add VAT, use the formula: <strong>Gross = Net * (1 + (VAT Rate / 100))</strong>. For example, if your net price is $100 and the VAT is 20%, the calculation is 100 * 1.20 = $120.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>How do I calculate the price before VAT?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">
+                            To remove VAT, use the formula: <strong>Net = Gross / (1 + (VAT Rate / 100))</strong>. If the total price is $120 and the VAT is 20%, the calculation is 120 / 1.20 = $100.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>Does this work for GST or Sales Tax?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">
+                            Yes. While named "VAT Calculator," the mathematical logic is identical for GST (Goods and Services Tax) and standard Sales Tax. Simply input the relevant percentage for your region.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 pb-16">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-slate-200 pt-16">
+            <h2 class="text-2xl font-bold text-center text-slate-800 mb-10">Popular Tools on SimpliConvert</h2>
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+                <a href="/gross_margin_calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0 group-hover:bg-emerald-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-chart-line text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Margin Calc</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Calculate profit margins easily.</p>
+                    </div>
+                </a>
+
+                <a href="/paypal_fee_calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center shrink-0 group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                        <i class="fab fa-paypal text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">PayPal Fees</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Calculate transaction fees.</p>
+                    </div>
+                </a>
+
+                <a href="/freelance_hourly_rate_calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-orange-50 text-orange-600 flex items-center justify-center shrink-0 group-hover:bg-orange-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-user-clock text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Hourly Rate</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Set your freelance pricing.</p>
+                    </div>
+                </a>
+
+                <a href="/calculate_percentage_of_number/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-slate-50 text-slate-800 flex items-center justify-center shrink-0 group-hover:bg-slate-900 group-hover:text-white transition-colors">
+                        <i class="fas fa-percent text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Percentage</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Quick percentage calculations.</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <div id="footer"></div>
+
+    <script>
+    function initializeHeaderScripts() {
+        const header = document.getElementById('header');
+        if (header) {
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 10) {
+                    header.classList.add('scrolled-effect');
+                } else {
+                    header.classList.remove('scrolled-effect');
+                }
+            });
+        }
+    }
+    
+    function initializeFooterScripts() {
+        const yearSpan = document.getElementById('current-year');
+        if(yearSpan) {
+            yearSpan.textContent = new Date().getFullYear();
+        }
+    }
+
+    async function loadComponent(url, elementId, callback) {
+        try {
+            const response = await fetch(url);
+            if (!response.ok) throw new Error('Status: ' + response.status);
+            const text = await response.text();
+            const element = document.getElementById(elementId);
+            if (element) {
+                element.innerHTML = text;
+                if (callback) callback();
+            }
+        } catch (error) {
+            console.error('Error loading component:', error);
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        loadComponent('/components/navbar.html', 'navbar', initializeHeaderScripts);
+        loadComponent('/components/footer.html', 'footer', initializeFooterScripts);
+        
+        const faqToggles = document.querySelectorAll('[data-faq-toggle]');
+        faqToggles.forEach(button => {
+            button.addEventListener('click', () => {
+                const answer = button.nextElementSibling;
+                const icon = button.querySelector('.faq-icon');
+                const isOpening = !answer.style.maxHeight;
+
+                faqToggles.forEach(other => {
+                    if (other !== button) {
+                        other.nextElementSibling.style.maxHeight = null;
+                        other.querySelector('.faq-icon').classList.remove('rotate-90');
+                        other.querySelector('.faq-icon').classList.add('-rotate-90');
+                    }
+                });
+
+                if (isOpening) {
+                    answer.style.maxHeight = answer.scrollHeight + "px";
+                    icon.classList.remove('-rotate-90');
+                    icon.classList.add('rotate-90');
+                } else {
+                    answer.style.maxHeight = null;
+                    icon.classList.remove('rotate-90');
+                    icon.classList.add('-rotate-90');
+                }
+            });
+        });
+    });
+    </script>
+</body>
+</html>

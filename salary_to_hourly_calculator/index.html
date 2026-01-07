@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Salary to Hourly Calculator – Convert Annual Salary to Hourly Wage | SimpliConvert</title>
+    <meta name="description" content="Convert your annual salary into an hourly wage instantly. Use our Salary to Hourly Calculator to breakdown your pay by hour, day, week, and month.">
+    <meta name="author" content="SimpliConvert">
+    <meta property="og:site_name" content="SimpliConvert">
+    <meta name="robots" content="index, follow">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://simpliconvert.com/salary_to_hourly_calculator/">
+    <meta property="og:title" content="Salary to Hourly Calculator – Annual to Hourly Wage">
+    <meta property="og:description" content="Find out exactly how much you earn per hour. Enter your annual salary and work schedule to get a detailed pay breakdown.">
+    <meta property="og:image" content="https://simpliconvert.com/images/salary-calculator-og.jpg">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://simpliconvert.com/salary_to_hourly_calculator/">
+    <meta name="twitter:title" content="Salary to Hourly Calculator – Convert Salary Instantly">
+    <meta name="twitter:description" content="Free online tool to convert annual salary to hourly pay. Perfect for job offers and budgeting.">
+    <meta name="twitter:image" content="https://simpliconvert.com/images/salary-calculator-og.jpg">
+
+    <link rel="canonical" href="https://simpliconvert.com/salary_to_hourly_calculator/">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Salary to Hourly Calculator",
+      "url": "https://simpliconvert.com/salary_to_hourly_calculator/",
+      "description": "A free online tool to convert annual salary into hourly, daily, weekly, and monthly wage breakdowns.",
+      "applicationCategory": "FinanceApplication",
+      "operatingSystem": "Web Browser",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "SimpliConvert",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://simpliconvert.com/logo.png"
+        }
+      }
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [{
+        "@type": "Question",
+        "name": "How is annual salary converted to hourly wage?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The calculation is done by dividing the total annual salary by the total number of work hours in a year (Hours per week multiplied by weeks worked per year). For a standard 40-hour week and 52-week year, this is 2,080 hours."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Does this calculator account for taxes?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "No, this tool calculates gross income (before taxes). To find your take-home pay, you would need to subtract federal, state, and local withholdings."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Can I adjust the number of work weeks?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. While 52 weeks is standard, you can adjust the input to account for unpaid leave or different contract lengths to get a more accurate hourly rate."
+        }
+      }]
+    }
+    </script>
+
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://simpliconvert.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Calculator Tools",
+      "item": "https://simpliconvert.com/calculator_tools/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "Salary to Hourly Calculator",
+      "item": "https://simpliconvert.com/salary_to_hourly_calculator/"
+    }
+  ]
+}
+</script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #da3f0b;
+            --primary-hover: #b53409;
+            --primary-light: #fff5f2;
+            --bg: #f8fafc;
+            --text-dark: #0f172a;
+            --success: #16a34a;
+            --danger: #dc2626;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text-dark);
+        }
+
+        .code-font {
+            font-family: 'Fira Code', monospace;
+        }
+
+        .hero-card {
+            background: white;
+            border: 1px solid #f1f5f9;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background-color: var(--primary);
+        }
+
+        .prose a {
+            color: #da3f0b;
+            text-decoration: none; 
+        }
+        .prose a:hover {
+            text-decoration: underline; 
+        }
+
+        .animate-fade { animation: fadeIn 0.3s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+        .tool-card {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .tool-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+        }
+
+        input[type="number"]::-webkit-inner-spin-button,
+        input[type="number"]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 min-h-screen flex flex-col">
+    <div id="navbar"></div>
+
+    <section class="hero-white text-black py-2 md:py-10">
+        <div class="container mx-auto px-4 text-center">
+            <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-2">Salary to Hourly Calculator</h1>
+            <p class="text-base text-gray-700 leading-relaxed max-w-2xl mx-auto">
+                Quickly convert your <strong>annual salary to an hourly wage</strong>. 
+                Enter your yearly pay and work schedule to see your earnings broken down by hour, day, week, and month.
+            </p>
+        </div>
+    </section>
+
+    <div id="root" class="w-full max-w-6xl mx-auto p-4 sm:p-6"></div>
+
+    <script type="text/babel">
+    const { useState, useEffect } = React;
+
+    const App = () => {
+      const [salary, setSalary] = useState(50000);
+      const [hoursPerWeek, setHoursPerWeek] = useState(40);
+      const [weeksPerYear, setWeeksPerYear] = useState(52);
+      const [results, setResults] = useState({
+        hourly: 0,
+        daily: 0,
+        weekly: 0,
+        biweekly: 0,
+        monthly: 0
+      });
+
+      const calculateRates = () => {
+        const annual = parseFloat(salary) || 0;
+        const hpw = parseFloat(hoursPerWeek) || 0;
+        const wpy = parseFloat(weeksPerYear) || 0;
+
+        if (annual > 0 && hpw > 0 && wpy > 0) {
+          const totalHours = hpw * wpy;
+          const hourly = annual / totalHours;
+          const weekly = annual / wpy;
+          
+          setResults({
+            hourly: hourly,
+            daily: (hourly * hpw) / 5, // Assuming 5-day work week for daily
+            weekly: weekly,
+            biweekly: weekly * 2,
+            monthly: annual / 12
+          });
+        } else {
+          setResults({ hourly: 0, daily: 0, weekly: 0, biweekly: 0, monthly: 0 });
+        }
+      };
+
+      useEffect(() => {
+        calculateRates();
+      }, [salary, hoursPerWeek, weeksPerYear]);
+
+      const formatCurrency = (val) => {
+        return new Intl.NumberFormat('en-US', {
+          style: 'currency',
+          currency: 'USD',
+        }).format(val);
+      };
+
+      const handleClear = () => {
+        setSalary('');
+        setHoursPerWeek(40);
+        setWeeksPerYear(52);
+      };
+
+      return (
+        <div className="bg-white rounded-[2rem] shadow-2xl overflow-hidden border border-slate-100">
+          <header className="bg-slate-50/50 border-b border-slate-100 p-6 md:p-8">
+            <h2 className="text-2xl font-black text-slate-800 tracking-tight flex items-center gap-3">
+              <span className="bg-[#da3f0b] text-white p-2 rounded-xl text-lg shadow-lg shadow-[#da3f0b30]">
+                <i className="fas fa-calculator"></i>
+              </span>
+              Wage Breakdown Tool
+            </h2>
+          </header>
+
+          <main className="flex flex-col lg:flex-row">
+            {/* Input Panel */}
+            <div className="lg:w-1/2 p-6 md:p-10 border-r border-slate-100">
+              <div className="flex justify-between items-center mb-6">
+                <span className="text-xs font-black text-slate-400 uppercase tracking-widest">Calculation Settings</span>
+                <button onClick={handleClear} className="text-[10px] font-bold text-slate-400 hover:text-red-500 transition-colors">
+                  <i className="fas fa-undo mr-1"></i> RESET
+                </button>
+              </div>
+
+              <div className="space-y-6">
+                <div>
+                  <label className="block text-sm font-bold text-slate-700 mb-2" htmlFor="salary">Annual Salary ($)</label>
+                  <div className="relative">
+                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 font-bold">$</span>
+                    <input
+                      id="salary"
+                      aria-label="Annual Salary"
+                      type="number"
+                      className="w-full pl-10 pr-4 py-4 rounded-2xl border border-slate-200 focus:ring-4 focus:ring-[#da3f0b15] focus:border-[#da3f0b] outline-none text-lg font-bold text-slate-800 transition-all"
+                      value={salary}
+                      onChange={(e) => setSalary(e.target.value)}
+                      placeholder="e.g. 50000"
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <label className="block text-sm font-bold text-slate-700 mb-2" htmlFor="hours">Hours Per Week</label>
+                    <input
+                      id="hours"
+                      aria-label="Hours Per Week"
+                      type="number"
+                      className="w-full px-4 py-4 rounded-2xl border border-slate-200 focus:ring-4 focus:ring-[#da3f0b15] focus:border-[#da3f0b] outline-none text-lg font-bold text-slate-800 transition-all"
+                      value={hoursPerWeek}
+                      onChange={(e) => setHoursPerWeek(e.target.value)}
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-bold text-slate-700 mb-2" htmlFor="weeks">Weeks Per Year</label>
+                    <input
+                      id="weeks"
+                      aria-label="Weeks Per Year"
+                      type="number"
+                      className="w-full px-4 py-4 rounded-2xl border border-slate-200 focus:ring-4 focus:ring-[#da3f0b15] focus:border-[#da3f0b] outline-none text-lg font-bold text-slate-800 transition-all"
+                      value={weeksPerYear}
+                      onChange={(e) => setWeeksPerYear(e.target.value)}
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Output Panel */}
+            <div className="lg:w-1/2 p-6 md:p-10 bg-slate-50/50">
+              <span className="text-xs font-black text-slate-400 uppercase tracking-widest block mb-6">Your Pay Breakdown</span>
+              
+              <div className="grid gap-4">
+                <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm flex justify-between items-center group hover:border-[#da3f0b] transition-all">
+                  <div>
+                    <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Hourly Rate</p>
+                    <p className="text-3xl font-black text-slate-800">{formatCurrency(results.hourly)}</p>
+                  </div>
+                  <div className="w-12 h-12 rounded-2xl bg-[#da3f0b10] text-[#da3f0b] flex items-center justify-center text-xl">
+                    <i className="fas fa-clock"></i>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm">
+                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Daily</p>
+                    <p className="text-xl font-bold text-slate-800">{formatCurrency(results.daily)}</p>
+                  </div>
+                  <div className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm">
+                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Weekly</p>
+                    <p className="text-xl font-bold text-slate-800">{formatCurrency(results.weekly)}</p>
+                  </div>
+                  <div className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm">
+                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Bi-Weekly</p>
+                    <p className="text-xl font-bold text-slate-800">{formatCurrency(results.biweekly)}</p>
+                  </div>
+                  <div className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm">
+                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Monthly</p>
+                    <p className="text-xl font-bold text-slate-800">{formatCurrency(results.monthly)}</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="mt-8 p-4 bg-[#da3f0b08] rounded-2xl border border-[#da3f0b15]">
+                <p className="text-xs text-slate-600 leading-relaxed">
+                  <i className="fas fa-info-circle mr-2 text-[#da3f0b]"></i>
+                  Based on <strong>{parseFloat(hoursPerWeek) * parseFloat(weeksPerYear)}</strong> total working hours per year.
+                </p>
+              </div>
+            </div>
+          </main>
+        </div>
+      );
+    };
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+    </script>
+
+    <p class="text-center mt-4 mb-10">
+        <a href="https://simpliconvert.com/calculator_tools/" class="text-primary font-medium hover:underline">
+            ← Back to All Calculator Tools
+        </a>
+    </p>
+
+    <section class="bg-white py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="prose prose-lg max-w-none prose-h2:text-gray-800 prose-p:text-gray-700">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">Salary to Hourly Calculator – Understand Your True Earnings</h2>
+                <p class="mb-6 leading-relaxed">
+                    Whether you are negotiating a new job offer, planning your personal budget, or simply curious about your worth, our <strong>Salary to Hourly Calculator</strong> provides instant clarity. Many professionals focus solely on their annual figure, but understanding your hourly wage is essential for comparing different employment opportunities, especially when work hours vary.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Why Calculate Your Hourly Wage?</h2>
+                <p class="mb-6 leading-relaxed">
+                    Converting an annual salary to an hourly rate allows for a "level playing field" comparison. For example, a $70,000 salary requiring 50 hours a week might actually pay less per hour than a $60,000 salary with a strict 35-hour work week. By using this <strong>annual to hourly calculator</strong>, you can make more informed career decisions.
+                </p>
+                <p class="mb-6 leading-relaxed">
+                    If you are a freelancer or contractor, knowing your base hourly rate is the first step before using our <a href="https://simpliconvert.com/freelance_hourly_rate_calculator/" target="_blank">Freelance Hourly Rate Calculator</a> to factor in overhead and profit margins.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Features of This Calculator</h2>
+                <ul class="list-disc pl-6 mb-6 space-y-2 text-gray-700">
+                    <li><strong>Customizable Schedule:</strong> Adjust hours per week and weeks per year to match your specific contract.</li>
+                    <li><strong>Comprehensive Breakdown:</strong> See your earnings by day, week, bi-weekly, and month.</li>
+                    <li><strong>Real-Time Updates:</strong> Results update instantly as you change your inputs.</li>
+                    <li><strong>Privacy Guaranteed:</strong> Your financial data is processed locally in your browser and is never stored on our servers.</li>
+                </ul>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">How the Calculation Works</h2>
+                <p class="mb-6 leading-relaxed">
+                    The formula is straightforward: 
+                    <br><code class="bg-gray-100 px-2 py-1 rounded">Hourly Rate = Annual Salary / (Hours per Week × Weeks per Year)</code>
+                </p>
+                <p class="mb-6 leading-relaxed">
+                    For a standard full-time position in the US, this usually means 40 hours per week and 52 weeks per year, totaling 2,080 work hours. If you take two weeks of unpaid vacation, you would adjust the weeks per year to 50. This tool is also a great companion to our <a href="https://simpliconvert.com/gross_margin_calculator/" target="_blank">Gross Margin Calculator</a> for business owners looking to understand labor costs.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-center text-gray-900 mb-8">Salary to Hourly – Frequently Asked Questions</h2>
+            <div class="space-y-4">
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-primary">
+                        <span>How many work hours are in a year?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">
+                            A standard full-time work year is considered 2,080 hours (40 hours per week × 52 weeks). However, this can vary based on your specific contract, part-time status, or unpaid time off.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-primary">
+                        <span>Is this my "take-home" pay?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">
+                            No. This calculator provides your gross (pre-tax) hourly rate. Your net or "take-home" pay will be lower after accounting for income taxes, Social Security, and other deductions. For digital payments, you might also want to check our <a href="https://simpliconvert.com/paypal_fee_calculator/" class="text-primary hover:underline">PayPal Fee Calculator</a> to see how transaction fees affect your income.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-primary">
+                        <span>Can I use this for part-time jobs?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">
+                            Absolutely. Simply change the "Hours Per Week" field to your part-time hours (e.g., 20 or 25) to see what your hourly equivalent would be based on an annual projection.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 pb-16">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-slate-200 pt-16">
+            <h2 class="text-2xl font-bold text-center text-slate-800 mb-10">Explore More Financial & Productivity Tools</h2>
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+                
+                <a href="/freelance_hourly_rate_calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0 group-hover:bg-emerald-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-calculator text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Freelance Rate</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Calculate your ideal freelance rate.</p>
+                    </div>
+                </a>
+
+                <a href="/paypal_fee_calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center shrink-0 group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                        <i class="fab fa-paypal text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">PayPal Fees</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Calculate merchant fees instantly.</p>
+                    </div>
+                </a>
+
+                <a href="/gross_margin_calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-orange-50 text-orange-600 flex items-center justify-center shrink-0 group-hover:bg-orange-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-chart-line text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Gross Margin</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Find your profit margins easily.</p>
+                    </div>
+                </a>
+
+                <a href="/roblox_devex_calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-gray-50 text-gray-800 flex items-center justify-center shrink-0 group-hover:bg-gray-900 group-hover:text-white transition-colors">
+                        <i class="fas fa-gamepad text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">DevEx Calc</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Convert Robux to real USD.</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <div id="footer"></div>
+
+    <script>
+    function initializeHeaderScripts() {
+        const header = document.getElementById('header');
+        if (header) {
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 10) {
+                    header.classList.add('scrolled-effect');
+                } else {
+                    header.classList.remove('scrolled-effect');
+                }
+            });
+        }
+    }
+    
+    function initializeFooterScripts() {
+        const yearSpan = document.getElementById('current-year');
+        if(yearSpan) {
+            yearSpan.textContent = new Date().getFullYear();
+        }
+    }
+
+    async function loadComponent(url, elementId, callback) {
+        try {
+            const response = await fetch(url);
+            if (!response.ok) throw new Error('Status: ' + response.status);
+            const text = await response.text();
+            const element = document.getElementById(elementId);
+            if (element) {
+                element.innerHTML = text;
+                if (callback) callback();
+            }
+        } catch (error) {
+            console.error('Error loading component:', error);
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        loadComponent('/components/navbar.html', 'navbar', initializeHeaderScripts);
+        loadComponent('/components/footer.html', 'footer', initializeFooterScripts);
+        
+        const faqToggles = document.querySelectorAll('[data-faq-toggle]');
+        faqToggles.forEach(button => {
+            button.addEventListener('click', () => {
+                const answer = button.nextElementSibling;
+                const icon = button.querySelector('.faq-icon');
+                const isOpening = !answer.style.maxHeight;
+
+                faqToggles.forEach(other => {
+                    if (other !== button) {
+                        other.nextElementSibling.style.maxHeight = null;
+                        other.querySelector('.faq-icon').classList.remove('rotate-90');
+                        other.querySelector('.faq-icon').classList.add('-rotate-90');
+                    }
+                });
+
+                if (isOpening) {
+                    answer.style.maxHeight = answer.scrollHeight + "px";
+                    icon.classList.remove('-rotate-90');
+                    icon.classList.add('rotate-90');
+                } else {
+                    answer.style.maxHeight = null;
+                    icon.classList.remove('rotate-90');
+                    icon.classList.add('-rotate-90');
+                }
+            });
+        });
+    });
+    </script>
+</body>
+</html>

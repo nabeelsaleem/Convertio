@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Work Hours Calculator – Calculate Total Hours Worked Online | SimpliConvert</title>
+    <meta name="description" content="Easily calculate your total work hours and earnings with our free Work Hours Calculator. Perfect for freelancers and employees to track daily shifts and breaks.">
+    <meta name="author" content="SimpliConvert">
+    <meta property="og:site_name" content="SimpliConvert">
+    <meta name="robots" content="index, follow">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://simpliconvert.com/work_hours_calculator/">
+    <meta property="og:title" content="Work Hours Calculator – Track Your Time and Pay">
+    <meta property="og:description" content="Calculate total hours worked per week, including breaks and hourly rates. Simple, fast, and accurate time tracking.">
+    <meta property="og:image" content="https://simpliconvert.com/images/work-hours-og.jpg">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://simpliconvert.com/work_hours_calculator/">
+    <meta name="twitter:title" content="Work Hours Calculator – Total Hours Worked">
+    <meta name="twitter:description" content="Free tool to calculate work hours and payroll. Manage your shifts and breaks efficiently.">
+    <meta name="twitter:image" content="https://simpliconvert.com/images/work-hours-og.jpg">
+
+    <link rel="canonical" href="https://simpliconvert.com/work_hours_calculator/">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Work Hours Calculator",
+      "url": "https://simpliconvert.com/work_hours_calculator/",
+      "description": "A free online tool to calculate total work hours, deduct breaks, and estimate total pay based on hourly rates.",
+      "applicationCategory": "BusinessApplication",
+      "operatingSystem": "Web Browser",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "SimpliConvert",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://simpliconvert.com/logo.png"
+        }
+      }
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [{
+        "@type": "Question",
+        "name": "How do I calculate work hours with a lunch break?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Simply enter your start and end times for each day, then input the duration of your break in minutes. The calculator automatically subtracts the break time from the total duration."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Does this calculator support overnight shifts?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. If your end time is earlier than your start time (e.g., 10:00 PM to 6:00 AM), the tool assumes the shift crosses into the next day and calculates the duration correctly."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Can I calculate my total pay?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. By entering your hourly rate in the settings, the tool will multiply your total decimal hours by your rate to provide an estimated gross pay."
+        }
+      }]
+    }
+    </script>
+
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://simpliconvert.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Calculator Tools",
+      "item": "https://simpliconvert.com/calculator_tools/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "Work Hours Calculator",
+      "item": "https://simpliconvert.com/work_hours_calculator/"
+    }
+  ]
+}
+</script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #da3f0b;
+            --primary-hover: #b53409;
+            --primary-light: #fff5f2;
+            --bg: #f8fafc;
+            --text-dark: #0f172a;
+            --success: #16a34a;
+            --danger: #dc2626;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text-dark);
+        }
+
+        .hero-card {
+            background: white;
+            border: 1px solid #f1f5f9;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background-color: var(--primary);
+        }
+
+        .prose a {
+            color: #da3f0b;
+            text-decoration: none; 
+        }
+        .prose a:hover {
+            text-decoration: underline; 
+        }
+
+        .animate-fade { animation: fadeIn 0.3s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+        .tool-card {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .tool-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+        }
+
+        input[type="time"], input[type="number"] {
+            border: 1px solid #e2e8f0;
+            border-radius: 0.5rem;
+            padding: 0.5rem;
+            outline: none;
+            transition: all 0.2s;
+        }
+        input:focus {
+            border-color: var(--primary);
+            ring: 2px;
+            ring-color: var(--primary-light);
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 min-h-screen flex flex-col">
+    <div id="navbar"></div>
+
+    <section class="hero-white text-black py-2 md:py-10">
+        <div class="container mx-auto px-4 text-center">
+            <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-2">Work Hours Calculator – Total Hours Worked</h1>
+            <p class="text-base text-gray-700 leading-relaxed">
+                Use our free <strong>Work Hours Calculator</strong> to track your shifts, deduct breaks, and calculate your total weekly earnings. 
+                Perfect for freelancers, contractors, and employees managing their own payroll.
+            </p>
+        </div>
+    </section>
+
+    <div id="root" class="w-full max-w-6xl mx-auto p-4 sm:p-6"></div>
+
+    <script type="text/babel">
+    const { useState, useEffect } = React;
+
+    const DAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+
+    const App = () => {
+      const [rows, setRows] = useState(DAYS.map(day => ({
+        day,
+        start: '09:00',
+        end: '17:00',
+        break: 30,
+        active: day !== 'Saturday' && day !== 'Sunday'
+      })));
+      const [rate, setRate] = useState(0);
+      const [totals, setTotals] = useState({ hours: 0, minutes: 0, decimal: 0, pay: 0 });
+
+      const calculateTime = () => {
+        let totalMinutes = 0;
+        rows.forEach(row => {
+          if (row.active && row.start && row.end) {
+            const [sH, sM] = row.start.split(':').map(Number);
+            const [eH, eM] = row.end.split(':').map(Number);
+            
+            let diff = (eH * 60 + eM) - (sH * 60 + sM);
+            if (diff < 0) diff += 24 * 60; // Overnight shift
+            
+            const netMinutes = Math.max(0, diff - (parseInt(row.break) || 0));
+            totalMinutes += netMinutes;
+          }
+        });
+
+        const h = Math.floor(totalMinutes / 60);
+        const m = totalMinutes % 60;
+        const dec = totalMinutes / 60;
+        setTotals({
+          hours: h,
+          minutes: m,
+          decimal: dec.toFixed(2),
+          pay: (dec * rate).toFixed(2)
+        });
+      };
+
+      useEffect(() => {
+        calculateTime();
+      }, [rows, rate]);
+
+      const updateRow = (index, field, value) => {
+        const newRows = [...rows];
+        newRows[index][field] = value;
+        setRows(newRows);
+      };
+
+      const reset = () => {
+        setRows(DAYS.map(day => ({
+          day,
+          start: '09:00',
+          end: '17:00',
+          break: 30,
+          active: day !== 'Saturday' && day !== 'Sunday'
+        })));
+        setRate(0);
+      };
+
+      return (
+        <div className="bg-white rounded-[2rem] shadow-2xl overflow-hidden border border-slate-100">
+          <header className="bg-slate-50/50 border-b border-slate-100 p-6 md:p-8 flex flex-col md:flex-row justify-between items-center gap-6">
+            <div className="text-center md:text-left">
+              <h2 className="text-2xl font-black text-slate-800 tracking-tight flex items-center justify-center md:justify-start gap-3">
+                <span className="bg-[#da3f0b] text-white p-2 rounded-xl text-lg shadow-lg shadow-[#da3f0b30]">
+                  <i className="fas fa-clock"></i>
+                </span>
+                Time Card Calculator
+              </h2>
+            </div>
+            
+            <div className="flex flex-wrap justify-center gap-4">
+              <div className="relative">
+                <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1 ml-1">Hourly Rate ($)</label>
+                <input 
+                  type="number" 
+                  aria-label="Hourly Rate"
+                  value={rate} 
+                  onChange={(e) => setRate(parseFloat(e.target.value) || 0)}
+                  className="w-32 bg-white border border-slate-200 text-slate-700 py-2 px-4 rounded-xl text-sm font-bold focus:outline-none focus:ring-4 focus:ring-[#da3f0b15] focus:border-[#da3f0b] shadow-sm"
+                  placeholder="0.00"
+                />
+              </div>
+              <div className="flex flex-col justify-end">
+                <button 
+                  onClick={reset}
+                  className="py-2 px-4 rounded-xl text-xs font-bold transition-all border bg-white text-slate-600 border-slate-200 hover:bg-slate-50"
+                >
+                  RESET ALL
+                </button>
+              </div>
+            </div>
+          </header>
+
+          <main className="p-4 md:p-8">
+            <div className="overflow-x-auto">
+              <table className="w-full text-left border-collapse">
+                <thead>
+                  <tr className="text-xs font-black text-slate-400 uppercase tracking-widest border-b border-slate-100">
+                    <th className="pb-4 px-2">Day</th>
+                    <th className="pb-4 px-2">Start Time</th>
+                    <th className="pb-4 px-2">End Time</th>
+                    <th className="pb-4 px-2">Break (Min)</th>
+                    <th className="pb-4 px-2 text-right">Status</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-50">
+                  {rows.map((row, idx) => (
+                    <tr key={row.day} className={`${!row.active ? 'opacity-40' : ''} transition-opacity`}>
+                      <td className="py-4 px-2 font-bold text-slate-700">{row.day}</td>
+                      <td className="py-4 px-2">
+                        <input 
+                          type="time" 
+                          aria-label={`${row.day} Start Time`}
+                          disabled={!row.active}
+                          value={row.start} 
+                          onChange={(e) => updateRow(idx, 'start', e.target.value)}
+                          className="w-full sm:w-auto"
+                        />
+                      </td>
+                      <td className="py-4 px-2">
+                        <input 
+                          type="time" 
+                          aria-label={`${row.day} End Time`}
+                          disabled={!row.active}
+                          value={row.end} 
+                          onChange={(e) => updateRow(idx, 'end', e.target.value)}
+                          className="w-full sm:w-auto"
+                        />
+                      </td>
+                      <td className="py-4 px-2">
+                        <input 
+                          type="number" 
+                          aria-label={`${row.day} Break Minutes`}
+                          disabled={!row.active}
+                          value={row.break} 
+                          onChange={(e) => updateRow(idx, 'break', e.target.value)}
+                          className="w-20"
+                        />
+                      </td>
+                      <td className="py-4 px-2 text-right">
+                        <button 
+                          aria-label={`Toggle ${row.day}`}
+                          onClick={() => updateRow(idx, 'active', !row.active)}
+                          className={`w-10 h-10 rounded-full transition-colors ${row.active ? 'bg-green-100 text-green-600' : 'bg-slate-100 text-slate-400'}`}
+                        >
+                          <i className={`fas ${row.active ? 'fa-check' : 'fa-times'}`}></i>
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="bg-slate-50 p-6 rounded-2xl border border-slate-100 text-center">
+                <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Total Time</p>
+                <h3 className="text-3xl font-black text-slate-800">{totals.hours}h {totals.minutes}m</h3>
+              </div>
+              <div className="bg-slate-50 p-6 rounded-2xl border border-slate-100 text-center">
+                <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Decimal Hours</p>
+                <h3 className="text-3xl font-black text-slate-800">{totals.decimal} hrs</h3>
+              </div>
+              <div className="bg-[#da3f0b] p-6 rounded-2xl shadow-lg shadow-[#da3f0b20] text-center">
+                <p className="text-[10px] font-black text-white/70 uppercase tracking-widest mb-2">Estimated Pay</p>
+                <h3 className="text-3xl font-black text-white">${totals.pay}</h3>
+              </div>
+            </div>
+          </main>
+
+          <footer className="bg-slate-50 border-t border-slate-100 p-6 md:p-8">
+             <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+                 <div className="text-center md:text-left">
+                     <h4 className="text-sm font-bold text-slate-700 mb-1">Share this calculator</h4>
+                     <p className="text-xs text-slate-400">Help others track their work hours accurately.</p>
+                 </div>
+                 <div className="flex flex-wrap justify-center gap-3">
+                     <a href={`https://twitter.com/intent/tweet?text=Calculate your work hours easily!&url=${encodeURIComponent(window.location.href)}`} target="_blank" className="w-10 h-10 rounded-full flex items-center justify-center text-white bg-[#1DA1F2] hover:-translate-y-1 transition-transform"><i className="fab fa-twitter"></i></a>
+                     <a href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`} target="_blank" className="w-10 h-10 rounded-full flex items-center justify-center text-white bg-[#1877F2] hover:-translate-y-1 transition-transform"><i className="fab fa-facebook-f"></i></a>
+                     <a href={`https://api.whatsapp.com/send?text=Work Hours Calculator: ${encodeURIComponent(window.location.href)}`} target="_blank" className="w-10 h-10 rounded-full flex items-center justify-center text-white bg-[#25D366] hover:-translate-y-1 transition-transform"><i className="fab fa-whatsapp"></i></a>
+                 </div>
+             </div>
+          </footer>
+        </div>
+      );
+    };
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+    </script>
+
+    <p class="text-center mt-4 mb-10">
+        <a href="https://simpliconvert.com/calculator_tools/" class="text-primary font-medium hover:underline">
+            ← Back to All Calculator Tools
+        </a>
+    </p>
+
+    <section class="bg-white py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="prose prose-lg max-w-none prose-h2:text-gray-800 prose-p:text-gray-700">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">Why Use a Work Hours Calculator?</h2>
+                <p class="mb-6 leading-relaxed">
+                    Managing your time is the first step toward financial clarity. Whether you are an independent contractor or an employee working irregular shifts, knowing exactly how many hours you've put in is crucial for accurate billing. Our <strong>Work Hours Calculator</strong> simplifies this process by allowing you to input daily start and end times while automatically deducting lunch breaks.
+                </p>
+                <p class="mb-6 leading-relaxed">
+                    For those working in the gig economy, this tool pairs perfectly with our <a href="https://simpliconvert.com/freelance_hourly_rate_calculator/" target="_blank">Freelance Hourly Rate Calculator</a> to help you determine if your current projects are meeting your income goals.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Key Features of Our Time Card Tool</h2>
+                <ul class="list-disc pl-6 mb-6 space-y-2 text-gray-700">
+                    <li><strong>Daily Shift Tracking:</strong> Toggle individual days on or off to match your specific work week.</li>
+                    <li><strong>Automatic Break Deduction:</strong> Input your break in minutes (e.g., 30 or 60) to get a true "net" work duration.</li>
+                    <li><strong>Overnight Shift Support:</strong> Our logic handles shifts that cross the midnight threshold automatically.</li>
+                    <li><strong>Earnings Estimation:</strong> Enter your hourly rate to see a real-time calculation of your gross pay.</li>
+                    <li><strong>Decimal Conversion:</strong> Instantly see your time in both HH:MM format and decimal format (e.g., 7.5 hours) for easier payroll entry.</li>
+                </ul>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">How to Calculate Total Hours Worked</h2>
+                <p class="mb-6 leading-relaxed">
+                    To get the most accurate results, follow these simple steps:
+                </p>
+                <ol class="list-decimal pl-6 mb-6 space-y-2 text-gray-700">
+                    <li><strong>Set Your Schedule:</strong> Use the toggle buttons to activate the days you worked.</li>
+                    <li><strong>Enter Times:</strong> Input your "Start Time" and "End Time" using the 24-hour or AM/PM selector.</li>
+                    <li><strong>Subtract Breaks:</strong> Enter the total minutes spent on unpaid breaks for each day.</li>
+                    <li><strong>Add Your Rate:</strong> If you want to see your earnings, enter your hourly pay rate in the top settings bar.</li>
+                    <li><strong>Review Totals:</strong> Check the summary cards at the bottom for your total time and estimated pay.</li>
+                </ol>
+                <p class="mb-6 leading-relaxed">
+                    If you need to track time in real-time rather than calculating after the fact, consider using our <a href="https://simpliconvert.com/online_stopwatch_and_timer/" target="_blank">Online Stopwatch and Timer</a>.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-center text-gray-900 mb-8">Work Hours – Frequently Asked Questions</h2>
+            <div class="space-y-4">
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>How do I convert minutes to decimal hours?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">
+                            To convert minutes to a decimal, divide the number of minutes by 60. For example, 30 minutes is 0.5 hours (30/60), and 45 minutes is 0.75 hours (45/60). Our calculator does this automatically for you.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>Is my data private?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">
+                            Yes. All calculations are performed locally in your browser. We do not store your time entries or hourly rates on our servers, ensuring your financial data remains completely private.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>Can I use this for monthly payroll?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">
+                            This specific tool is designed for weekly tracking (7 days). For monthly totals, you can calculate each week individually and sum the "Decimal Hours" results for your final report.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 pb-16">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-slate-200 pt-16">
+            <h2 class="text-2xl font-bold text-center text-slate-800 mb-10">Popular Tools on SimpliConvert</h2>
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+                <a href="/freelance_hourly_rate_calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0 group-hover:bg-emerald-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-calculator text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Rate Calc</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Calculate freelance hourly rates.</p>
+                    </div>
+                </a>
+                <a href="/online_stopwatch_and_timer/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center shrink-0 group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-stopwatch text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Stopwatch</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Track time in real-time.</p>
+                    </div>
+                </a>
+                <a href="/to_do_list/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-green-50 text-green-600 flex items-center justify-center shrink-0 group-hover:bg-green-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-check-square text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">To-Do List</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Manage tasks effectively.</p>
+                    </div>
+                </a>
+                <a href="/password_generator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-slate-50 text-slate-700 flex items-center justify-center shrink-0 group-hover:bg-slate-800 group-hover:text-white transition-colors">
+                        <i class="fas fa-key text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Password Gen</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Create secure passwords.</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <div id="footer"></div>
+
+    <script>
+    function initializeHeaderScripts() {
+        const header = document.getElementById('header');
+        if (header) {
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 10) {
+                    header.classList.add('scrolled-effect');
+                } else {
+                    header.classList.remove('scrolled-effect');
+                }
+            });
+        }
+    }
+    
+    function initializeFooterScripts() {
+        const yearSpan = document.getElementById('current-year');
+        if(yearSpan) {
+            yearSpan.textContent = new Date().getFullYear();
+        }
+    }
+
+    async function loadComponent(url, elementId, callback) {
+        try {
+            const response = await fetch(url);
+            if (!response.ok) throw new Error('Status: ' + response.status);
+            const text = await response.text();
+            const element = document.getElementById(elementId);
+            if (element) {
+                element.innerHTML = text;
+                if (callback) callback();
+            }
+        } catch (error) {
+            console.error('Error loading component:', error);
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        loadComponent('/components/navbar.html', 'navbar', initializeHeaderScripts);
+        loadComponent('/components/footer.html', 'footer', initializeFooterScripts);
+        
+        const faqToggles = document.querySelectorAll('[data-faq-toggle]');
+        faqToggles.forEach(button => {
+            button.addEventListener('click', () => {
+                const answer = button.nextElementSibling;
+                const icon = button.querySelector('.faq-icon');
+                const isOpening = !answer.style.maxHeight;
+
+                faqToggles.forEach(other => {
+                    if (other !== button) {
+                        other.nextElementSibling.style.maxHeight = null;
+                        other.querySelector('.faq-icon').classList.remove('rotate-90');
+                        other.querySelector('.faq-icon').classList.add('-rotate-90');
+                    }
+                });
+
+                if (isOpening) {
+                    answer.style.maxHeight = answer.scrollHeight + "px";
+                    icon.classList.remove('-rotate-90');
+                    icon.classList.add('rotate-90');
+                } else {
+                    answer.style.maxHeight = null;
+                    icon.classList.remove('rotate-90');
+                    icon.classList.add('-rotate-90');
+                }
+            });
+        });
+    });
+    </script>
+</body>
+</html>

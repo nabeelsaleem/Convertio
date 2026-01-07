@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>EMI Calculator – Calculate Monthly Loan Payments Instantly | SimpliConvert</title>
+    <meta name="description" content="Calculate your monthly loan payments with our free EMI Calculator. Plan your home, car, or personal loan by estimating interest and total repayment amounts.">
+    <meta name="author" content="SimpliConvert">
+    <meta property="og:site_name" content="SimpliConvert">
+    <meta name="robots" content="index, follow">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://simpliconvert.com/emi_calculator/">
+    <meta property="og:title" content="EMI Calculator – Plan Your Loan Payments">
+    <meta property="og:description" content="Estimate your Equated Monthly Installments (EMI) for any loan. Get a detailed breakdown of total interest and total payment instantly.">
+    <meta property="og:image" content="https://simpliconvert.com/images/emi-calculator-og.jpg">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://simpliconvert.com/emi_calculator/">
+    <meta name="twitter:title" content="EMI Calculator – Loan EMI Calculator Online">
+    <meta name="twitter:description" content="Free online tool to calculate loan EMIs. Simple, fast, and accurate financial planning for your next big purchase.">
+    <meta name="twitter:image" content="https://simpliconvert.com/images/emi-calculator-og.jpg">
+
+    <link rel="canonical" href="https://simpliconvert.com/emi_calculator/">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "EMI Calculator",
+      "url": "https://simpliconvert.com/emi_calculator/",
+      "description": "A free online tool to calculate Equated Monthly Installments (EMI) for home, car, and personal loans.",
+      "applicationCategory": "FinanceApplication",
+      "operatingSystem": "Web Browser",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "SimpliConvert",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://simpliconvert.com/logo.png"
+        }
+      }
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [{
+        "@type": "Question",
+        "name": "What is an EMI?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "EMI stands for Equated Monthly Installment. It is a fixed payment amount made by a borrower to a lender at a specified date each calendar month."
+        }
+      }, {
+        "@type": "Question",
+        "name": "How is loan interest calculated in this tool?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "This calculator uses the reducing balance method, which is the standard for most bank loans. Interest is calculated on the outstanding principal amount each month."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Can I use this for home and car loans?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes, this EMI calculator is universal. You can use it for home loans, car loans, personal loans, or any other amortized loan by entering the principal, interest rate, and tenure."
+        }
+      }]
+    }
+    </script>
+
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://simpliconvert.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Calculator Tools",
+      "item": "https://simpliconvert.com/calculator_tools/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "EMI Calculator",
+      "item": "https://simpliconvert.com/emi_calculator/"
+    }
+  ]
+}
+</script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #da3f0b;
+            --primary-hover: #b53409;
+            --primary-light: #fff5f2;
+            --bg: #f8fafc;
+            --text-dark: #0f172a;
+            --success: #16a34a;
+            --danger: #dc2626;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text-dark);
+        }
+
+        .hero-card {
+            background: white;
+            border: 1px solid #f1f5f9;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background-color: var(--primary);
+        }
+
+        .prose a {
+            color: #da3f0b;
+            text-decoration: none; 
+        }
+        .prose a:hover {
+            text-decoration: underline; 
+        }
+
+        .animate-fade { animation: fadeIn 0.3s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+        .tool-card {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .tool-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+        }
+
+        input[type="range"] {
+            accent-color: var(--primary);
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 min-h-screen flex flex-col">
+    <div id="navbar"></div>
+
+    <section class="hero-white text-black py-2 md:py-10">
+        <div class="container mx-auto px-4 text-center">
+            <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-2">EMI Calculator – Calculate Monthly Loan Payments</h1>
+            <p class="text-base text-gray-700 leading-relaxed">
+                Plan your finances better with our free <strong>EMI Calculator</strong>. Whether it's a home, car, or personal loan, 
+                instantly calculate your <strong>monthly installments, total interest</strong>, and repayment schedule.
+            </p>
+        </div>
+    </section>
+
+    <div id="root" class="w-full max-w-6xl mx-auto p-4 sm:p-6"></div>
+
+    <script type="text/babel">
+    const { useState, useEffect } = React;
+
+    const App = () => {
+      const [amount, setAmount] = useState(100000);
+      const [rate, setRate] = useState(8.5);
+      const [tenure, setTenure] = useState(5);
+      const [tenureType, setTenureType] = useState('years');
+      
+      const [results, setResults] = useState({
+        emi: 0,
+        totalInterest: 0,
+        totalPayment: 0
+      });
+
+      const calculateEMI = () => {
+        const p = parseFloat(amount);
+        const r = parseFloat(rate) / 12 / 100;
+        const n = tenureType === 'years' ? tenure * 12 : tenure;
+
+        if (p > 0 && r > 0 && n > 0) {
+          const emiValue = (p * r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1);
+          const totalPayable = emiValue * n;
+          const totalInt = totalPayable - p;
+
+          setResults({
+            emi: emiValue.toFixed(2),
+            totalInterest: totalInt.toFixed(2),
+            totalPayment: totalPayable.toFixed(2)
+          });
+        } else {
+          setResults({ emi: 0, totalInterest: 0, totalPayment: 0 });
+        }
+      };
+
+      useEffect(() => {
+        calculateEMI();
+      }, [amount, rate, tenure, tenureType]);
+
+      const formatCurrency = (num) => {
+        return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(num);
+      };
+
+      return (
+        <div className="bg-white rounded-[2rem] shadow-2xl overflow-hidden border border-slate-100">
+          <header className="bg-slate-50/50 border-b border-slate-100 p-6 md:p-8">
+            <h2 className="text-2xl font-black text-slate-800 tracking-tight flex items-center gap-3">
+              <span className="bg-[#da3f0b] text-white p-2 rounded-xl text-lg shadow-lg shadow-[#da3f0b30]">
+                <i className="fas fa-calculator"></i>
+              </span>
+              Loan EMI Calculator
+            </h2>
+          </header>
+
+          <main className="flex flex-col lg:flex-row">
+            {/* Input Panel */}
+            <div className="lg:w-1/2 p-6 md:p-10 border-r border-slate-100 space-y-8">
+              <div>
+                <div className="flex justify-between mb-2">
+                  <label className="text-sm font-bold text-slate-700 uppercase tracking-wider">Loan Amount</label>
+                  <span className="text-[#da3f0b] font-bold">{formatCurrency(amount)}</span>
+                </div>
+                <input 
+                  type="range" min="1000" max="1000000" step="1000"
+                  value={amount} onChange={(e) => setAmount(e.target.value)}
+                  className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer"
+                  aria-label="Loan Amount Slider"
+                />
+                <input 
+                  type="number" value={amount} onChange={(e) => setAmount(e.target.value)}
+                  className="mt-4 w-full p-3 rounded-xl border border-slate-200 focus:ring-4 focus:ring-[#da3f0b15] focus:border-[#da3f0b] outline-none font-bold text-slate-700"
+                  placeholder="Enter Amount"
+                />
+              </div>
+
+              <div>
+                <div className="flex justify-between mb-2">
+                  <label className="text-sm font-bold text-slate-700 uppercase tracking-wider">Interest Rate (%)</label>
+                  <span className="text-[#da3f0b] font-bold">{rate}%</span>
+                </div>
+                <input 
+                  type="range" min="1" max="30" step="0.1"
+                  value={rate} onChange={(e) => setRate(e.target.value)}
+                  className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer"
+                  aria-label="Interest Rate Slider"
+                />
+                <input 
+                  type="number" value={rate} onChange={(e) => setRate(e.target.value)}
+                  className="mt-4 w-full p-3 rounded-xl border border-slate-200 focus:ring-4 focus:ring-[#da3f0b15] focus:border-[#da3f0b] outline-none font-bold text-slate-700"
+                  placeholder="Enter Rate"
+                />
+              </div>
+
+              <div>
+                <div className="flex justify-between mb-2">
+                  <label className="text-sm font-bold text-slate-700 uppercase tracking-wider">Loan Tenure</label>
+                  <div className="flex gap-2">
+                    <button 
+                      onClick={() => setTenureType('years')}
+                      className={`px-3 py-1 text-[10px] font-bold rounded-md border ${tenureType === 'years' ? 'bg-[#da3f0b] text-white border-[#da3f0b]' : 'bg-white text-slate-500 border-slate-200'}`}
+                    >YEARS</button>
+                    <button 
+                      onClick={() => setTenureType('months')}
+                      className={`px-3 py-1 text-[10px] font-bold rounded-md border ${tenureType === 'months' ? 'bg-[#da3f0b] text-white border-[#da3f0b]' : 'bg-white text-slate-500 border-slate-200'}`}
+                    >MONTHS</button>
+                  </div>
+                </div>
+                <input 
+                  type="range" min="1" max={tenureType === 'years' ? 30 : 360} step="1"
+                  value={tenure} onChange={(e) => setTenure(e.target.value)}
+                  className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer"
+                  aria-label="Loan Tenure Slider"
+                />
+                <input 
+                  type="number" value={tenure} onChange={(e) => setTenure(e.target.value)}
+                  className="mt-4 w-full p-3 rounded-xl border border-slate-200 focus:ring-4 focus:ring-[#da3f0b15] focus:border-[#da3f0b] outline-none font-bold text-slate-700"
+                  placeholder={`Enter ${tenureType}`}
+                />
+              </div>
+            </div>
+
+            {/* Output Panel */}
+            <div className="lg:w-1/2 p-6 md:p-10 bg-slate-50/50 flex flex-col justify-center">
+              <div className="space-y-6">
+                <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm text-center">
+                  <span className="text-xs font-black text-slate-400 uppercase tracking-widest block mb-2">Monthly EMI</span>
+                  <div className="text-4xl md:text-5xl font-black text-slate-800">{formatCurrency(results.emi)}</div>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm">
+                    <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-1">Total Interest</span>
+                    <div className="text-xl font-bold text-slate-700">{formatCurrency(results.totalInterest)}</div>
+                  </div>
+                  <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm">
+                    <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-1">Total Payment</span>
+                    <div className="text-xl font-bold text-slate-700">{formatCurrency(results.totalPayment)}</div>
+                  </div>
+                </div>
+
+                <div className="pt-4">
+                    <div className="w-full bg-slate-200 h-4 rounded-full overflow-hidden flex">
+                        <div 
+                            className="bg-slate-800 h-full" 
+                            style={{ width: `${(amount / results.totalPayment) * 100}%` }}
+                            title="Principal"
+                        ></div>
+                        <div 
+                            className="bg-[#da3f0b] h-full" 
+                            style={{ width: `${(results.totalInterest / results.totalPayment) * 100}%` }}
+                            title="Interest"
+                        ></div>
+                    </div>
+                    <div className="flex justify-between mt-3 text-[10px] font-bold uppercase tracking-tighter">
+                        <span className="flex items-center gap-1"><i className="fas fa-circle text-slate-800"></i> Principal ({((amount / results.totalPayment) * 100).toFixed(1)}%)</span>
+                        <span className="flex items-center gap-1"><i className="fas fa-circle text-[#da3f0b]"></i> Interest ({((results.totalInterest / results.totalPayment) * 100).toFixed(1)}%)</span>
+                    </div>
+                </div>
+              </div>
+            </div>
+          </main>
+
+          <footer className="bg-slate-50 border-t border-slate-100 p-6 md:p-8">
+             <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+                 <div className="text-center md:text-left">
+                     <h4 className="text-sm font-bold text-slate-700 mb-1">Share this calculator</h4>
+                     <p className="text-xs text-slate-400">Help others plan their financial future.</p>
+                 </div>
+                 <div className="flex flex-wrap justify-center gap-3">
+                     <a href={`https://twitter.com/intent/tweet?text=Check out this EMI Calculator!&url=${encodeURIComponent(window.location.href)}`} target="_blank" className="w-10 h-10 rounded-full flex items-center justify-center text-white bg-[#1DA1F2] hover:-translate-y-1 transition-transform"><i className="fab fa-twitter"></i></a>
+                     <a href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`} target="_blank" className="w-10 h-10 rounded-full flex items-center justify-center text-white bg-[#1877F2] hover:-translate-y-1 transition-transform"><i className="fab fa-facebook-f"></i></a>
+                     <a href={`https://api.whatsapp.com/send?text=EMI Calculator: ${encodeURIComponent(window.location.href)}`} target="_blank" className="w-10 h-10 rounded-full flex items-center justify-center text-white bg-[#25D366] hover:-translate-y-1 transition-transform"><i className="fab fa-whatsapp"></i></a>
+                 </div>
+             </div>
+          </footer>
+        </div>
+      );
+    };
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+    </script>
+
+    <p class="text-center mt-4 mb-10">
+        <a href="https://simpliconvert.com/calculator_tools/" class="text-primary font-medium hover:underline">
+            ← Back to All Calculator Tools
+        </a>
+    </p>
+
+    <section class="bg-white py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="prose prose-lg max-w-none prose-h2:text-gray-800 prose-p:text-gray-700">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">EMI Calculator – Plan Your Loan Repayments with Ease</h2>
+                <p class="mb-6 leading-relaxed">
+                    Taking out a loan is a significant financial commitment. Whether you are looking at a mortgage for your dream home, financing a new vehicle, or taking a personal loan for unexpected expenses, knowing your <strong>Equated Monthly Installment (EMI)</strong> is crucial. Our <strong>EMI Calculator</strong> provides an instant, accurate estimate of your monthly outgoings, helping you manage your budget effectively.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Why Use an Online Loan EMI Calculator?</h2>
+                <p class="mb-6 leading-relaxed">
+                    Manual financial calculations can be complex and prone to errors. By using our tool, you can experiment with different loan amounts, interest rates, and tenures to find a repayment plan that fits your lifestyle. This tool is as essential for personal finance as our <a href="https://simpliconvert.com/freelance_hourly_rate_calculator/" target="_blank">Freelance Hourly Rate Calculator</a> is for independent professionals.
+                </p>
+                <p class="mb-6 leading-relaxed">
+                    Understanding the ratio between your principal and interest is vital. Our calculator provides a visual breakdown, showing you exactly how much of your total payment goes toward the actual loan amount versus the cost of borrowing. For business owners, this pairs perfectly with our <a href="https://simpliconvert.com/gross_margin_calculator/" target="_blank">Gross Margin Calculator</a> to ensure your debt-to-income ratio remains healthy.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Features of Our EMI Calculator</h2>
+                <ul class="list-disc pl-6 mb-6 space-y-2 text-gray-700">
+                    <li><strong>Instant Results:</strong> See your monthly EMI change in real-time as you adjust the sliders.</li>
+                    <li><strong>Total Interest Breakdown:</strong> Know exactly how much interest you will pay over the life of the loan.</li>
+                    <li><strong>Flexible Tenure:</strong> Switch between years and months to match your specific loan agreement.</li>
+                    <li><strong>Visual Progress:</strong> A built-in chart shows the percentage split between principal and interest.</li>
+                    <li><strong>Universal Use:</strong> Works for home loans, car loans, education loans, and more.</li>
+                </ul>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">How to Calculate Your EMI</h2>
+                <ol class="list-decimal pl-6 mb-6 space-y-2 text-gray-700">
+                    <li><strong>Enter Loan Amount:</strong> Use the slider or type in the total amount you wish to borrow.</li>
+                    <li><strong>Set Interest Rate:</strong> Input the annual interest rate offered by your bank or lender.</li>
+                    <li><strong>Choose Tenure:</strong> Select how long you plan to take to repay the loan (in years or months).</li>
+                    <li><strong>Analyze:</strong> Review the Monthly EMI, Total Interest, and Total Payment displayed on the right.</li>
+                </ol>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Smart Financial Planning</h2>
+                <p class="mb-6 leading-relaxed">
+                    Before signing any loan agreement, it is wise to calculate the "true cost" of the loan. Often, a lower monthly payment means a longer tenure, which results in much higher total interest. Use this tool to find the "sweet spot" where your monthly payment is affordable but your total interest is minimized. If you're managing online sales or services, you might also find our <a href="https://simpliconvert.com/paypal_fee_calculator/" target="_blank">PayPal Fee Calculator</a> useful for calculating net income after transaction costs.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-center text-gray-900 mb-8">EMI Calculator – Frequently Asked Questions</h2>
+            <div class="space-y-4">
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>Does this calculator include processing fees?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">
+                            No, this calculator focuses on the principal and interest components. Banks often charge a processing fee (usually 0.5% to 2% of the loan amount) which is typically paid upfront and not included in the monthly EMI.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>How does a longer tenure affect my EMI?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">
+                            A longer tenure reduces your monthly EMI amount, making it easier on your monthly budget. However, it significantly increases the total interest you pay over the life of the loan. It is usually better to choose the shortest tenure you can comfortably afford.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>Is the interest rate fixed or floating?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">
+                            This calculator works for both. If you have a fixed-rate loan, the EMI remains constant. If you have a floating-rate loan, you can use this tool to see how your EMI might change if interest rates rise or fall in the future.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div id="footer"></div>
+
+    <script>
+    async function loadComponent(url, elementId, callback) {
+        try {
+            const response = await fetch(url);
+            if (!response.ok) throw new Error('Status: ' + response.status);
+            const text = await response.text();
+            const element = document.getElementById(elementId);
+            if (element) {
+                element.innerHTML = text;
+                if (callback) callback();
+            }
+        } catch (error) {
+            console.error('Error loading component:', error);
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        loadComponent('/components/navbar.html', 'navbar');
+        loadComponent('/components/footer.html', 'footer', () => {
+            const yearSpan = document.getElementById('current-year');
+            if(yearSpan) yearSpan.textContent = new Date().getFullYear();
+        });
+        
+        const faqToggles = document.querySelectorAll('[data-faq-toggle]');
+        faqToggles.forEach(button => {
+            button.addEventListener('click', () => {
+                const answer = button.nextElementSibling;
+                const icon = button.querySelector('.faq-icon');
+                const isOpening = !answer.style.maxHeight;
+
+                faqToggles.forEach(other => {
+                    if (other !== button) {
+                        other.nextElementSibling.style.maxHeight = null;
+                        other.querySelector('.faq-icon').classList.remove('rotate-90');
+                        other.querySelector('.faq-icon').classList.add('-rotate-90');
+                    }
+                });
+
+                if (isOpening) {
+                    answer.style.maxHeight = answer.scrollHeight + "px";
+                    icon.classList.remove('-rotate-90');
+                    icon.classList.add('rotate-90');
+                } else {
+                    answer.style.maxHeight = null;
+                    icon.classList.remove('rotate-90');
+                    icon.classList.add('-rotate-90');
+                }
+            });
+        });
+    });
+    </script>
+</body>
+</html>

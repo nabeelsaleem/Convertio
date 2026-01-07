@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Fuel Cost Calculator – Estimate Trip Fuel Expenses | SimpliConvert</title>
+    <meta name="description" content="Plan your road trip budget with our Fuel Cost Calculator. Estimate total fuel expenses based on distance, fuel efficiency, and current gas prices.">
+    <meta name="author" content="SimpliConvert">
+    <meta property="og:site_name" content="SimpliConvert">
+    <meta name="robots" content="index, follow">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://simpliconvert.com/fuel_cost_calculator/">
+    <meta property="og:title" content="Fuel Cost Calculator – Trip Fuel Cost Estimator">
+    <meta property="og:description" content="Calculate how much your next trip will cost in fuel. Supports Metric and Imperial units for global travel planning.">
+    <meta property="og:image" content="https://simpliconvert.com/images/fuel-calculator-og.jpg">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://simpliconvert.com/fuel_cost_calculator/">
+    <meta name="twitter:title" content="Fuel Cost Calculator – Plan Your Road Trip Budget">
+    <meta name="twitter:description" content="Free online tool to estimate fuel expenses for any journey. Simple, fast, and accurate.">
+    <meta name="twitter:image" content="https://simpliconvert.com/images/fuel-calculator-og.jpg">
+
+    <link rel="canonical" href="https://simpliconvert.com/fuel_cost_calculator/">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Fuel Cost Calculator",
+      "url": "https://simpliconvert.com/fuel_cost_calculator/",
+      "description": "A free online tool to estimate fuel expenses for trips based on distance, vehicle efficiency, and fuel price.",
+      "applicationCategory": "FinanceApplication",
+      "operatingSystem": "Web Browser",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "SimpliConvert",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://simpliconvert.com/logo.png"
+        }
+      }
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [{
+        "@type": "Question",
+        "name": "How is fuel cost calculated?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The formula depends on your units. For Metric: (Distance / 100) × Fuel Consumption (L/100km) × Fuel Price. For Imperial: (Distance / MPG) × Fuel Price per Gallon."
+        }
+      }, {
+        "@type": "Question",
+        "name": "What is the difference between MPG (US) and MPG (UK)?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "A UK gallon is approximately 1.2 times larger than a US gallon. Therefore, a car getting 30 MPG in the UK would get about 25 MPG in the US."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Does this calculator account for traffic or terrain?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "No, this tool provides an estimate based on average fuel efficiency. Real-world factors like heavy traffic, hilly terrain, or aggressive driving will likely increase your actual fuel consumption."
+        }
+      }]
+    }
+    </script>
+
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://simpliconvert.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Calculator Tools",
+      "item": "https://simpliconvert.com/calculator_tools/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "Fuel Cost Calculator",
+      "item": "https://simpliconvert.com/fuel_cost_calculator/"
+    }
+  ]
+}
+</script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #da3f0b;
+            --primary-hover: #b53409;
+            --primary-light: #fff5f2;
+            --bg: #f8fafc;
+            --text-dark: #0f172a;
+            --success: #16a34a;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text-dark);
+        }
+
+        .hero-card {
+            background: white;
+            border: 1px solid #f1f5f9;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background-color: var(--primary);
+        }
+
+        .prose a {
+            color: #da3f0b;
+            text-decoration: none; 
+        }
+        .prose a:hover {
+            text-decoration: underline; 
+        }
+
+        .animate-fade { animation: fadeIn 0.3s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+        .tool-card {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .tool-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 min-h-screen flex flex-col">
+    <div id="navbar"></div>
+
+    <section class="hero-white text-black py-2 md:py-10">
+        <div class="container mx-auto px-4 text-center">
+            <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-2">Fuel Cost Calculator: Estimate Your Trip Fuel Cost</h1>
+            <p class="text-base text-gray-700 leading-relaxed max-w-2xl mx-auto">
+                Planning a road trip? Use our free <strong>Fuel Cost Calculator</strong> to estimate your total gas expenses. 
+                Simply enter your distance, vehicle efficiency, and fuel price to budget your journey accurately.
+            </p>
+        </div>
+    </section>
+
+    <div id="root" class="w-full max-w-4xl mx-auto p-4 sm:p-6"></div>
+
+    <script type="text/babel">
+    const { useState, useEffect } = React;
+
+    const App = () => {
+      const [unit, setUnit] = useState('metric'); // metric or imperial
+      const [distance, setDistance] = useState('');
+      const [efficiency, setEfficiency] = useState('');
+      const [price, setPrice] = useState('');
+      const [result, setResult] = useState(null);
+      const [showBookmarkToast, setShowBookmarkToast] = useState(false);
+
+      const calculateFuel = () => {
+        const d = parseFloat(distance);
+        const e = parseFloat(efficiency);
+        const p = parseFloat(price);
+
+        if (isNaN(d) || isNaN(e) || isNaN(p) || d <= 0 || e <= 0 || p <= 0) {
+          setResult(null);
+          return;
+        }
+
+        let totalFuel, totalCost;
+
+        if (unit === 'metric') {
+          // Distance in km, Efficiency in L/100km, Price per Liter
+          totalFuel = (d / 100) * e;
+          totalCost = totalFuel * p;
+        } else {
+          // Distance in miles, Efficiency in MPG, Price per Gallon
+          totalFuel = d / e;
+          totalCost = totalFuel * p;
+        }
+
+        setResult({
+          fuel: totalFuel.toFixed(2),
+          cost: totalCost.toFixed(2)
+        });
+      };
+
+      useEffect(() => {
+        calculateFuel();
+      }, [distance, efficiency, price, unit]);
+
+      const handleClear = () => {
+        setDistance('');
+        setEfficiency('');
+        setPrice('');
+        setResult(null);
+      };
+
+      const handleBookmark = () => {
+        setShowBookmarkToast(true);
+        setTimeout(() => setShowBookmarkToast(false), 3000);
+      };
+
+      return (
+        <div className="bg-white rounded-[2rem] shadow-2xl overflow-hidden border border-slate-100">
+          <header className="bg-slate-50/50 border-b border-slate-100 p-6 md:p-8 flex flex-col md:flex-row justify-between items-center gap-6">
+            <div className="text-center md:text-left">
+              <h2 className="text-2xl font-black text-slate-800 tracking-tight flex items-center justify-center md:justify-start gap-3">
+                <span className="bg-[#da3f0b] text-white p-2 rounded-xl text-lg shadow-lg shadow-[#da3f0b30]">
+                  <i className="fas fa-gas-pump"></i>
+                </span>
+                Trip Expense Estimator
+              </h2>
+            </div>
+            
+            <div className="flex bg-slate-200 p-1 rounded-xl">
+              <button 
+                onClick={() => setUnit('metric')}
+                className={`px-4 py-2 rounded-lg text-xs font-bold transition-all ${unit === 'metric' ? 'bg-white text-slate-800 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
+              >
+                Metric (KM/L)
+              </button>
+              <button 
+                onClick={() => setUnit('imperial')}
+                className={`px-4 py-2 rounded-lg text-xs font-bold transition-all ${unit === 'imperial' ? 'bg-white text-slate-800 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
+              >
+                Imperial (Mi/Gal)
+              </button>
+            </div>
+          </header>
+
+          <main className="p-6 md:p-10">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+              <div className="space-y-2">
+                <label className="block text-xs font-black text-slate-400 uppercase tracking-widest ml-1" htmlFor="distance">
+                  Trip Distance ({unit === 'metric' ? 'km' : 'miles'})
+                </label>
+                <input
+                  id="distance"
+                  aria-label="Trip Distance"
+                  type="number"
+                  placeholder={unit === 'metric' ? "e.g. 450" : "e.g. 280"}
+                  className="w-full p-4 rounded-2xl border border-slate-200 focus:ring-4 focus:ring-[#da3f0b15] focus:border-[#da3f0b] outline-none font-bold text-lg transition-all"
+                  value={distance}
+                  onChange={(e) => setDistance(e.target.value)}
+                />
+              </div>
+
+              <div className="space-y-2">
+                <label className="block text-xs font-black text-slate-400 uppercase tracking-widest ml-1" htmlFor="efficiency">
+                  Fuel Efficiency ({unit === 'metric' ? 'L/100km' : 'MPG'})
+                </label>
+                <input
+                  id="efficiency"
+                  aria-label="Fuel Efficiency"
+                  type="number"
+                  placeholder={unit === 'metric' ? "e.g. 8.5" : "e.g. 25"}
+                  className="w-full p-4 rounded-2xl border border-slate-200 focus:ring-4 focus:ring-[#da3f0b15] focus:border-[#da3f0b] outline-none font-bold text-lg transition-all"
+                  value={efficiency}
+                  onChange={(e) => setEfficiency(e.target.value)}
+                />
+              </div>
+
+              <div className="space-y-2">
+                <label className="block text-xs font-black text-slate-400 uppercase tracking-widest ml-1" htmlFor="price">
+                  Fuel Price (per {unit === 'metric' ? 'Liter' : 'Gallon'})
+                </label>
+                <input
+                  id="price"
+                  aria-label="Fuel Price"
+                  type="number"
+                  placeholder="e.g. 1.45"
+                  className="w-full p-4 rounded-2xl border border-slate-200 focus:ring-4 focus:ring-[#da3f0b15] focus:border-[#da3f0b] outline-none font-bold text-lg transition-all"
+                  value={price}
+                  onChange={(e) => setPrice(e.target.value)}
+                />
+              </div>
+            </div>
+
+            {result ? (
+              <div className="bg-[#da3f0b08] border border-[#da3f0b20] rounded-[2rem] p-8 text-center animate-fade">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                  <div>
+                    <p className="text-xs font-black text-slate-400 uppercase tracking-widest mb-2">Estimated Total Cost</p>
+                    <p className="text-5xl font-black text-[#da3f0b]">${result.cost}</p>
+                  </div>
+                  <div className="md:border-l border-slate-200">
+                    <p className="text-xs font-black text-slate-400 uppercase tracking-widest mb-2">Fuel Required</p>
+                    <p className="text-4xl font-black text-slate-800">{result.fuel} <span className="text-lg text-slate-400">{unit === 'metric' ? 'Liters' : 'Gallons'}</span></p>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <div className="bg-slate-50 border border-dashed border-slate-200 rounded-[2rem] p-12 text-center">
+                <i className="fas fa-calculator text-slate-300 text-4xl mb-4"></i>
+                <p className="text-slate-500 font-medium">Enter your trip details above to see the estimated cost.</p>
+              </div>
+            )}
+
+            <div className="mt-8 flex justify-center">
+                <button 
+                  onClick={handleClear}
+                  className="text-xs font-bold text-slate-400 hover:text-red-500 transition-colors flex items-center gap-2"
+                  aria-label="Clear all inputs"
+                >
+                  <i className="fas fa-undo"></i> RESET CALCULATOR
+                </button>
+            </div>
+          </main>
+
+          <footer className="bg-slate-50 border-t border-slate-100 p-6 md:p-8">
+             <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+                 <div className="text-center md:text-left">
+                     <h4 className="text-sm font-bold text-slate-700 mb-1">Share this calculator</h4>
+                     <p className="text-xs text-slate-400">Help others plan their road trip budget.</p>
+                 </div>
+                 
+                 <div className="flex flex-wrap justify-center gap-3">
+                     <a href={`https://twitter.com/intent/tweet?text=Check out this Fuel Cost Calculator!&url=${encodeURIComponent(window.location.href)}`} target="_blank" className="w-10 h-10 rounded-full flex items-center justify-center text-white bg-[#1DA1F2] hover:-translate-y-1 transition-transform" aria-label="Share on Twitter"><i className="fab fa-twitter"></i></a>
+                     <a href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`} target="_blank" className="w-10 h-10 rounded-full flex items-center justify-center text-white bg-[#1877F2] hover:-translate-y-1 transition-transform" aria-label="Share on Facebook"><i className="fab fa-facebook-f"></i></a>
+                     <a href={`https://api.whatsapp.com/send?text=Fuel Cost Calculator: ${encodeURIComponent(window.location.href)}`} target="_blank" className="w-10 h-10 rounded-full flex items-center justify-center text-white bg-[#25D366] hover:-translate-y-1 transition-transform" aria-label="Share on WhatsApp"><i className="fab fa-whatsapp"></i></a>
+                 </div>
+
+                 <div className="relative">
+                     <button 
+                        onClick={handleBookmark}
+                        className="flex items-center gap-2 bg-white border border-slate-200 hover:border-[#da3f0b] hover:text-[#da3f0b] text-slate-600 px-4 py-2 rounded-lg text-sm font-bold transition-all shadow-sm active:scale-95"
+                        aria-label="Bookmark this page"
+                     >
+                        <i className="fas fa-bookmark"></i> Bookmark
+                     </button>
+                     {showBookmarkToast && (
+                         <div className="absolute bottom-full mb-3 left-1/2 -translate-x-1/2 bg-slate-800 text-white text-xs py-2 px-4 rounded-lg shadow-lg whitespace-nowrap animate-fade">
+                             Press <span className="font-bold text-[#da3f0b]">Ctrl + D</span> to bookmark
+                         </div>
+                     )}
+                 </div>
+             </div>
+          </footer>
+        </div>
+      );
+    };
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+    </script>
+
+    <p class="text-center mt-4 mb-10">
+        <a href="https://simpliconvert.com/calculator_tools/" class="text-primary font-medium hover:underline">
+            ← Back to All Calculator Tools
+        </a>
+    </p>
+
+    <section class="bg-white py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="prose prose-lg max-w-none prose-h2:text-gray-800 prose-p:text-gray-700">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">Fuel Cost Calculator – Plan Your Trip Budget</h2>
+                <p class="mb-6 leading-relaxed">
+                    Whether you're planning a cross-country adventure or a simple weekend getaway, understanding your <strong>trip fuel cost</strong> is essential for effective budgeting. Our <strong>Fuel Cost Calculator</strong> removes the guesswork by providing an instant estimate of how much you'll spend at the pump. By factoring in your vehicle's efficiency and current fuel prices, you can make informed decisions about your travel route and vehicle choice.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Why Use a Trip Fuel Estimator?</h2>
+                <p class="mb-6 leading-relaxed">
+                    Fuel prices are notoriously volatile, and vehicle efficiency varies greatly between a compact car and a heavy SUV. Using a dedicated calculator helps you avoid "sticker shock" during your journey. Just as freelancers use our <a href="https://simpliconvert.com/freelance_hourly_rate_calculator/" target="_blank">Freelance Hourly Rate Calculator</a> to manage their business finances, travelers use this tool to manage their personal travel expenses.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Key Features of Our Fuel Calculator</h2>
+                <ul class="list-disc pl-6 mb-6 space-y-2 text-gray-700">
+                    <li><strong>Dual Unit Support:</strong> Switch seamlessly between Metric (km, Liters) and Imperial (miles, Gallons) systems.</li>
+                    <li><strong>Real-Time Results:</strong> See your estimated cost and total fuel required update instantly as you type.</li>
+                    <li><strong>Global Compatibility:</strong> Works for any currency and any fuel type (Gasoline, Diesel, or Hybrid).</li>
+                    <li><strong>Mobile Friendly:</strong> Calculate your costs on the go, right from your smartphone at the gas station.</li>
+                    <li><strong>Privacy Focused:</strong> Your travel data stays in your browser; we don't track your routes or vehicle info.</li>
+                </ul>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">How to Calculate Fuel Costs</h2>
+                <p class="mb-6 leading-relaxed">
+                    Calculating your expenses is straightforward with these four steps:
+                </p>
+                <ol class="list-decimal pl-6 mb-6 space-y-2 text-gray-700">
+                    <li><strong>Select Units:</strong> Choose between Metric or Imperial based on your region.</li>
+                    <li><strong>Enter Distance:</strong> Input the total distance of your trip (one-way or round-trip).</li>
+                    <li><strong>Input Efficiency:</strong> Enter your car's average fuel consumption (found in your manual or dashboard).</li>
+                    <li><strong>Set Price:</strong> Enter the current price of fuel per liter or gallon in your area.</li>
+                </ol>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Pro Tips for Saving Fuel</h2>
+                <p class="mb-6 leading-relaxed">
+                    Once you've calculated your costs, you might want to lower them! Maintaining steady speeds, ensuring your tires are properly inflated, and reducing excess weight in the vehicle can significantly improve your MPG or L/100km. For those tracking health metrics alongside travel, our <a href="https://simpliconvert.com/bmi_calculator_for_men_women/" target="_blank">BMI Calculator</a> is another great tool to keep your lifestyle in check.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-center text-gray-900 mb-8">Fuel Calculator – Frequently Asked Questions</h2>
+            <div class="space-y-4">
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>How accurate is the fuel cost estimate?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">
+                            The estimate is mathematically accurate based on the numbers you provide. However, real-world fuel consumption can vary due to traffic, weather, road conditions, and driving style. It is always wise to budget an extra 10-15% for unexpected delays.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>Can I use this for electric vehicles (EVs)?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">
+                            While designed for liquid fuel, you can adapt it for EVs by treating "Liters" as "kWh" and "Price per Liter" as "Price per kWh." However, specialized EV calculators are usually better for handling charging speeds and battery degradation.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>What is L/100km?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">
+                            Liters per 100 kilometers (L/100km) is the standard metric for fuel consumption in Europe, Canada, and Australia. Unlike MPG, a lower number in L/100km means the vehicle is more fuel-efficient.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 pb-16">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-slate-200 pt-16">
+            <h2 class="text-2xl font-bold text-center text-slate-800 mb-10">Popular Tools on SimpliConvert</h2>
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+                <a href="/bmi_calculator_for_men_women/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center shrink-0 group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-weight text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">BMI Calc</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Check your body mass index.</p>
+                    </div>
+                </a>
+
+                <a href="/image_aspect_ratio_calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-purple-50 text-purple-600 flex items-center justify-center shrink-0 group-hover:bg-purple-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-expand text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Aspect Ratio</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Calculate image dimensions.</p>
+                    </div>
+                </a>
+
+                <a href="/freelance_hourly_rate_calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0 group-hover:bg-emerald-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-calculator text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Rate Calc</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Set your freelance pricing.</p>
+                    </div>
+                </a>
+
+                <a href="/password_generator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-slate-50 text-slate-700 flex items-center justify-center shrink-0 group-hover:bg-slate-800 group-hover:text-white transition-colors">
+                        <i class="fas fa-key text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Password Gen</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Secure random passwords.</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <div id="footer"></div>
+
+    <script>
+    function initializeHeaderScripts() {
+        const header = document.getElementById('header');
+        if (header) {
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 10) {
+                    header.classList.add('scrolled-effect');
+                } else {
+                    header.classList.remove('scrolled-effect');
+                }
+            });
+        }
+    }
+    
+    function initializeFooterScripts() {
+        const yearSpan = document.getElementById('current-year');
+        if(yearSpan) {
+            yearSpan.textContent = new Date().getFullYear();
+        }
+    }
+
+    async function loadComponent(url, elementId, callback) {
+        try {
+            const response = await fetch(url);
+            if (!response.ok) throw new Error('Status: ' + response.status);
+            const text = await response.text();
+            const element = document.getElementById(elementId);
+            if (element) {
+                element.innerHTML = text;
+                if (callback) callback();
+            }
+        } catch (error) {
+            console.error('Error loading component:', error);
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        loadComponent('/components/navbar.html', 'navbar', initializeHeaderScripts);
+        loadComponent('/components/footer.html', 'footer', initializeFooterScripts);
+        
+        const faqToggles = document.querySelectorAll('[data-faq-toggle]');
+        faqToggles.forEach(button => {
+            button.addEventListener('click', () => {
+                const answer = button.nextElementSibling;
+                const icon = button.querySelector('.faq-icon');
+                const isOpening = !answer.style.maxHeight;
+
+                faqToggles.forEach(other => {
+                    if (other !== button) {
+                        other.nextElementSibling.style.maxHeight = null;
+                        other.querySelector('.faq-icon').classList.remove('rotate-90');
+                        other.querySelector('.faq-icon').classList.add('-rotate-90');
+                    }
+                });
+
+                if (isOpening) {
+                    answer.style.maxHeight = answer.scrollHeight + "px";
+                    icon.classList.remove('-rotate-90');
+                    icon.classList.add('rotate-90');
+                } else {
+                    answer.style.maxHeight = null;
+                    icon.classList.remove('rotate-90');
+                    icon.classList.add('-rotate-90');
+                }
+            });
+        });
+    });
+    </script>
+</body>
+</html>

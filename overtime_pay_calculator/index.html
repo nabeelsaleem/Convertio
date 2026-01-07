@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Overtime Pay Calculator – Calculate Extra Hours & Wages | SimpliConvert</title>
+    <meta name="description" content="Calculate overtime pay accurately with this free Overtime Pay Calculator. Instantly determine your total wages based on hourly rates, regular hours, and overtime multipliers.">
+    <meta name="author" content="SimpliConvert">
+    <meta property="og:site_name" content="SimpliConvert">
+    <meta name="robots" content="index, follow">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://simpliconvert.com/overtime_pay_calculator/">
+    <meta property="og:title" content="Overtime Pay Calculator – Calculate Your Extra Wages">
+    <meta property="og:description" content="Easily calculate your overtime earnings. Supports time-and-a-half, double time, and custom multipliers for precise payroll estimates.">
+    <meta property="og:image" content="https://simpliconvert.com/images/overtime-calculator-og.jpg">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://simpliconvert.com/overtime_pay_calculator/">
+    <meta name="twitter:title" content="Overtime Pay Calculator – Accurate Wage Estimation">
+    <meta name="twitter:description" content="Free online tool to calculate overtime wages. Input your hourly rate and hours worked to see your total gross pay instantly.">
+    <meta name="twitter:image" content="https://simpliconvert.com/images/overtime-calculator-og.jpg">
+
+    <link rel="canonical" href="https://simpliconvert.com/overtime_pay_calculator/">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Overtime Pay Calculator",
+      "url": "https://simpliconvert.com/overtime_pay_calculator/",
+      "description": "A free online tool to calculate overtime pay and total gross wages based on hourly rates and multipliers.",
+      "applicationCategory": "FinanceApplication",
+      "operatingSystem": "Web Browser",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "SimpliConvert",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://simpliconvert.com/logo.png"
+        }
+      }
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [{
+        "@type": "Question",
+        "name": "What is the standard overtime multiplier?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "In many regions, the standard overtime rate is 'time and a half,' which is a 1.5x multiplier of your regular hourly wage for any hours worked beyond 40 in a week."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Does this calculator include tax deductions?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "No, this calculator determines your gross pay (total earnings before taxes and other deductions). Your net take-home pay will be lower depending on your local tax laws."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Can I calculate double-time pay?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. You can adjust the multiplier setting to 2.0 for double-time calculations or enter a custom rate if your employer offers a different overtime incentive."
+        }
+      }]
+    }
+    </script>
+
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://simpliconvert.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Finance Tools",
+      "item": "https://simpliconvert.com/finance_tools/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "Overtime Pay Calculator",
+      "item": "https://simpliconvert.com/overtime_pay_calculator/"
+    }
+  ]
+}
+</script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #da3f0b;
+            --primary-hover: #b53409;
+            --primary-light: #fff5f2;
+            --bg: #f8fafc;
+            --text-dark: #0f172a;
+            --success: #16a34a;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text-dark);
+        }
+
+        .hero-card {
+            background: white;
+            border: 1px solid #f1f5f9;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background-color: var(--primary);
+        }
+
+        .prose a {
+            color: #da3f0b;
+            text-decoration: none; 
+        }
+        .prose a:hover {
+            text-decoration: underline; 
+        }
+
+        .animate-fade { animation: fadeIn 0.3s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+        .tool-card {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .tool-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+        }
+
+        input[type="number"]::-webkit-inner-spin-button,
+        input[type="number"]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 min-h-screen flex flex-col">
+    <div id="navbar"></div>
+
+    <section class="hero-white text-black py-2 md:py-10">
+        <div class="container mx-auto px-4 text-center">
+            <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-2">Overtime Pay Calculator</h1>
+            <p class="text-base text-gray-700 leading-relaxed">
+                Use our free <strong>Overtime Pay Calculator</strong> to accurately estimate your extra wages. 
+                Calculate total earnings based on <strong>hourly rates, regular hours, and overtime multipliers</strong> 
+                instantly in your browser.
+            </p>
+        </div>
+    </section>
+
+    <div id="root" class="w-full max-w-6xl mx-auto p-4 sm:p-6"></div>
+
+    <script type="text/babel">
+    const { useState, useEffect } = React;
+
+    const App = () => {
+      const [hourlyRate, setHourlyRate] = useState(25);
+      const [regHours, setRegHours] = useState(40);
+      const [otHours, setOtHours] = useState(5);
+      const [multiplier, setMultiplier] = useState(1.5);
+      const [results, setResults] = useState({
+        regularPay: 0,
+        overtimePay: 0,
+        totalPay: 0,
+        otHourlyRate: 0
+      });
+      const [showBookmarkToast, setShowBookmarkToast] = useState(false);
+
+      useEffect(() => {
+        const rate = parseFloat(hourlyRate) || 0;
+        const rHours = parseFloat(regHours) || 0;
+        const oHours = parseFloat(otHours) || 0;
+        const mult = parseFloat(multiplier) || 0;
+
+        const otRate = rate * mult;
+        const rPay = rate * rHours;
+        const oPay = otRate * oHours;
+        const tPay = rPay + oPay;
+
+        setResults({
+          regularPay: rPay.toFixed(2),
+          overtimePay: oPay.toFixed(2),
+          totalPay: tPay.toFixed(2),
+          otHourlyRate: otRate.toFixed(2)
+        });
+      }, [hourlyRate, regHours, otHours, multiplier]);
+
+      const handleBookmark = () => {
+        setShowBookmarkToast(true);
+        setTimeout(() => setShowBookmarkToast(false), 3000);
+      };
+
+      return (
+        <div className="bg-white rounded-[2rem] shadow-2xl overflow-hidden border border-slate-100">
+          <header className="bg-slate-50/50 border-b border-slate-100 p-6 md:p-8">
+            <div className="flex flex-col md:flex-row justify-between items-center gap-6">
+              <div className="text-center md:text-left">
+                <h2 className="text-2xl font-black text-slate-800 tracking-tight flex items-center justify-center md:justify-start gap-3">
+                  <span className="bg-[#da3f0b] text-white p-2 rounded-xl text-lg shadow-lg shadow-[#da3f0b30]">
+                    <i className="fas fa-calculator"></i>
+                  </span>
+                  Wage & Overtime Estimator
+                </h2>
+              </div>
+              <div className="flex gap-2">
+                <button 
+                  onClick={() => {setHourlyRate(0); setRegHours(0); setOtHours(0);}}
+                  className="text-xs font-bold text-slate-400 hover:text-red-500 transition-colors px-4 py-2"
+                >
+                  <i className="fas fa-undo mr-1"></i> RESET
+                </button>
+              </div>
+            </div>
+          </header>
+
+          <main className="flex flex-col lg:flex-row">
+            {/* Input Panel */}
+            <div className="lg:w-1/2 p-6 md:p-10 border-r border-slate-100">
+              <div className="space-y-6">
+                <div>
+                  <label className="block text-xs font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Hourly Rate ($)</label>
+                  <div className="relative">
+                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 font-bold">$</span>
+                    <input 
+                      type="number" 
+                      aria-label="Hourly Rate"
+                      className="w-full pl-10 pr-4 py-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-4 focus:ring-[#da3f0b15] focus:border-[#da3f0b] outline-none font-bold text-lg transition-all"
+                      value={hourlyRate}
+                      onChange={(e) => setHourlyRate(e.target.value)}
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-xs font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Regular Hours</label>
+                    <input 
+                      type="number" 
+                      aria-label="Regular Hours"
+                      className="w-full px-4 py-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-4 focus:ring-[#da3f0b15] focus:border-[#da3f0b] outline-none font-bold text-lg transition-all"
+                      value={regHours}
+                      onChange={(e) => setRegHours(e.target.value)}
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Overtime Hours</label>
+                    <input 
+                      type="number" 
+                      aria-label="Overtime Hours"
+                      className="w-full px-4 py-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-4 focus:ring-[#da3f0b15] focus:border-[#da3f0b] outline-none font-bold text-lg transition-all"
+                      value={otHours}
+                      onChange={(e) => setOtHours(e.target.value)}
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Overtime Multiplier</label>
+                  <div className="flex gap-2">
+                    {[1.5, 2.0].map(val => (
+                      <button 
+                        key={val}
+                        onClick={() => setMultiplier(val)}
+                        className={`flex-1 py-3 rounded-xl font-bold text-sm transition-all border ${multiplier === val ? 'bg-[#da3f0b] text-white border-[#da3f0b]' : 'bg-white text-slate-600 border-slate-200 hover:border-[#da3f0b]'}`}
+                      >
+                        {val === 1.5 ? '1.5x (Time & Half)' : '2.0x (Double)'}
+                      </button>
+                    ))}
+                  </div>
+                  <div className="mt-3">
+                    <input 
+                      type="number" 
+                      step="0.1"
+                      aria-label="Custom Multiplier"
+                      placeholder="Custom Multiplier (e.g. 1.75)"
+                      className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-4 focus:ring-[#da3f0b15] focus:border-[#da3f0b] outline-none font-bold text-sm transition-all"
+                      value={multiplier}
+                      onChange={(e) => setMultiplier(e.target.value)}
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Output Panel */}
+            <div className="lg:w-1/2 p-6 md:p-10 bg-slate-50/50 flex flex-col justify-center">
+              <div className="bg-white p-8 rounded-[2rem] shadow-xl border border-slate-100 space-y-6">
+                <div className="flex justify-between items-center pb-4 border-b border-slate-50">
+                  <span className="text-sm font-bold text-slate-500">Regular Pay</span>
+                  <span className="text-xl font-black text-slate-800">${results.regularPay}</span>
+                </div>
+                <div className="flex justify-between items-center pb-4 border-b border-slate-50">
+                  <div className="flex flex-col">
+                    <span className="text-sm font-bold text-slate-500">Overtime Pay</span>
+                    <span className="text-[10px] font-bold text-[#da3f0b] uppercase tracking-tighter">Rate: ${results.otHourlyRate}/hr</span>
+                  </div>
+                  <span className="text-xl font-black text-[#da3f0b]">${results.overtimePay}</span>
+                </div>
+                <div className="pt-4 text-center">
+                  <span className="block text-xs font-black text-slate-400 uppercase tracking-widest mb-1">Total Gross Earnings</span>
+                  <div className="text-5xl font-black text-slate-900 tracking-tight">
+                    ${results.totalPay}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </main>
+
+          <footer className="bg-slate-50 border-t border-slate-100 p-6 md:p-8">
+             <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+                 <div className="text-center md:text-left">
+                     <h4 className="text-sm font-bold text-slate-700 mb-1">Share this calculator</h4>
+                     <p className="text-xs text-slate-400">Help others calculate their hard-earned wages.</p>
+                 </div>
+                 
+                 <div className="flex flex-wrap justify-center gap-3">
+                     <a href={`https://twitter.com/intent/tweet?text=Check out this Overtime Pay Calculator!&url=${encodeURIComponent(window.location.href)}`} target="_blank" className="w-10 h-10 rounded-full flex items-center justify-center text-white bg-[#1DA1F2] hover:-translate-y-1 transition-transform"><i className="fab fa-twitter"></i></a>
+                     <a href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`} target="_blank" className="w-10 h-10 rounded-full flex items-center justify-center text-white bg-[#1877F2] hover:-translate-y-1 transition-transform"><i className="fab fa-facebook-f"></i></a>
+                     <a href={`https://api.whatsapp.com/send?text=Overtime Calculator: ${encodeURIComponent(window.location.href)}`} target="_blank" className="w-10 h-10 rounded-full flex items-center justify-center text-white bg-[#25D366] hover:-translate-y-1 transition-transform"><i className="fab fa-whatsapp"></i></a>
+                 </div>
+
+                 <div className="relative">
+                     <button 
+                        onClick={handleBookmark}
+                        className="flex items-center gap-2 bg-white border border-slate-200 hover:border-[#da3f0b] hover:text-[#da3f0b] text-slate-600 px-4 py-2 rounded-lg text-sm font-bold transition-all shadow-sm active:scale-95"
+                     >
+                        <i className="fas fa-bookmark"></i> Bookmark
+                     </button>
+                     {showBookmarkToast && (
+                         <div className="absolute bottom-full mb-3 left-1/2 -translate-x-1/2 bg-slate-800 text-white text-xs py-2 px-4 rounded-lg shadow-lg whitespace-nowrap animate-fade">
+                             Press <span className="font-bold text-[#da3f0b]">Ctrl + D</span> to bookmark
+                         </div>
+                     )}
+                 </div>
+             </div>
+          </footer>
+        </div>
+      );
+    };
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+    </script>
+
+    <p class="text-center mt-4 mb-10">
+        <a href="https://simpliconvert.com/freelance_hourly_rate_calculator/" class="text-primary font-medium hover:underline">
+            ← Check out our Freelance Hourly Rate Calculator
+        </a>
+    </p>
+
+    <section class="bg-white py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="prose prose-lg max-w-none prose-h2:text-gray-800 prose-p:text-gray-700">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">Overtime Pay Calculator – Simplify Your Payroll Math</h2>
+                <p class="mb-6 leading-relaxed">
+                    Understanding your paycheck shouldn't require an advanced degree in finance. Our <strong>Overtime Pay Calculator</strong> is designed to give you a clear, immediate breakdown of your earnings. Whether you are a full-time employee picking up extra shifts or an employer verifying payroll, this tool provides the precision you need.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Why Accuracy Matters in Overtime Calculation</h2>
+                <p class="mb-6 leading-relaxed">
+                    Overtime laws vary, but the goal remains the same: ensuring workers are compensated fairly for their extra time. Using an <strong>overtime wage calculator</strong> helps prevent errors that could lead to underpayment. By inputting your specific hourly rate and the exact number of extra hours worked, you can see how "time and a half" or "double time" impacts your gross income.
+                </p>
+                <p class="mb-6 leading-relaxed">
+                    Just as our <a href="https://simpliconvert.com/gross_margin_calculator/" target="_blank">Gross Margin Calculator</a> helps businesses understand their profitability, this tool empowers individuals to understand their personal earning potential.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Key Features of Our Wage Calculator</h2>
+                <ul class="list-disc pl-6 mb-6 space-y-2 text-gray-700">
+                    <li><strong>Flexible Multipliers:</strong> Easily switch between 1.5x (standard), 2.0x (double time), or enter a custom rate.</li>
+                    <li><strong>Real-Time Results:</strong> See your regular pay, overtime pay, and total gross earnings update as you type.</li>
+                    <li><strong>Mobile Friendly:</strong> Check your earnings on the go, whether you're at the office or on the job site.</li>
+                    <li><strong>Privacy Focused:</strong> Your financial data is never stored. All calculations happen locally in your browser.</li>
+                </ul>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">How to Calculate Overtime Pay</h2>
+                <p class="mb-6 leading-relaxed">
+                    The formula for overtime is straightforward but easy to mess up manually:
+                </p>
+                <ol class="list-decimal pl-6 mb-6 space-y-2 text-gray-700">
+                    <li><strong>Regular Pay:</strong> Multiply your hourly rate by your regular hours (usually 40).</li>
+                    <li><strong>Overtime Rate:</strong> Multiply your hourly rate by the multiplier (e.g., $20 x 1.5 = $30).</li>
+                    <li><strong>Overtime Pay:</strong> Multiply the overtime rate by the number of overtime hours worked.</li>
+                    <li><strong>Total Pay:</strong> Add your regular pay and overtime pay together.</li>
+                </ol>
+                <p class="mb-6 leading-relaxed">
+                    If you are managing multiple income streams, you might also find our <a href="https://simpliconvert.com/paypal_fee_calculator/" target="_blank">PayPal Fee Calculator</a> useful for calculating net earnings from digital payments.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-center text-gray-900 mb-8">Overtime Pay – Frequently Asked Questions</h2>
+            <div class="space-y-4">
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-primary">
+                        <span>What is considered "Overtime"?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">
+                            In the United States, under the Fair Labor Standards Act (FLSA), overtime is generally any work performed beyond 40 hours in a single workweek. Some states, like California, also have daily overtime rules for work exceeding 8 hours in a day.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-primary">
+                        <span>How do I calculate a 1.5x rate?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">
+                            Simply multiply your base hourly wage by 1.5. For example, if you earn $20 per hour, your overtime rate is $20 × 1.5 = $30 per hour. Our calculator does this automatically for you.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-primary">
+                        <span>Is overtime pay taxed differently?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">
+                            Overtime pay is considered ordinary income by the IRS. However, because it increases your total earnings, it might be withheld at a higher rate on your paycheck if it pushes you into a higher tax bracket for that specific pay period.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 pb-16">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-slate-200 pt-16">
+            <h2 class="text-2xl font-bold text-center text-slate-800 mb-10">Popular Tools on SimpliConvert</h2>
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+                <a href="/freelance_hourly_rate_calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0 group-hover:bg-emerald-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-calculator text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Rate Calc</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Calculate freelance hourly rates.</p>
+                    </div>
+                </a>
+                <a href="/paypal_fee_calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center shrink-0 group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                        <i class="fab fa-paypal text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">PayPal Fee</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Calculate merchant fees easily.</p>
+                    </div>
+                </a>
+                <a href="/gross_margin_calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-orange-50 text-orange-600 flex items-center justify-center shrink-0 group-hover:bg-orange-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-chart-pie text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Gross Margin</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Calculate profit margins.</p>
+                    </div>
+                </a>
+                <a href="/bmi_calculator_for_men_women/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-red-50 text-red-600 flex items-center justify-center shrink-0 group-hover:bg-red-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-weight text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">BMI Calc</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Check your body mass index.</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <div id="footer"></div>
+
+    <script>
+    function initializeHeaderScripts() {
+        const header = document.getElementById('header');
+        if (header) {
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 10) {
+                    header.classList.add('scrolled-effect');
+                } else {
+                    header.classList.remove('scrolled-effect');
+                }
+            });
+        }
+    }
+    
+    function initializeFooterScripts() {
+        const yearSpan = document.getElementById('current-year');
+        if(yearSpan) {
+            yearSpan.textContent = new Date().getFullYear();
+        }
+    }
+
+    async function loadComponent(url, elementId, callback) {
+        try {
+            const response = await fetch(url);
+            if (!response.ok) throw new Error('Status: ' + response.status);
+            const text = await response.text();
+            const element = document.getElementById(elementId);
+            if (element) {
+                element.innerHTML = text;
+                if (callback) callback();
+            }
+        } catch (error) {
+            console.error('Error loading component:', error);
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        loadComponent('/components/navbar.html', 'navbar', initializeHeaderScripts);
+        loadComponent('/components/footer.html', 'footer', initializeFooterScripts);
+        
+        const faqToggles = document.querySelectorAll('[data-faq-toggle]');
+        faqToggles.forEach(button => {
+            button.addEventListener('click', () => {
+                const answer = button.nextElementSibling;
+                const icon = button.querySelector('.faq-icon');
+                const isOpening = !answer.style.maxHeight;
+
+                faqToggles.forEach(other => {
+                    if (other !== button) {
+                        other.nextElementSibling.style.maxHeight = null;
+                        other.querySelector('.faq-icon').classList.remove('rotate-90');
+                        other.querySelector('.faq-icon').classList.add('-rotate-90');
+                    }
+                });
+
+                if (isOpening) {
+                    answer.style.maxHeight = answer.scrollHeight + "px";
+                    icon.classList.remove('-rotate-90');
+                    icon.classList.add('rotate-90');
+                } else {
+                    answer.style.maxHeight = null;
+                    icon.classList.remove('rotate-90');
+                    icon.classList.add('-rotate-90');
+                }
+            });
+        });
+    });
+    </script>
+</body>
+</html>

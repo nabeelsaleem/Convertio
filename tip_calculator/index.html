@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Tip Calculator – Fast Restaurant Tip & Bill Splitter | SimpliConvert</title>
+    <meta name="description" content="Calculate tips and split bills easily using this Tip Calculator. Instantly figure out the tip amount and total per person for group dining and restaurants.">
+    <meta name="author" content="SimpliConvert">
+    <meta property="og:site_name" content="SimpliConvert">
+    <meta name="robots" content="index, follow">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://simpliconvert.com/tip_calculator/">
+    <meta property="og:title" content="Tip Calculator – Split Bills & Calculate Tips Instantly">
+    <meta property="og:description" content="The easiest way to calculate restaurant tips and split the bill among friends. Fast, free, and mobile-friendly.">
+    <meta property="og:image" content="https://simpliconvert.com/images/tip-calculator-og.jpg">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://simpliconvert.com/tip_calculator/">
+    <meta name="twitter:title" content="Tip Calculator – Restaurant Tip & Bill Splitter">
+    <meta name="twitter:description" content="Free online tool to calculate tips and split bills. Perfect for group dining and quick calculations.">
+    <meta name="twitter:image" content="https://simpliconvert.com/images/tip-calculator-og.jpg">
+
+    <link rel="canonical" href="https://simpliconvert.com/tip_calculator/">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Tip Calculator",
+      "url": "https://simpliconvert.com/tip_calculator/",
+      "description": "A free online tool to calculate tips and split bills among multiple people easily.",
+      "applicationCategory": "FinancialApplication",
+      "operatingSystem": "Web Browser",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "SimpliConvert",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://simpliconvert.com/logo.png"
+        }
+      }
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [{
+        "@type": "Question",
+        "name": "How do I calculate a 15% or 20% tip?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "To calculate a tip, multiply the total bill by the decimal version of the percentage (e.g., Bill x 0.15 for 15%). Our tool automates this for you instantly."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Can I split the bill with more than 10 people?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes! Our Tip Calculator allows you to enter any number of people to split the total bill and tip evenly among the group."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Is this tip calculator free to use?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Absolutely. Like all tools on SimpliConvert, the Tip Calculator is 100% free and works directly in your browser."
+        }
+      }]
+    }
+    </script>
+
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://simpliconvert.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Calculator Tools",
+      "item": "https://simpliconvert.com/calculator_tools/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "Tip Calculator",
+      "item": "https://simpliconvert.com/tip_calculator/"
+    }
+  ]
+}
+</script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #da3f0b;
+            --primary-hover: #b53409;
+            --primary-light: #fff5f2;
+            --bg: #f8fafc;
+            --text-dark: #0f172a;
+            --success: #16a34a;
+            --danger: #dc2626;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text-dark);
+        }
+
+        .hero-card {
+            background: white;
+            border: 1px solid #f1f5f9;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background-color: var(--primary);
+        }
+
+        .prose a {
+            color: #da3f0b;
+            text-decoration: none; 
+        }
+        .prose a:hover {
+            text-decoration: underline; 
+        }
+
+        .animate-fade { animation: fadeIn 0.3s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+        .tool-card {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .tool-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+        }
+
+        input[type=number]::-webkit-inner-spin-button, 
+        input[type=number]::-webkit-outer-spin-button { 
+            -webkit-appearance: none; 
+            margin: 0; 
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 min-h-screen flex flex-col">
+    <div id="navbar"></div>
+
+    <section class="hero-white text-black py-2 md:py-10">
+        <div class="container mx-auto px-4 text-center">
+            <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-2">Tip Calculator – Split Bill & Tip Instantly</h1>
+            <p class="text-base text-gray-700 leading-relaxed">
+                Use our free <strong>Tip Calculator</strong> to quickly figure out gratuity and split the bill among friends. 
+                Perfect for dining out, drinks, or delivery services. Fast, accurate, and easy to use on any device.
+            </p>
+        </div>
+    </section>
+
+    <div id="root" class="w-full max-w-4xl mx-auto p-4 sm:p-6"></div>
+
+    <script type="text/babel">
+    const { useState, useEffect } = React;
+
+    const App = () => {
+      const [bill, setBill] = useState('');
+      const [tipPercent, setTipPercent] = useState(15);
+      const [people, setPeople] = useState(1);
+      const [results, setResults] = useState({
+        tipAmount: 0,
+        totalBill: 0,
+        perPerson: 0
+      });
+
+      const commonTips = [10, 15, 18, 20, 25];
+
+      useEffect(() => {
+        const billVal = parseFloat(bill) || 0;
+        const peopleVal = parseInt(people) || 1;
+        const tipVal = parseFloat(tipPercent) || 0;
+
+        const calculatedTip = billVal * (tipVal / 100);
+        const total = billVal + calculatedTip;
+        const split = total / (peopleVal > 0 ? peopleVal : 1);
+
+        setResults({
+          tipAmount: calculatedTip.toFixed(2),
+          totalBill: total.toFixed(2),
+          perPerson: split.toFixed(2)
+        });
+      }, [bill, tipPercent, people]);
+
+      const handleReset = () => {
+        setBill('');
+        setTipPercent(15);
+        setPeople(1);
+      };
+
+      return (
+        <div className="bg-white rounded-[2rem] shadow-2xl overflow-hidden border border-slate-100">
+          <header className="bg-slate-50/50 border-b border-slate-100 p-6 md:p-8">
+            <h2 className="text-2xl font-black text-slate-800 tracking-tight flex items-center justify-center gap-3">
+              <span className="bg-[#da3f0b] text-white p-2 rounded-xl text-lg shadow-lg shadow-[#da3f0b30]">
+                <i className="fas fa-calculator"></i>
+              </span>
+              Bill & Tip Splitter
+            </h2>
+          </header>
+
+          <main className="flex flex-col md:flex-row">
+            {/* Input Section */}
+            <div className="md:w-1/2 p-6 md:p-10 border-r border-slate-100">
+              <div className="space-y-6">
+                <div>
+                  <label className="block text-xs font-black text-slate-400 uppercase tracking-widest mb-2">Bill Amount ($)</label>
+                  <div className="relative">
+                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 font-bold">$</span>
+                    <input 
+                      type="number"
+                      aria-label="Bill Amount"
+                      placeholder="0.00"
+                      value={bill}
+                      onChange={(e) => setBill(e.target.value)}
+                      className="w-full pl-8 pr-4 py-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-4 focus:ring-[#da3f0b15] focus:border-[#da3f0b] outline-none text-xl font-bold text-slate-700 transition-all"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-black text-slate-400 uppercase tracking-widest mb-2">Select Tip %</label>
+                  <div className="grid grid-cols-3 gap-3 mb-3">
+                    {commonTips.map(t => (
+                      <button
+                        key={t}
+                        onClick={() => setTipPercent(t)}
+                        aria-label={`Set tip to ${t} percent`}
+                        className={`py-3 rounded-xl font-bold transition-all ${tipPercent === t ? 'bg-[#da3f0b] text-white shadow-lg shadow-[#da3f0b30]' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}`}
+                      >
+                        {t}%
+                      </button>
+                    ))}
+                    <div className="relative">
+                      <input 
+                        type="number"
+                        placeholder="Custom"
+                        aria-label="Custom Tip Percentage"
+                        onChange={(e) => setTipPercent(e.target.value)}
+                        className="w-full py-3 px-2 bg-slate-50 border border-slate-200 rounded-xl focus:border-[#da3f0b] outline-none text-center font-bold text-slate-700"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-black text-slate-400 uppercase tracking-widest mb-2">Number of People</label>
+                  <div className="flex items-center gap-4">
+                    <button 
+                      onClick={() => setPeople(Math.max(1, people - 1))}
+                      aria-label="Decrease people count"
+                      className="w-12 h-12 rounded-xl bg-slate-100 text-slate-600 hover:bg-slate-200 flex items-center justify-center text-xl font-bold"
+                    >-</button>
+                    <input 
+                      type="number"
+                      aria-label="Number of people"
+                      value={people}
+                      onChange={(e) => setPeople(Math.max(1, parseInt(e.target.value) || 1))}
+                      className="flex-grow py-3 bg-slate-50 border border-slate-200 rounded-xl focus:border-[#da3f0b] outline-none text-center text-xl font-bold text-slate-700"
+                    />
+                    <button 
+                      onClick={() => setPeople(people + 1)}
+                      aria-label="Increase people count"
+                      className="w-12 h-12 rounded-xl bg-slate-100 text-slate-600 hover:bg-slate-200 flex items-center justify-center text-xl font-bold"
+                    >+</button>
+                  </div>
+                </div>
+
+                <button 
+                  onClick={handleReset}
+                  className="w-full py-3 text-xs font-black text-slate-400 hover:text-[#da3f0b] uppercase tracking-widest transition-colors"
+                >
+                  <i className="fas fa-undo mr-2"></i> Reset Calculator
+                </button>
+              </div>
+            </div>
+
+            {/* Results Section */}
+            <div className="md:w-1/2 p-6 md:p-10 bg-slate-800 flex flex-col justify-center gap-8">
+              <div className="flex justify-between items-center">
+                <div>
+                  <p className="text-white font-bold">Tip Amount</p>
+                  <p className="text-slate-400 text-xs">Total gratuity</p>
+                </div>
+                <p className="text-3xl font-black text-[#da3f0b]">${results.tipAmount}</p>
+              </div>
+
+              <div className="flex justify-between items-center">
+                <div>
+                  <p className="text-white font-bold">Total Bill</p>
+                  <p className="text-slate-400 text-xs">Bill + Tip</p>
+                </div>
+                <p className="text-3xl font-black text-white">${results.totalBill}</p>
+              </div>
+
+              <div className="bg-slate-700/50 p-6 rounded-3xl border border-slate-600 mt-4">
+                <div className="flex justify-between items-center">
+                  <div>
+                    <p className="text-[#da3f0b] font-black text-lg">Total Per Person</p>
+                    <p className="text-slate-400 text-xs">Individual share</p>
+                  </div>
+                  <p className="text-4xl font-black text-white">${results.perPerson}</p>
+                </div>
+              </div>
+            </div>
+          </main>
+
+          <footer className="bg-slate-50 border-t border-slate-100 p-6 md:p-8">
+             <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+                 <div className="text-center md:text-left">
+                     <h4 className="text-sm font-bold text-slate-700 mb-1">Share with friends</h4>
+                     <p className="text-xs text-slate-400">Make splitting the bill easier for everyone.</p>
+                 </div>
+                 
+                 <div className="flex flex-wrap justify-center gap-3">
+                     <a href={`https://twitter.com/intent/tweet?text=Check out this Tip Calculator!&url=${encodeURIComponent(window.location.href)}`} target="_blank" className="w-10 h-10 rounded-full flex items-center justify-center text-white bg-[#1DA1F2] hover:-translate-y-1 transition-transform"><i className="fab fa-twitter"></i></a>
+                     <a href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`} target="_blank" className="w-10 h-10 rounded-full flex items-center justify-center text-white bg-[#1877F2] hover:-translate-y-1 transition-transform"><i className="fab fa-facebook-f"></i></a>
+                     <a href={`https://api.whatsapp.com/send?text=Tip Calculator: ${encodeURIComponent(window.location.href)}`} target="_blank" className="w-10 h-10 rounded-full flex items-center justify-center text-white bg-[#25D366] hover:-translate-y-1 transition-transform"><i className="fab fa-whatsapp"></i></a>
+                 </div>
+             </div>
+          </footer>
+        </div>
+      );
+    };
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+    </script>
+
+    <p class="text-center mt-4 mb-10">
+        <a href="https://simpliconvert.com/calculator_tools/" class="text-primary font-medium hover:underline">
+            ← Back to All Calculator Tools
+        </a>
+    </p>
+
+    <section class="bg-white py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="prose prose-lg max-w-none prose-h2:text-gray-800 prose-p:text-gray-700">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">Tip Calculator – The Easiest Way to Split the Bill</h2>
+                <p class="mb-6 leading-relaxed">
+                    Dining out with friends should be about the conversation and the food, not the stressful math at the end of the meal. Our <strong>Tip Calculator</strong> is designed to remove the guesswork from restaurant bills. Whether you're grabbing a quick coffee or enjoying a five-course dinner, this tool helps you calculate the perfect gratuity and split the total cost among your group in seconds.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Why Use an Online Tip Calculator?</h2>
+                <p class="mb-6 leading-relaxed">
+                    While most people know the basics of tipping, calculating percentages on the fly can be tricky, especially when the bill isn't a round number. Just like using a <a href="https://simpliconvert.com/calculate_percentage_of_number/" target="_blank">Percentage Calculator</a> for financial tasks, using a dedicated tip tool ensures accuracy. It prevents overpaying or under-tipping and ensures that everyone in your party pays their fair share.
+                </p>
+                <p class="mb-6 leading-relaxed">
+                    This tool is particularly helpful for large groups. Instead of passing around a receipt and a phone calculator, you can simply enter the total, choose your percentage, and see exactly what each person owes.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Features of Our Bill Splitter</h2>
+                <ul class="list-disc pl-6 mb-6 space-y-2 text-gray-700">
+                    <li><strong>Instant Calculations:</strong> Results update in real-time as you change the bill amount or tip percentage.</li>
+                    <li><strong>Custom Tip Percentages:</strong> Choose from standard options like 15% or 20%, or enter your own custom amount.</li>
+                    <li><strong>Group Splitting:</strong> Easily divide the total bill (including tip) among any number of people.</li>
+                    <li><strong>Mobile Optimized:</strong> Designed to work perfectly on your smartphone while you're at the table.</li>
+                    <li><strong>Clean Interface:</strong> No clutter—just the inputs and results you need to get back to your day.</li>
+                </ul>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">How to Use the Tip Calculator</h2>
+                <ol class="list-decimal pl-6 mb-6 space-y-2 text-gray-700">
+                    <li><strong>Enter Bill:</strong> Type in the total amount shown on your receipt.</li>
+                    <li><strong>Select Tip:</strong> Click one of the common percentage buttons or type in a custom percentage.</li>
+                    <li><strong>Set People:</strong> Use the plus/minus buttons to indicate how many people are splitting the bill.</li>
+                    <li><strong>Get Results:</strong> View the total tip amount, the final bill, and the exact amount each person needs to contribute.</li>
+                </ol>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Tipping Etiquette and Tips</h2>
+                <p class="mb-6 leading-relaxed">
+                    Tipping standards vary by country and service type. In the United States, 15-20% is considered standard for sit-down restaurants. For excellent service, many diners choose 22% or 25%. If you are a freelancer calculating your own service costs, you might also find our <a href="https://simpliconvert.com/freelance_hourly_rate_calculator/" target="_blank">Freelance Hourly Rate Calculator</a> useful for setting your professional fees.
+                </p>
+                <p class="mb-6 leading-relaxed">
+                    Remember that for very large groups, some restaurants automatically include a "gratuity" or service charge on the bill. Always check your receipt before adding an additional tip!
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-center text-gray-900 mb-8">Tip Calculator – Frequently Asked Questions</h2>
+            <div class="space-y-4">
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-primary">
+                        <span>Should I tip on the pre-tax or post-tax total?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">
+                            Standard etiquette suggests tipping on the pre-tax amount of the bill. However, many people find it easier to tip on the final total. Our calculator works with whatever number you provide, so you can choose the method you prefer.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-primary">
+                        <span>What is a "good" tip percentage?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">
+                            In the US, 18% to 20% is the current standard for good service at sit-down restaurants. For exceptional service, 25% is common. For buffet-style or coffee shops, 10% or a flat couple of dollars is often sufficient.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-primary">
+                        <span>Does this tool store my financial data?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">
+                            No. All calculations are performed locally in your browser. We do not store your bill amounts, tip choices, or any other personal information. Your privacy is completely protected.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 pb-16">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-slate-200 pt-16">
+            <h2 class="text-2xl font-bold text-center text-slate-800 mb-10">Popular Tools on SimpliConvert</h2>
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+                <a href="/paypal_fee_calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center shrink-0 group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                        <i class="fab fa-paypal text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">PayPal Fee</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Calculate merchant fees easily.</p>
+                    </div>
+                </a>
+
+                <a href="/calculate_percentage_of_number/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-slate-50 text-slate-700 flex items-center justify-center shrink-0 group-hover:bg-slate-800 group-hover:text-white transition-colors">
+                        <i class="fas fa-percent text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Percentage Calc</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Quick math for any percentage.</p>
+                    </div>
+                </a>
+
+                <a href="/bmi_calculator_for_men_women/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-green-50 text-green-600 flex items-center justify-center shrink-0 group-hover:bg-green-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-weight text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">BMI Calc</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Check your body mass index.</p>
+                    </div>
+                </a>
+
+                <a href="/freelance_hourly_rate_calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0 group-hover:bg-emerald-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-calculator text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Rate Calc</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Calculate freelance hourly rates.</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <div id="footer"></div>
+
+    <script>
+    function initializeHeaderScripts() {
+        const header = document.getElementById('header');
+        if (header) {
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 10) {
+                    header.classList.add('scrolled-effect');
+                } else {
+                    header.classList.remove('scrolled-effect');
+                }
+            });
+        }
+    }
+    
+    function initializeFooterScripts() {
+        const yearSpan = document.getElementById('current-year');
+        if(yearSpan) {
+            yearSpan.textContent = new Date().getFullYear();
+        }
+    }
+
+    async function loadComponent(url, elementId, callback) {
+        try {
+            const response = await fetch(url);
+            if (!response.ok) throw new Error('Status: ' + response.status);
+            const text = await response.text();
+            const element = document.getElementById(elementId);
+            if (element) {
+                element.innerHTML = text;
+                if (callback) callback();
+            }
+        } catch (error) {
+            console.error('Error loading component:', error);
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        loadComponent('/components/navbar.html', 'navbar', initializeHeaderScripts);
+        loadComponent('/components/footer.html', 'footer', initializeFooterScripts);
+        
+        const faqToggles = document.querySelectorAll('[data-faq-toggle]');
+        faqToggles.forEach(button => {
+            button.addEventListener('click', () => {
+                const answer = button.nextElementSibling;
+                const icon = button.querySelector('.faq-icon');
+                const isOpening = !answer.style.maxHeight;
+
+                faqToggles.forEach(other => {
+                    if (other !== button) {
+                        other.nextElementSibling.style.maxHeight = null;
+                        other.querySelector('.faq-icon').classList.remove('rotate-90');
+                        other.querySelector('.faq-icon').classList.add('-rotate-90');
+                    }
+                });
+
+                if (isOpening) {
+                    answer.style.maxHeight = answer.scrollHeight + "px";
+                    icon.classList.remove('-rotate-90');
+                    icon.classList.add('rotate-90');
+                } else {
+                    answer.style.maxHeight = null;
+                    icon.classList.remove('rotate-90');
+                    icon.classList.add('-rotate-90');
+                }
+            });
+        });
+    });
+    </script>
+</body>
+</html>

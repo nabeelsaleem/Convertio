@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Currency Percentage Calculator – Calculate Forex & Price Changes | SimpliConvert</title>
+    <meta name="description" content="Easily calculate the percentage change between two currency prices. Perfect for forex traders and investors to track market movements and volatility instantly.">
+    <meta name="author" content="SimpliConvert">
+    <meta property="og:site_name" content="SimpliConvert">
+    <meta name="robots" content="index, follow">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://simpliconvert.com/currency_percentage_calculator/">
+    <meta property="og:title" content="Currency Percentage Calculator – Track Forex Price Changes">
+    <meta property="og:description" content="Calculate the exact percentage difference between currency pairs. A must-have tool for forex trading and financial analysis.">
+    <meta property="og:image" content="https://simpliconvert.com/images/currency-percentage-og.jpg">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://simpliconvert.com/currency_percentage_calculator/">
+    <meta name="twitter:title" content="Currency Percentage Calculator – Forex Change Tool">
+    <meta name="twitter:description" content="Free online tool to calculate currency price movements in percentage. Monitor market volatility with ease.">
+    <meta name="twitter:image" content="https://simpliconvert.com/images/currency-percentage-og.jpg">
+
+    <link rel="canonical" href="https://simpliconvert.com/currency_percentage_calculator/">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Currency Percentage Calculator",
+      "url": "https://simpliconvert.com/currency_percentage_calculator/",
+      "description": "A free online tool to calculate the percentage change between two currency prices, ideal for forex traders.",
+      "applicationCategory": "FinanceApplication",
+      "operatingSystem": "Web Browser",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "SimpliConvert",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://simpliconvert.com/logo.png"
+        }
+      }
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [{
+        "@type": "Question",
+        "name": "How is currency percentage change calculated?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The formula is: ((New Price - Old Price) / Old Price) * 100. This gives you the percentage increase or decrease relative to the starting price."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Why do forex traders use percentage change instead of just pips?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "While pips measure the smallest price move, percentage change provides a standardized way to compare volatility across different currency pairs or asset classes like stocks and crypto."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Is this calculator accurate for high-precision forex pairs?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. Our calculator supports multiple decimal places, ensuring accuracy for pairs like EUR/USD (5 decimals) or USD/JPY (3 decimals)."
+        }
+      }]
+    }
+    </script>
+
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://simpliconvert.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Calculator Tools",
+      "item": "https://simpliconvert.com/calculator_tools/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "Currency Percentage Calculator",
+      "item": "https://simpliconvert.com/currency_percentage_calculator/"
+    }
+  ]
+}
+</script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #da3f0b;
+            --primary-hover: #b53409;
+            --primary-light: #fff5f2;
+            --bg: #f8fafc;
+            --text-dark: #0f172a;
+            --success: #16a34a;
+            --danger: #dc2626;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text-dark);
+        }
+
+        .hero-card {
+            background: white;
+            border: 1px solid #f1f5f9;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background-color: var(--primary);
+        }
+
+        .prose a {
+            color: #da3f0b;
+            text-decoration: none; 
+        }
+        .prose a:hover {
+            text-decoration: underline; 
+        }
+
+        .animate-fade { animation: fadeIn 0.3s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+        .tool-card {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .tool-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 min-h-screen flex flex-col">
+    <div id="navbar"></div>
+
+    <section class="hero-white text-black py-2 md:py-10">
+        <div class="container mx-auto px-4 text-center">
+            <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-2">Currency Percentage Calculator</h1>
+            <p class="text-base text-gray-700 leading-relaxed">
+                Use our free <strong>Currency Percentage Calculator</strong> to instantly determine the percentage change between two forex prices. 
+                Perfect for tracking <strong>market volatility, price breakouts, and trading performance</strong> across all major and minor currency pairs.
+            </p>
+        </div>
+    </section>
+
+    <div id="root" class="w-full max-w-4xl mx-auto p-4 sm:p-6"></div>
+
+    <script type="text/babel">
+    const { useState, useEffect } = React;
+
+    const App = () => {
+      const [oldPrice, setOldPrice] = useState('');
+      const [newPrice, setNewPrice] = useState('');
+      const [result, setResult] = useState(null);
+      const [showBookmarkToast, setShowBookmarkToast] = useState(false);
+
+      const calculateChange = () => {
+        const oldVal = parseFloat(oldPrice);
+        const newVal = parseFloat(newPrice);
+
+        if (isNaN(oldVal) || isNaN(newVal) || oldVal === 0) {
+          setResult(null);
+          return;
+        }
+
+        const diff = newVal - oldVal;
+        const percentChange = (diff / oldVal) * 100;
+        
+        setResult({
+          percent: percentChange.toFixed(4),
+          absolute: diff.toFixed(5),
+          isPositive: diff >= 0
+        });
+      };
+
+      useEffect(() => {
+        calculateChange();
+      }, [oldPrice, newPrice]);
+
+      const handleClear = () => {
+        setOldPrice('');
+        setNewPrice('');
+        setResult(null);
+      };
+
+      const handleBookmark = () => {
+        setShowBookmarkToast(true);
+        setTimeout(() => setShowBookmarkToast(false), 3000);
+      };
+
+      return (
+        <div className="bg-white rounded-[2rem] shadow-2xl overflow-hidden border border-slate-100">
+          <header className="bg-slate-50/50 border-b border-slate-100 p-6 md:p-8 flex flex-col md:flex-row justify-between items-center gap-6">
+            <div className="text-center md:text-left">
+              <h2 className="text-2xl font-black text-slate-800 tracking-tight flex items-center justify-center md:justify-start gap-3">
+                <span className="bg-[#da3f0b] text-white p-2 rounded-xl text-lg shadow-lg shadow-[#da3f0b30]">
+                  <i className="fas fa-chart-line"></i>
+                </span>
+                Forex Price Change Tool
+              </h2>
+            </div>
+            <button onClick={handleClear} className="text-xs font-bold text-slate-400 hover:text-red-500 transition-colors uppercase tracking-widest">
+              <i className="fas fa-undo mr-1"></i> Reset Fields
+            </button>
+          </header>
+
+          <main className="p-6 md:p-10">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <div className="space-y-6">
+                <div>
+                  <label htmlFor="oldPrice" className="block text-xs font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Original Price (e.g. 1.0850)</label>
+                  <input
+                    id="oldPrice"
+                    type="number"
+                    step="any"
+                    aria-label="Original Currency Price"
+                    className="w-full p-4 rounded-2xl border border-slate-200 focus:ring-4 focus:ring-[#da3f0b15] focus:border-[#da3f0b] outline-none text-lg font-semibold bg-slate-50/30 transition-all"
+                    placeholder="0.0000"
+                    value={oldPrice}
+                    onChange={(e) => setOldPrice(e.target.value)}
+                  />
+                </div>
+                <div>
+                  <label htmlFor="newPrice" className="block text-xs font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">New Price (e.g. 1.0920)</label>
+                  <input
+                    id="newPrice"
+                    type="number"
+                    step="any"
+                    aria-label="New Currency Price"
+                    className="w-full p-4 rounded-2xl border border-slate-200 focus:ring-4 focus:ring-[#da3f0b15] focus:border-[#da3f0b] outline-none text-lg font-semibold bg-slate-50/30 transition-all"
+                    placeholder="0.0000"
+                    value={newPrice}
+                    onChange={(e) => setNewPrice(e.target.value)}
+                  />
+                </div>
+              </div>
+
+              <div className="flex flex-col justify-center items-center bg-slate-50 rounded-3xl p-8 border border-dashed border-slate-200">
+                {result ? (
+                  <div className="text-center animate-fade">
+                    <span className="text-xs font-black text-slate-400 uppercase tracking-widest block mb-2">Percentage Change</span>
+                    <div className={`text-5xl md:text-6xl font-black mb-4 ${result.isPositive ? 'text-emerald-600' : 'text-red-600'}`}>
+                      {result.isPositive ? '+' : ''}{result.percent}%
+                    </div>
+                    <div className="text-slate-500 font-medium">
+                      Difference: <span className="font-bold text-slate-700">{result.absolute}</span>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="text-center text-slate-400">
+                    <i className="fas fa-calculator text-4xl mb-4 opacity-20"></i>
+                    <p className="text-sm font-medium">Enter prices to see the percentage change</p>
+                  </div>
+                )}
+              </div>
+            </div>
+          </main>
+
+          <footer className="bg-slate-50 border-t border-slate-100 p-6 md:p-8">
+             <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+                 <div className="text-center md:text-left">
+                     <h4 className="text-sm font-bold text-slate-700 mb-1">Share this calculator</h4>
+                     <p className="text-xs text-slate-400">Help other traders calculate market moves.</p>
+                 </div>
+                 
+                 <div className="flex flex-wrap justify-center gap-3">
+                     <a href={`https://twitter.com/intent/tweet?text=Calculate currency percentage changes easily!&url=${encodeURIComponent(window.location.href)}`} target="_blank" className="w-10 h-10 rounded-full flex items-center justify-center text-white bg-[#1DA1F2] hover:-translate-y-1 transition-transform"><i className="fab fa-twitter"></i></a>
+                     <a href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`} target="_blank" className="w-10 h-10 rounded-full flex items-center justify-center text-white bg-[#1877F2] hover:-translate-y-1 transition-transform"><i className="fab fa-facebook-f"></i></a>
+                     <a href={`https://api.whatsapp.com/send?text=Currency Percentage Calculator: ${encodeURIComponent(window.location.href)}`} target="_blank" className="w-10 h-10 rounded-full flex items-center justify-center text-white bg-[#25D366] hover:-translate-y-1 transition-transform"><i className="fab fa-whatsapp"></i></a>
+                 </div>
+
+                 <div className="relative">
+                     <button 
+                        onClick={handleBookmark}
+                        className="flex items-center gap-2 bg-white border border-slate-200 hover:border-[#da3f0b] hover:text-[#da3f0b] text-slate-600 px-4 py-2 rounded-lg text-sm font-bold transition-all shadow-sm active:scale-95"
+                     >
+                        <i className="fas fa-bookmark"></i> Bookmark
+                     </button>
+                     {showBookmarkToast && (
+                         <div className="absolute bottom-full mb-3 left-1/2 -translate-x-1/2 bg-slate-800 text-white text-xs py-2 px-4 rounded-lg shadow-lg whitespace-nowrap animate-fade">
+                             Press <span className="font-bold text-[#da3f0b]">Ctrl + D</span> to bookmark
+                         </div>
+                     )}
+                 </div>
+             </div>
+          </footer>
+        </div>
+      );
+    };
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+    </script>
+
+    <p class="text-center mt-4 mb-10">
+        <a href="https://simpliconvert.com/calculator_tools/" class="text-primary font-medium hover:underline">
+            ← Back to All Calculator Tools
+        </a>
+    </p>
+
+    <section class="bg-white py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="prose prose-lg max-w-none prose-h2:text-gray-800 prose-p:text-gray-700">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">Currency Percentage Calculator – Analyze Forex Movements</h2>
+                <p class="mb-6 leading-relaxed">
+                    In the fast-paced world of foreign exchange (Forex), understanding price movements is crucial for success. Our <strong>Currency Percentage Calculator</strong> provides a simple yet powerful way to measure the relative change between two price points. Whether you are a day trader looking for a quick breakout calculation or a long-term investor monitoring currency trends, this tool delivers precise results in seconds.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Why Calculate Percentage Change in Forex?</h2>
+                <p class="mb-6 leading-relaxed">
+                    While many traders focus on "pips," the percentage change offers a broader perspective on market volatility. For example, a 50-pip move on EUR/USD represents a different percentage shift than a 50-pip move on USD/JPY. By using a <strong>forex calculator</strong> for percentages, you can normalize your data and compare the strength of different currency pairs more effectively.
+                </p>
+                <p class="mb-6 leading-relaxed">
+                    Just as our <a href="https://simpliconvert.com/calculate_percentage_of_number/" target="_blank">Calculate Percentage of Number</a> tool helps with general mathematics, this specialized currency tool is tailored for the high-precision requirements of financial markets.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Key Features of Our Currency Change Tool</h2>
+                <ul class="list-disc pl-6 mb-6 space-y-2 text-gray-700">
+                    <li><strong>High Precision:</strong> Supports up to 5 decimal places, essential for major forex pairs.</li>
+                    <li><strong>Real-Time Results:</strong> Calculations update instantly as you type your price data.</li>
+                    <li><strong>Visual Indicators:</strong> Clearly see if the change is an increase (green) or a decrease (red).</li>
+                    <li><strong>Mobile Optimized:</strong> Check your trade setups on the go with a fully responsive interface.</li>
+                    <li><strong>Privacy Focused:</strong> All calculations happen in your browser; your financial data is never stored.</li>
+                </ul>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">How to Use the Calculator</h2>
+                <ol class="list-decimal pl-6 mb-6 space-y-2 text-gray-700">
+                    <li><strong>Enter Original Price:</strong> Input the starting price of the currency pair (e.g., your entry price).</li>
+                    <li><strong>Enter New Price:</strong> Input the current or target price.</li>
+                    <li><strong>Analyze:</strong> The tool will instantly show the percentage difference and the absolute price gap.</li>
+                </ol>
+                <p class="mb-6 leading-relaxed">
+                    For those also involved in the digital asset space, you might find our <a href="https://simpliconvert.com/crypto_profit_calculator/" target="_blank">Crypto Profit Calculator</a> useful for managing your Bitcoin or Ethereum positions alongside your forex trades.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Final Thoughts</h2>
+                <p class="mb-6 leading-relaxed">
+                    Accurate data is the foundation of profitable trading. By using the <strong>Currency Percentage Calculator</strong>, you remove the guesswork from your analysis. It is an essential utility for anyone looking to maintain a professional edge in the global financial markets.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-center text-gray-900 mb-8">Currency Calculator – Frequently Asked Questions</h2>
+            <div class="space-y-4">
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-primary" aria-expanded="false">
+                        <span>Does this tool work for all currency pairs?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">
+                            Yes. Since the calculation is based on the mathematical relationship between two numbers, it works for any currency pair (Majors, Minors, or Exotics) as well as commodities like Gold (XAU/USD) or Oil.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-primary" aria-expanded="false">
+                        <span>What is the difference between a pip and a percentage?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">
+                            A pip (percentage in point) is the smallest unit of price change in a forex pair. A percentage change measures the total move relative to the starting price. Percentage is often more useful for risk management and comparing different assets.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-primary" aria-expanded="false">
+                        <span>Can I use this for stock prices too?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">
+                            Absolutely. While designed with forex precision in mind, the formula for percentage change is universal. You can use it to calculate the daily change of a stock, index, or any other financial instrument.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 pb-16">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-slate-200 pt-16">
+            <h2 class="text-2xl font-bold text-center text-slate-800 mb-10">Popular Tools on SimpliConvert</h2>
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+                <a href="/crypto_profit_calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-orange-50 text-orange-600 flex items-center justify-center shrink-0 group-hover:bg-orange-600 group-hover:text-white transition-colors">
+                        <i class="fab fa-bitcoin text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Crypto Profit</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Calculate your crypto gains.</p>
+                    </div>
+                </a>
+
+                <a href="/calculate_percentage_of_number/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center shrink-0 group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-percent text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Percent Calc</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Find percentages of any value.</p>
+                    </div>
+                </a>
+
+                <a href="/roas_calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0 group-hover:bg-emerald-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-ad text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">ROAS Calc</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Measure your ad spend return.</p>
+                    </div>
+                </a>
+
+                <a href="/gross_margin_calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-slate-50 text-slate-800 flex items-center justify-center shrink-0 group-hover:bg-slate-900 group-hover:text-white transition-colors">
+                        <i class="fas fa-file-invoice-dollar text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Margin Calc</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Calculate profit margins easily.</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <div id="footer"></div>
+
+    <script>
+    function initializeHeaderScripts() {
+        const header = document.getElementById('header');
+        if (header) {
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 10) {
+                    header.classList.add('scrolled-effect');
+                } else {
+                    header.classList.remove('scrolled-effect');
+                }
+            });
+        }
+    }
+    
+    function initializeFooterScripts() {
+        const yearSpan = document.getElementById('current-year');
+        if(yearSpan) {
+            yearSpan.textContent = new Date().getFullYear();
+        }
+    }
+
+    async function loadComponent(url, elementId, callback) {
+        try {
+            const response = await fetch(url);
+            if (!response.ok) throw new Error('Status: ' + response.status);
+            const text = await response.text();
+            const element = document.getElementById(elementId);
+            if (element) {
+                element.innerHTML = text;
+                if (callback) callback();
+            }
+        } catch (error) {
+            console.error('Error loading component:', error);
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        loadComponent('/components/navbar.html', 'navbar', initializeHeaderScripts);
+        loadComponent('/components/footer.html', 'footer', initializeFooterScripts);
+        
+        const faqToggles = document.querySelectorAll('[data-faq-toggle]');
+        faqToggles.forEach(button => {
+            button.addEventListener('click', () => {
+                const answer = button.nextElementSibling;
+                const icon = button.querySelector('.faq-icon');
+                const isOpening = !answer.style.maxHeight;
+
+                faqToggles.forEach(other => {
+                    if (other !== button) {
+                        other.nextElementSibling.style.maxHeight = null;
+                        other.querySelector('.faq-icon').classList.remove('rotate-90');
+                        other.querySelector('.faq-icon').classList.add('-rotate-90');
+                        other.setAttribute('aria-expanded', 'false');
+                    }
+                });
+
+                if (isOpening) {
+                    answer.style.maxHeight = answer.scrollHeight + "px";
+                    icon.classList.remove('-rotate-90');
+                    icon.classList.add('rotate-90');
+                    button.setAttribute('aria-expanded', 'true');
+                } else {
+                    answer.style.maxHeight = null;
+                    icon.classList.remove('rotate-90');
+                    icon.classList.add('-rotate-90');
+                    button.setAttribute('aria-expanded', 'false');
+                }
+            });
+        });
+    });
+    </script>
+</body>
+</html>
