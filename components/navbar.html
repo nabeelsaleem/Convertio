@@ -1,52 +1,55 @@
 <header id="header" class="sticky top-0 z-50 w-full transition-all duration-300 bg-white/95 backdrop-blur-sm shadow-sm border-b border-gray-100">
 
     <style>
-        /* --- Mega Menu Styles --- */
+        /* --- Mega Menu --- */
         #mega-menu {
             opacity: 0;
             visibility: hidden;
             transform: translateY(-10px);
             transition: opacity 0.2s ease-out, visibility 0.2s ease-out, transform 0.2s ease-out;
         }
-
-        .mega-menu-group:hover #mega-menu,
-        #mega-menu:hover {
+        .mega-menu-group:hover #mega-menu, #mega-menu:hover {
             opacity: 1;
             visibility: visible;
             transform: translateY(0);
         }
 
-        /* --- Search Dropdown Styles (FIXED) --- */
-        .search-results-dropdown {
+        /* --- Search Dropdown (DESKTOP) --- */
+        .desktop-results {
             position: absolute;
-            top: 100%; /* Push exactly below input */
+            top: 100%;
             left: 0;
             width: 100%;
             background-color: white;
             border: 1px solid #e5e7eb;
-            border-radius: 0.75rem;
-            box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.2); /* Stronger shadow */
+            border-radius: 0.5rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
             max-height: 400px;
             overflow-y: auto;
-            z-index: 9999; /* Maximum Z-Index to ensure it shows on top */
+            z-index: 100;
+            margin-top: 8px;
+        }
+
+        /* --- Search Dropdown (MOBILE) --- */
+        .mobile-results {
+            position: relative; /* Pushes content down */
+            width: 100%;
+            background-color: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 0.5rem;
+            max-height: 300px;
+            overflow-y: auto;
             margin-top: 8px;
         }
 
         /* Scrollbar Styling */
-        .search-results-dropdown::-webkit-scrollbar,
-        .mega-menu-scroll::-webkit-scrollbar { width: 6px; }
-        
-        .search-results-dropdown::-webkit-scrollbar-track,
-        .mega-menu-scroll::-webkit-scrollbar-track { background: #f1f1f1; }
-        
-        .search-results-dropdown::-webkit-scrollbar-thumb,
-        .mega-menu-scroll::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 3px; }
+        .desktop-results::-webkit-scrollbar, .mobile-results::-webkit-scrollbar, .mega-menu-scroll::-webkit-scrollbar { width: 6px; }
+        .desktop-results::-webkit-scrollbar-track, .mobile-results::-webkit-scrollbar-track, .mega-menu-scroll::-webkit-scrollbar-track { background: #f1f1f1; }
+        .desktop-results::-webkit-scrollbar-thumb, .mobile-results::-webkit-scrollbar-thumb, .mega-menu-scroll::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 3px; }
 
-        /* Tool Link Animations */
-        .tool-link { transition: all 0.2s ease; }
+        /* Animation */
         .tool-link:hover { transform: translateX(4px); background-color: #f3f4f6; }
-        .tool-icon { transition: transform 0.2s ease; }
-        .tool-link:hover .tool-icon { transform: scale(1.1); }
+        .tool-link { transition: all 0.2s ease; }
     </style>
 
     <div class="bg-gray-900 text-white px-4 py-2 text-center text-xs sm:text-sm font-medium relative z-[51]">
@@ -66,7 +69,7 @@
                 </a>
             </div>
 
-            <div class="hidden lg:block flex-1 max-w-md mx-auto relative z-50">
+            <div class="hidden lg:block relative w-[400px]">
                 <div class="relative group">
                     <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                         <svg class="h-5 w-5 text-gray-400 group-focus-within:text-primary transition-colors" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
@@ -77,20 +80,18 @@
                         type="text" 
                         id="desktop-search-input"
                         class="block w-full pl-10 pr-10 py-2.5 border border-gray-200 rounded-lg leading-5 bg-gray-50 text-gray-900 placeholder-gray-500 focus:outline-none focus:bg-white focus:ring-2 focus:ring-primary/20 focus:border-primary transition duration-150 ease-in-out sm:text-sm shadow-sm" 
-                        placeholder="Search tools (e.g. 'merge', 'tax')..."
+                        placeholder="Search 150+ tools..."
                         autocomplete="off"
                     >
                     <button id="desktop-search-clear" class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 hidden cursor-pointer focus:outline-none">
                         <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
                     </button>
                 </div>
-                
-                <div id="desktop-search-results" class="search-results-dropdown hidden">
-                    </div>
+                <div id="desktop-search-results" class="desktop-results hidden"></div>
             </div>
 
             <nav class="hidden lg:flex items-center space-x-1 h-full ml-auto shrink-0">
-                <a href="https://simpliconvert.com/all_tools/" class="px-4 py-2 text-sm font-semibold text-gray-700 hover:text-primary hover:bg-gray-50 rounded-lg transition-colors duration-200 whitespace-nowrap">Full Directory</a>
+                <a href="https://simpliconvert.com/all_tools/" class="px-4 py-2 text-sm font-semibold text-gray-700 hover:text-primary hover:bg-gray-50 rounded-lg transition-colors duration-200 whitespace-nowrap">Directory</a>
                 <a href="/blog/" class="px-4 py-2 text-sm font-semibold text-gray-700 hover:text-primary hover:bg-gray-50 rounded-lg transition-colors duration-200 whitespace-nowrap">Blog</a>
                 
                 <div class="mega-menu-group static h-full flex items-center">
@@ -200,7 +201,7 @@
                     placeholder="Search tools..."
                     autocomplete="off"
                 >
-                <div id="mobile-search-results" class="search-results-dropdown hidden relative mt-2 w-full shadow-none border border-gray-200">
+                <div id="mobile-search-results" class="mobile-results hidden">
                     </div>
             </div>
 
@@ -212,7 +213,7 @@
 </header>
 
 <script>
-    // --- 1. The FULL Master Tool Database (including new tools) ---
+    // --- 1. The FULL Master Tool Database ---
     const allTools = [
         { name: "Base64 Encoder Decoder", url: "https://simpliconvert.com/base64_encoder_decoder_online/" },
         { name: "JSON Formatter & Validator", url: "https://simpliconvert.com/json_formatter_and_validator/" },
@@ -344,11 +345,12 @@
                 return;
             }
 
+            // Filter tools (match name or URL keywords)
             const filteredTools = allTools.filter(tool => {
                 const searchableUrl = tool.url.replace(/[-_]/g, ' ');
                 return tool.name.toLowerCase().includes(query) || 
                        searchableUrl.toLowerCase().includes(query);
-            }).slice(0, 10);
+            }).slice(0, 10); // Limit results for speed
 
             if (filteredTools.length > 0) {
                 const html = filteredTools.map(tool => `
@@ -386,6 +388,7 @@
             });
         }
 
+        // Close search when clicking outside
         document.addEventListener('click', function(e) {
             if (!input.contains(e.target) && !results.contains(e.target) && (!clearBtn || !clearBtn.contains(e.target))) {
                 results.classList.add('hidden');
@@ -397,6 +400,7 @@
         setupSearch('desktop-search-input', 'desktop-search-results', 'desktop-search-clear');
         setupSearch('mobile-search-input', 'mobile-search-results', null);
 
+        // Mobile Menu Toggle
         const btn = document.getElementById('mobile-menu-button');
         const menu = document.getElementById('mobile-menu');
         const iconOpen = document.getElementById('mobile-menu-icon-open');
