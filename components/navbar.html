@@ -47,6 +47,35 @@
             background: #d1d5db;
             border-radius: 3px;
         }
+        /* Search Results Styling */
+#search-results, #mobile-search-results {
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+}
+
+.search-result-item {
+    border-bottom: 1px solid #f3f4f6;
+}
+
+.search-result-item:last-child {
+    border-bottom: none;
+}
+
+.search-result-item:hover .text-gray-900 {
+    color: #4f46e5; /* primary color */
+}
+
+/* Highlight matching text */
+.search-result-item mark {
+    background-color: #fef3c7; /* yellow-100 */
+    color: inherit;
+    padding: 0;
+}
+
+/* Mobile menu spacing adjustment */
+#mobile-menu > div {
+    padding-top: 0.5rem;
+}
     </style>
 
     <div class="bg-gray-900 text-white px-4 py-2 text-center text-xs sm:text-sm font-medium relative z-[51]">
@@ -209,7 +238,201 @@
             <a href="https://simpliconvert.com/contact/" class="block px-3 py-3 rounded-md text-base font-medium text-gray-700 hover:text-primary hover:bg-gray-50">Contact</a>
         </div>
     </div>
+
+    <script>
+// ===========================
+// TOOLS SEARCH WITH JSON LOADING & CACHING
+// ===========================
+class ToolSearch {
+    constructor(searchInputId, resultsContainerId, resultsListId, noResultsId) {
+        this.searchInput = document.getElementById(searchInputId);
+        this.resultsContainer = document.getElementById(resultsContainerId);
+        this.resultsList = document.getElementById(resultsListId);
+        this.noResults = document.getElementById(noResultsId);
+        
+        this.tools = null; // Will store tools data
+        this.isLoading = false;
+        
+        this.init();
+    }
+    
+    init() {
+        // Load data on first interaction OR on page load (choose one)
+        this.searchInput.addEventListener('focus', () => this.ensureDataLoaded(), { once: true });
+        // OR uncomment for background loading on page load:
+        // this.ensureDataLoaded();
+        
+        this.searchInput.addEventListener('input', (e) => this.handleSearch(e.target.value));
+        
+        // Hide results when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!this.searchInput.contains(e.target) && !this.resultsContainer.contains(e.target)) {
+                this.hideResults();
+            }
+        });
+        
+        // Keyboard navigation
+        this.searchInput.addEventListener('keydown', (e) => this.handleKeydown(e));
+    }
+    
+    async ensureDataLoaded() {
+        if (this.tools !== null || this.isLoading) return;
+        
+        this.isLoading = true;
+        this.searchInput.placeholder = 'Loading tools...';
+        
+        try {
+            // Try to load from session cache first (faster than localStorage)
+            const cachedTools = sessionStorage.getItem('simpliconvert-tools');
+            if (cachedTools) {
+                this.tools = JSON.parse(cachedTools);
+            } else {
+                // Fetch from JSON file with aggressive caching
+                const response = await fetch('/tools.json', {
+                    method: 'GET',
+                    cache: 'force-cache', // Use browser HTTP cache
+                    headers: {
+                        'Accept': 'application/json',
+                    }
+                });
+                
+                if (!response.ok) throw new Error('Failed to load tools');
+                
+                const data = await response.json();
+                this.tools = data.tools;
+                
+                // Cache in sessionStorage for this browsing session
+                sessionStorage.setItem('simpliconvert-tools', JSON.stringify(this.tools));
+            }
+            
+            this.searchInput.placeholder = 'Search 500+ tools...';
+        } catch (error) {
+            console.error('Error loading tools:', error);
+            this.searchInput.placeholder = 'Search unavailable';
+            this.searchInput.disabled = true;
+        } finally {
+            this.isLoading = false;
+        }
+    }
+    
+    handleSearch(query) {
+        const trimmedQuery = query.trim();
+        
+        if (!trimmedQuery) {
+            this.hideResults();
+            return;
+        }
+        
+        if (this.tools === null) {
+            // Show loading state while data loads
+            this.showLoading();
+            return;
+        }
+        
+        const results = this.searchTools(trimmedQuery);
+        this.displayResults(results);
+    }
+    
+    searchTools(query) {
+        const searchTerm = query.toLowerCase();
+        return this.tools.filter(tool => 
+            tool.name.toLowerCase().includes(searchTerm) ||
+            tool.category.toLowerCase().includes(searchTerm) ||
+            (tool.keywords && tool.keywords.toLowerCase().includes(searchTerm))
+        ).slice(0, 15); // Limit results
+    }
+    
+    displayResults(results) {
+        this.resultsList.innerHTML = '';
+        
+        if (results.length === 0) {
+            this.noResults.classList.remove('hidden');
+            this.resultsContainer.classList.remove('hidden');
+            return;
+        }
+        
+        this.noResults.classList.add('hidden');
+        
+        results.forEach((tool, index) => {
+            const resultItem = document.createElement('a');
+            resultItem.href = tool.url;
+            resultItem.className = `search-result-item flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-colors duration-150 ${index === 0 ? 'bg-primary/5' : ''}`;
+            resultItem.innerHTML = `
+                <div class="flex-shrink-0">${tool.icon}</div>
+                <div class="flex-1 min-w-0">
+                    <div class="text-sm font-medium text-gray-900 truncate">${this.highlightMatch(tool.name)}</div>
+                    <div class="text-xs text-gray-500">${tool.category}</div>
+                </div>
+            `;
+            
+            resultItem.addEventListener('click', () => this.hideResults());
+            this.resultsList.appendChild(resultItem);
+        });
+        
+        this.showResults();
+    }
+    
+    highlightMatch(text) {
+        const query = this.searchInput.value.trim();
+        if (!query) return text;
+        const regex = new RegExp(`(${query})`, 'gi');
+        return text.replace(regex, '<mark>$1</mark>');
+    }
+    
+    showLoading() {
+        this.resultsList.innerHTML = '<div class="p-4 text-center text-sm text-gray-500">Loading tools...</div>';
+        this.noResults.classList.add('hidden');
+        this.resultsContainer.classList.remove('hidden');
+    }
+    
+    showResults() {
+        this.resultsContainer.classList.remove('hidden');
+    }
+    
+    hideResults() {
+        this.resultsContainer.classList.add('hidden');
+    }
+    
+    handleKeydown(e) {
+        const items = this.resultsList.querySelectorAll('.search-result-item');
+        const currentIndex = Array.from(items).findIndex(item => item.classList.contains('bg-primary/5'));
+        
+        switch (e.key) {
+            case 'ArrowDown':
+                e.preventDefault();
+                if (currentIndex < items.length - 1) {
+                    if (currentIndex >= 0) items[currentIndex].classList.remove('bg-primary/5');
+                    items[currentIndex + 1].classList.add('bg-primary/5');
+                }
+                break;
+            case 'ArrowUp':
+                e.preventDefault();
+                if (currentIndex > 0) {
+                    items[currentIndex].classList.remove('bg-primary/5');
+                    items[currentIndex - 1].classList.add('bg-primary/5');
+                }
+                break;
+            case 'Enter':
+                e.preventDefault();
+                const selected = this.resultsList.querySelector('.bg-primary/5');
+                if (selected) selected.click();
+                break;
+            case 'Escape':
+                this.hideResults();
+                this.searchInput.blur();
+                break;
+        }
+    }
+}
+
+// Initialize both search instances
+document.addEventListener('DOMContentLoaded', () => {
+    new ToolSearch('tool-search', 'search-results', 'search-results-list', 'search-no-results');
+    new ToolSearch('mobile-tool-search', 'mobile-search-results', 'mobile-search-results-list', 'mobile-search-no-results');
+});
+</script>
 </header>
+
 
 
 
