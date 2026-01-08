@@ -1,3 +1,7 @@
+
+console.log('Search script loaded');
+
+
 let tools = [];
 
 // Load tools list
