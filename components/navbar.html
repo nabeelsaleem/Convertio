@@ -1,7 +1,7 @@
 <header id="header" class="sticky top-0 z-50 w-full transition-all duration-300 bg-white/95 backdrop-blur-sm shadow-sm border-b border-gray-100">
 
     <style>
-        /* Mega Menu Styles */
+        /* --- Mega Menu Styles --- */
         #mega-menu {
             opacity: 0;
             visibility: hidden;
@@ -16,25 +16,38 @@
             transform: translateY(0);
         }
 
+        /* --- Search Bar Styles --- */
+        /* Ensure results sit ON TOP of everything */
+        .search-results-dropdown {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 100%;
+            background-color: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 0.75rem; /* rounded-xl */
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            max-height: 400px;
+            overflow-y: auto;
+            z-index: 100; /* Super high z-index to ensure visibility */
+            margin-top: 0.5rem;
+        }
+
+        /* Scrollbar Styling */
+        .search-results-dropdown::-webkit-scrollbar,
+        .mega-menu-scroll::-webkit-scrollbar { width: 6px; }
+        
+        .search-results-dropdown::-webkit-scrollbar-track,
+        .mega-menu-scroll::-webkit-scrollbar-track { background: #f1f1f1; }
+        
+        .search-results-dropdown::-webkit-scrollbar-thumb,
+        .mega-menu-scroll::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 3px; }
+
         /* Tool Link Animations */
         .tool-link { transition: all 0.2s ease; }
         .tool-link:hover { transform: translateX(4px); background-color: #f3f4f6; }
         .tool-icon { transition: transform 0.2s ease; }
         .tool-link:hover .tool-icon { transform: scale(1.1); }
-        
-        /* Search Results Dropdown */
-        .search-results {
-            max-height: 400px;
-            overflow-y: auto;
-            scrollbar-width: thin;
-        }
-        .search-results::-webkit-scrollbar { width: 6px; }
-        .search-results::-webkit-scrollbar-track { background: #f1f1f1; }
-        .search-results::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 3px; }
-
-        .mega-menu-scroll::-webkit-scrollbar { width: 6px; }
-        .mega-menu-scroll::-webkit-scrollbar-track { background: #f1f1f1; }
-        .mega-menu-scroll::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 3px; }
     </style>
 
     <div class="bg-gray-900 text-white px-4 py-2 text-center text-xs sm:text-sm font-medium relative z-[51]">
@@ -54,45 +67,45 @@
                 </a>
             </div>
 
-            <div class="hidden lg:block flex-1 max-w-xl mx-auto relative group">
-                <div class="relative">
+            <div class="hidden lg:block flex-1 max-w-lg mx-auto relative z-50">
+                <div class="relative group">
                     <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                        <svg class="h-5 w-5 text-gray-400 group-focus-within:text-primary transition-colors" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
                             <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
                         </svg>
                     </div>
                     <input 
                         type="text" 
                         id="desktop-search-input"
-                        class="block w-full pl-10 pr-3 py-2.5 border border-gray-200 rounded-lg leading-5 bg-gray-50 text-gray-900 placeholder-gray-500 focus:outline-none focus:bg-white focus:ring-2 focus:ring-primary/20 focus:border-primary transition duration-150 ease-in-out sm:text-sm" 
-                        placeholder="Search for tools (e.g. 'pdf', 'bmi', 'compress')..."
+                        class="block w-full pl-10 pr-10 py-2.5 border border-gray-200 rounded-lg leading-5 bg-gray-50 text-gray-900 placeholder-gray-500 focus:outline-none focus:bg-white focus:ring-2 focus:ring-primary/20 focus:border-primary transition duration-150 ease-in-out sm:text-sm shadow-sm" 
+                        placeholder="Search 150+ tools (e.g. 'pdf', 'resize')..."
                         autocomplete="off"
                     >
-                    <button id="desktop-search-clear" class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 hidden cursor-pointer">
+                    <button id="desktop-search-clear" class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 hidden cursor-pointer focus:outline-none">
                         <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
                     </button>
                 </div>
                 
-                <div id="desktop-search-results" class="absolute top-full left-0 w-full mt-2 bg-white rounded-xl shadow-xl border border-gray-100 overflow-hidden hidden search-results z-50">
+                <div id="desktop-search-results" class="search-results-dropdown hidden">
                     </div>
             </div>
 
-            <nav class="hidden lg:flex items-center space-x-2 h-full ml-auto">
-                <a href="https://simpliconvert.com/all_tools/" class="px-4 py-2 text-sm font-semibold text-gray-700 hover:text-primary hover:bg-gray-50 rounded-lg transition-colors duration-200">Full Directory</a>
+            <nav class="hidden lg:flex items-center space-x-1 h-full ml-auto shrink-0">
+                <a href="https://simpliconvert.com/all_tools/" class="px-4 py-2 text-sm font-semibold text-gray-700 hover:text-primary hover:bg-gray-50 rounded-lg transition-colors duration-200 whitespace-nowrap">Full Directory</a>
+                <a href="/blog/" class="px-4 py-2 text-sm font-semibold text-gray-700 hover:text-primary hover:bg-gray-50 rounded-lg transition-colors duration-200 whitespace-nowrap">Blog</a>
                 
                 <div class="mega-menu-group static h-full flex items-center">
-                    <button id="mega-menu-trigger" class="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-semibold text-gray-700 hover:text-primary hover:bg-gray-50 rounded-lg transition-all duration-200 focus:outline-none ring-offset-2 focus:ring-2 ring-primary/20">
-                        Tools Categories
+                    <button id="mega-menu-trigger" class="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-semibold text-gray-700 hover:text-primary hover:bg-gray-50 rounded-lg transition-all duration-200 focus:outline-none ring-offset-2 focus:ring-2 ring-primary/20 whitespace-nowrap">
+                        Categories
                         <svg class="h-4 w-4 text-gray-400 transition-transform duration-200 group-hover:rotate-180" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
                             <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
                         </svg>
                     </button>
 
-                    <div id="mega-menu" class="absolute top-full left-0 w-full mt-0 bg-white rounded-b-xl shadow-2xl border-x border-b border-gray-100 overflow-hidden z-50">
+                    <div id="mega-menu" class="absolute top-full left-0 w-full mt-0 bg-white rounded-b-xl shadow-2xl border-x border-b border-gray-100 overflow-hidden z-40">
                         <div class="flex flex-col h-full max-h-[80vh]">
                             <div class="flex-1 overflow-y-auto mega-menu-scroll p-6 lg:p-8">
                                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-                                    
                                     <div class="space-y-4">
                                         <div class="flex items-center gap-2 pb-2 border-b border-gray-100">
                                             <svg class="w-5 h-5 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" /></svg>
@@ -104,11 +117,9 @@
                                             <li><a href="https://simpliconvert.com/compress_pdf/" class="tool-link block px-3 py-2 rounded-md text-sm text-gray-600 hover:text-gray-900">Compress PDF</a></li>
                                             <li><a href="https://simpliconvert.com/pdf_to_word/" class="tool-link block px-3 py-2 rounded-md text-sm text-gray-600 hover:text-gray-900">PDF to Word</a></li>
                                             <li><a href="https://simpliconvert.com/pdf_to_images/" class="tool-link block px-3 py-2 rounded-md text-sm text-gray-600 hover:text-gray-900">PDF to Images</a></li>
-                                            <li><a href="https://simpliconvert.com/jpg_to_pdf/" class="tool-link block px-3 py-2 rounded-md text-sm text-gray-600 hover:text-gray-900">JPG to PDF</a></li>
                                             <li><a href="https://simpliconvert.com/sign_pdf/" class="tool-link block px-3 py-2 rounded-md text-sm text-gray-600 hover:text-gray-900">Sign PDF</a></li>
                                         </ul>
                                     </div>
-
                                     <div class="space-y-4">
                                         <div class="flex items-center gap-2 pb-2 border-b border-gray-100">
                                             <svg class="w-5 h-5 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
@@ -119,47 +130,37 @@
                                             <li><a href="https://simpliconvert.com/image_format_converter/" class="tool-link block px-3 py-2 rounded-md text-sm text-gray-600 hover:text-gray-900">Format Converter</a></li>
                                             <li><a href="https://simpliconvert.com/png_to_gif/" class="tool-link block px-3 py-2 rounded-md text-sm text-gray-600 hover:text-gray-900">PNG to GIF</a></li>
                                             <li><a href="https://simpliconvert.com/images_to_pdf/" class="tool-link block px-3 py-2 rounded-md text-sm text-gray-600 hover:text-gray-900">Images to PDF</a></li>
-                                            <li><a href="https://simpliconvert.com/image_aspect_ratio_calculator/" class="tool-link block px-3 py-2 rounded-md text-sm text-gray-600 hover:text-gray-900">Aspect Ratio Calc</a></li>
-                                            <li><a href="https://simpliconvert.com/image_to_base64_converter/" class="tool-link block px-3 py-2 rounded-md text-sm text-gray-600 hover:text-gray-900">Image to Base64</a></li>
                                             <li><a href="https://simpliconvert.com/free_favicon_generator_online/" class="tool-link block px-3 py-2 rounded-md text-sm text-gray-600 hover:text-gray-900">Favicon Generator</a></li>
                                         </ul>
                                     </div>
-
                                     <div class="space-y-4">
                                         <div class="flex items-center gap-2 pb-2 border-b border-gray-100">
                                             <svg class="w-5 h-5 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" /></svg>
-                                            <h3 class="font-bold text-gray-900">Developer & Web</h3>
+                                            <h3 class="font-bold text-gray-900">Developer</h3>
                                         </div>
                                         <ul class="space-y-1">
                                             <li><a href="https://simpliconvert.com/json_formatter_and_validator/" class="tool-link block px-3 py-2 rounded-md text-sm text-gray-600 hover:text-gray-900">JSON Formatter</a></li>
                                             <li><a href="https://simpliconvert.com/base64_encoder_decoder_online/" class="tool-link block px-3 py-2 rounded-md text-sm text-gray-600 hover:text-gray-900">Base64 Encoder</a></li>
-                                            <li><a href="https://simpliconvert.com/url_encoder_decoder_online/" class="tool-link block px-3 py-2 rounded-md text-sm text-gray-600 hover:text-gray-900">URL Encoder</a></li>
                                             <li><a href="https://simpliconvert.com/css_gradient_background_generator/" class="tool-link block px-3 py-2 rounded-md text-sm text-gray-600 hover:text-gray-900">CSS Gradient</a></li>
                                             <li><a href="https://simpliconvert.com/sql_formatter_online/" class="tool-link block px-3 py-2 rounded-md text-sm text-gray-600 hover:text-gray-900">SQL Formatter</a></li>
-                                            <li><a href="https://simpliconvert.com/markdown_editor/" class="tool-link block px-3 py-2 rounded-md text-sm text-gray-600 hover:text-gray-900">Markdown Editor</a></li>
                                             <li><a href="https://simpliconvert.com/meta_tag_generator/" class="tool-link block px-3 py-2 rounded-md text-sm text-gray-600 hover:text-gray-900">Meta Tag Gen</a></li>
                                         </ul>
                                     </div>
-
                                     <div class="space-y-4">
                                         <div class="flex items-center gap-2 pb-2 border-b border-gray-100">
                                             <svg class="w-5 h-5 text-purple-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.384-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" /></svg>
-                                            <h3 class="font-bold text-gray-900">More Tools</h3>
+                                            <h3 class="font-bold text-gray-900">Calculators</h3>
                                         </div>
                                         <ul class="space-y-1">
                                             <li><a href="https://simpliconvert.com/password_generator/" class="tool-link block px-3 py-2 rounded-md text-sm text-gray-600 hover:text-gray-900">Password Gen</a></li>
-                                            <li><a href="https://simpliconvert.com/qr_code_generator/" class="tool-link block px-3 py-2 rounded-md text-sm text-gray-600 hover:text-gray-900">QR Code Gen</a></li>
                                             <li><a href="https://simpliconvert.com/internet_download_speed_test/" class="tool-link block px-3 py-2 rounded-md text-sm text-gray-600 hover:text-gray-900">Speed Test</a></li>
-                                            <li><a href="https://simpliconvert.com/to_do_list/" class="tool-link block px-3 py-2 rounded-md text-sm text-gray-600 hover:text-gray-900">To-Do List</a></li>
                                             <li><a href="https://simpliconvert.com/bmi_calculator_for_men_women/" class="tool-link block px-3 py-2 rounded-md text-sm text-gray-600 hover:text-gray-900">BMI Calculator</a></li>
                                             <li><a href="https://simpliconvert.com/youtube_thumbnail_downloader/" class="tool-link block px-3 py-2 rounded-md text-sm text-gray-600 hover:text-gray-900">YT Thumbnail</a></li>
-                                            <li><a href="https://simpliconvert.com/all_tools/" class="block mt-2 px-3 py-2 rounded-md text-sm font-semibold text-primary hover:bg-primary/5 bg-primary/5 text-center">View All 150+ Tools &rarr;</a></li>
+                                            <li><a href="https://simpliconvert.com/all_tools/" class="block mt-2 px-3 py-2 rounded-md text-sm font-semibold text-primary hover:bg-primary/5 bg-primary/5 text-center">View All Tools &rarr;</a></li>
                                         </ul>
                                     </div>
-
                                 </div>
                             </div>
-                            
                             <div class="bg-gray-50 p-4 border-t border-gray-100 flex justify-between items-center text-sm">
                                 <span class="text-gray-500">Need a custom tool?</span>
                                 <a href="https://simpliconvert.com/contact/" class="text-primary hover:text-primaryLight font-medium flex items-center">Request a Feature <svg class="w-3 h-3 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></a>
@@ -182,7 +183,7 @@
         </div>
     </div>
 
-    <div id="mobile-menu" class="lg:hidden hidden bg-white border-t border-gray-100 absolute w-full left-0 top-full shadow-xl max-h-[85vh] overflow-y-auto">
+    <div id="mobile-menu" class="lg:hidden hidden bg-white border-t border-gray-100 absolute w-full left-0 top-full shadow-xl max-h-[85vh] overflow-y-auto z-40">
         <div class="px-4 pt-4 pb-6 space-y-1">
             
             <div class="mb-4 relative">
@@ -198,34 +199,11 @@
                     placeholder="Search tools..."
                     autocomplete="off"
                 >
-                <div id="mobile-search-results" class="mt-2 bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden hidden search-results">
+                <div id="mobile-search-results" class="search-results-dropdown hidden relative mt-2 w-full shadow-none border border-gray-200">
                     </div>
             </div>
 
             <a href="https://simpliconvert.com/all_tools/" class="block px-3 py-3 rounded-md text-base font-semibold text-gray-900 hover:bg-gray-50">Browse All Tools</a>
-            
-            <div class="border-t border-gray-100 pt-2 mt-2">
-                <button class="accordion-button w-full flex justify-between items-center px-3 py-3 text-base font-medium text-gray-700 hover:text-primary hover:bg-gray-50 rounded-md transition-colors duration-200">
-                    <span class="flex items-center gap-2">
-                        <svg class="w-5 h-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16" /></svg>
-                        Tool Categories
-                    </span>
-                    <svg class="h-5 w-5 text-gray-400 transform transition-transform duration-200" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                        <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
-                    </svg>
-                </button>
-                
-                <div class="accordion-content hidden pl-4 pr-2 space-y-1 bg-gray-50 rounded-lg my-1 py-2">
-                    <p class="px-3 py-1 text-xs font-bold text-gray-400 uppercase tracking-wider">Popular</p>
-                    <a href="https://simpliconvert.com/merge_pdf_online/" class="block px-3 py-2 rounded-md text-sm text-gray-600 hover:text-primary hover:bg-white">Merge PDF</a>
-                    <a href="https://simpliconvert.com/image_resizer/" class="block px-3 py-2 rounded-md text-sm text-gray-600 hover:text-primary hover:bg-white">Image Resizer</a>
-                    <a href="https://simpliconvert.com/json_formatter_and_validator/" class="block px-3 py-2 rounded-md text-sm text-gray-600 hover:text-primary hover:bg-white">JSON Formatter</a>
-                    <a href="https://simpliconvert.com/password_generator/" class="block px-3 py-2 rounded-md text-sm text-gray-600 hover:text-primary hover:bg-white">Password Generator</a>
-                    <a href="https://simpliconvert.com/qr_code_generator/" class="block px-3 py-2 rounded-md text-sm text-gray-600 hover:text-primary hover:bg-white">QR Code Generator</a>
-                    <a href="https://simpliconvert.com/pdf_tools/" class="block px-3 py-2 mt-2 font-medium text-sm text-primary hover:underline">View All Categories &rarr;</a>
-                </div>
-            </div>
-
             <a href="/blog/" class="block px-3 py-3 rounded-md text-base font-medium text-gray-700 hover:text-primary hover:bg-gray-50">Blog</a>
             <a href="https://simpliconvert.com/contact/" class="block px-3 py-3 rounded-md text-base font-medium text-gray-700 hover:text-primary hover:bg-gray-50">Contact</a>
         </div>
@@ -233,7 +211,7 @@
 </header>
 
 <script>
-    // --- 1. The Master Tool Database ---
+    // --- 1. The Master Tool Database (Full List) ---
     const allTools = [
         { name: "Base64 Encoder Decoder", url: "https://simpliconvert.com/base64_encoder_decoder_online/" },
         { name: "JSON Formatter & Validator", url: "https://simpliconvert.com/json_formatter_and_validator/" },
@@ -343,7 +321,7 @@
         { name: "Zakat Cash Calc", url: "https://simpliconvert.com/zakat_calculator_cash/" }
     ];
 
-    // --- 2. Search Logic Function ---
+    // --- 2. Search Logic ---
     function setupSearch(inputId, resultsId, clearBtnId) {
         const input = document.getElementById(inputId);
         const results = document.getElementById(resultsId);
@@ -351,10 +329,10 @@
 
         if (!input || !results) return;
 
-        input.addEventListener('input', function() {
-            const query = this.value.toLowerCase().trim();
+        function performSearch() {
+            const query = input.value.toLowerCase().trim();
             
-            // Toggle clear button if exists
+            // Toggle clear button
             if (clearBtn) {
                 if (query.length > 0) clearBtn.classList.remove('hidden');
                 else clearBtn.classList.add('hidden');
@@ -367,13 +345,12 @@
                 return;
             }
 
-            // Filter tools (match name or partial URL keywords)
+            // Filter tools
             const filteredTools = allTools.filter(tool => {
-                // Normalize string for better matching (remove hyphens/underscores from URL)
                 const searchableUrl = tool.url.replace(/[-_]/g, ' ');
                 return tool.name.toLowerCase().includes(query) || 
                        searchableUrl.toLowerCase().includes(query);
-            }).slice(0, 10); // Limit to top 10 results for performance
+            }).slice(0, 10);
 
             // Render Results
             if (filteredTools.length > 0) {
@@ -393,12 +370,15 @@
             } else {
                 results.innerHTML = `
                     <div class="px-4 py-3 text-sm text-gray-500 text-center">
-                        No tools found. Try "PDF" or "Calculator".
+                        No tools found.
                     </div>
                 `;
                 results.classList.remove('hidden');
             }
-        });
+        }
+
+        input.addEventListener('input', performSearch);
+        input.addEventListener('focus', performSearch); // Show results on click if text exists
 
         // Clear button logic
         if (clearBtn) {
@@ -412,18 +392,17 @@
 
         // Hide when clicking outside
         document.addEventListener('click', function(e) {
-            if (!input.contains(e.target) && !results.contains(e.target)) {
+            if (!input.contains(e.target) && !results.contains(e.target) && (!clearBtn || !clearBtn.contains(e.target))) {
                 results.classList.add('hidden');
             }
         });
     }
 
     document.addEventListener('DOMContentLoaded', function() {
-        // --- 3. Initialize Search ---
         setupSearch('desktop-search-input', 'desktop-search-results', 'desktop-search-clear');
         setupSearch('mobile-search-input', 'mobile-search-results', null);
 
-        // Mobile Menu Toggle Logic
+        // Mobile Menu Toggle
         const btn = document.getElementById('mobile-menu-button');
         const menu = document.getElementById('mobile-menu');
         const iconOpen = document.getElementById('mobile-menu-icon-open');
@@ -440,22 +419,8 @@
                     menu.classList.remove('hidden');
                     iconOpen.classList.add('hidden');
                     iconClose.classList.remove('hidden');
-                    // Focus on mobile search when opening menu
-                    setTimeout(() => document.getElementById('mobile-search-input').focus(), 100);
                 }
             });
         }
-
-        // Mobile Accordion
-        const accBtns = document.querySelectorAll('.accordion-button');
-        accBtns.forEach(accBtn => {
-            accBtn.addEventListener('click', function() {
-                const content = this.nextElementSibling;
-                const icon = this.querySelector('svg:last-child');
-                content.classList.toggle('hidden');
-                icon.classList.toggle('rotate-180');
-            });
-        });
     });
 </script>
-</header>
