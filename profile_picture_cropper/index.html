@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Profile Picture Cropper – Round Image Cropper & PFP Maker | SimpliConvert</title>
+    <meta name="description" content="Create the perfect circular profile picture for Instagram, TikTok, and Twitter. Our free round image cropper lets you zoom, rotate, and crop photos into a circle instantly.">
+    <meta name="author" content="SimpliConvert">
+    <meta property="og:site_name" content="SimpliConvert">
+    <meta name="robots" content="index, follow">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://simpliconvert.com/profile_picture_cropper/">
+    <meta property="og:title" content="Profile Picture Cropper – Create the Perfect Round PFP Online">
+    <meta property="og:description" content="Crop your photos into a perfect circle for social media profile pictures. Preview how it looks before downloading.">
+    <meta property="og:image" content="https://simpliconvert.com/images/pfp-cropper-og.jpg">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://simpliconvert.com/profile_picture_cropper/">
+    <meta name="twitter:title" content="Round Image Cropper – Make Your Social Media PFP">
+    <meta name="twitter:description" content="Free online tool to crop photos into circles. Perfect for Instagram, TikTok, and LinkedIn profile pictures.">
+    <meta name="twitter:image" content="https://simpliconvert.com/images/pfp-cropper-og.jpg">
+
+    <link rel="canonical" href="https://simpliconvert.com/profile_picture_cropper/">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Profile Picture Cropper",
+      "url": "https://simpliconvert.com/profile_picture_cropper/",
+      "description": "A free online tool to crop images into a perfect circle for social media profile pictures.",
+      "applicationCategory": "MultimediaApplication",
+      "operatingSystem": "Web Browser",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "SimpliConvert",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://simpliconvert.com/logo.png"
+        }
+      }
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [{
+        "@type": "Question",
+        "name": "Why do I need a circular cropper for my profile picture?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Most social media platforms like Instagram, TikTok, and Twitter display profile pictures in a circle. Using a round image cropper ensures your face is perfectly centered and nothing important is cut off by the platform's automatic masking."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Will my image lose quality after cropping?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "No. Our tool processes the image at its original resolution and exports a high-quality PNG with transparency to maintain clarity."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Is my photo uploaded to a server?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "No. All image processing happens locally in your browser. Your personal photos never leave your device, ensuring 100% privacy."
+        }
+      }]
+    }
+    </script>
+
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://simpliconvert.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Social Media Tools",
+      "item": "https://simpliconvert.com/social_media_tools/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "Profile Picture Cropper",
+      "item": "https://simpliconvert.com/profile_picture_cropper/"
+    }
+  ]
+}
+</script>
+
+<script src="/components/core.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #da3f0b;
+            --primary-hover: #b53409;
+            --primary-light: #fff5f2;
+            --bg: #f8fafc;
+            --text-dark: #0f172a;
+            --success: #16a34a;
+            --danger: #dc2626;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text-dark);
+        }
+
+        .hero-card {
+            background: white;
+            border: 1px solid #f1f5f9;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background-color: var(--primary);
+        }
+
+        .prose a {
+            color: #da3f0b;
+            text-decoration: none; 
+        }
+        .prose a:hover {
+            text-decoration: underline; 
+        }
+
+        .animate-fade { animation: fadeIn 0.3s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+        .tool-card {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .tool-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+        }
+
+        .canvas-container {
+            position: relative;
+            width: 100%;
+            max-width: 400px;
+            aspect-ratio: 1 / 1;
+            margin: 0 auto;
+            background: #e2e8f0;
+            border-radius: 1.5rem;
+            overflow: hidden;
+            cursor: move;
+        }
+
+        .circle-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.5);
+            border-radius: 50%;
+            border: 2px solid white;
+        }
+        
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 min-h-screen flex flex-col">
+    <div id="navbar"></div>
+
+    <section class="hero-white text-black py-2 md:py-10">
+        <div class="container mx-auto px-4 text-center">
+            <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-2">Profile Picture Cropper</h1>
+            <p class="text-base text-gray-700 leading-relaxed max-w-2xl mx-auto">
+                Create a perfect <strong>round profile picture</strong> for Instagram, TikTok, and Twitter. 
+                Upload your photo, adjust the circle, and download your high-quality PFP instantly.
+            </p>
+        </div>
+    </section>
+
+    <div id="root" class="w-full max-w-6xl mx-auto p-4 sm:p-6"></div>
+
+    <script type="text/babel">
+    const { useState, useRef, useEffect } = React;
+
+    const App = () => {
+      const [image, setImage] = useState(null);
+      const [zoom, setZoom] = useState(1);
+      const [offset, setOffset] = useState({ x: 0, y: 0 });
+      const [isDragging, setIsDragging] = useState(false);
+      const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
+      const [showBookmarkToast, setShowBookmarkToast] = useState(false);
+      
+      const canvasRef = useRef(null);
+      const containerRef = useRef(null);
+      const fileInputRef = useRef(null);
+      const imgRef = useRef(new Image());
+
+      const handleFileChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+          const reader = new FileReader();
+          reader.onload = (event) => {
+            imgRef.current.src = event.target.result;
+            imgRef.current.onload = () => {
+              setImage(event.target.result);
+              setZoom(1);
+              setOffset({ x: 0, y: 0 });
+              drawCanvas();
+            };
+          };
+          reader.readAsDataURL(file);
+        }
+      };
+
+      const drawCanvas = () => {
+        const canvas = canvasRef.current;
+        if (!canvas || !imgRef.current.src) return;
+        const ctx = canvas.getContext('2d');
+        const size = canvas.width;
+        
+        ctx.clearRect(0, 0, size, size);
+        
+        const img = imgRef.current;
+        const aspect = img.width / img.height;
+        let drawW, drawH;
+
+        if (aspect > 1) {
+          drawH = size * zoom;
+          drawW = drawH * aspect;
+        } else {
+          drawW = size * zoom;
+          drawH = drawW / aspect;
+        }
+
+        const x = (size - drawW) / 2 + offset.x;
+        const y = (size - drawH) / 2 + offset.y;
+
+        ctx.drawImage(img, x, y, drawW, drawH);
+      };
+
+      useEffect(() => {
+        if (image) drawCanvas();
+      }, [image, zoom, offset]);
+
+      const handleMouseDown = (e) => {
+        setIsDragging(true);
+        setDragStart({ x: e.clientX - offset.x, y: e.clientY - offset.y });
+      };
+
+      const handleMouseMove = (e) => {
+        if (!isDragging) return;
+        setOffset({
+          x: e.clientX - dragStart.x,
+          y: e.clientY - dragStart.y
+        });
+      };
+
+      const handleMouseUp = () => setIsDragging(false);
+
+      const handleDownload = () => {
+        const canvas = document.createElement('canvas');
+        const size = 500; // High res export
+        canvas.width = size;
+        canvas.height = size;
+        const ctx = canvas.getContext('2d');
+
+        // Create circular clip
+        ctx.beginPath();
+        ctx.arc(size / 2, size / 2, size / 2, 0, Math.PI * 2);
+        ctx.clip();
+
+        const img = imgRef.current;
+        const aspect = img.width / img.height;
+        let drawW, drawH;
+
+        if (aspect > 1) {
+          drawH = size * zoom;
+          drawW = drawH * aspect;
+        } else {
+          drawW = size * zoom;
+          drawH = drawW / aspect;
+        }
+
+        const x = (size - drawW) / 2 + (offset.x * (size / canvasRef.current.width));
+        const y = (size - drawH) / 2 + (offset.y * (size / canvasRef.current.height));
+
+        ctx.drawImage(img, x, y, drawW, drawH);
+
+        const link = document.createElement('a');
+        link.download = 'circle-profile-picture.png';
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+      };
+
+      const handleBookmark = () => {
+        setShowBookmarkToast(true);
+        setTimeout(() => setShowBookmarkToast(false), 3000);
+      };
+
+      return (
+        <div className="bg-white rounded-[2rem] shadow-2xl overflow-hidden border border-slate-100">
+          <header className="bg-slate-50/50 border-b border-slate-100 p-6 md:p-8 flex flex-col md:flex-row justify-between items-center gap-6">
+            <div className="text-center md:text-left">
+              <h2 className="text-2xl font-black text-slate-800 tracking-tight flex items-center justify-center md:justify-start gap-3">
+                <span className="bg-[#da3f0b] text-white p-2 rounded-xl text-lg shadow-lg shadow-[#da3f0b30]">
+                  <i className="fas fa-user-circle"></i>
+                </span>
+                PFP Maker & Cropper
+              </h2>
+            </div>
+            
+            <div className="flex flex-wrap justify-center gap-4">
+              <button 
+                onClick={() => fileInputRef.current.click()}
+                className="bg-[#da3f0b] hover:bg-[#b53409] text-white px-6 py-2 rounded-xl text-sm font-bold transition-all shadow-lg shadow-[#da3f0b30] flex items-center gap-2"
+              >
+                <i className="fas fa-upload"></i> Upload Photo
+              </button>
+              <input 
+                type="file" 
+                ref={fileInputRef} 
+                onChange={handleFileChange} 
+                accept="image/*" 
+                className="hidden" 
+              />
+            </div>
+          </header>
+
+          <main className="flex flex-col lg:flex-row min-h-[500px]">
+            {/* Editor Panel */}
+            <div className="lg:w-1/2 p-6 md:p-10 border-r border-slate-100 flex flex-col items-center justify-center bg-slate-50/30">
+              {!image ? (
+                <div 
+                    onClick={() => fileInputRef.current.click()}
+                    className="w-full max-w-sm aspect-square border-4 border-dashed border-slate-200 rounded-[2rem] flex flex-col items-center justify-center text-slate-400 cursor-pointer hover:border-[#da3f0b] hover:text-[#da3f0b] transition-all group"
+                >
+                    <i className="fas fa-cloud-upload-alt text-5xl mb-4 group-hover:scale-110 transition-transform"></i>
+                    <p className="font-bold">Click to upload image</p>
+                    <p className="text-xs mt-2">JPG, PNG or WEBP</p>
+                </div>
+              ) : (
+                <div className="w-full space-y-8">
+                    <div 
+                        className="canvas-container shadow-2xl"
+                        onMouseDown={handleMouseDown}
+                        onMouseMove={handleMouseMove}
+                        onMouseUp={handleMouseUp}
+                        onMouseLeave={handleMouseUp}
+                        onTouchStart={(e) => {
+                            const touch = e.touches[0];
+                            handleMouseDown({ clientX: touch.clientX, clientY: touch.clientY });
+                        }}
+                        onTouchMove={(e) => {
+                            const touch = e.touches[0];
+                            handleMouseMove({ clientX: touch.clientX, clientY: touch.clientY });
+                        }}
+                        onTouchEnd={handleMouseUp}
+                    >
+                        <canvas 
+                            ref={canvasRef} 
+                            width={400} 
+                            height={400} 
+                            className="w-full h-full"
+                        />
+                        <div className="circle-overlay"></div>
+                    </div>
+
+                    <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm">
+                        <label className="block text-xs font-black text-slate-400 uppercase tracking-widest mb-4">
+                            <i className="fas fa-search-plus mr-2"></i> Zoom Level
+                        </label>
+                        <input 
+                            type="range" 
+                            min="1" 
+                            max="3" 
+                            step="0.01" 
+                            value={zoom} 
+                            onChange={(e) => setZoom(parseFloat(e.target.value))}
+                            className="w-full h-2 bg-slate-100 rounded-lg appearance-none cursor-pointer accent-[#da3f0b]"
+                        />
+                        <div className="flex justify-between mt-6">
+                            <button onClick={() => setOffset({x:0, y:0})} className="text-xs font-bold text-slate-400 hover:text-[#da3f0b]">
+                                <i className="fas fa-undo mr-1"></i> RESET POSITION
+                            </button>
+                            <span className="text-xs font-bold text-slate-600">Drag image to reposition</span>
+                        </div>
+                    </div>
+                </div>
+              )}
+            </div>
+
+            {/* Preview & Action Panel */}
+            <div className="lg:w-1/2 p-6 md:p-10 flex flex-col items-center justify-center">
+              <div className="text-center mb-10">
+                <span className="text-xs font-black text-slate-400 uppercase tracking-widest mb-2 block">Live Preview</span>
+                <h3 className="text-xl font-bold text-slate-800">How it will look</h3>
+              </div>
+
+              <div className="flex flex-col items-center gap-8">
+                <div className="relative">
+                    <div className="w-48 h-48 rounded-full border-4 border-white shadow-2xl overflow-hidden bg-slate-100">
+                        {image ? (
+                            <canvas 
+                                width={400} 
+                                height={400} 
+                                className="w-full h-full"
+                                ref={(el) => {
+                                    if (el && image) {
+                                        const ctx = el.getContext('2d');
+                                        const size = 400;
+                                        ctx.clearRect(0, 0, size, size);
+                                        const img = imgRef.current;
+                                        const aspect = img.width / img.height;
+                                        let drawW, drawH;
+                                        if (aspect > 1) { drawH = size * zoom; drawW = drawH * aspect; }
+                                        else { drawW = size * zoom; drawH = drawW / aspect; }
+                                        ctx.drawImage(img, (size - drawW) / 2 + offset.x, (size - drawH) / 2 + offset.y, drawW, drawH);
+                                    }
+                                }}
+                            />
+                        ) : (
+                            <div className="w-full h-full flex items-center justify-center text-slate-300">
+                                <i className="fas fa-user text-6xl"></i>
+                            </div>
+                        )}
+                    </div>
+                    <div className="absolute -bottom-2 -right-2 bg-green-500 text-white w-10 h-10 rounded-full flex items-center justify-center border-4 border-white">
+                        <i className="fas fa-check text-sm"></i>
+                    </div>
+                </div>
+
+                <div className="space-y-4 w-full max-w-xs">
+                    <button 
+                        onClick={handleDownload}
+                        disabled={!image}
+                        className={`w-full py-4 rounded-2xl font-bold text-lg transition-all flex items-center justify-center gap-3 ${image ? 'bg-slate-900 text-white hover:bg-black shadow-xl' : 'bg-slate-100 text-slate-400 cursor-not-allowed'}`}
+                    >
+                        <i className="fas fa-download"></i> Download PFP
+                    </button>
+                    <p className="text-[10px] text-slate-400 text-center uppercase font-bold tracking-tighter">High Resolution PNG with Transparency</p>
+                </div>
+              </div>
+            </div>
+          </main>
+
+          {/* Share & Bookmark Footer */}
+          <footer className="bg-slate-50 border-t border-slate-100 p-6 md:p-8">
+             <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+                 <div className="text-center md:text-left">
+                     <h4 className="text-sm font-bold text-slate-700 mb-1">Share this tool</h4>
+                     <p className="text-xs text-slate-400">Help your friends create the perfect profile picture.</p>
+                 </div>
+                 
+                 <div className="flex flex-wrap justify-center gap-3">
+                     <a href={`https://twitter.com/intent/tweet?text=Check out this Round Image Cropper!&url=${encodeURIComponent(window.location.href)}`} target="_blank" className="w-10 h-10 rounded-full flex items-center justify-center text-white bg-[#1DA1F2] hover:-translate-y-1 transition-transform"><i className="fab fa-twitter"></i></a>
+                     <a href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`} target="_blank" className="w-10 h-10 rounded-full flex items-center justify-center text-white bg-[#1877F2] hover:-translate-y-1 transition-transform"><i className="fab fa-facebook-f"></i></a>
+                     <a href={`https://api.whatsapp.com/send?text=Profile Picture Cropper: ${encodeURIComponent(window.location.href)}`} target="_blank" className="w-10 h-10 rounded-full flex items-center justify-center text-white bg-[#25D366] hover:-translate-y-1 transition-transform"><i className="fab fa-whatsapp"></i></a>
+                 </div>
+
+                 <div className="relative">
+                     <button 
+                        onClick={handleBookmark}
+                        className="flex items-center gap-2 bg-white border border-slate-200 hover:border-[#da3f0b] hover:text-[#da3f0b] text-slate-600 px-4 py-2 rounded-lg text-sm font-bold transition-all shadow-sm active:scale-95"
+                        aria-label="Bookmark this tool"
+                     >
+                        <i className="fas fa-bookmark"></i> Bookmark
+                     </button>
+                     {showBookmarkToast && (
+                         <div className="absolute bottom-full mb-3 left-1/2 -translate-x-1/2 bg-slate-800 text-white text-xs py-2 px-4 rounded-lg shadow-lg whitespace-nowrap animate-fade">
+                             Press <span className="font-bold text-[#da3f0b]">Ctrl + D</span> to bookmark
+                         </div>
+                     )}
+                 </div>
+             </div>
+          </footer>
+        </div>
+      );
+    };
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+    </script>
+
+    <p class="text-center mt-4 mb-10">
+        <a href="https://simpliconvert.com/social_media_tools/" class="text-primary font-medium hover:underline">
+            ← Back to All Social Media Tools
+        </a>
+    </p>
+
+    <section class="bg-white py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="prose prose-lg max-w-none prose-h2:text-gray-800 prose-p:text-gray-700">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">Round Image Cropper – The Easiest Way to Make a PFP</h2>
+                <p class="mb-6 leading-relaxed">
+                    First impressions matter, especially on social media. Whether you're updating your LinkedIn, Instagram, or TikTok, your profile picture is the first thing people see. Our <strong>Profile Picture Cropper</strong> takes the guesswork out of formatting. Most platforms use a circular mask for avatars, which often cuts off the top of heads or important background details. By using a dedicated <strong>round image cropper</strong>, you can see exactly how your photo will look before you upload it.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Why Use a Circle Photo Maker?</h2>
+                <p class="mb-6 leading-relaxed">
+                    Standard photo editors crop in squares or rectangles. When you upload a square photo to Instagram, the app automatically applies a circular mask. If your face isn't perfectly centered, the result looks unprofessional. Our tool allows you to zoom and reposition your image within a live circular guide. Before you finalize your new look, you might also want to check if your desired handle is available using our <a href="https://simpliconvert.com/instagram_username_checker/" target="_blank">Instagram Username Checker</a>.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Features of Our PFP Maker</h2>
+                <ul class="list-disc pl-6 mb-6 space-y-2 text-gray-700">
+                    <li><strong>Instant Circle Preview:</strong> See the exact circular crop in real-time.</li>
+                    <li><strong>Precision Zoom & Drag:</strong> Fine-tune the position to ensure your face is the focus.</li>
+                    <li><strong>High-Quality Export:</strong> Downloads as a transparent PNG, perfect for any background.</li>
+                    <li><strong>Privacy Guaranteed:</strong> We don't store your photos. Everything happens in your browser.</li>
+                    <li><strong>Mobile Friendly:</strong> Works perfectly on iPhones, Androids, and tablets.</li>
+                </ul>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">How to Create the Perfect Profile Picture</h2>
+                <p class="mb-6 leading-relaxed">
+                    Creating a professional-looking avatar only takes a few seconds:
+                </p>
+                <ol class="list-decimal pl-6 mb-6 space-y-2 text-gray-700">
+                    <li><strong>Upload:</strong> Select a high-resolution photo from your gallery or desktop.</li>
+                    <li><strong>Adjust:</strong> Use the zoom slider and drag the image until it fits perfectly in the circle.</li>
+                    <li><strong>Download:</strong> Hit the download button to save your new PFP.</li>
+                    <li><strong>Optimize:</strong> If you need to change the overall dimensions for other posts, try our <a href="https://simpliconvert.com/social_media_image_resizer/" target="_blank">Social Media Image Resizer</a>.</li>
+                </ol>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Pro Tip for Social Media Branding</h2>
+                <p class="mb-6 leading-relaxed">
+                    Consistency is key for personal branding. Use the same circular crop across all your platforms—from YouTube to WhatsApp. If you're managing a professional account, don't forget to tidy up your profile further with our <a href="https://simpliconvert.com/caption_cleaner_tool/" target="_blank">Caption Cleaner Tool</a> to ensure your posts look as good as your new profile picture.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-center text-gray-900 mb-8">PFP Cropper – Frequently Asked Questions</h2>
+            <div class="space-y-4">
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-primary">
+                        <span>What is the best size for a profile picture?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">
+                            While platforms vary, a size of 500x500 pixels is generally ideal. Our tool exports at a high resolution to ensure your PFP looks crisp on both mobile retina displays and desktop browsers.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-primary">
+                        <span>Does this tool work for Instagram profile pic zoom?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">
+                            Yes! You can use the zoom slider to focus on specific parts of your photo, allowing you to create that "zoomed-in" look that is popular for aesthetic Instagram profiles.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-primary">
+                        <span>Can I crop images for LinkedIn and Twitter too?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">
+                            Absolutely. Any platform that uses a circular avatar (including LinkedIn, Twitter, Discord, and Slack) will work perfectly with the images generated by this tool.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 pb-16">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-slate-200 pt-16">
+            <h2 class="text-2xl font-bold text-center text-slate-800 mb-10">More Social Media Tools</h2>
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+                <a href="/instagram_username_checker/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-pink-50 text-pink-600 flex items-center justify-center shrink-0 group-hover:bg-pink-600 group-hover:text-white transition-colors">
+                        <i class="fab fa-instagram text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Username Check</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Check handle availability.</p>
+                    </div>
+                </a>
+
+                <a href="/social_media_image_resizer/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center shrink-0 group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-expand-arrows-alt text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Image Resizer</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Resize for any platform.</p>
+                    </div>
+                </a>
+
+                <a href="/caption_cleaner_tool/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-green-50 text-green-600 flex items-center justify-center shrink-0 group-hover:bg-green-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-broom text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Caption Cleaner</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Remove extra spaces & dots.</p>
+                    </div>
+                </a>
+
+                <a href="/fancy_text_generator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-purple-50 text-purple-600 flex items-center justify-center shrink-0 group-hover:bg-purple-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-font text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Fancy Text</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Cool fonts for your bio.</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <div id="footer"></div>
+
+    <script>
+    function initializeHeaderScripts() {
+        const header = document.getElementById('header');
+        if (header) {
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 10) {
+                    header.classList.add('scrolled-effect');
+                } else {
+                    header.classList.remove('scrolled-effect');
+                }
+            });
+        }
+    }
+    
+    function initializeFooterScripts() {
+        const yearSpan = document.getElementById('current-year');
+        if(yearSpan) {
+            yearSpan.textContent = new Date().getFullYear();
+        }
+    }
+
+    async function loadComponent(url, elementId, callback) {
+        try {
+            const response = await fetch(url);
+            if (!response.ok) throw new Error('Status: ' + response.status);
+            const text = await response.text();
+            const element = document.getElementById(elementId);
+            if (element) {
+                element.innerHTML = text;
+                if (callback) callback();
+            }
+        } catch (error) {
+            console.error('Error loading component:', error);
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        loadComponent('/components/navbar.html', 'navbar', initializeHeaderScripts);
+        loadComponent('/components/footer.html', 'footer', initializeFooterScripts);
+        
+        const faqToggles = document.querySelectorAll('[data-faq-toggle]');
+        faqToggles.forEach(button => {
+            button.addEventListener('click', () => {
+                const answer = button.nextElementSibling;
+                const icon = button.querySelector('.faq-icon');
+                const isOpening = !answer.style.maxHeight;
+
+                faqToggles.forEach(other => {
+                    if (other !== button) {
+                        other.nextElementSibling.style.maxHeight = null;
+                        other.querySelector('.faq-icon').classList.remove('rotate-90');
+                        other.querySelector('.faq-icon').classList.add('-rotate-90');
+                    }
+                });
+
+                if (isOpening) {
+                    answer.style.maxHeight = answer.scrollHeight + "px";
+                    icon.classList.remove('-rotate-90');
+                    icon.classList.add('rotate-90');
+                } else {
+                    answer.style.maxHeight = null;
+                    icon.classList.remove('rotate-90');
+                    icon.classList.add('-rotate-90');
+                }
+            });
+        });
+    });
+    </script>
+</body>
+</html>

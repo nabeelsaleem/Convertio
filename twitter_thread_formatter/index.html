@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Twitter Thread Formatter – Split Long Tweets into Threads | SimpliConvert</title>
+    <meta name="description" content="Turn long text into a perfectly formatted Twitter thread. Our free tweet splitter automatically numbers your posts (1/x) and respects character limits for easy publishing.">
+    <meta name="author" content="SimpliConvert">
+    <meta property="og:site_name" content="SimpliConvert">
+    <meta name="robots" content="index, follow">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://simpliconvert.com/twitter_thread_formatter/">
+    <meta property="og:title" content="Twitter Thread Formatter – Make Long Threads Instantly">
+    <meta property="og:description" content="Paste long-form content and split it into a numbered Twitter thread. Supports 280-character limits and smart word-wrapping.">
+    <meta property="og:image" content="https://simpliconvert.com/images/twitter-thread-og.jpg">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://simpliconvert.com/twitter_thread_formatter/">
+    <meta name="twitter:title" content="Twitter Thread Formatter – Tweet Splitter Tool">
+    <meta name="twitter:description" content="Free tool to split long text into numbered Twitter threads. Simplify your long-form tweeting process.">
+    <meta name="twitter:image" content="https://simpliconvert.com/images/twitter-thread-og.jpg">
+
+    <link rel="canonical" href="https://simpliconvert.com/twitter_thread_formatter/">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Twitter Thread Formatter",
+      "url": "https://simpliconvert.com/twitter_thread_formatter/",
+      "description": "A free online tool to split long text into numbered Twitter threads (1/x) while respecting character limits.",
+      "applicationCategory": "SocialMediaApplication",
+      "operatingSystem": "Web Browser",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "SimpliConvert",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://simpliconvert.com/logo.png"
+        }
+      }
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [{
+        "@type": "Question",
+        "name": "How many characters can each tweet in a thread have?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Standard Twitter posts are limited to 280 characters. Our tool accounts for the numbering (like 1/5) to ensure your text fits perfectly within this limit."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Does the tool split words in the middle?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "No. Our smart splitting algorithm looks for spaces and line breaks to ensure your sentences remain readable and words are never cut in half."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Is there a limit to how long the input text can be?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "There is no strict limit, but for the best user experience, we recommend threads under 25 tweets. The tool will handle thousands of characters instantly."
+        }
+      }]
+    }
+    </script>
+
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://simpliconvert.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Social Media Tools",
+      "item": "https://simpliconvert.com/social_media_tools/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "Twitter Thread Formatter",
+      "item": "https://simpliconvert.com/twitter_thread_formatter/"
+    }
+  ]
+}
+</script>
+
+<script src="/components/core.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #da3f0b;
+            --primary-hover: #b53409;
+            --primary-light: #fff5f2;
+            --bg: #f8fafc;
+            --text-dark: #0f172a;
+            --success: #16a34a;
+            --danger: #dc2626;
+            --twitter-blue: #1DA1F2;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text-dark);
+        }
+
+        .hero-card {
+            background: white;
+            border: 1px solid #f1f5f9;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background-color: var(--primary);
+        }
+
+        .prose a {
+            color: #da3f0b;
+            text-decoration: none; 
+        }
+        .prose a:hover {
+            text-decoration: underline; 
+        }
+
+        .animate-fade { animation: fadeIn 0.3s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+        .tool-card {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .tool-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+        }
+
+        textarea {
+            resize: none;
+        }
+        
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        .tweet-card {
+            border-left: 4px solid var(--twitter-blue);
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 min-h-screen flex flex-col">
+    <div id="navbar"></div>
+
+    <section class="hero-white text-black py-2 md:py-10">
+        <div class="container mx-auto px-4 text-center">
+            <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-2">Twitter Thread Formatter</h1>
+            <p class="text-base text-gray-700 leading-relaxed max-w-2xl mx-auto">
+                Easily <strong>make Twitter threads</strong> by splitting long text into numbered posts. 
+                Our <strong>tweet splitter</strong> ensures your content fits perfectly within X's character limits.
+            </p>
+        </div>
+    </section>
+
+    <div id="root" class="w-full max-w-6xl mx-auto p-4 sm:p-6"></div>
+
+    <script type="text/babel">
+    const { useState, useEffect } = React;
+
+    const App = () => {
+      const [input, setInput] = useState('');
+      const [tweets, setTweets] = useState([]);
+      const [charLimit, setCharLimit] = useState(280);
+      const [numberingStyle, setNumberingStyle] = useState('1/n');
+      const [showBookmarkToast, setShowBookmarkToast] = useState(false);
+      const [copyAllStatus, setCopyAllStatus] = useState('Copy All');
+
+      const splitIntoThreads = (text) => {
+        if (!text.trim()) {
+          setTweets([]);
+          return;
+        }
+
+        const words = text.split(/\s+/);
+        const result = [];
+        let currentTweet = "";
+        
+        // Initial pass to estimate number of tweets for numbering overhead
+        // We'll use a placeholder like " (99/99)" which is 8 chars
+        const overhead = numberingStyle === 'none' ? 0 : 8;
+        const effectiveLimit = charLimit - overhead;
+
+        words.forEach(word => {
+          if ((currentTweet + " " + word).length <= effectiveLimit) {
+            currentTweet += (currentTweet === "" ? "" : " ") + word;
+          } else {
+            if (currentTweet !== "") result.push(currentTweet);
+            currentTweet = word;
+          }
+        });
+        if (currentTweet !== "") result.push(currentTweet);
+
+        // Apply actual numbering
+        const finalThreads = result.map((content, index) => {
+          if (numberingStyle === '1/n') return `${content} (${index + 1}/${result.length})`;
+          if (numberingStyle === '1.') return `${index + 1}. ${content}`;
+          return content;
+        });
+
+        setTweets(finalThreads);
+      };
+
+      useEffect(() => {
+        const timeoutId = setTimeout(() => {
+          splitIntoThreads(input);
+        }, 300);
+        return () => clearTimeout(timeoutId);
+      }, [input, charLimit, numberingStyle]);
+
+      const handleCopyTweet = (text, index) => {
+        navigator.clipboard.writeText(text);
+        const btn = document.getElementById(`copy-btn-${index}`);
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '<i class="fas fa-check mr-1"></i> Copied';
+        btn.classList.add('bg-green-600');
+        setTimeout(() => {
+          btn.innerHTML = originalText;
+          btn.classList.remove('bg-green-600');
+        }, 2000);
+      };
+
+      const handleCopyAll = () => {
+        const allText = tweets.join('\n\n---\n\n');
+        navigator.clipboard.writeText(allText);
+        setCopyAllStatus('All Copied!');
+        setTimeout(() => setCopyAllStatus('Copy All'), 2000);
+      };
+
+      const handleClear = () => {
+        setInput('');
+        setTweets([]);
+      };
+
+      const handleBookmark = () => {
+        setShowBookmarkToast(true);
+        setTimeout(() => setShowBookmarkToast(false), 3000);
+      };
+
+      return (
+        <div className="bg-white rounded-[2rem] shadow-2xl overflow-hidden border border-slate-100">
+          <header className="bg-slate-50/50 border-b border-slate-100 p-6 md:p-8 flex flex-col md:flex-row justify-between items-center gap-6">
+            <div className="text-center md:text-left">
+              <h2 className="text-2xl font-black text-slate-800 tracking-tight flex items-center justify-center md:justify-start gap-3">
+                <span className="bg-[#1DA1F2] text-white p-2 rounded-xl text-lg shadow-lg shadow-[#1DA1F230]">
+                  <i className="fab fa-twitter"></i>
+                </span>
+                Thread Maker & Splitter
+              </h2>
+            </div>
+            
+            <div className="flex flex-wrap justify-center gap-4">
+              <div className="relative min-w-[140px]">
+                <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1 ml-1">Numbering</label>
+                <select 
+                  aria-label="Select numbering style"
+                  value={numberingStyle}
+                  onChange={(e) => setNumberingStyle(e.target.value)}
+                  className="appearance-none w-full bg-white border border-slate-200 text-slate-700 py-2 pl-4 pr-10 rounded-xl text-xs font-bold focus:outline-none focus:ring-4 focus:ring-[#da3f0b15] focus:border-[#da3f0b] shadow-sm cursor-pointer"
+                >
+                  <option value="1/n">Style: (1/n)</option>
+                  <option value="1.">Style: 1. </option>
+                  <option value="none">No Numbering</option>
+                </select>
+                <div className="pointer-events-none absolute bottom-3 right-3 text-slate-400">
+                  <i className="fas fa-chevron-down text-[10px]"></i>
+                </div>
+              </div>
+
+              <div className="relative min-w-[120px]">
+                <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1 ml-1">Limit</label>
+                <select 
+                  aria-label="Select character limit"
+                  value={charLimit}
+                  onChange={(e) => setCharLimit(parseInt(e.target.value))}
+                  className="appearance-none w-full bg-white border border-slate-200 text-slate-700 py-2 pl-4 pr-10 rounded-xl text-xs font-bold focus:outline-none focus:ring-4 focus:ring-[#da3f0b15] focus:border-[#da3f0b] shadow-sm cursor-pointer"
+                >
+                  <option value="280">280 Chars (X)</option>
+                  <option value="140">140 Chars (Old)</option>
+                  <option value="200">200 Chars</option>
+                </select>
+                <div className="pointer-events-none absolute bottom-3 right-3 text-slate-400">
+                  <i className="fas fa-chevron-down text-[10px]"></i>
+                </div>
+              </div>
+            </div>
+          </header>
+
+          <main className="flex flex-col lg:flex-row min-h-[500px]">
+            {/* Input Panel */}
+            <div className="lg:w-1/2 p-4 md:p-6 border-r border-slate-100 flex flex-col">
+              <div className="flex justify-between items-center mb-3 px-2">
+                <span className="text-xs font-black text-slate-400 uppercase tracking-widest">Paste Long Text</span>
+                <div className="flex gap-4">
+                    <span className="text-[10px] font-bold text-slate-400">{input.length} characters</span>
+                    <button onClick={handleClear} className="text-[10px] font-bold text-slate-400 hover:text-red-500 transition-colors">
+                    <i className="fas fa-trash-alt mr-1"></i> CLEAR
+                    </button>
+                </div>
+              </div>
+              <textarea
+                aria-label="Input text for Twitter thread"
+                className="flex-grow w-full p-4 rounded-2xl border border-slate-200 focus:ring-4 focus:ring-[#da3f0b15] focus:border-[#da3f0b] outline-none text-sm custom-scrollbar bg-slate-50/30 leading-relaxed"
+                placeholder="Type or paste your long story here. We will automatically split it into a thread for you..."
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+              ></textarea>
+            </div>
+
+            {/* Output Panel */}
+            <div className="lg:w-1/2 p-4 md:p-6 bg-slate-50/50 flex flex-col">
+              <div className="flex justify-between items-center mb-3 px-2">
+                <span className="text-xs font-black text-slate-400 uppercase tracking-widest">Generated Thread ({tweets.length})</span>
+                <button 
+                  onClick={handleCopyAll}
+                  disabled={tweets.length === 0}
+                  className={`text-[10px] font-bold px-3 py-1 rounded-lg transition-all ${tweets.length > 0 ? 'bg-slate-800 text-white hover:bg-black' : 'bg-slate-200 text-slate-400 cursor-not-allowed'}`}
+                >
+                  <i className="fas fa-copy mr-1"></i> {copyAllStatus}
+                </button>
+              </div>
+              
+              <div className="flex-grow overflow-y-auto custom-scrollbar space-y-4 pr-2">
+                {tweets.length > 0 ? (
+                  tweets.map((tweet, idx) => (
+                    <div key={idx} className="tweet-card bg-white p-4 rounded-xl border border-slate-200 shadow-sm animate-fade">
+                      <div className="flex justify-between items-start mb-2">
+                        <span className="text-[10px] font-bold text-slate-400">TWEET {idx + 1}</span>
+                        <span className={`text-[10px] font-bold ${tweet.length > charLimit ? 'text-red-500' : 'text-slate-400'}`}>
+                          {tweet.length}/{charLimit}
+                        </span>
+                      </div>
+                      <p className="text-sm text-slate-700 whitespace-pre-wrap mb-3 leading-relaxed">{tweet}</p>
+                      <button 
+                        id={`copy-btn-${idx}`}
+                        onClick={() => handleCopyTweet(tweet, idx)}
+                        className="text-[10px] font-bold bg-[#1DA1F2] text-white px-3 py-1 rounded-md hover:bg-[#1a91da] transition-colors"
+                      >
+                        <i className="fas fa-copy mr-1"></i> Copy Tweet
+                      </button>
+                    </div>
+                  ))
+                ) : (
+                  <div className="h-full flex flex-col items-center justify-center text-slate-400 opacity-60">
+                    <i className="fas fa-feather-alt text-4xl mb-4"></i>
+                    <p className="text-sm font-medium">Your thread will appear here</p>
+                  </div>
+                )}
+              </div>
+            </div>
+          </main>
+
+          <footer className="bg-slate-50 border-t border-slate-100 p-6 md:p-8">
+             <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+                 <div className="text-center md:text-left">
+                     <h4 className="text-sm font-bold text-slate-700 mb-1">Share this tool</h4>
+                     <p className="text-xs text-slate-400">Help others split their long tweets easily.</p>
+                 </div>
+                 
+                 <div className="flex flex-wrap justify-center gap-3">
+                     <a href={`https://twitter.com/intent/tweet?text=Check out this Twitter Thread Formatter!&url=${encodeURIComponent(window.location.href)}`} target="_blank" className="w-10 h-10 rounded-full flex items-center justify-center text-white bg-[#1DA1F2] hover:-translate-y-1 transition-transform"><i className="fab fa-twitter"></i></a>
+                     <a href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`} target="_blank" className="w-10 h-10 rounded-full flex items-center justify-center text-white bg-[#1877F2] hover:-translate-y-1 transition-transform"><i className="fab fa-facebook-f"></i></a>
+                     <a href={`https://api.whatsapp.com/send?text=Twitter Thread Formatter: ${encodeURIComponent(window.location.href)}`} target="_blank" className="w-10 h-10 rounded-full flex items-center justify-center text-white bg-[#25D366] hover:-translate-y-1 transition-transform"><i className="fab fa-whatsapp"></i></a>
+                 </div>
+
+                 <div className="relative">
+                     <button 
+                        onClick={handleBookmark}
+                        className="flex items-center gap-2 bg-white border border-slate-200 hover:border-[#da3f0b] hover:text-[#da3f0b] text-slate-600 px-4 py-2 rounded-lg text-sm font-bold transition-all shadow-sm active:scale-95"
+                     >
+                        <i className="fas fa-bookmark"></i> Bookmark
+                     </button>
+                     {showBookmarkToast && (
+                         <div className="absolute bottom-full mb-3 left-1/2 -translate-x-1/2 bg-slate-800 text-white text-xs py-2 px-4 rounded-lg shadow-lg whitespace-nowrap animate-fade">
+                             Press <span className="font-bold text-[#da3f0b]">Ctrl + D</span> to bookmark
+                         </div>
+                     )}
+                 </div>
+             </div>
+          </footer>
+        </div>
+      );
+    };
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+    </script>
+
+    <p class="text-center mt-4 mb-10">
+        <a href="https://simpliconvert.com/twitter_character_counter/" class="text-primary font-medium hover:underline">
+            ← Check Single Tweet Length
+        </a>
+    </p>
+
+    <section class="bg-white py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="prose prose-lg max-w-none prose-h2:text-gray-800 prose-p:text-gray-700">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">Twitter Thread Formatter – The Ultimate Tweet Splitter</h2>
+                <p class="mb-6 leading-relaxed">
+                    Sharing long-form stories or detailed insights on X (formerly Twitter) can be frustrating due to the 280-character limit. Our <strong>Twitter Thread Formatter</strong> is designed to solve this exact problem. Instead of manually cutting and pasting your text, our tool acts as a smart <strong>tweet splitter</strong>, automatically dividing your content into a series of connected posts.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Why Use a Thread Maker?</h2>
+                <p class="mb-6 leading-relaxed">
+                    Threads are the best way to drive engagement on social media. They allow you to bypass character restrictions while keeping your audience hooked. However, manually numbering posts like "1/5" or "2/5" is tedious. Our <strong>thread maker</strong> handles the math for you, ensuring that even with the added numbering, your text never exceeds the limit.
+                </p>
+                <p class="mb-6 leading-relaxed">
+                    If you want to add some personality to your threads, you can also use our <a href="https://simpliconvert.com/emoji_text_generator/" target="_blank">Emoji Text Generator</a> to make your headers stand out.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Features of Our Long Tweet Splitter</h2>
+                <ul class="list-disc pl-6 mb-6 space-y-2 text-gray-700">
+                    <li><strong>Smart Word-Wrapping:</strong> We never split words in half. The tool finds the best break points between sentences.</li>
+                    <li><strong>Automatic Numbering:</strong> Choose between (1/n) or 1. styles to keep your readers oriented.</li>
+                    <li><strong>Real-Time Preview:</strong> See exactly how many tweets your text will generate as you type.</li>
+                    <li><strong>One-Click Copy:</strong> Copy individual tweets or the entire formatted thread to your clipboard instantly.</li>
+                    <li><strong>Clean Formatting:</strong> Use our <a href="https://simpliconvert.com/caption_cleaner_tool/" target="_blank">Caption Cleaner Tool</a> if you need to remove extra symbols before splitting.</li>
+                </ul>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">How to Create a Twitter Thread</h2>
+                <ol class="list-decimal pl-6 mb-6 space-y-2 text-gray-700">
+                    <li><strong>Input:</strong> Paste your long text into the input box above.</li>
+                    <li><strong>Customize:</strong> Select your preferred numbering style and character limit (280 is standard).</li>
+                    <li><strong>Review:</strong> Check the generated cards on the right to ensure the flow of the story is correct.</li>
+                    <li><strong>Publish:</strong> Copy each tweet one by one and post them as replies to your initial tweet on X.</li>
+                </ol>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Boost Your Social Presence</h2>
+                <p class="mb-6 leading-relaxed">
+                    Consistency and readability are key to growing a following. By using a <strong>long tweet to thread</strong> converter, you ensure your content looks professional and is easy to consume. Whether you are a journalist, a developer sharing a tutorial, or a storyteller, this tool streamlines your workflow. Don't forget to check your bio length with our <a href="https://simpliconvert.com/twitter_character_counter/" target="_blank">Twitter Character Counter</a> to make sure your profile is as optimized as your threads.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-center text-gray-900 mb-8">Frequently Asked Questions</h2>
+            <div class="space-y-4">
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>Does this tool post directly to Twitter?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">
+                            No. For security and privacy, we do not require access to your Twitter account. The tool formats and splits the text for you, and you can then copy and paste the segments into the Twitter app or website.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>What is the best numbering style?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">
+                            The "(1/n)" style is the most popular on X because it tells the reader exactly how long the thread is, encouraging them to read until the end.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>Is my data saved?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">
+                            No. All processing happens locally in your browser. Your text never leaves your device and is not stored on our servers.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 pb-16">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-slate-200 pt-16">
+            <h2 class="text-2xl font-bold text-center text-slate-800 mb-10">More Social Media Tools</h2>
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+                <a href="/twitter_character_counter/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center shrink-0 group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                        <i class="fab fa-twitter text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Tweet Counter</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Count characters for X posts.</p>
+                    </div>
+                </a>
+
+                <a href="/instagram_reel_caption_formatter/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-pink-50 text-pink-600 flex items-center justify-center shrink-0 group-hover:bg-pink-600 group-hover:text-white transition-colors">
+                        <i class="fab fa-instagram text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Reel Formatter</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Clean up Instagram captions.</p>
+                    </div>
+                </a>
+
+                <a href="/emoji_text_generator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-yellow-50 text-yellow-600 flex items-center justify-center shrink-0 group-hover:bg-yellow-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-smile text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Emoji Gen</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Add emojis to your text.</p>
+                    </div>
+                </a>
+
+                <a href="/caption_cleaner_tool/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-slate-50 text-slate-800 flex items-center justify-center shrink-0 group-hover:bg-slate-900 group-hover:text-white transition-colors">
+                        <i class="fas fa-broom text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Caption Cleaner</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Remove unwanted symbols.</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <div id="footer"></div>
+
+    <script>
+    function initializeHeaderScripts() {
+        const header = document.getElementById('header');
+        if (header) {
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 10) {
+                    header.classList.add('scrolled-effect');
+                } else {
+                    header.classList.remove('scrolled-effect');
+                }
+            });
+        }
+    }
+    
+    function initializeFooterScripts() {
+        const yearSpan = document.getElementById('current-year');
+        if(yearSpan) {
+            yearSpan.textContent = new Date().getFullYear();
+        }
+    }
+
+    async function loadComponent(url, elementId, callback) {
+        try {
+            const response = await fetch(url);
+            if (!response.ok) throw new Error('Status: ' + response.status);
+            const text = await response.text();
+            const element = document.getElementById(elementId);
+            if (element) {
+                element.innerHTML = text;
+                if (callback) callback();
+            }
+        } catch (error) {
+            console.error('Error loading component:', error);
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        loadComponent('/components/navbar.html', 'navbar', initializeHeaderScripts);
+        loadComponent('/components/footer.html', 'footer', initializeFooterScripts);
+        
+        const faqToggles = document.querySelectorAll('[data-faq-toggle]');
+        faqToggles.forEach(button => {
+            button.addEventListener('click', () => {
+                const answer = button.nextElementSibling;
+                const icon = button.querySelector('.faq-icon');
+                const isOpening = !answer.style.maxHeight;
+
+                faqToggles.forEach(other => {
+                    if (other !== button) {
+                        other.nextElementSibling.style.maxHeight = null;
+                        other.querySelector('.faq-icon').classList.remove('rotate-90');
+                        other.querySelector('.faq-icon').classList.add('-rotate-90');
+                    }
+                });
+
+                if (isOpening) {
+                    answer.style.maxHeight = answer.scrollHeight + "px";
+                    icon.classList.remove('-rotate-90');
+                    icon.classList.add('rotate-90');
+                } else {
+                    answer.style.maxHeight = null;
+                    icon.classList.remove('rotate-90');
+                    icon.classList.add('-rotate-90');
+                }
+            });
+        });
+    });
+    </script>
+</body>
+</html>
