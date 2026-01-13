@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>UUID v4 Generator – Create Random Unique Identifiers Online | SimpliConvert</title>
+    <meta name="description" content="Generate secure, collision-free UUID v4 strings instantly. Perfect for creating unique database keys, session IDs, or GUIDs for software development.">
+    <meta name="author" content="SimpliConvert">
+    <meta property="og:site_name" content="SimpliConvert">
+    <meta name="robots" content="index, follow">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://simpliconvert.com/uuid_v4_generator/">
+    <meta property="og:title" content="UUID v4 Generator – Generate Secure Random UUIDs">
+    <meta property="og:description" content="Instantly create unique UUID v4 strings. Bulk generate identifiers for your projects with customizable formatting.">
+    <meta property="og:image" content="https://simpliconvert.com/images/uuid-generator-og.jpg">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://simpliconvert.com/uuid_v4_generator/">
+    <meta name="twitter:title" content="UUID v4 Generator – Unique Identifier Creator">
+    <meta name="twitter:description" content="Free online tool to generate version 4 UUIDs. Secure, fast, and runs entirely in your browser.">
+    <meta name="twitter:image" content="https://simpliconvert.com/images/uuid-generator-og.jpg">
+
+    <link rel="canonical" href="https://simpliconvert.com/uuid_v4_generator/">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "UUID v4 Generator",
+      "url": "https://simpliconvert.com/uuid_v4_generator/",
+      "description": "A free online tool to generate secure, random UUID v4 strings for developers and database administrators.",
+      "applicationCategory": "DeveloperApplication",
+      "operatingSystem": "Web Browser",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "SimpliConvert",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://simpliconvert.com/logo.png"
+        }
+      }
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [{
+        "@type": "Question",
+        "name": "What is a UUID v4?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "A UUID (Universally Unique Identifier) version 4 is a 128-bit number used to uniquely identify information in computer systems. Version 4 is specifically generated using random numbers, making the probability of a duplicate virtually zero."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Are these UUIDs safe for production databases?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. UUID v4 is the industry standard for primary keys in distributed systems and databases where you want to avoid sequential ID guessing or central ID generation."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Is my data sent to a server?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "No. The generation happens locally in your browser using the Web Crypto API. No identifiers are ever transmitted or stored on our servers."
+        }
+      }]
+    }
+    </script>
+
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://simpliconvert.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Developer Tools",
+      "item": "https://simpliconvert.com/developer_tools/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "UUID v4 Generator",
+      "item": "https://simpliconvert.com/uuid_v4_generator/"
+    }
+  ]
+}
+</script>
+
+    <script src="/components/core.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #da3f0b;
+            --primary-hover: #b53409;
+            --primary-light: #fff5f2;
+            --bg: #f8fafc;
+            --text-dark: #0f172a;
+            --success: #16a34a;
+            --danger: #dc2626;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text-dark);
+        }
+
+        .code-font {
+            font-family: 'Fira Code', monospace;
+        }
+
+        .hero-card {
+            background: white;
+            border: 1px solid #f1f5f9;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background-color: var(--primary);
+        }
+
+        .prose a {
+            color: #da3f0b;
+            text-decoration: none; 
+        }
+        .prose a:hover {
+            text-decoration: underline; 
+        }
+
+        .animate-fade { animation: fadeIn 0.3s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+        .tool-card {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .tool-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+        }
+
+        textarea {
+            resize: none;
+        }
+        
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 min-h-screen flex flex-col">
+    <div id="navbar"></div>
+
+    <section class="hero-white text-black py-2 md:py-10">
+        <div class="container mx-auto px-4 text-center">
+            <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-2">UUID v4 Generator Online</h1>
+            <p class="text-base text-gray-700 leading-relaxed">
+                Generate secure, random <strong>UUID v4</strong> strings instantly. Create unique identifiers for 
+                <strong>database keys, session IDs, and API tokens</strong> without worrying about collisions.
+            </p>
+        </div>
+    </section>
+
+    <div id="root" class="w-full max-w-6xl mx-auto p-4 sm:p-6"></div>
+
+    <script type="text/babel">
+    const { useState, useEffect } = React;
+
+    const App = () => {
+      const [count, setCount] = useState(1);
+      const [uuids, setUuids] = useState([]);
+      const [uppercase, setUppercase] = useState(false);
+      const [hyphens, setHyphens] = useState(true);
+      const [copyStatus, setCopyStatus] = useState('Copy All');
+      const [showBookmarkToast, setShowBookmarkToast] = useState(false);
+
+      const generateUUID = () => {
+        const newUuids = [];
+        const iterations = Math.min(Math.max(count, 1), 500);
+        
+        for (let i = 0; i < iterations; i++) {
+          let uuid = crypto.randomUUID();
+          if (!hyphens) uuid = uuid.replace(/-/g, '');
+          if (uppercase) uuid = uuid.toUpperCase();
+          newUuids.push(uuid);
+        }
+        setUuids(newUuids);
+      };
+
+      useEffect(() => {
+        generateUUID();
+      }, []);
+
+      const handleCopy = () => {
+        const text = uuids.join('\n');
+        navigator.clipboard.writeText(text);
+        setCopyStatus('Copied!');
+        setTimeout(() => setCopyStatus('Copy All'), 2000);
+      };
+
+      const handleClear = () => {
+        setUuids([]);
+      };
+
+      const handleBookmark = () => {
+        setShowBookmarkToast(true);
+        setTimeout(() => setShowBookmarkToast(false), 3000);
+      };
+
+      return (
+        <div className="bg-white rounded-[2rem] shadow-2xl overflow-hidden border border-slate-100">
+          <header className="bg-slate-50/50 border-b border-slate-100 p-6 md:p-8 flex flex-col md:flex-row justify-between items-center gap-6">
+            <div className="text-center md:text-left">
+              <h2 className="text-2xl font-black text-slate-800 tracking-tight flex items-center justify-center md:justify-start gap-3">
+                <span className="bg-[#da3f0b] text-white p-2 rounded-xl text-lg shadow-lg shadow-[#da3f0b30]">
+                  <i className="fas fa-fingerprint"></i>
+                </span>
+                Unique ID Creator
+              </h2>
+            </div>
+            
+            <div className="flex flex-wrap justify-center gap-4">
+              <div className="relative min-w-[100px]">
+                <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1 ml-1">Quantity</label>
+                <input 
+                  type="number"
+                  min="1"
+                  max="500"
+                  value={count}
+                  onChange={(e) => setCount(parseInt(e.target.value) || 1)}
+                  aria-label="Number of UUIDs to generate"
+                  className="w-full bg-white border border-slate-200 text-slate-700 py-2 px-4 rounded-xl text-xs font-bold focus:outline-none focus:ring-4 focus:ring-[#da3f0b15] focus:border-[#da3f0b] shadow-sm"
+                />
+              </div>
+
+              <div className="flex flex-col justify-end">
+                <button 
+                  onClick={() => setUppercase(!uppercase)}
+                  aria-label="Toggle Uppercase"
+                  className={`py-2 px-4 rounded-xl text-xs font-bold transition-all border ${uppercase ? 'bg-[#da3f0b] text-white border-[#da3f0b]' : 'bg-white text-slate-600 border-slate-200'}`}
+                >
+                  UPPERCASE
+                </button>
+              </div>
+
+              <div className="flex flex-col justify-end">
+                <button 
+                  onClick={() => setHyphens(!hyphens)}
+                  aria-label="Toggle Hyphens"
+                  className={`py-2 px-4 rounded-xl text-xs font-bold transition-all border ${hyphens ? 'bg-[#da3f0b] text-white border-[#da3f0b]' : 'bg-white text-slate-600 border-slate-200'}`}
+                >
+                  HYPHENS
+                </button>
+              </div>
+
+              <div className="flex flex-col justify-end">
+                <button 
+                  onClick={generateUUID}
+                  aria-label="Generate New UUIDs"
+                  className="py-2 px-6 rounded-xl text-xs font-bold bg-slate-800 text-white hover:bg-black transition-all shadow-md"
+                >
+                  GENERATE
+                </button>
+              </div>
+            </div>
+          </header>
+
+          <main className="flex flex-col min-h-[400px]">
+            <div className="p-4 md:p-8 bg-slate-50/30 flex flex-col flex-grow">
+              <div className="flex justify-between items-center mb-4 px-2">
+                <span className="text-xs font-black text-slate-400 uppercase tracking-widest">Generated UUIDs</span>
+                <div className="flex gap-3">
+                    <button onClick={handleClear} className="text-[10px] font-bold text-slate-400 hover:text-red-500 transition-colors">
+                      <i className="fas fa-trash-alt mr-1"></i> CLEAR
+                    </button>
+                    <button 
+                      onClick={handleCopy}
+                      disabled={uuids.length === 0}
+                      className={`text-[10px] font-bold px-4 py-1.5 rounded-lg transition-all ${uuids.length > 0 ? 'bg-slate-800 text-white hover:bg-black' : 'bg-slate-200 text-slate-400 cursor-not-allowed'}`}
+                    >
+                      <i className={`fas ${copyStatus === 'Copy All' ? 'fa-copy' : 'fa-check'} mr-1`}></i> {copyStatus}
+                    </button>
+                </div>
+              </div>
+              <div className="flex-grow w-full p-6 rounded-2xl border border-slate-200 bg-white code-font text-sm md:text-base custom-scrollbar overflow-y-auto max-h-[500px] shadow-inner">
+                {uuids.length > 0 ? (
+                  uuids.map((id, idx) => (
+                    <div key={idx} className="py-1 border-b border-slate-50 last:border-0 hover:bg-slate-50 transition-colors">
+                      {id}
+                    </div>
+                  ))
+                ) : (
+                  <div className="text-slate-300 italic text-center py-10">No UUIDs generated yet.</div>
+                )}
+              </div>
+            </div>
+          </main>
+
+          <footer className="bg-slate-50 border-t border-slate-100 p-6 md:p-8">
+             <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+                 <div className="text-center md:text-left">
+                     <h4 className="text-sm font-bold text-slate-700 mb-1">Share this generator</h4>
+                     <p className="text-xs text-slate-400">Help other developers generate unique keys easily.</p>
+                 </div>
+                 
+                 <div className="flex flex-wrap justify-center gap-3">
+                     <a href={`https://twitter.com/intent/tweet?text=Check out this UUID v4 Generator!&url=${encodeURIComponent(window.location.href)}`} target="_blank" className="w-10 h-10 rounded-full flex items-center justify-center text-white bg-[#1DA1F2] hover:-translate-y-1 transition-transform"><i className="fab fa-twitter"></i></a>
+                     <a href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`} target="_blank" className="w-10 h-10 rounded-full flex items-center justify-center text-white bg-[#1877F2] hover:-translate-y-1 transition-transform"><i className="fab fa-facebook-f"></i></a>
+                     <a href={`https://api.whatsapp.com/send?text=UUID Generator: ${encodeURIComponent(window.location.href)}`} target="_blank" className="w-10 h-10 rounded-full flex items-center justify-center text-white bg-[#25D366] hover:-translate-y-1 transition-transform"><i className="fab fa-whatsapp"></i></a>
+                 </div>
+
+                 <div className="relative">
+                     <button 
+                        onClick={handleBookmark}
+                        className="flex items-center gap-2 bg-white border border-slate-200 hover:border-[#da3f0b] hover:text-[#da3f0b] text-slate-600 px-4 py-2 rounded-lg text-sm font-bold transition-all shadow-sm active:scale-95"
+                     >
+                        <i className="fas fa-bookmark"></i> Bookmark
+                     </button>
+                     {showBookmarkToast && (
+                         <div className="absolute bottom-full mb-3 left-1/2 -translate-x-1/2 bg-slate-800 text-white text-xs py-2 px-4 rounded-lg shadow-lg whitespace-nowrap animate-fade">
+                             Press <span className="font-bold text-[#da3f0b]">Ctrl + D</span> to bookmark
+                         </div>
+                     )}
+                 </div>
+             </div>
+          </footer>
+        </div>
+      );
+    };
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+    </script>
+
+    <p class="text-center mt-4 mb-10">
+        <a href="https://simpliconvert.com/developer_tools/" class="text-primary font-medium hover:underline">
+            ← Back to All Developer Tools
+        </a>
+    </p>
+
+    <section class="bg-white py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="prose prose-lg max-w-none prose-h2:text-gray-800 prose-p:text-gray-700">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">UUID v4 Generator – Reliable Unique IDs for Every Project</h2>
+                <p class="mb-6 leading-relaxed">
+                    In modern software architecture, ensuring that every record, user, or session has a truly unique identifier is critical. Our <strong>UUID v4 Generator</strong> provides a seamless way to create these identifiers without the risk of collisions. Unlike sequential IDs, which can be predicted and may leak business data, a random UUID (Universally Unique Identifier) offers a high level of security and anonymity.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Why Choose Version 4 UUIDs?</h2>
+                <p class="mb-6 leading-relaxed">
+                    While there are several versions of UUIDs, Version 4 is the most popular because it relies entirely on random numbers. This makes it perfect for distributed systems where multiple servers need to generate IDs simultaneously without communicating with a central authority. Whether you are building a REST API or setting up a new database schema, using a <strong>unique identifier creator</strong> ensures your data remains organized and scalable.
+                </p>
+                <p class="mb-6 leading-relaxed">
+                    If you are also working with web data, you might find our <a href="https://simpliconvert.com/json_formatter_validator/" target="_blank">JSON Formatter and Validator</a> helpful for structuring the data that these UUIDs will identify.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Features of Our GUID Generator</h2>
+                <ul class="list-disc pl-6 mb-6 space-y-2 text-gray-700">
+                    <li><strong>Bulk Generation:</strong> Create up to 500 UUIDs at once for large-scale testing or database seeding.</li>
+                    <li><strong>Custom Formatting:</strong> Toggle between uppercase and lowercase, or remove hyphens for compact storage.</li>
+                    <li><strong>Privacy-Centric:</strong> All generation happens via the Web Crypto API in your browser. Your IDs are never sent to our servers.</li>
+                    <li><strong>Developer Friendly:</strong> One-click copy functionality to quickly move your IDs into your code or <a href="https://simpliconvert.com/url_slug_generator/" target="_blank">URL Slug Generator</a>.</li>
+                </ul>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">How to Use the UUID Creator</h2>
+                <ol class="list-decimal pl-6 mb-6 space-y-2 text-gray-700">
+                    <li><strong>Select Quantity:</strong> Enter the number of unique strings you need (up to 500).</li>
+                    <li><strong>Set Preferences:</strong> Choose if you want the IDs in uppercase or if you want to strip the hyphens.</li>
+                    <li><strong>Generate:</strong> Click the "Generate" button to refresh the list with new random values.</li>
+                    <li><strong>Copy:</strong> Use the "Copy All" button to save the entire list to your clipboard.</li>
+                </ol>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Practical Applications</h2>
+                <p class="mb-6 leading-relaxed">
+                    Developers use UUIDs for everything from primary keys in PostgreSQL and MongoDB to generating unique filenames for cloud storage. Because they are 128-bit values, the chance of a collision is so small that it is effectively zero for most human applications. If you're working on low-level data representation, you might also be interested in our <a href="https://simpliconvert.com/binary_code_translator/" target="_blank">Binary Code Translator</a> to see how data is structured at its core.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-center text-gray-900 mb-8">Frequently Asked Questions</h2>
+            <div class="space-y-4">
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>What is the difference between UUID and GUID?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">
+                            Essentially, they are the same. GUID (Globally Unique Identifier) is Microsoft's implementation of the UUID standard. Both are 128-bit identifiers used for the same purpose of uniqueness.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>Can two UUID v4s ever be the same?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">
+                            While mathematically possible, the probability is astronomical. You would need to generate billions of UUIDs every second for many years to have even a small chance of a collision. It is safe to assume they are unique.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>Is this tool free to use?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">
+                            Yes, our UUID v4 Generator is 100% free and requires no registration. You can generate as many identifiers as you need for your personal or commercial projects.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 pb-16">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-slate-200 pt-16">
+            <h2 class="text-2xl font-bold text-center text-slate-800 mb-10">Popular Tools on SimpliConvert</h2>
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+                <a href="/password_generator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-slate-50 text-slate-700 flex items-center justify-center shrink-0 group-hover:bg-slate-800 group-hover:text-white transition-colors">
+                        <i class="fas fa-key text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Password Gen</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Create secure, random passwords.</p>
+                    </div>
+                </a>
+
+                <a href="/json_formatter_validator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center shrink-0 group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-code text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">JSON Tool</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Format and validate JSON data.</p>
+                    </div>
+                </a>
+
+                <a href="/url_slug_generator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-green-50 text-green-600 flex items-center justify-center shrink-0 group-hover:bg-green-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-link text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Slug Gen</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Convert text to SEO-friendly URLs.</p>
+                    </div>
+                </a>
+
+                <a href="/qr_code_generator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-slate-50 text-slate-800 flex items-center justify-center shrink-0 group-hover:bg-slate-900 group-hover:text-white transition-colors">
+                        <i class="fas fa-qrcode text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">QR Creator</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Generate custom QR codes instantly.</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <div id="footer"></div>
+
+    <script>
+    function initializeHeaderScripts() {
+        const header = document.getElementById('header');
+        if (header) {
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 10) {
+                    header.classList.add('scrolled-effect');
+                } else {
+                    header.classList.remove('scrolled-effect');
+                }
+            });
+        }
+    }
+    
+    function initializeFooterScripts() {
+        const yearSpan = document.getElementById('current-year');
+        if(yearSpan) {
+            yearSpan.textContent = new Date().getFullYear();
+        }
+    }
+
+    async function loadComponent(url, elementId, callback) {
+        try {
+            const response = await fetch(url);
+            if (!response.ok) throw new Error('Status: ' + response.status);
+            const text = await response.text();
+            const element = document.getElementById(elementId);
+            if (element) {
+                element.innerHTML = text;
+                if (callback) callback();
+            }
+        } catch (error) {
+            console.error('Error loading component:', error);
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        loadComponent('/components/navbar.html', 'navbar', initializeHeaderScripts);
+        loadComponent('/components/footer.html', 'footer', initializeFooterScripts);
+        
+        const faqToggles = document.querySelectorAll('[data-faq-toggle]');
+        faqToggles.forEach(button => {
+            button.addEventListener('click', () => {
+                const answer = button.nextElementSibling;
+                const icon = button.querySelector('.faq-icon');
+                const isOpening = !answer.style.maxHeight;
+
+                faqToggles.forEach(other => {
+                    if (other !== button) {
+                        other.nextElementSibling.style.maxHeight = null;
+                        other.querySelector('.faq-icon').classList.remove('rotate-90');
+                        other.querySelector('.faq-icon').classList.add('-rotate-90');
+                    }
+                });
+
+                if (isOpening) {
+                    answer.style.maxHeight = answer.scrollHeight + "px";
+                    icon.classList.remove('-rotate-90');
+                    icon.classList.add('rotate-90');
+                } else {
+                    answer.style.maxHeight = null;
+                    icon.classList.remove('rotate-90');
+                    icon.classList.add('-rotate-90');
+                }
+            });
+        });
+    });
+    </script>
+</body>
+</html>

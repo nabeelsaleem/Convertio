@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>JSON Minifier – Compress & Minify JSON Online | SimpliConvert</title>
+    <meta name="description" content="Instantly compress your JSON code by removing unnecessary whitespace and comments. Boost API performance and reduce file size with our free online JSON Minifier.">
+    <meta name="author" content="SimpliConvert">
+    <meta property="og:site_name" content="SimpliConvert">
+    <meta name="robots" content="index, follow">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://simpliconvert.com/json_minifier/">
+    <meta property="og:title" content="JSON Minifier – Reduce JSON Size Instantly">
+    <meta property="og:description" content="Shrink your JSON files for faster load times. Our tool removes whitespace and formatting while keeping your data intact.">
+    <meta property="og:image" content="https://simpliconvert.com/images/json-minifier-og.jpg">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://simpliconvert.com/json_minifier/">
+    <meta name="twitter:title" content="JSON Minifier – Compress JSON Online">
+    <meta name="twitter:description" content="Free online tool to minify JSON code. Improve API response times and save bandwidth by removing unnecessary characters.">
+    <meta name="twitter:image" content="https://simpliconvert.com/images/json-minifier-og.jpg">
+
+    <link rel="canonical" href="https://simpliconvert.com/json_minifier/">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "JSON Minifier",
+      "url": "https://simpliconvert.com/json_minifier/",
+      "description": "A free online tool to compress and minify JSON code by removing whitespace and comments to optimize performance.",
+      "applicationCategory": "DeveloperApplication",
+      "operatingSystem": "Web Browser",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "SimpliConvert",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://simpliconvert.com/logo.png"
+        }
+      }
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [{
+        "@type": "Question",
+        "name": "Does minifying JSON change the data structure?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Absolutely not. Minification only removes 'insignificant' whitespace like spaces, tabs, and newlines. The actual keys, values, and hierarchy of your data remain exactly the same."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Why should I minify my JSON files?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Minified JSON results in smaller file sizes, which means faster data transmission over networks. This is crucial for optimizing API performance and reducing bandwidth costs in high-traffic applications."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Is my data safe when using this minifier?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. Our JSON Minifier runs entirely in your browser. Your data is never uploaded to our servers, ensuring your sensitive configuration files or API responses stay private."
+        }
+      }]
+    }
+    </script>
+
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://simpliconvert.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Developer Tools",
+      "item": "https://simpliconvert.com/developer_tools/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "JSON Minifier",
+      "item": "https://simpliconvert.com/json_minifier/"
+    }
+  ]
+}
+</script>
+
+    <script src="/components/core.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #da3f0b;
+            --primary-hover: #b53409;
+            --primary-light: #fff5f2;
+            --bg: #f8fafc;
+            --text-dark: #0f172a;
+            --success: #16a34a;
+            --danger: #dc2626;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text-dark);
+        }
+
+        .code-font {
+            font-family: 'Fira Code', monospace;
+        }
+
+        .hero-card {
+            background: white;
+            border: 1px solid #f1f5f9;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background-color: var(--primary);
+        }
+
+        .prose a {
+            color: #da3f0b;
+            text-decoration: none; 
+        }
+        .prose a:hover {
+            text-decoration: underline; 
+        }
+
+        .animate-fade { animation: fadeIn 0.3s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+        .tool-card {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .tool-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+        }
+
+        textarea {
+            resize: none;
+        }
+        
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 min-h-screen flex flex-col">
+    <div id="navbar"></div>
+
+    <section class="hero-white text-black py-2 md:py-10">
+        <div class="container mx-auto px-4 text-center">
+            <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-2">JSON Minifier – Compress JSON Online</h1>
+            <p class="text-base text-gray-700 leading-relaxed max-w-2xl mx-auto">
+                Shrink your JSON files instantly. Our <strong>JSON Minifier</strong> removes unnecessary whitespace and formatting to optimize your code for faster API performance and reduced bandwidth usage.
+            </p>
+        </div>
+    </section>
+
+    <div id="root" class="w-full max-w-6xl mx-auto p-4 sm:p-6"></div>
+
+    <script type="text/babel">
+    const { useState, useEffect } = React;
+
+    const App = () => {
+      const [input, setInput] = useState('');
+      const [output, setOutput] = useState('');
+      const [error, setError] = useState('');
+      const [copyStatus, setCopyStatus] = useState('Copy');
+      const [showBookmarkToast, setShowBookmarkToast] = useState(false);
+      const [stats, setStats] = useState({ original: 0, minified: 0, reduction: 0 });
+
+      const minifyJSON = () => {
+        if (!input.trim()) {
+          setOutput('');
+          setError('');
+          setStats({ original: 0, minified: 0, reduction: 0 });
+          return;
+        }
+        try {
+          const parsed = JSON.parse(input);
+          const minified = JSON.stringify(parsed);
+          setOutput(minified);
+          setError('');
+          
+          const origSize = new Blob([input]).size;
+          const miniSize = new Blob([minified]).size;
+          const reduction = origSize > 0 ? ((origSize - miniSize) / origSize * 100).toFixed(1) : 0;
+          
+          setStats({
+            original: origSize,
+            minified: miniSize,
+            reduction: reduction
+          });
+        } catch (err) {
+          setError('Invalid JSON: ' + err.message);
+          setOutput('');
+          setStats({ original: 0, minified: 0, reduction: 0 });
+        }
+      };
+
+      useEffect(() => {
+        const timeoutId = setTimeout(() => {
+          minifyJSON();
+        }, 300);
+        return () => clearTimeout(timeoutId);
+      }, [input]);
+
+      const handleCopy = () => {
+        if (!output) return;
+        navigator.clipboard.writeText(output);
+        setCopyStatus('Copied!');
+        setTimeout(() => setCopyStatus('Copy'), 2000);
+      };
+
+      const handleClear = () => {
+        setInput('');
+        setOutput('');
+        setError('');
+      };
+
+      const handleBookmark = () => {
+        setShowBookmarkToast(true);
+        setTimeout(() => setShowBookmarkToast(false), 3000);
+      };
+
+      return (
+        <div className="bg-white rounded-[2rem] shadow-2xl overflow-hidden border border-slate-100">
+          <header className="bg-slate-50/50 border-b border-slate-100 p-6 md:p-8 flex flex-col md:flex-row justify-between items-center gap-6">
+            <div className="text-center md:text-left">
+              <h2 className="text-2xl font-black text-slate-800 tracking-tight flex items-center justify-center md:justify-start gap-3">
+                <span className="bg-[#da3f0b] text-white p-2 rounded-xl text-lg shadow-lg shadow-[#da3f0b30]">
+                  <i className="fas fa-compress-alt"></i>
+                </span>
+                JSON Compressor
+              </h2>
+            </div>
+            
+            <div className="flex flex-wrap justify-center gap-4">
+              {stats.minified > 0 && (
+                <div className="flex gap-4 animate-fade">
+                    <div className="text-center px-4 py-2 bg-green-50 rounded-xl border border-green-100">
+                        <p className="text-[10px] font-black text-green-600 uppercase tracking-widest">Reduction</p>
+                        <p className="text-sm font-bold text-green-700">{stats.reduction}%</p>
+                    </div>
+                    <div className="text-center px-4 py-2 bg-blue-50 rounded-xl border border-blue-100">
+                        <p className="text-[10px] font-black text-blue-600 uppercase tracking-widest">Final Size</p>
+                        <p className="text-sm font-bold text-blue-700">{stats.minified} bytes</p>
+                    </div>
+                </div>
+              )}
+            </div>
+          </header>
+
+          <main className="flex flex-col lg:flex-row min-h-[500px]">
+            {/* Input Panel */}
+            <div className="lg:w-1/2 p-4 md:p-6 border-r border-slate-100 flex flex-col">
+              <div className="flex justify-between items-center mb-3 px-2">
+                <span className="text-xs font-black text-slate-400 uppercase tracking-widest">Source JSON</span>
+                <button onClick={handleClear} className="text-[10px] font-bold text-slate-400 hover:text-red-500 transition-colors">
+                  <i className="fas fa-trash-alt mr-1"></i> CLEAR
+                </button>
+              </div>
+              <textarea
+                className={`flex-grow w-full p-4 rounded-2xl border ${error ? 'border-red-300' : 'border-slate-200'} focus:ring-4 focus:ring-[#da3f0b15] focus:border-[#da3f0b] outline-none code-font text-sm custom-scrollbar bg-slate-50/30`}
+                placeholder="Paste your pretty-printed JSON here..."
+                aria-label="Input JSON"
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+              ></textarea>
+              {error && <p className="mt-2 text-xs text-red-500 font-medium px-2"><i className="fas fa-exclamation-circle mr-1"></i> {error}</p>}
+            </div>
+
+            {/* Output Panel */}
+            <div className="lg:w-1/2 p-4 md:p-6 bg-slate-50/50 flex flex-col">
+              <div className="flex justify-between items-center mb-3 px-2">
+                <span className="text-xs font-black text-slate-400 uppercase tracking-widest">Minified Result</span>
+                <button 
+                  onClick={handleCopy}
+                  disabled={!output}
+                  className={`text-[10px] font-bold px-3 py-1 rounded-lg transition-all ${output ? 'bg-slate-800 text-white hover:bg-black' : 'bg-slate-200 text-slate-400 cursor-not-allowed'}`}
+                >
+                  <i className={`fas ${copyStatus === 'Copy' ? 'fa-copy' : 'fa-check'} mr-1`}></i> {copyStatus}
+                </button>
+              </div>
+              <textarea
+                readOnly
+                aria-label="Minified JSON Output"
+                className="flex-grow w-full p-4 rounded-2xl border border-slate-200 bg-white code-font text-sm custom-scrollbar outline-none"
+                placeholder="Minified JSON will appear here..."
+                value={output}
+              ></textarea>
+            </div>
+          </main>
+
+          <footer className="bg-slate-50 border-t border-slate-100 p-6 md:p-8">
+             <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+                 <div className="text-center md:text-left">
+                     <h4 className="text-sm font-bold text-slate-700 mb-1">Share this tool</h4>
+                     <p className="text-xs text-slate-400">Help others optimize their web applications.</p>
+                 </div>
+                 
+                 <div className="flex flex-wrap justify-center gap-3">
+                     <a href={`https://twitter.com/intent/tweet?text=Check out this JSON Minifier!&url=${encodeURIComponent(window.location.href)}`} target="_blank" className="w-10 h-10 rounded-full flex items-center justify-center text-white bg-[#1DA1F2] hover:-translate-y-1 transition-transform"><i className="fab fa-twitter"></i></a>
+                     <a href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`} target="_blank" className="w-10 h-10 rounded-full flex items-center justify-center text-white bg-[#1877F2] hover:-translate-y-1 transition-transform"><i className="fab fa-facebook-f"></i></a>
+                     <a href={`https://api.whatsapp.com/send?text=JSON Minifier: ${encodeURIComponent(window.location.href)}`} target="_blank" className="w-10 h-10 rounded-full flex items-center justify-center text-white bg-[#25D366] hover:-translate-y-1 transition-transform"><i className="fab fa-whatsapp"></i></a>
+                 </div>
+
+                 <div className="relative">
+                     <button 
+                        onClick={handleBookmark}
+                        className="flex items-center gap-2 bg-white border border-slate-200 hover:border-[#da3f0b] hover:text-[#da3f0b] text-slate-600 px-4 py-2 rounded-lg text-sm font-bold transition-all shadow-sm active:scale-95"
+                     >
+                        <i className="fas fa-bookmark"></i> Bookmark
+                     </button>
+                     {showBookmarkToast && (
+                         <div className="absolute bottom-full mb-3 left-1/2 -translate-x-1/2 bg-slate-800 text-white text-xs py-2 px-4 rounded-lg shadow-lg whitespace-nowrap animate-fade">
+                             Press <span className="font-bold text-[#da3f0b]">Ctrl + D</span> to bookmark
+                         </div>
+                     )}
+                 </div>
+             </div>
+          </footer>
+        </div>
+      );
+    };
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+    </script>
+
+    <p class="text-center mt-4 mb-10">
+        <a href="https://simpliconvert.com/developer_tools/" class="text-primary font-medium hover:underline">
+            ← Back to Developer Tools
+        </a>
+    </p>
+
+    <section class="bg-white py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="prose prose-lg max-w-none prose-h2:text-gray-800 prose-p:text-gray-700">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">JSON Minifier – Optimize Your Data for the Web</h2>
+                <p class="mb-6 leading-relaxed">
+                    In the world of web development, every byte counts. While "pretty-printed" JSON is great for humans to read, it's inefficient for machines to transmit. Our <strong>JSON Minifier</strong> is a specialized tool that strips away all the "fluff"—spaces, tabs, and newlines—to create the leanest possible version of your data. This process, often called compression or shrinking, is a standard practice for developers looking to boost API response times and reduce server costs.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Why Minification Matters</h2>
+                <p class="mb-6 leading-relaxed">
+                    When your application fetches data from a server, the size of that data directly impacts how fast your app feels to the user. Large, unminified JSON files consume more bandwidth and take longer to parse. By using a <strong>minify JSON online</strong> utility, you can often reduce file sizes by 20% to 50% without losing a single piece of information. This is especially critical for mobile users on slower networks where latency is a major factor.
+                </p>
+                <p class="mb-6 leading-relaxed">
+                    If you find yourself needing to reverse this process for debugging, you can always use our <a href="https://simpliconvert.com/json_formatter_and_validator/" target="_blank">JSON Formatter and Validator</a> to make the code readable again.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Features of Our JSON Compressor</h2>
+                <ul class="list-disc pl-6 mb-6 space-y-2 text-gray-700">
+                    <li><strong>Real-time Compression:</strong> See your minified code instantly as you paste.</li>
+                    <li><strong>Size Statistics:</strong> We show you exactly how many bytes you've saved.</li>
+                    <li><strong>Error Detection:</strong> Our tool validates your JSON before minifying to ensure your data is sound.</li>
+                    <li><strong>Browser-Based Privacy:</strong> Just like our <a href="https://simpliconvert.com/base64_encoder_decoder_online/" target="_blank">Base64 Encoder/Decoder</a>, all processing happens on your device.</li>
+                    <li><strong>One-Click Copy:</strong> Quickly grab your optimized code for deployment.</li>
+                </ul>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">How to Use the JSON Minifier</h2>
+                <p class="mb-6 leading-relaxed">
+                    Optimizing your code shouldn't be a chore. Follow these simple steps:
+                </p>
+                <ol class="list-decimal pl-6 mb-6 space-y-2 text-gray-700">
+                    <li><strong>Paste:</strong> Drop your formatted JSON into the "Source JSON" area.</li>
+                    <li><strong>Validate:</strong> The tool will automatically check for syntax errors.</li>
+                    <li><strong>Compress:</strong> The minified version appears instantly in the right-hand panel.</li>
+                    <li><strong>Deploy:</strong> Copy the result and use it in your production environment or API calls.</li>
+                </ol>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">A Must-Have for Modern Developers</h2>
+                <p class="mb-6 leading-relaxed">
+                    Whether you are building a React app, a REST API, or configuring a server, clean and compact data is key. This tool is part of our suite of developer utilities, including the <a href="https://simpliconvert.com/url_encoder_decoder_online/" target="_blank">URL Encoder/Decoder</a>, designed to make your daily coding tasks smoother and more efficient. Stop shipping whitespace and start shipping performance.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-center text-gray-900 mb-8">JSON Minifier – Frequently Asked Questions</h2>
+            <div class="space-y-4">
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>Does minifying JSON affect the data?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">
+                            No. Minification only removes whitespace, tabs, and newlines that are outside of string values. The actual data structure, keys, and values remain identical. It is a non-destructive process.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>Can I minify invalid JSON?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">
+                            No. To ensure your data remains functional, our tool parses the JSON before minifying it. If there is a syntax error (like a missing comma or bracket), the tool will alert you so you can fix it before compression.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>Is there a file size limit?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">
+                            Since the tool runs in your browser, the limit depends on your device's memory. It can easily handle several megabytes of JSON data. For extremely large files (100MB+), browser performance may vary.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 pb-16">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-slate-200 pt-16">
+            <h2 class="text-2xl font-bold text-center text-slate-800 mb-10">Popular Tools on SimpliConvert</h2>
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+                <a href="/json_formatter_and_validator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0 group-hover:bg-indigo-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-code text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">JSON Formatter</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Beautify and validate JSON.</p>
+                    </div>
+                </a>
+
+                <a href="/url_encoder_decoder_online/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center shrink-0 group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-link text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">URL Encoder</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Encode or decode URLs safely.</p>
+                    </div>
+                </a>
+
+                <a href="/base64_encoder_decoder_online/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-slate-50 text-slate-700 flex items-center justify-center shrink-0 group-hover:bg-slate-800 group-hover:text-white transition-colors">
+                        <i class="fas fa-exchange-alt text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Base64 Tool</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Convert text to Base64 format.</p>
+                    </div>
+                </a>
+
+                <a href="/password_generator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-slate-50 text-slate-700 flex items-center justify-center shrink-0 group-hover:bg-slate-800 group-hover:text-white transition-colors">
+                        <i class="fas fa-key text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Password Gen</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Create secure, random passwords.</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <div id="footer"></div>
+
+    <script>
+    function initializeHeaderScripts() {
+        const header = document.getElementById('header');
+        if (header) {
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 10) {
+                    header.classList.add('scrolled-effect');
+                } else {
+                    header.classList.remove('scrolled-effect');
+                }
+            });
+        }
+    }
+    
+    function initializeFooterScripts() {
+        const yearSpan = document.getElementById('current-year');
+        if(yearSpan) {
+            yearSpan.textContent = new Date().getFullYear();
+        }
+    }
+
+    async function loadComponent(url, elementId, callback) {
+        try {
+            const response = await fetch(url);
+            if (!response.ok) throw new Error('Status: ' + response.status);
+            const text = await response.text();
+            const element = document.getElementById(elementId);
+            if (element) {
+                element.innerHTML = text;
+                if (callback) callback();
+            }
+        } catch (error) {
+            console.error('Error loading component:', error);
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        loadComponent('/components/navbar.html', 'navbar', initializeHeaderScripts);
+        loadComponent('/components/footer.html', 'footer', initializeFooterScripts);
+        
+        const faqToggles = document.querySelectorAll('[data-faq-toggle]');
+        faqToggles.forEach(button => {
+            button.addEventListener('click', () => {
+                const answer = button.nextElementSibling;
+                const icon = button.querySelector('.faq-icon');
+                const isOpening = !answer.style.maxHeight;
+
+                faqToggles.forEach(other => {
+                    if (other !== button) {
+                        other.nextElementSibling.style.maxHeight = null;
+                        other.querySelector('.faq-icon').classList.remove('rotate-90');
+                        other.querySelector('.faq-icon').classList.add('-rotate-90');
+                    }
+                });
+
+                if (isOpening) {
+                    answer.style.maxHeight = answer.scrollHeight + "px";
+                    icon.classList.remove('-rotate-90');
+                    icon.classList.add('rotate-90');
+                } else {
+                    answer.style.maxHeight = null;
+                    icon.classList.remove('rotate-90');
+                    icon.classList.add('-rotate-90');
+                }
+            });
+        });
+    });
+    </script>
+</body>
+</html>

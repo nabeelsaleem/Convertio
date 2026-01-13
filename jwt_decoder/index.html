@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>JWT Decoder Online – Read & Debug JSON Web Tokens | SimpliConvert</title>
+    <meta name="description" content="Instantly decode JSON Web Tokens (JWT) to view header and payload data. A secure, browser-based JWT viewer for developers to debug tokens without needing a private key.">
+    <meta name="author" content="SimpliConvert">
+    <meta property="og:site_name" content="SimpliConvert">
+    <meta name="robots" content="index, follow">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://simpliconvert.com/jwt_decoder/">
+    <meta property="og:title" content="JWT Decoder Online – Read & Debug JSON Web Tokens">
+    <meta property="og:description" content="Paste a JWT to instantly see the header and payload data. Secure, client-side decoding for faster debugging.">
+    <meta property="og:image" content="https://simpliconvert.com/images/jwt-decoder-og.jpg">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://simpliconvert.com/jwt_decoder/">
+    <meta name="twitter:title" content="JWT Decoder Online – Parse JSON Web Tokens Instantly">
+    <meta name="twitter:description" content="Free online tool to decode and inspect JWTs. View claims, headers, and expiration dates without sending data to a server.">
+    <meta name="twitter:image" content="https://simpliconvert.com/images/jwt-decoder-og.jpg">
+
+    <link rel="canonical" href="https://simpliconvert.com/jwt_decoder/">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "JWT Decoder Online",
+      "url": "https://simpliconvert.com/jwt_decoder/",
+      "description": "A secure online tool to decode and inspect JSON Web Tokens (JWT) header and payload data.",
+      "applicationCategory": "DeveloperApplication",
+      "operatingSystem": "Web Browser",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "SimpliConvert",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://simpliconvert.com/logo.png"
+        }
+      }
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [{
+        "@type": "Question",
+        "name": "Is it safe to decode my JWT here?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. Our JWT Decoder works entirely in your browser. The token is never sent to our servers, ensuring your sensitive authentication data remains private."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Do I need a secret key to decode a JWT?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "No. You only need a secret key to verify the signature or encode a new token. Decoding the header and payload is possible because they are simply Base64Url encoded."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Can this tool modify a JWT?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "This specific tool is a viewer/decoder. While you can see the data, any manual changes to the payload would invalidate the signature unless you re-sign it with the original private key."
+        }
+      }]
+    }
+    </script>
+
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://simpliconvert.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Developer Tools",
+      "item": "https://simpliconvert.com/developer_tools/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "JWT Decoder",
+      "item": "https://simpliconvert.com/jwt_decoder/"
+    }
+  ]
+}
+</script>
+
+    <script src="/components/core.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #da3f0b;
+            --primary-hover: #b53409;
+            --primary-light: #fff5f2;
+            --bg: #f8fafc;
+            --text-dark: #0f172a;
+            --success: #16a34a;
+            --danger: #dc2626;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text-dark);
+        }
+
+        .code-font {
+            font-family: 'Fira Code', monospace;
+        }
+
+        .hero-card {
+            background: white;
+            border: 1px solid #f1f5f9;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background-color: var(--primary);
+        }
+
+        .prose a {
+            color: #da3f0b;
+            text-decoration: none; 
+        }
+        .prose a:hover {
+            text-decoration: underline; 
+        }
+
+        .animate-fade { animation: fadeIn 0.3s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+        .tool-card {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .tool-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+        }
+
+        textarea {
+            resize: none;
+        }
+        
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        .jwt-header { color: #fb7185; }
+        .jwt-payload { color: #38bdf8; }
+        .jwt-signature { color: #4ade80; }
+    </style>
+</head>
+
+<body class="bg-gray-50 min-h-screen flex flex-col">
+    <div id="navbar"></div>
+
+    <section class="hero-white text-black py-2 md:py-10">
+        <div class="container mx-auto px-4 text-center">
+            <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-2">JWT Decoder Online</h1>
+            <p class="text-base text-gray-700 leading-relaxed max-w-2xl mx-auto">
+                Instantly parse and debug <strong>JSON Web Tokens</strong>. View your token's header, payload, and claims in a readable format without compromising security.
+            </p>
+        </div>
+    </section>
+
+    <div id="root" class="w-full max-w-6xl mx-auto p-4 sm:p-6"></div>
+
+    <script type="text/babel">
+    const { useState, useEffect } = React;
+
+    const App = () => {
+      const [token, setToken] = useState('');
+      const [decoded, setDecoded] = useState({ header: null, payload: null, error: '' });
+      const [copyStatus, setCopyStatus] = useState('Copy Payload');
+      const [showBookmarkToast, setShowBookmarkToast] = useState(false);
+
+      const decodeToken = (jwt) => {
+        if (!jwt.trim()) {
+          setDecoded({ header: null, payload: null, error: '' });
+          return;
+        }
+
+        const parts = jwt.split('.');
+        if (parts.length !== 3) {
+          setDecoded({ header: null, payload: null, error: 'Invalid JWT: A token must have 3 parts separated by dots.' });
+          return;
+        }
+
+        try {
+          const base64UrlDecode = (str) => {
+            const base64 = str.replace(/-/g, '+').replace(/_/g, '/');
+            const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+                return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+            }).join(''));
+            return JSON.parse(jsonPayload);
+          };
+
+          const header = base64UrlDecode(parts[0]);
+          const payload = base64UrlDecode(parts[1]);
+
+          setDecoded({ header, payload, error: '' });
+        } catch (err) {
+          setDecoded({ header: null, payload: null, error: 'Error decoding token. Ensure it is a valid Base64Url string.' });
+        }
+      };
+
+      useEffect(() => {
+        decodeToken(token);
+      }, [token]);
+
+      const handleCopy = (data, type) => {
+        navigator.clipboard.writeText(JSON.stringify(data, null, 2));
+        setCopyStatus(`Copied ${type}!`);
+        setTimeout(() => setCopyStatus('Copy Payload'), 2000);
+      };
+
+      const handleClear = () => {
+        setToken('');
+      };
+
+      const handleBookmark = () => {
+        setShowBookmarkToast(true);
+        setTimeout(() => setShowBookmarkToast(false), 3000);
+      };
+
+      return (
+        <div className="bg-white rounded-[2rem] shadow-2xl overflow-hidden border border-slate-100">
+          <header className="bg-slate-50/50 border-b border-slate-100 p-6 md:p-8 flex flex-col md:flex-row justify-between items-center gap-6">
+            <div className="text-center md:text-left">
+              <h2 className="text-2xl font-black text-slate-800 tracking-tight flex items-center justify-center md:justify-start gap-3">
+                <span className="bg-[#da3f0b] text-white p-2 rounded-xl text-lg shadow-lg shadow-[#da3f0b30]">
+                  <i className="fas fa-shield-alt"></i>
+                </span>
+                JWT Debugger & Viewer
+              </h2>
+            </div>
+            <div className="flex gap-3">
+                <span className="px-3 py-1 bg-green-100 text-green-700 text-[10px] font-bold rounded-full uppercase tracking-wider">
+                    <i className="fas fa-lock mr-1"></i> 100% Client-Side
+                </span>
+            </div>
+          </header>
+
+          <main className="flex flex-col lg:flex-row min-h-[550px]">
+            {/* Input Panel */}
+            <div className="lg:w-1/2 p-4 md:p-6 border-r border-slate-100 flex flex-col">
+              <div className="flex justify-between items-center mb-3 px-2">
+                <span className="text-xs font-black text-slate-400 uppercase tracking-widest">Encoded Token</span>
+                <button onClick={handleClear} className="text-[10px] font-bold text-slate-400 hover:text-red-500 transition-colors" aria-label="Clear Input">
+                  <i className="fas fa-trash-alt mr-1"></i> CLEAR
+                </button>
+              </div>
+              <textarea
+                className="flex-grow w-full p-4 rounded-2xl border border-slate-200 focus:ring-4 focus:ring-[#da3f0b15] focus:border-[#da3f0b] outline-none code-font text-sm custom-scrollbar bg-slate-50/30 leading-relaxed"
+                placeholder="Paste your JWT here (header.payload.signature)..."
+                value={token}
+                onChange={(e) => setToken(e.target.value)}
+                aria-label="JWT Input Area"
+              ></textarea>
+              {decoded.error && (
+                <div className="mt-4 p-3 bg-red-50 border border-red-100 text-red-600 text-xs rounded-xl font-medium animate-fade">
+                   <i className="fas fa-exclamation-circle mr-2"></i> {decoded.error}
+                </div>
+              )}
+            </div>
+
+            {/* Output Panel */}
+            <div className="lg:w-1/2 p-4 md:p-6 bg-slate-50/50 flex flex-col gap-6">
+              {/* Header Section */}
+              <div className="flex flex-col h-1/3">
+                <div className="flex justify-between items-center mb-2 px-2">
+                    <span className="text-xs font-black text-slate-400 uppercase tracking-widest">Header <span className="text-[10px] font-medium lowercase">(Algorithm & Token Type)</span></span>
+                </div>
+                <div className="flex-grow bg-white border border-slate-200 rounded-2xl p-4 overflow-auto custom-scrollbar">
+                    <pre className="code-font text-xs jwt-header">
+                        {decoded.header ? JSON.stringify(decoded.header, null, 2) : '// Header data will appear here'}
+                    </pre>
+                </div>
+              </div>
+
+              {/* Payload Section */}
+              <div className="flex flex-col h-2/3">
+                <div className="flex justify-between items-center mb-2 px-2">
+                    <span className="text-xs font-black text-slate-400 uppercase tracking-widest">Payload <span className="text-[10px] font-medium lowercase">(Data & Claims)</span></span>
+                    {decoded.payload && (
+                        <button 
+                            onClick={() => handleCopy(decoded.payload, 'Payload')}
+                            className="text-[10px] font-bold text-[#da3f0b] hover:underline"
+                        >
+                            <i className="fas fa-copy mr-1"></i> {copyStatus === 'Copy Payload' ? 'COPY' : 'COPIED'}
+                        </button>
+                    )}
+                </div>
+                <div className="flex-grow bg-white border border-slate-200 rounded-2xl p-4 overflow-auto custom-scrollbar">
+                    <pre className="code-font text-xs jwt-payload">
+                        {decoded.payload ? JSON.stringify(decoded.payload, null, 2) : '// Payload data will appear here'}
+                    </pre>
+                </div>
+              </div>
+            </div>
+          </main>
+
+          {/* Share & Bookmark Footer */}
+          <footer className="bg-slate-50 border-t border-slate-100 p-6 md:p-8">
+             <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+                 <div className="text-center md:text-left">
+                     <h4 className="text-sm font-bold text-slate-700 mb-1">Share this debugger</h4>
+                     <p className="text-xs text-slate-400">Help other developers inspect their tokens safely.</p>
+                 </div>
+                 
+                 <div className="flex flex-wrap justify-center gap-3">
+                     <a href={`https://twitter.com/intent/tweet?text=Check out this JWT Decoder!&url=${encodeURIComponent(window.location.href)}`} target="_blank" className="w-10 h-10 rounded-full flex items-center justify-center text-white bg-[#1DA1F2] hover:-translate-y-1 transition-transform" aria-label="Share on Twitter"><i className="fab fa-twitter"></i></a>
+                     <a href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`} target="_blank" className="w-10 h-10 rounded-full flex items-center justify-center text-white bg-[#1877F2] hover:-translate-y-1 transition-transform" aria-label="Share on Facebook"><i className="fab fa-facebook-f"></i></a>
+                     <a href={`https://api.whatsapp.com/send?text=JWT Decoder: ${encodeURIComponent(window.location.href)}`} target="_blank" className="w-10 h-10 rounded-full flex items-center justify-center text-white bg-[#25D366] hover:-translate-y-1 transition-transform" aria-label="Share on WhatsApp"><i className="fab fa-whatsapp"></i></a>
+                 </div>
+
+                 <div className="relative">
+                     <button 
+                        onClick={handleBookmark}
+                        className="flex items-center gap-2 bg-white border border-slate-200 hover:border-[#da3f0b] hover:text-[#da3f0b] text-slate-600 px-4 py-2 rounded-lg text-sm font-bold transition-all shadow-sm active:scale-95"
+                     >
+                        <i className="fas fa-bookmark"></i> Bookmark
+                     </button>
+                     {showBookmarkToast && (
+                         <div className="absolute bottom-full mb-3 left-1/2 -translate-x-1/2 bg-slate-800 text-white text-xs py-2 px-4 rounded-lg shadow-lg whitespace-nowrap animate-fade">
+                             Press <span className="font-bold text-[#da3f0b]">Ctrl + D</span> to bookmark
+                         </div>
+                     )}
+                 </div>
+             </div>
+          </footer>
+        </div>
+      );
+    };
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+    </script>
+
+    <p class="text-center mt-4 mb-10">
+        <a href="https://simpliconvert.com/developer_tools/" class="text-primary font-medium hover:underline">
+            ← Back to Developer Tools
+        </a>
+    </p>
+
+    <section class="bg-white py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="prose prose-lg max-w-none prose-h2:text-gray-800 prose-p:text-gray-700">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">What is a JWT Decoder and Why Do You Need It?</h2>
+                <p class="mb-6 leading-relaxed">
+                    JSON Web Tokens (JWT) are the backbone of modern web authentication. They are used to securely transmit information between parties as a JSON object. However, because they are Base64Url encoded, they look like a string of random characters to the human eye. Our <strong>JWT Decoder Online</strong> allows you to "unmask" these tokens instantly.
+                </p>
+                <p class="mb-6 leading-relaxed">
+                    Whether you're debugging an OAuth2 flow, checking session expiration times, or verifying user roles (claims), being able to read the payload is essential. Unlike other tools, our decoder is built with privacy in mind—all processing happens on your device. If you're working with other encoded formats, you might also find our <a href="https://simpliconvert.com/base64_encoder_decoder_online/">Base64 Encoder/Decoder</a> useful for manual data handling.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Key Features of Our JWT Viewer</h2>
+                <ul class="list-disc pl-6 mb-6 space-y-2 text-gray-700">
+                    <li><strong>Instant Parsing:</strong> Just paste your token, and the header and payload appear immediately.</li>
+                    <li><strong>No Secret Key Required:</strong> Since JWTs are encoded, not encrypted, you can view the data without the private signature key.</li>
+                    <li><strong>Security First:</strong> Your tokens never leave your browser. We don't log or store any data you paste.</li>
+                    <li><strong>Formatted JSON:</strong> The output is automatically beautified, much like our <a href="https://simpliconvert.com/json_formatter_and_validator/">JSON Formatter</a>, making it easy to read nested objects.</li>
+                    <li><strong>Mobile Friendly:</strong> Debug on the go with a fully responsive interface.</li>
+                </ul>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">How to Use the JWT Decoder</h2>
+                <ol class="list-decimal pl-6 mb-6 space-y-2 text-gray-700">
+                    <li><strong>Copy your token:</strong> Grab the JWT from your application's network tab or local storage.</li>
+                    <li><strong>Paste:</strong> Drop the string into the "Encoded Token" input field above.</li>
+                    <li><strong>Inspect:</strong> Look at the Header (red) for the algorithm and the Payload (blue) for user data and timestamps.</li>
+                    <li><strong>Copy Results:</strong> Use the copy button to quickly grab the JSON data for your documentation or bug reports.</li>
+                </ol>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Understanding JWT Structure</h2>
+                <p class="mb-6 leading-relaxed">
+                    A standard JWT consists of three parts separated by dots: <code>Header.Payload.Signature</code>. The header typically contains the type of token and the hashing algorithm used (like HS256 or RS256). The payload contains the "claims," which are statements about an entity (typically, the user) and additional data. Finally, the signature is used to verify that the sender of the JWT is who it says it is and to ensure that the message wasn't changed along the way.
+                </p>
+                <p class="mb-6 leading-relaxed">
+                    If you are building secure systems, you might also want to use our <a href="https://simpliconvert.com/password_generator/">Password Generator</a> to create strong secrets for your JWT signing keys.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-center text-gray-900 mb-8">Frequently Asked Questions</h2>
+            <div class="space-y-4">
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none" aria-expanded="false">
+                        <span>Is my token data sent to your server?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">
+                            Absolutely not. All decoding logic is written in JavaScript that runs locally in your browser. Your token stays on your machine, making it safe for debugging production tokens.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none" aria-expanded="false">
+                        <span>Why can I see the data without a password?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">
+                            JWTs are designed to be "signed," not "encrypted" by default. The Base64Url encoding is just a way to make the JSON data safe for URLs. Anyone with the token can read the data; the signature only exists to prove the data hasn't been tampered with.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none" aria-expanded="false">
+                        <span>Can I use this to verify a signature?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">
+                            This tool is a decoder and viewer. Signature verification requires the server-side secret or public key. For security reasons, we do not ask for your private keys on this website.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 pb-16">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-slate-200 pt-16">
+            <h2 class="text-2xl font-bold text-center text-slate-800 mb-10">Explore More Developer Tools</h2>
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+                <a href="/json_formatter_and_validator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center shrink-0 group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-code text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">JSON Formatter</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Clean and validate JSON code.</p>
+                    </div>
+                </a>
+
+                <a href="/base64_encoder_decoder_online/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-slate-50 text-slate-700 flex items-center justify-center shrink-0 group-hover:bg-slate-800 group-hover:text-white transition-colors">
+                        <i class="fas fa-exchange-alt text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Base64 Tool</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Encode or decode Base64 strings.</p>
+                    </div>
+                </a>
+
+                <a href="/javascript_keycode_checker/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-yellow-50 text-yellow-600 flex items-center justify-center shrink-0 group-hover:bg-yellow-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-keyboard text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Keycode Checker</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Find JS event key codes.</p>
+                    </div>
+                </a>
+
+                <a href="/url_encoder_decoder_online/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0 group-hover:bg-indigo-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-link text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">URL Encoder</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Safe URL parameter encoding.</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <div id="footer"></div>
+
+    <script>
+    function initializeHeaderScripts() {
+        const header = document.getElementById('header');
+        if (header) {
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 10) {
+                    header.classList.add('scrolled-effect');
+                } else {
+                    header.classList.remove('scrolled-effect');
+                }
+            });
+        }
+    }
+    
+    function initializeFooterScripts() {
+        const yearSpan = document.getElementById('current-year');
+        if(yearSpan) {
+            yearSpan.textContent = new Date().getFullYear();
+        }
+    }
+
+    async function loadComponent(url, elementId, callback) {
+        try {
+            const response = await fetch(url);
+            if (!response.ok) throw new Error('Status: ' + response.status);
+            const text = await response.text();
+            const element = document.getElementById(elementId);
+            if (element) {
+                element.innerHTML = text;
+                if (callback) callback();
+            }
+        } catch (error) {
+            console.error('Error loading component:', error);
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        loadComponent('/components/navbar.html', 'navbar', initializeHeaderScripts);
+        loadComponent('/components/footer.html', 'footer', initializeFooterScripts);
+        
+        const faqToggles = document.querySelectorAll('[data-faq-toggle]');
+        faqToggles.forEach(button => {
+            button.addEventListener('click', () => {
+                const answer = button.nextElementSibling;
+                const icon = button.querySelector('.faq-icon');
+                const isOpening = !answer.style.maxHeight;
+
+                faqToggles.forEach(other => {
+                    if (other !== button) {
+                        other.nextElementSibling.style.maxHeight = null;
+                        other.querySelector('.faq-icon').classList.remove('rotate-90');
+                        other.querySelector('.faq-icon').classList.add('-rotate-90');
+                    }
+                });
+
+                if (isOpening) {
+                    answer.style.maxHeight = answer.scrollHeight + "px";
+                    icon.classList.remove('-rotate-90');
+                    icon.classList.add('rotate-90');
+                    button.setAttribute('aria-expanded', 'true');
+                } else {
+                    answer.style.maxHeight = null;
+                    icon.classList.remove('rotate-90');
+                    icon.classList.add('-rotate-90');
+                    button.setAttribute('aria-expanded', 'false');
+                }
+            });
+        });
+    });
+    </script>
+</body>
+</html>

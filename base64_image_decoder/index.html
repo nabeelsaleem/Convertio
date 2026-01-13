@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Base64 Image Decoder – Convert Base64 to PNG, JPG & GIF Online | SimpliConvert</title>
+    <meta name="description" content="Instantly decode Base64 strings into viewable images. Convert Base64 to PNG, JPG, or GIF files. Free, secure, and browser-based Base64 image viewer.">
+    <meta name="author" content="SimpliConvert">
+    <meta property="og:site_name" content="SimpliConvert">
+    <meta name="robots" content="index, follow">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://simpliconvert.com/base64_image_decoder/">
+    <meta property="og:title" content="Base64 Image Decoder – View and Convert Base64 to Image">
+    <meta property="og:description" content="Paste your Base64 string and instantly preview or download it as an image file. Supports PNG, JPG, GIF, and WebP.">
+    <meta property="og:image" content="https://simpliconvert.com/images/base64-decoder-og.jpg">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://simpliconvert.com/base64_image_decoder/">
+    <meta name="twitter:title" content="Base64 Image Decoder – Decode Base64 to Image Instantly">
+    <meta name="twitter:description" content="Free online tool to decode Base64 strings back into image files. Fast, secure, and works entirely in your browser.">
+    <meta name="twitter:image" content="https://simpliconvert.com/images/base64-decoder-og.jpg">
+
+    <link rel="canonical" href="https://simpliconvert.com/base64_image_decoder/">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Base64 Image Decoder",
+      "url": "https://simpliconvert.com/base64_image_decoder/",
+      "description": "A free online tool to decode Base64 strings into images like PNG, JPG, and GIF for preview and download.",
+      "applicationCategory": "DeveloperApplication",
+      "operatingSystem": "Web Browser",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "SimpliConvert",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://simpliconvert.com/logo.png"
+        }
+      }
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [{
+        "@type": "Question",
+        "name": "What is a Base64 Image Decoder?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "A Base64 Image Decoder is a tool that takes a text-based Base64 string and converts it back into its original binary image format (like PNG or JPG) so you can view or download it."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Is it safe to paste my Base64 strings here?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. Our tool processes everything locally in your browser using JavaScript. Your data is never uploaded to our servers, ensuring your images remain private."
+        }
+      }, {
+        "@type": "Question",
+        "name": "What image formats are supported?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The decoder supports all common web formats including PNG, JPG, JPEG, GIF, WebP, and SVG, provided the Base64 string is valid."
+        }
+      }]
+    }
+    </script>
+
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://simpliconvert.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Developer Tools",
+      "item": "https://simpliconvert.com/developer_tools/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "Base64 Image Decoder",
+      "item": "https://simpliconvert.com/base64_image_decoder/"
+    }
+  ]
+}
+</script>
+
+    <script src="/components/core.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #da3f0b;
+            --primary-hover: #b53409;
+            --primary-light: #fff5f2;
+            --bg: #f8fafc;
+            --text-dark: #0f172a;
+            --success: #16a34a;
+            --danger: #dc2626;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text-dark);
+        }
+
+        .code-font {
+            font-family: 'Fira Code', monospace;
+        }
+
+        .hero-card {
+            background: white;
+            border: 1px solid #f1f5f9;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background-color: var(--primary);
+        }
+
+        .prose a {
+            color: #da3f0b;
+            text-decoration: none; 
+        }
+        .prose a:hover {
+            text-decoration: underline; 
+        }
+
+        .animate-fade { animation: fadeIn 0.3s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+        .tool-card {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .tool-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+        }
+
+        textarea {
+            resize: none;
+        }
+        
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        .checkerboard {
+            background-image: linear-gradient(45deg, #f0f0f0 25%, transparent 25%), 
+                              linear-gradient(-45deg, #f0f0f0 25%, transparent 25%), 
+                              linear-gradient(45deg, transparent 75%, #f0f0f0 75%), 
+                              linear-gradient(-45deg, transparent 75%, #f0f0f0 75%);
+            background-size: 20px 20px;
+            background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 min-h-screen flex flex-col">
+    <div id="navbar"></div>
+
+    <section class="hero-white text-black py-2 md:py-10">
+        <div class="container mx-auto px-4 text-center">
+            <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-2">Base64 Image Decoder</h1>
+            <p class="text-base text-gray-700 leading-relaxed max-w-2xl mx-auto">
+                Paste a <strong>Base64 string</strong> to instantly decode and view the hidden image. 
+                Convert code back into <strong>PNG, JPG, or GIF</strong> files directly in your browser.
+            </p>
+        </div>
+    </section>
+
+    <div id="root" class="w-full max-w-6xl mx-auto p-4 sm:p-6"></div>
+
+    <script type="text/babel">
+    const { useState, useEffect } = React;
+
+    const App = () => {
+      const [input, setInput] = useState('');
+      const [imageSrc, setImageSrc] = useState('');
+      const [error, setError] = useState('');
+      const [fileInfo, setFileInfo] = useState(null);
+      const [showBookmarkToast, setShowBookmarkToast] = useState(false);
+
+      const decodeBase64 = (val) => {
+        setError('');
+        setFileInfo(null);
+        
+        if (!val.trim()) {
+          setImageSrc('');
+          return;
+        }
+
+        let cleanInput = val.trim();
+        
+        // Check if it has the data URI prefix, if not, try to guess or just append a default
+        if (!cleanInput.startsWith('data:image/')) {
+          // Basic detection for common headers
+          if (cleanInput.startsWith('iVBOR')) cleanInput = 'data:image/png;base64,' + cleanInput;
+          else if (cleanInput.startsWith('/9j/')) cleanInput = 'data:image/jpeg;base64,' + cleanInput;
+          else if (cleanInput.startsWith('R0lG')) cleanInput = 'data:image/gif;base64,' + cleanInput;
+          else if (cleanInput.startsWith('UklG')) cleanInput = 'data:image/webp;base64,' + cleanInput;
+          else if (cleanInput.startsWith('PHN2Zy')) cleanInput = 'data:image/svg+xml;base64,' + cleanInput;
+          else {
+            // Default to PNG if unknown but looks like base64
+            cleanInput = 'data:image/png;base64,' + cleanInput;
+          }
+        }
+
+        const img = new Image();
+        img.onload = () => {
+          setImageSrc(cleanInput);
+          const mime = cleanInput.split(';')[0].split(':')[1];
+          const extension = mime.split('/')[1] || 'png';
+          
+          // Estimate size
+          const base64Content = cleanInput.split(',')[1];
+          const sizeInBytes = Math.floor((base64Content.length * 3) / 4);
+          
+          setFileInfo({
+            type: mime,
+            ext: extension,
+            width: img.width,
+            height: img.height,
+            size: (sizeInBytes / 1024).toFixed(2) + ' KB'
+          });
+        };
+        img.onerror = () => {
+          setError('Invalid Base64 string. Please ensure the code represents a valid image.');
+          setImageSrc('');
+        };
+        img.src = cleanInput;
+      };
+
+      useEffect(() => {
+        const timeoutId = setTimeout(() => {
+          decodeBase64(input);
+        }, 400);
+        return () => clearTimeout(timeoutId);
+      }, [input]);
+
+      const handleDownload = () => {
+        if (!imageSrc) return;
+        const link = document.createElement('a');
+        link.href = imageSrc;
+        link.download = `decoded-image.${fileInfo?.ext || 'png'}`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      };
+
+      const handleClear = () => {
+        setInput('');
+        setImageSrc('');
+        setError('');
+        setFileInfo(null);
+      };
+
+      const handleBookmark = () => {
+        setShowBookmarkToast(true);
+        setTimeout(() => setShowBookmarkToast(false), 3000);
+      };
+
+      return (
+        <div className="bg-white rounded-[2rem] shadow-2xl overflow-hidden border border-slate-100">
+          <header className="bg-slate-50/50 border-b border-slate-100 p-6 md:p-8 flex flex-col md:flex-row justify-between items-center gap-6">
+            <div className="text-center md:text-left">
+              <h2 className="text-2xl font-black text-slate-800 tracking-tight flex items-center justify-center md:justify-start gap-3">
+                <span className="bg-[#da3f0b] text-white p-2 rounded-xl text-lg shadow-lg shadow-[#da3f0b30]">
+                  <i className="fas fa-file-image"></i>
+                </span>
+                Base64 to Image
+              </h2>
+            </div>
+            
+            <div className="flex gap-3">
+              <button 
+                onClick={handleDownload}
+                disabled={!imageSrc}
+                className={`flex items-center gap-2 py-2.5 px-6 rounded-xl text-sm font-bold transition-all shadow-sm ${imageSrc ? 'bg-[#da3f0b] text-white hover:bg-[#b53409] active:scale-95' : 'bg-slate-100 text-slate-400 cursor-not-allowed'}`}
+                aria-label="Download decoded image"
+              >
+                <i className="fas fa-download"></i> Download Image
+              </button>
+            </div>
+          </header>
+
+          <main className="flex flex-col lg:flex-row min-h-[500px]">
+            {/* Input Panel */}
+            <div className="lg:w-1/2 p-4 md:p-6 border-r border-slate-100 flex flex-col">
+              <div className="flex justify-between items-center mb-3 px-2">
+                <span className="text-xs font-black text-slate-400 uppercase tracking-widest">Paste Base64 String</span>
+                <button onClick={handleClear} className="text-[10px] font-bold text-slate-400 hover:text-red-500 transition-colors" aria-label="Clear input">
+                  <i className="fas fa-trash-alt mr-1"></i> CLEAR
+                </button>
+              </div>
+              <textarea
+                className="flex-grow w-full p-4 rounded-2xl border border-slate-200 focus:ring-4 focus:ring-[#da3f0b15] focus:border-[#da3f0b] outline-none code-font text-xs custom-scrollbar bg-slate-50/30"
+                placeholder="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8/5+hHgAHggJ/PchI7wAAAABJRU5ErkJggg=="
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                aria-label="Base64 input area"
+              ></textarea>
+              {error && <p className="mt-3 text-red-500 text-xs font-medium bg-red-50 p-2 rounded-lg"><i className="fas fa-exclamation-circle mr-1"></i> {error}</p>}
+            </div>
+
+            {/* Preview Panel */}
+            <div className="lg:w-1/2 p-4 md:p-6 bg-slate-50/50 flex flex-col">
+              <div className="flex justify-between items-center mb-3 px-2">
+                <span className="text-xs font-black text-slate-400 uppercase tracking-widest">Image Preview</span>
+                {fileInfo && (
+                  <span className="text-[10px] font-bold text-slate-500 bg-white px-2 py-1 rounded border border-slate-200">
+                    {fileInfo.width}x{fileInfo.height} | {fileInfo.size} | {fileInfo.type}
+                  </span>
+                )}
+              </div>
+              <div className="flex-grow w-full rounded-2xl border border-slate-200 bg-white overflow-hidden flex items-center justify-center checkerboard relative min-h-[300px]">
+                {imageSrc ? (
+                  <img src={imageSrc} alt="Decoded preview" className="max-w-full max-h-full object-contain shadow-sm" />
+                ) : (
+                  <div className="text-center p-8">
+                    <i className="fas fa-image text-slate-200 text-6xl mb-4"></i>
+                    <p className="text-slate-400 text-sm font-medium">Your decoded image will appear here</p>
+                  </div>
+                )}
+              </div>
+            </div>
+          </main>
+
+          {/* Share & Bookmark Footer */}
+          <footer className="bg-slate-50 border-t border-slate-100 p-6 md:p-8">
+             <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+                 <div className="text-center md:text-left">
+                     <h4 className="text-sm font-bold text-slate-700 mb-1">Share this decoder</h4>
+                     <p className="text-xs text-slate-400">Help others convert Base64 back to images easily.</p>
+                 </div>
+                 
+                 <div className="flex flex-wrap justify-center gap-3">
+                     <a href={`https://twitter.com/intent/tweet?text=Check out this Base64 Image Decoder!&url=${encodeURIComponent(window.location.href)}`} target="_blank" className="w-10 h-10 rounded-full flex items-center justify-center text-white bg-[#1DA1F2] hover:-translate-y-1 transition-transform" aria-label="Share on Twitter"><i className="fab fa-twitter"></i></a>
+                     <a href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`} target="_blank" className="w-10 h-10 rounded-full flex items-center justify-center text-white bg-[#1877F2] hover:-translate-y-1 transition-transform" aria-label="Share on Facebook"><i className="fab fa-facebook-f"></i></a>
+                     <a href={`https://api.whatsapp.com/send?text=Base64 Image Decoder: ${encodeURIComponent(window.location.href)}`} target="_blank" className="w-10 h-10 rounded-full flex items-center justify-center text-white bg-[#25D366] hover:-translate-y-1 transition-transform" aria-label="Share on WhatsApp"><i className="fab fa-whatsapp"></i></a>
+                 </div>
+
+                 <div className="relative">
+                     <button 
+                        onClick={handleBookmark}
+                        className="flex items-center gap-2 bg-white border border-slate-200 hover:border-[#da3f0b] hover:text-[#da3f0b] text-slate-600 px-4 py-2 rounded-lg text-sm font-bold transition-all shadow-sm active:scale-95"
+                        aria-label="Bookmark this tool"
+                     >
+                        <i className="fas fa-bookmark"></i> Bookmark
+                     </button>
+                     {showBookmarkToast && (
+                         <div className="absolute bottom-full mb-3 left-1/2 -translate-x-1/2 bg-slate-800 text-white text-xs py-2 px-4 rounded-lg shadow-lg whitespace-nowrap animate-fade">
+                             Press <span className="font-bold text-[#da3f0b]">Ctrl + D</span> to bookmark
+                         </div>
+                     )}
+                 </div>
+             </div>
+          </footer>
+        </div>
+      );
+    };
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+    </script>
+
+    <p class="text-center mt-4 mb-10">
+        <a href="https://simpliconvert.com/developer_tools/" class="text-primary font-medium hover:underline">
+            ← Back to All Developer Tools
+        </a>
+    </p>
+
+    <section class="bg-white py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="prose prose-lg max-w-none prose-h2:text-gray-800 prose-p:text-gray-700">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">Base64 Image Decoder – Convert Code Back to Visuals</h2>
+                <p class="mb-6 leading-relaxed">
+                    Ever found a massive string of random characters in a CSS file or a JSON response and wondered what it was? Chances are, it's a Base64 encoded image. Our <strong>Base64 Image Decoder</strong> is designed to help developers and designers quickly turn that text back into a viewable image. Whether you need to extract a logo from a stylesheet or verify an image sent via an API, this tool handles the conversion instantly.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Why Decode Base64 Images?</h2>
+                <p class="mb-6 leading-relaxed">
+                    Base64 encoding is a way to represent binary data (like images) in an ASCII string format. This is incredibly useful for embedding small images directly into HTML or CSS to reduce the number of HTTP requests. However, it makes the image unreadable to the human eye. 
+                </p>
+                <p class="mb-6 leading-relaxed">
+                    Using a <strong>Base64 to PNG</strong> or <strong>Base64 to JPG</strong> converter allows you to:
+                </p>
+                <ul class="list-disc pl-6 mb-6 space-y-2 text-gray-700">
+                    <li>Preview images embedded in source code without running the application.</li>
+                    <li>Save embedded assets as standalone files for editing.</li>
+                    <li>Debug broken data URIs by checking if the string is valid.</li>
+                    <li>Verify the output of our <a href="https://simpliconvert.com/image_to_base64_converter/" target="_blank">Image to Base64 Converter</a>.</li>
+                </ul>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Features of Our Online Decoder</h2>
+                <p class="mb-6 leading-relaxed">
+                    We built this tool to be the fastest and most secure way to <strong>view Base64</strong> strings. Unlike other tools that upload your data to a server, our decoder works 100% client-side. This means your images never leave your computer, making it safe for sensitive or private assets.
+                </p>
+                <p class="mb-6 leading-relaxed">
+                    It supports all modern formats, including WebP and SVG. If you're working with complex data structures, you might also find our <a href="https://simpliconvert.com/json_formatter_and_validator/" target="_blank">JSON Formatter</a> helpful for cleaning up the API responses that contain these strings.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">How to Use the Base64 to Image Tool</h2>
+                <ol class="list-decimal pl-6 mb-6 space-y-2 text-gray-700">
+                    <li><strong>Copy:</strong> Grab the Base64 string from your code (it usually starts with <code>data:image/...</code>).</li>
+                    <li><strong>Paste:</strong> Drop the string into the input box above.</li>
+                    <li><strong>Preview:</strong> The image will automatically appear in the preview pane.</li>
+                    <li><strong>Download:</strong> Click the download button to save it as a file on your device.</li>
+                </ol>
+                <p class="mt-6">
+                    If the image is too large for your needs after decoding, you can easily resize it using our <a href="https://simpliconvert.com/image_resizer/" target="_blank">Image Resizer</a>.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-center text-gray-900 mb-8">Base64 Image Decoder – FAQ</h2>
+            <div class="space-y-4">
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>What does "data:image/png;base64" mean?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">
+                            This is a Data URI scheme. It tells the browser that the following data is an image, specifically in PNG format, and that it is encoded using Base64. Our tool can handle strings with or without this prefix.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>Can I decode Base64 back to a GIF?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">
+                            Yes! As long as the original file was a GIF, the Base64 string will contain all the animation data. When you decode it here, the preview will show the animation, and you can download it as a .gif file.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>Why is my Base64 string not showing an image?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">
+                            This usually happens if the string is truncated (cut off) or contains invalid characters. Ensure you have copied the entire string. Also, make sure the string actually represents an image and not just plain text or a PDF.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 pb-16">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-slate-200 pt-16">
+            <h2 class="text-2xl font-bold text-center text-slate-800 mb-10">Popular Tools on SimpliConvert</h2>
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+                <a href="/image_to_base64_converter/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-orange-50 text-orange-600 flex items-center justify-center shrink-0 group-hover:bg-orange-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-code text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Image to Base64</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Convert images to code strings.</p>
+                    </div>
+                </a>
+
+                <a href="/image_resizer/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center shrink-0 group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-image text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Image Resizer</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Resize images without quality loss.</p>
+                    </div>
+                </a>
+
+                <a href="/json_formatter_and_validator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0 group-hover:bg-indigo-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-brackets-curly text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">JSON Formatter</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Clean and validate JSON data.</p>
+                    </div>
+                </a>
+
+                <a href="/qr_code_generator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-slate-50 text-slate-800 flex items-center justify-center shrink-0 group-hover:bg-slate-900 group-hover:text-white transition-colors">
+                        <i class="fas fa-qrcode text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">QR Creator</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Generate custom QR codes instantly.</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <div id="footer"></div>
+
+    <script>
+    function initializeHeaderScripts() {
+        const header = document.getElementById('header');
+        if (header) {
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 10) {
+                    header.classList.add('scrolled-effect');
+                } else {
+                    header.classList.remove('scrolled-effect');
+                }
+            });
+        }
+    }
+    
+    function initializeFooterScripts() {
+        const yearSpan = document.getElementById('current-year');
+        if(yearSpan) {
+            yearSpan.textContent = new Date().getFullYear();
+        }
+    }
+
+    async function loadComponent(url, elementId, callback) {
+        try {
+            const response = await fetch(url);
+            if (!response.ok) throw new Error('Status: ' + response.status);
+            const text = await response.text();
+            const element = document.getElementById(elementId);
+            if (element) {
+                element.innerHTML = text;
+                if (callback) callback();
+            }
+        } catch (error) {
+            console.error('Error loading component:', error);
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        loadComponent('/components/navbar.html', 'navbar', initializeHeaderScripts);
+        loadComponent('/components/footer.html', 'footer', initializeFooterScripts);
+        
+        const faqToggles = document.querySelectorAll('[data-faq-toggle]');
+        faqToggles.forEach(button => {
+            button.addEventListener('click', () => {
+                const answer = button.nextElementSibling;
+                const icon = button.querySelector('.faq-icon');
+                const isOpening = !answer.style.maxHeight;
+
+                faqToggles.forEach(other => {
+                    if (other !== button) {
+                        other.nextElementSibling.style.maxHeight = null;
+                        other.querySelector('.faq-icon').classList.remove('rotate-90');
+                        other.querySelector('.faq-icon').classList.add('-rotate-90');
+                    }
+                });
+
+                if (isOpening) {
+                    answer.style.maxHeight = answer.scrollHeight + "px";
+                    icon.classList.remove('-rotate-90');
+                    icon.classList.add('rotate-90');
+                } else {
+                    answer.style.maxHeight = null;
+                    icon.classList.remove('rotate-90');
+                    icon.classList.add('-rotate-90');
+                }
+            });
+        });
+    });
+    </script>
+</body>
+</html>

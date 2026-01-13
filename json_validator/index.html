@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>JSON Validator Online – Check & Fix JSON Syntax Errors | SimpliConvert</title>
+    <meta name="description" content="Quickly validate your JSON code with our free online JSON Validator. Identify syntax errors like missing brackets or commas and fix them instantly for clean, valid data.">
+    <meta name="author" content="SimpliConvert">
+    <meta property="og:site_name" content="SimpliConvert">
+    <meta name="robots" content="index, follow">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://simpliconvert.com/json_validator/">
+    <meta property="og:title" content="JSON Validator Online – Validate and Lint JSON Code">
+    <meta property="og:description" content="Paste your JSON to check for missing brackets, commas, or formatting errors. A simple, free way to validate JSON syntax instantly.">
+    <meta property="og:image" content="https://simpliconvert.com/images/json-validator-og.jpg">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://simpliconvert.com/json_validator/">
+    <meta name="twitter:title" content="JSON Validator Online – Fix JSON Errors Instantly">
+    <meta name="twitter:description" content="Free online tool to validate JSON syntax. Find errors, fix formatting, and ensure your data is structure correctly.">
+    <meta name="twitter:image" content="https://simpliconvert.com/images/json-validator-og.jpg">
+
+    <link rel="canonical" href="https://simpliconvert.com/json_validator/">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "JSON Validator Online",
+      "url": "https://simpliconvert.com/json_validator/",
+      "description": "A simple, free online tool to validate JSON syntax, find errors, and format JSON code instantly.",
+      "applicationCategory": "DeveloperApplication",
+      "operatingSystem": "Web Browser",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "SimpliConvert",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://simpliconvert.com/logo.png"
+        }
+      }
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [{
+        "@type": "Question",
+        "name": "What does this JSON Validator check for?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Our tool checks for common JSON syntax errors including missing commas, unclosed brackets or braces, trailing commas, and incorrect use of quotes around keys or strings."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Is my JSON data stored on your server?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "No. The validation happens entirely within your browser using JavaScript. Your data never leaves your computer, ensuring 100% privacy and security for sensitive configurations."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Can this tool fix my JSON automatically?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "If the JSON is valid, the tool will automatically format it (beautify) to make it readable. If there is a syntax error, it provides the exact error message and line location so you can fix it manually."
+        }
+      }]
+    }
+    </script>
+
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://simpliconvert.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Developer Tools",
+      "item": "https://simpliconvert.com/developer_tools/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "JSON Validator Online",
+      "item": "https://simpliconvert.com/json_validator/"
+    }
+  ]
+}
+</script>
+
+<script src="/components/core.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #da3f0b;
+            --primary-hover: #b53409;
+            --primary-light: #fff5f2;
+            --bg: #f8fafc;
+            --text-dark: #0f172a;
+            --success: #16a34a;
+            --danger: #dc2626;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text-dark);
+        }
+
+        .code-font {
+            font-family: 'Fira Code', monospace;
+        }
+
+        .hero-card {
+            background: white;
+            border: 1px solid #f1f5f9;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background-color: var(--primary);
+        }
+
+        .prose a {
+            color: #da3f0b;
+            text-decoration: none; 
+        }
+        .prose a:hover {
+            text-decoration: underline; 
+        }
+
+        .animate-fade { animation: fadeIn 0.3s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+        .tool-card {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .tool-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+        }
+
+        textarea {
+            resize: none;
+        }
+        
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 min-h-screen flex flex-col">
+    <div id="navbar"></div>
+
+    <section class="hero-white text-black py-2 md:py-10">
+        <div class="container mx-auto px-4 text-center">
+            <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-2">JSON Validator Online</h1>
+            <p class="text-base text-gray-700 leading-relaxed">
+      Use our free <strong>JSON Validator Online</strong> to instantly check for syntax errors, 
+      missing brackets, or trailing commas. This simple <strong>JSON Lint</strong> tool helps you 
+      fix broken code and beautify your data structure directly in your browser.
+    </p>
+        </div>
+    </section>
+
+    <div id="root" class="w-full max-w-6xl mx-auto p-4 sm:p-6"></div>
+
+    <script type="text/babel">
+    const { useState, useEffect } = React;
+
+    const App = () => {
+      const [input, setInput] = useState('');
+      const [output, setOutput] = useState('');
+      const [error, setError] = useState(null);
+      const [indent, setIndent] = useState(2);
+      const [copyStatus, setCopyStatus] = useState('Copy');
+      const [showBookmarkToast, setShowBookmarkToast] = useState(false);
+
+      const validateJSON = () => {
+        if (!input.trim()) {
+          setOutput('');
+          setError(null);
+          return;
+        }
+        try {
+          const parsed = JSON.parse(input);
+          const formatted = JSON.stringify(parsed, null, indent);
+          setOutput(formatted);
+          setError(null);
+        } catch (err) {
+          setError(err.message);
+          setOutput('');
+        }
+      };
+
+      useEffect(() => {
+        const timeoutId = setTimeout(() => {
+          validateJSON();
+        }, 300);
+        return () => clearTimeout(timeoutId);
+      }, [input, indent]);
+
+      const handleCopy = () => {
+        navigator.clipboard.writeText(output || input);
+        setCopyStatus('Copied!');
+        setTimeout(() => setCopyStatus('Copy'), 2000);
+      };
+
+      const handleClear = () => {
+        setInput('');
+        setOutput('');
+        setError(null);
+      };
+
+      const handleBookmark = () => {
+        setShowBookmarkToast(true);
+        setTimeout(() => setShowBookmarkToast(false), 3000);
+      };
+
+      return (
+        <div className="bg-white rounded-[2rem] shadow-2xl overflow-hidden border border-slate-100">
+          <header className="bg-slate-50/50 border-b border-slate-100 p-6 md:p-8 flex flex-col md:flex-row justify-between items-center gap-6">
+            <div className="text-center md:text-left">
+              <h2 className="text-2xl font-black text-slate-800 tracking-tight flex items-center justify-center md:justify-start gap-3">
+                <span className="bg-[#da3f0b] text-white p-2 rounded-xl text-lg shadow-lg shadow-[#da3f0b30]">
+                  <i className="fas fa-brackets-curly"></i>
+                </span>
+                JSON Syntax Checker
+              </h2>
+            </div>
+            
+            <div className="flex flex-wrap justify-center gap-4">
+              <div className="relative min-w-[140px]">
+                <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1 ml-1">Indentation</label>
+                <select 
+                  aria-label="Select Indentation"
+                  value={indent}
+                  onChange={(e) => setIndent(parseInt(e.target.value))}
+                  className="appearance-none w-full bg-white border border-slate-200 text-slate-700 py-2 pl-4 pr-10 rounded-xl text-xs font-bold focus:outline-none focus:ring-4 focus:ring-[#da3f0b15] focus:border-[#da3f0b] shadow-sm cursor-pointer"
+                >
+                  <option value="2">2 Spaces</option>
+                  <option value="4">4 Spaces</option>
+                  <option value="0">Minified</option>
+                </select>
+                <div className="pointer-events-none absolute bottom-3 right-3 text-slate-400">
+                  <i className="fas fa-chevron-down text-[10px]"></i>
+                </div>
+              </div>
+
+              <div className="flex flex-col justify-end">
+                <div className={`py-2 px-4 rounded-xl text-xs font-bold border flex items-center gap-2 ${error ? 'bg-red-50 text-red-600 border-red-200' : input ? 'bg-green-50 text-green-600 border-green-200' : 'bg-slate-50 text-slate-400 border-slate-200'}`}>
+                  <i className={`fas ${error ? 'fa-times-circle' : input ? 'fa-check-circle' : 'fa-info-circle'}`}></i>
+                  {error ? 'INVALID JSON' : input ? 'VALID JSON' : 'AWAITING INPUT'}
+                </div>
+              </div>
+            </div>
+          </header>
+
+          <main className="flex flex-col lg:flex-row min-h-[500px]">
+            {/* Input Panel */}
+            <div className="lg:w-1/2 p-4 md:p-6 border-r border-slate-100 flex flex-col">
+              <div className="flex justify-between items-center mb-3 px-2">
+                <span className="text-xs font-black text-slate-400 uppercase tracking-widest">Paste JSON Code</span>
+                <button onClick={handleClear} className="text-[10px] font-bold text-slate-400 hover:text-red-500 transition-colors" aria-label="Clear Input">
+                  <i className="fas fa-trash-alt mr-1"></i> CLEAR
+                </button>
+              </div>
+              <textarea
+                aria-label="JSON Input"
+                className="flex-grow w-full p-4 rounded-2xl border border-slate-200 focus:ring-4 focus:ring-[#da3f0b15] focus:border-[#da3f0b] outline-none code-font text-sm custom-scrollbar bg-slate-50/30"
+                placeholder='{ "example": "Paste your JSON here..." }'
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+              ></textarea>
+            </div>
+
+            {/* Output Panel */}
+            <div className="lg:w-1/2 p-4 md:p-6 bg-slate-50/50 flex flex-col">
+              <div className="flex justify-between items-center mb-3 px-2">
+                <span className="text-xs font-black text-slate-400 uppercase tracking-widest">Validation Result</span>
+                <button 
+                  onClick={handleCopy}
+                  disabled={!output && !input}
+                  className={`text-[10px] font-bold px-3 py-1 rounded-lg transition-all ${output || input ? 'bg-slate-800 text-white hover:bg-black' : 'bg-slate-200 text-slate-400 cursor-not-allowed'}`}
+                  aria-label="Copy Result"
+                >
+                  <i className={`fas ${copyStatus === 'Copy' ? 'fa-copy' : 'fa-check'} mr-1`}></i> {copyStatus}
+                </button>
+              </div>
+              {error ? (
+                <div className="flex-grow w-full p-6 rounded-2xl border border-red-200 bg-red-50/50 text-red-700 code-font text-sm overflow-auto custom-scrollbar">
+                  <div className="font-bold mb-2 flex items-center gap-2">
+                    <i className="fas fa-exclamation-triangle"></i> Syntax Error Found:
+                  </div>
+                  <p className="bg-white p-4 rounded-lg border border-red-100 shadow-sm">{error}</p>
+                  <p className="mt-4 text-xs text-red-500 italic">Tip: Check for missing commas, unclosed quotes, or trailing commas at the end of objects/arrays.</p>
+                </div>
+              ) : (
+                <textarea
+                  readOnly
+                  aria-label="JSON Output"
+                  className="flex-grow w-full p-4 rounded-2xl border border-slate-200 bg-white code-font text-sm custom-scrollbar outline-none"
+                  placeholder="Valid and formatted JSON will appear here..."
+                  value={output}
+                ></textarea>
+              )}
+            </div>
+          </main>
+
+          <footer className="bg-slate-50 border-t border-slate-100 p-6 md:p-8">
+             <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+                 <div className="text-center md:text-left">
+                     <h4 className="text-sm font-bold text-slate-700 mb-1">Share this tool</h4>
+                     <p className="text-xs text-slate-400">Help others debug their JSON code faster.</p>
+                 </div>
+                 
+                 <div className="flex flex-wrap justify-center gap-3">
+                     <a href={`https://twitter.com/intent/tweet?text=Check out this JSON Validator!&url=${encodeURIComponent(window.location.href)}`} target="_blank" className="w-10 h-10 rounded-full flex items-center justify-center text-white bg-[#1DA1F2] hover:-translate-y-1 transition-transform" aria-label="Share on Twitter"><i className="fab fa-twitter"></i></a>
+                     <a href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`} target="_blank" className="w-10 h-10 rounded-full flex items-center justify-center text-white bg-[#1877F2] hover:-translate-y-1 transition-transform" aria-label="Share on Facebook"><i className="fab fa-facebook-f"></i></a>
+                     <a href={`https://api.whatsapp.com/send?text=JSON Validator: ${encodeURIComponent(window.location.href)}`} target="_blank" className="w-10 h-10 rounded-full flex items-center justify-center text-white bg-[#25D366] hover:-translate-y-1 transition-transform" aria-label="Share on WhatsApp"><i className="fab fa-whatsapp"></i></a>
+                 </div>
+
+                 <div className="relative">
+                     <button 
+                        onClick={handleBookmark}
+                        className="flex items-center gap-2 bg-white border border-slate-200 hover:border-[#da3f0b] hover:text-[#da3f0b] text-slate-600 px-4 py-2 rounded-lg text-sm font-bold transition-all shadow-sm active:scale-95"
+                        aria-label="Bookmark Tool"
+                     >
+                        <i className="fas fa-bookmark"></i> Bookmark
+                     </button>
+                     {showBookmarkToast && (
+                         <div className="absolute bottom-full mb-3 left-1/2 -translate-x-1/2 bg-slate-800 text-white text-xs py-2 px-4 rounded-lg shadow-lg whitespace-nowrap animate-fade">
+                             Press <span className="font-bold text-[#da3f0b]">Ctrl + D</span> to bookmark
+                         </div>
+                     )}
+                 </div>
+             </div>
+          </footer>
+        </div>
+      );
+    };
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+    </script>
+
+    <p class="text-center mt-4 mb-10">
+        <a href="https://simpliconvert.com/developer_tools/" class="text-primary font-medium hover:underline">
+            ← Back to All Developer Tools
+        </a>
+    </p>
+
+    <section class="bg-white py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="prose prose-lg max-w-none prose-h2:text-gray-800 prose-p:text-gray-700">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">JSON Validator Online – Fix Syntax Errors Instantly</h2>
+                <p class="mb-6 leading-relaxed">
+                    If you've ever spent twenty minutes hunting for a missing comma in a 500-line configuration file, you know how frustrating JSON errors can be. Our <strong>JSON Validator Online</strong> is a simple, lightweight tool designed to take the guesswork out of debugging. Whether you're a developer working on an API or a student learning data structures, this tool provides instant feedback on your code's validity.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Why Use a JSON Lint Tool?</h2>
+                <p class="mb-6 leading-relaxed">
+                    JSON (JavaScript Object Notation) is strict. A single misplaced quote or a trailing comma can cause an entire application to crash. Unlike our <a href="https://simpliconvert.com/json_formatter_and_validator/" target="_blank">JSON Formatter and Validator</a> which handles complex beautification, this "simple" validator focuses on speed and error detection. It acts as a <strong>JSON syntax checker</strong> that highlights exactly where your code went wrong.
+                </p>
+                <p class="mb-6 leading-relaxed">
+                    Using an online validator is often faster than running a local script or waiting for your IDE to catch up. It’s particularly useful when you're quickly copying snippets from documentation or logs and need to verify them before implementation.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Key Features of the JSON Syntax Checker</h2>
+                <ul class="list-disc pl-6 mb-6 space-y-2 text-gray-700">
+                    <li><strong>Real-Time Validation:</strong> As soon as you paste your code, the tool checks for errors without requiring a page refresh.</li>
+                    <li><strong>Detailed Error Messages:</strong> If your JSON is invalid, we provide the specific reason (e.g., "Unexpected token") to help you find the bug.</li>
+                    <li><strong>Auto-Beautification:</strong> Valid JSON is automatically formatted with clean indentation for better readability.</li>
+                    <li><strong>Privacy-Focused:</strong> All processing happens in your browser. We don't store your data, making it safe for sensitive API keys or user data.</li>
+                    <li><strong>Developer Friendly:</strong> Works perfectly alongside other utilities like our <a href="https://simpliconvert.com/javascript_keycode_checker/" target="_blank">JavaScript Keycode Checker</a>.</li>
+                </ul>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">How to Validate Your JSON</h2>
+                <ol class="list-decimal pl-6 mb-6 space-y-2 text-gray-700">
+                    <li><strong>Paste:</strong> Drop your JSON string into the input box.</li>
+                    <li><strong>Check:</strong> Look at the status indicator. If it's green, your JSON is perfect!</li>
+                    <li><strong>Fix:</strong> If it's red, read the error message to identify the line or character causing the issue.</li>
+                    <li><strong>Copy:</strong> Once fixed, use the copy button to get the clean, formatted version.</li>
+                </ol>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Common JSON Errors to Watch For</h2>
+                <p class="mb-6 leading-relaxed">
+                    Most JSON issues stem from a few common mistakes:
+                </p>
+                <ul class="list-disc pl-6 mb-6 space-y-2 text-gray-700">
+                    <li><strong>Trailing Commas:</strong> JSON does not allow a comma after the last item in an array or object.</li>
+                    <li><strong>Single Quotes:</strong> JSON requires double quotes (") for keys and string values.</li>
+                    <li><strong>Unquoted Keys:</strong> All keys must be wrapped in double quotes.</li>
+                    <li><strong>Mismatched Brackets:</strong> Every opening { or [ must have a corresponding closing } or ].</li>
+                </ul>
+                <p class="mb-6 leading-relaxed">
+                    By using this <strong>JSON lint</strong> tool, you can catch these errors in seconds. If you need to work with other data formats, check out our <a href="https://simpliconvert.com/base64_encoder_decoder_online/" target="_blank">Base64 Encoder/Decoder</a> for more developer utilities.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-center text-gray-900 mb-8">JSON Validator – Frequently Asked Questions</h2>
+            <div class="space-y-4">
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>Does this tool support large JSON files?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">
+                            Yes, it can handle large JSON strings. However, since the validation happens in your browser, extremely large files (several megabytes) might cause a slight delay depending on your computer's performance.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>Is there a difference between JSON and JSON5?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">
+                            Yes. Standard JSON is very strict (no comments, no trailing commas, double quotes only). JSON5 is a proposal that allows for a more human-friendly syntax. This tool validates standard, strict JSON as used in most APIs and configuration files.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>Why is my JSON invalid even if it looks correct?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">
+                            Common hidden issues include "smart quotes" (slanted quotes from word processors), hidden non-printable characters, or a missing comma between two objects in an array. Our validator will point you to the exact character where the parser got confused.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 pb-16">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-slate-200 pt-16">
+            <h2 class="text-2xl font-bold text-center text-slate-800 mb-10">Popular Tools on SimpliConvert</h2>
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+                <a href="/json_formatter_and_validator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center shrink-0 group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-code text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">JSON Formatter</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Advanced JSON formatting tools.</p>
+                    </div>
+                </a>
+
+                <a href="/password_generator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-slate-50 text-slate-700 flex items-center justify-center shrink-0 group-hover:bg-slate-800 group-hover:text-white transition-colors">
+                        <i class="fas fa-key text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Password Gen</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Create secure, random passwords.</p>
+                    </div>
+                </a>
+
+                <a href="/sql_formatter_online/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-orange-50 text-orange-600 flex items-center justify-center shrink-0 group-hover:bg-orange-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-database text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">SQL Formatter</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Beautify your database queries.</p>
+                    </div>
+                </a>
+
+                <a href="/qr_code_generator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-slate-50 text-slate-800 flex items-center justify-center shrink-0 group-hover:bg-slate-900 group-hover:text-white transition-colors">
+                        <i class="fas fa-qrcode text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">QR Creator</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Generate custom QR codes instantly.</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <div id="footer"></div>
+
+    <script>
+    function initializeHeaderScripts() {
+        const header = document.getElementById('header');
+        if (header) {
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 10) {
+                    header.classList.add('scrolled-effect');
+                } else {
+                    header.classList.remove('scrolled-effect');
+                }
+            });
+        }
+    }
+    
+    function initializeFooterScripts() {
+        const yearSpan = document.getElementById('current-year');
+        if(yearSpan) {
+            yearSpan.textContent = new Date().getFullYear();
+        }
+    }
+
+    async function loadComponent(url, elementId, callback) {
+        try {
+            const response = await fetch(url);
+            if (!response.ok) throw new Error('Status: ' + response.status);
+            const text = await response.text();
+            const element = document.getElementById(elementId);
+            if (element) {
+                element.innerHTML = text;
+                if (callback) callback();
+            }
+        } catch (error) {
+            console.error('Error loading component:', error);
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        loadComponent('/components/navbar.html', 'navbar', initializeHeaderScripts);
+        loadComponent('/components/footer.html', 'footer', initializeFooterScripts);
+        
+        const faqToggles = document.querySelectorAll('[data-faq-toggle]');
+        faqToggles.forEach(button => {
+            button.addEventListener('click', () => {
+                const answer = button.nextElementSibling;
+                const icon = button.querySelector('.faq-icon');
+                const isOpening = !answer.style.maxHeight;
+
+                faqToggles.forEach(other => {
+                    if (other !== button) {
+                        other.nextElementSibling.style.maxHeight = null;
+                        other.querySelector('.faq-icon').classList.remove('rotate-90');
+                        other.querySelector('.faq-icon').classList.add('-rotate-90');
+                    }
+                });
+
+                if (isOpening) {
+                    answer.style.maxHeight = answer.scrollHeight + "px";
+                    icon.classList.remove('-rotate-90');
+                    icon.classList.add('rotate-90');
+                } else {
+                    answer.style.maxHeight = null;
+                    icon.classList.remove('rotate-90');
+                    icon.classList.add('-rotate-90');
+                }
+            });
+        });
+    });
+    </script>
+</body>
+</html>

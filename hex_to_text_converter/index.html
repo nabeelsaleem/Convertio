@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Hex to Text Converter – Decode Hexadecimal to ASCII Online | SimpliConvert</title>
+    <meta name="description" content="Convert hexadecimal strings into human-readable text instantly. Our free Hex to ASCII translator helps you decode data, debug code, and translate hex codes back to English.">
+    <meta name="author" content="SimpliConvert">
+    <meta property="og:site_name" content="SimpliConvert">
+    <meta name="robots" content="index, follow">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://simpliconvert.com/hex_to_text_converter/">
+    <meta property="og:title" content="Hex to Text Converter – Decode Hexadecimal Strings">
+    <meta property="og:description" content="Easily translate Hex to Text. Supports various delimiters like spaces, commas, and 0x prefixes. Fast, free, and secure.">
+    <meta property="og:image" content="https://simpliconvert.com/images/hex-to-text-og.jpg">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://simpliconvert.com/hex_to_text_converter/">
+    <meta name="twitter:title" content="Hex to Text Converter – Hex Decoder Online">
+    <meta name="twitter:description" content="Free online tool to decode hexadecimal codes into ASCII text. Perfect for developers and data analysts.">
+    <meta name="twitter:image" content="https://simpliconvert.com/images/hex-to-text-og.jpg">
+
+    <link rel="canonical" href="https://simpliconvert.com/hex_to_text_converter/">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Hex to Text Converter",
+      "url": "https://simpliconvert.com/hex_to_text_converter/",
+      "description": "A free online tool to convert hexadecimal strings into human-readable ASCII text.",
+      "applicationCategory": "DeveloperApplication",
+      "operatingSystem": "Web Browser",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "SimpliConvert",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://simpliconvert.com/logo.png"
+        }
+      }
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [{
+        "@type": "Question",
+        "name": "What is Hex to Text conversion?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Hex to Text conversion is the process of taking a base-16 (hexadecimal) number string and translating it into ASCII characters that humans can read. Each pair of hex digits represents one character."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Does this tool handle spaces or 0x prefixes?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. Our converter automatically cleans the input by removing spaces, commas, and common prefixes like '0x' before decoding the hexadecimal values."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Is my data safe when using this hex decoder?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Absolutely. All decoding happens locally within your browser using JavaScript. Your data is never sent to our servers, ensuring 100% privacy."
+        }
+      }]
+    }
+    </script>
+
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://simpliconvert.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Developer Tools",
+      "item": "https://simpliconvert.com/developer_tools/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "Hex to Text Converter",
+      "item": "https://simpliconvert.com/hex_to_text_converter/"
+    }
+  ]
+}
+</script>
+
+<script src="/components/core.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #da3f0b;
+            --primary-hover: #b53409;
+            --primary-light: #fff5f2;
+            --bg: #f8fafc;
+            --text-dark: #0f172a;
+            --success: #16a34a;
+            --danger: #dc2626;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text-dark);
+        }
+
+        .code-font {
+            font-family: 'Fira Code', monospace;
+        }
+
+        .hero-card {
+            background: white;
+            border: 1px solid #f1f5f9;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background-color: var(--primary);
+        }
+
+        .prose a {
+            color: #da3f0b;
+            text-decoration: none; 
+        }
+        .prose a:hover {
+            text-decoration: underline; 
+        }
+
+        .animate-fade { animation: fadeIn 0.3s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+        .tool-card {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .tool-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+        }
+
+        textarea {
+            resize: none;
+        }
+        
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 min-h-screen flex flex-col">
+    <div id="navbar"></div>
+
+    <section class="hero-white text-black py-2 md:py-10">
+        <div class="container mx-auto px-4 text-center">
+            <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-2">Hex to Text Converter</h1>
+            <p class="text-base text-gray-700 leading-relaxed">
+                Use our free <strong>Hex to Text Converter</strong> to instantly decode hexadecimal strings into human-readable ASCII. 
+                Whether you're debugging data packets or translating encoded messages, our tool provides a fast, 
+                secure way to <strong>translate hex to English</strong> directly in your browser.
+            </p>
+        </div>
+    </section>
+
+    <div id="root" class="w-full max-w-6xl mx-auto p-4 sm:p-6"></div>
+
+    <script type="text/babel">
+    const { useState, useEffect } = React;
+
+    const App = () => {
+      const [input, setInput] = useState('');
+      const [output, setOutput] = useState('');
+      const [autoConvert, setAutoConvert] = useState(true);
+      const [copyStatus, setCopyStatus] = useState('Copy');
+      const [showBookmarkToast, setShowBookmarkToast] = useState(false);
+
+      const decodeHex = (val) => {
+        if (!val.trim()) {
+          setOutput('');
+          return;
+        }
+        try {
+          // Remove prefixes like 0x, spaces, commas, and newlines
+          let hex = val.replace(/0x/g, '').replace(/[^0-9A-Fa-f]/g, '');
+          
+          if (hex.length % 2 !== 0) {
+            setOutput('Error: Hex string must have an even number of characters.');
+            return;
+          }
+
+          let str = '';
+          for (let i = 0; i < hex.length; i += 2) {
+            const charCode = parseInt(hex.substr(i, 2), 16);
+            if (isNaN(charCode)) throw new Error("Invalid Hex");
+            str += String.fromCharCode(charCode);
+          }
+          setOutput(str);
+        } catch (err) {
+          setOutput('Error: Invalid hexadecimal input. Please check your code.');
+        }
+      };
+
+      useEffect(() => {
+        if (autoConvert) {
+          const timeoutId = setTimeout(() => {
+            decodeHex(input);
+          }, 300);
+          return () => clearTimeout(timeoutId);
+        }
+      }, [input, autoConvert]);
+
+      const handleCopy = () => {
+        if (!output) return;
+        navigator.clipboard.writeText(output);
+        setCopyStatus('Copied!');
+        setTimeout(() => setCopyStatus('Copy'), 2000);
+      };
+
+      const handleClear = () => {
+        setInput('');
+        setOutput('');
+      };
+
+      const handleBookmark = () => {
+        setShowBookmarkToast(true);
+        setTimeout(() => setShowBookmarkToast(false), 3000);
+      };
+
+      return (
+        <div className="bg-white rounded-[2rem] shadow-2xl overflow-hidden border border-slate-100">
+          <header className="bg-slate-50/50 border-b border-slate-100 p-6 md:p-8 flex flex-col md:flex-row justify-between items-center gap-6">
+            <div className="text-center md:text-left">
+              <h2 className="text-2xl font-black text-slate-800 tracking-tight flex items-center justify-center md:justify-start gap-3">
+                <span className="bg-[#da3f0b] text-white p-2 rounded-xl text-lg shadow-lg shadow-[#da3f0b30]">
+                  <i className="fas fa-exchange-alt"></i>
+                </span>
+                Hex Decoder & Translator
+              </h2>
+            </div>
+            
+            <div className="flex flex-wrap justify-center gap-4">
+              <div className="flex items-center gap-3 bg-white border border-slate-200 px-4 py-2 rounded-xl shadow-sm">
+                <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Auto-Convert</span>
+                <button 
+                  onClick={() => setAutoConvert(!autoConvert)}
+                  aria-label="Toggle Auto Convert"
+                  className={`w-10 h-5 rounded-full transition-colors relative ${autoConvert ? 'bg-[#da3f0b]' : 'bg-slate-300'}`}
+                >
+                  <div className={`absolute top-1 w-3 h-3 bg-white rounded-full transition-all ${autoConvert ? 'left-6' : 'left-1'}`}></div>
+                </button>
+              </div>
+
+              <button 
+                onClick={() => decodeHex(input)}
+                className="bg-slate-800 text-white px-6 py-2 rounded-xl text-xs font-bold hover:bg-black transition-all shadow-md active:scale-95"
+              >
+                DECODE NOW
+              </button>
+            </div>
+          </header>
+
+          <main className="flex flex-col lg:flex-row min-h-[450px]">
+            {/* Input Panel */}
+            <div className="lg:w-1/2 p-4 md:p-6 border-r border-slate-100 flex flex-col">
+              <div className="flex justify-between items-center mb-3 px-2">
+                <span className="text-xs font-black text-slate-400 uppercase tracking-widest">Hexadecimal Input</span>
+                <button onClick={handleClear} className="text-[10px] font-bold text-slate-400 hover:text-red-500 transition-colors">
+                  <i className="fas fa-trash-alt mr-1"></i> CLEAR
+                </button>
+              </div>
+              <textarea
+                aria-label="Hexadecimal Input"
+                className="flex-grow w-full p-4 rounded-2xl border border-slate-200 focus:ring-4 focus:ring-[#da3f0b15] focus:border-[#da3f0b] outline-none code-font text-sm custom-scrollbar bg-slate-50/30"
+                placeholder="Paste hex here (e.g., 48 65 6c 6c 6f 21 or 0x48656c6c6f)"
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+              ></textarea>
+            </div>
+
+            {/* Output Panel */}
+            <div className="lg:w-1/2 p-4 md:p-6 bg-slate-50/50 flex flex-col">
+              <div className="flex justify-between items-center mb-3 px-2">
+                <span className="text-xs font-black text-slate-400 uppercase tracking-widest">Text Output (ASCII)</span>
+                <button 
+                  onClick={handleCopy}
+                  disabled={!output || output.startsWith('Error')}
+                  className={`text-[10px] font-bold px-3 py-1 rounded-lg transition-all ${output && !output.startsWith('Error') ? 'bg-slate-800 text-white hover:bg-black' : 'bg-slate-200 text-slate-400 cursor-not-allowed'}`}
+                >
+                  <i className={`fas ${copyStatus === 'Copy' ? 'fa-copy' : 'fa-check'} mr-1`}></i> {copyStatus}
+                </button>
+              </div>
+              <textarea
+                readOnly
+                aria-label="Text Output"
+                className="flex-grow w-full p-4 rounded-2xl border border-slate-200 bg-white code-font text-sm custom-scrollbar outline-none"
+                placeholder="Decoded text will appear here..."
+                value={output}
+              ></textarea>
+            </div>
+          </main>
+
+          <footer className="bg-slate-50 border-t border-slate-100 p-6 md:p-8">
+             <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+                 <div className="text-center md:text-left">
+                     <h4 className="text-sm font-bold text-slate-700 mb-1">Share this converter</h4>
+                     <p className="text-xs text-slate-400">Help others decode hex strings quickly.</p>
+                 </div>
+                 
+                 <div className="flex flex-wrap justify-center gap-3">
+                     <a href={`https://twitter.com/intent/tweet?text=Check out this Hex to Text Converter!&url=${encodeURIComponent(window.location.href)}`} target="_blank" className="w-10 h-10 rounded-full flex items-center justify-center text-white bg-[#1DA1F2] hover:-translate-y-1 transition-transform"><i className="fab fa-twitter"></i></a>
+                     <a href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`} target="_blank" className="w-10 h-10 rounded-full flex items-center justify-center text-white bg-[#1877F2] hover:-translate-y-1 transition-transform"><i className="fab fa-facebook-f"></i></a>
+                     <a href={`https://api.whatsapp.com/send?text=Hex to Text Converter: ${encodeURIComponent(window.location.href)}`} target="_blank" className="w-10 h-10 rounded-full flex items-center justify-center text-white bg-[#25D366] hover:-translate-y-1 transition-transform"><i className="fab fa-whatsapp"></i></a>
+                 </div>
+
+                 <div className="relative">
+                     <button 
+                        onClick={handleBookmark}
+                        className="flex items-center gap-2 bg-white border border-slate-200 hover:border-[#da3f0b] hover:text-[#da3f0b] text-slate-600 px-4 py-2 rounded-lg text-sm font-bold transition-all shadow-sm active:scale-95"
+                     >
+                        <i className="fas fa-bookmark"></i> Bookmark
+                     </button>
+                     {showBookmarkToast && (
+                         <div className="absolute bottom-full mb-3 left-1/2 -translate-x-1/2 bg-slate-800 text-white text-xs py-2 px-4 rounded-lg shadow-lg whitespace-nowrap animate-fade">
+                             Press <span className="font-bold text-[#da3f0b]">Ctrl + D</span> to bookmark
+                         </div>
+                     )}
+                 </div>
+             </div>
+          </footer>
+        </div>
+      );
+    };
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+    </script>
+
+    <p class="text-center mt-4 mb-10">
+        <a href="https://simpliconvert.com/developer_tools/" class="text-primary font-medium hover:underline">
+            ← Back to Developer Tools
+        </a>
+    </p>
+
+    <section class="bg-white py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="prose prose-lg max-w-none prose-h2:text-gray-800 prose-p:text-gray-700">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">Hex to Text Converter – Decode Hexadecimal Strings Instantly</h2>
+                <p class="mb-6 leading-relaxed">
+                    Hexadecimal (Base-16) is a common way to represent binary data in a more compact, human-readable format. However, reading raw hex codes like "48 65 6c 6c 6f" isn't exactly intuitive. Our <strong>Hex to Text Converter</strong> bridges this gap, allowing you to translate complex hex strings back into standard ASCII text. Whether you are a developer analyzing network logs or a student learning about data encoding, this tool makes the process seamless.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Why Translate Hex to ASCII?</h2>
+                <p class="mb-6 leading-relaxed">
+                    In the world of computing, data is often stored or transmitted in hexadecimal to save space and reduce errors. You might encounter hex strings in database exports, URL parameters, or low-level programming. Using a <strong>hex translator</strong> is essential for verifying the contents of these strings. It’s a vital part of a developer's toolkit, much like our <a href="https://simpliconvert.com/binary_code_translator/" target="_blank">Binary Code Translator</a> or <a href="https://simpliconvert.com/base64_encoder_decoder_online/" target="_blank">Base64 Encoder/Decoder</a>.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Features of Our Hex Decoder</h2>
+                <ul class="list-disc pl-6 mb-6 space-y-2 text-gray-700">
+                    <li><strong>Smart Cleaning:</strong> Automatically ignores spaces, commas, and "0x" prefixes, so you don't have to manually format your input.</li>
+                    <li><strong>Real-Time Conversion:</strong> See your decoded text appear instantly as you paste your hex code.</li>
+                    <li><strong>Browser-Based Privacy:</strong> Your data never leaves your device. All processing is done via JavaScript in your browser.</li>
+                    <li><strong>Universal Support:</strong> Works with any standard ASCII or UTF-8 compatible hex string.</li>
+                    <li><strong>Completely Free:</strong> No subscriptions, no limits, just a clean tool for your daily tasks.</li>
+                </ul>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">How to Use the Hex to Text Translator</h2>
+                <ol class="list-decimal pl-6 mb-6 space-y-2 text-gray-700">
+                    <li><strong>Paste:</strong> Enter your hexadecimal string into the input box. You can include spaces (e.g., 41 42 43) or prefixes (e.g., 0x41).</li>
+                    <li><strong>Convert:</strong> If "Auto-Convert" is on, the text will appear immediately. Otherwise, click "Decode Now".</li>
+                    <li><strong>Copy:</strong> Use the copy button to quickly grab your decoded message for use in other applications.</li>
+                </ol>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Common Use Cases</h2>
+                <p class="mb-6 leading-relaxed">
+                    This tool is perfect for <strong>decoding hexadecimal</strong> data found in firmware files, debugging web requests where characters are encoded, or even solving puzzles in CTF (Capture The Flag) competitions. If you find yourself needing to go the other way, you can also use our <a href="https://simpliconvert.com/url_encoder_decoder_online/" target="_blank">URL Encoder/Decoder</a> for web-specific formatting.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-center text-gray-900 mb-8">Hex to Text – Frequently Asked Questions</h2>
+            <div class="space-y-4">
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>What does "Hex" stand for?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">
+                            Hex is short for Hexadecimal, a base-16 numbering system. It uses sixteen distinct symbols: 0–9 to represent values zero to nine, and A–F to represent values ten to fifteen.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>Why is my hex code not converting correctly?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">
+                            Ensure that your hex string has an even number of characters. Each ASCII character is represented by exactly two hex digits. If you have an odd number, the string is likely incomplete or corrupted.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>Can I convert large blocks of hex data?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">
+                            Yes, our tool can handle large strings. However, for extremely large files (several megabytes), browser performance may vary. For standard text messages and data logs, it is nearly instantaneous.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 pb-16">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-slate-200 pt-16">
+            <h2 class="text-2xl font-bold text-center text-slate-800 mb-10">Explore More Developer Tools</h2>
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+                <a href="/binary_code_translator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-slate-50 text-slate-700 flex items-center justify-center shrink-0 group-hover:bg-slate-800 group-hover:text-white transition-colors">
+                        <i class="fas fa-robot text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Binary Translator</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Convert binary to text and vice versa.</p>
+                    </div>
+                </a>
+
+                <a href="/json_formatter_and_validator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center shrink-0 group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-code text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">JSON Formatter</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Beautify and validate JSON data.</p>
+                    </div>
+                </a>
+
+                <a href="/base64_encoder_decoder_online/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-red-50 text-red-600 flex items-center justify-center shrink-0 group-hover:bg-red-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-shield-alt text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Base64 Tool</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Encode and decode Base64 strings.</p>
+                    </div>
+                </a>
+
+                <a href="/url_encoder_decoder_online/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-green-50 text-green-600 flex items-center justify-center shrink-0 group-hover:bg-green-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-link text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">URL Encoder</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Safely encode URLs for the web.</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <div id="footer"></div>
+
+    <script>
+    function initializeHeaderScripts() {
+        const header = document.getElementById('header');
+        if (header) {
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 10) {
+                    header.classList.add('scrolled-effect');
+                } else {
+                    header.classList.remove('scrolled-effect');
+                }
+            });
+        }
+    }
+    
+    function initializeFooterScripts() {
+        const yearSpan = document.getElementById('current-year');
+        if(yearSpan) {
+            yearSpan.textContent = new Date().getFullYear();
+        }
+    }
+
+    async function loadComponent(url, elementId, callback) {
+        try {
+            const response = await fetch(url);
+            if (!response.ok) throw new Error('Status: ' + response.status);
+            const text = await response.text();
+            const element = document.getElementById(elementId);
+            if (element) {
+                element.innerHTML = text;
+                if (callback) callback();
+            }
+        } catch (error) {
+            console.error('Error loading component:', error);
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        loadComponent('/components/navbar.html', 'navbar', initializeHeaderScripts);
+        loadComponent('/components/footer.html', 'footer', initializeFooterScripts);
+        
+        const faqToggles = document.querySelectorAll('[data-faq-toggle]');
+        faqToggles.forEach(button => {
+            button.addEventListener('click', () => {
+                const answer = button.nextElementSibling;
+                const icon = button.querySelector('.faq-icon');
+                const isOpening = !answer.style.maxHeight;
+
+                faqToggles.forEach(other => {
+                    if (other !== button) {
+                        other.nextElementSibling.style.maxHeight = null;
+                        other.querySelector('.faq-icon').classList.remove('rotate-90');
+                        other.querySelector('.faq-icon').classList.add('-rotate-90');
+                    }
+                });
+
+                if (isOpening) {
+                    answer.style.maxHeight = answer.scrollHeight + "px";
+                    icon.classList.remove('-rotate-90');
+                    icon.classList.add('rotate-90');
+                } else {
+                    answer.style.maxHeight = null;
+                    icon.classList.remove('rotate-90');
+                    icon.classList.add('-rotate-90');
+                }
+            });
+        });
+    });
+    </script>
+</body>
+</html>

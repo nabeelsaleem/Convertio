@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>HTTP Status Code Checker – Check Website Status & Server Headers | SimpliConvert</title>
+    <meta name="description" content="Instantly check HTTP status codes for any URL. Identify 200 OK, 301 redirects, 404 errors, and server response headers to diagnose website availability and SEO health.">
+    <meta name="author" content="SimpliConvert">
+    <meta property="og:site_name" content="SimpliConvert">
+    <meta name="robots" content="index, follow">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://simpliconvert.com/http_status_code_checker/">
+    <meta property="og:title" content="HTTP Status Code Checker – Check Server Response & Redirects">
+    <meta property="og:description" content="Enter a URL to see if it returns a 200 OK, 301 Redirect, or 404 Error. Quickly diagnose website availability and redirect chains.">
+    <meta property="og:image" content="https://simpliconvert.com/images/http-status-checker-og.jpg">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://simpliconvert.com/http_status_code_checker/">
+    <meta name="twitter:title" content="HTTP Status Code Checker – Online Server Header Check">
+    <meta name="twitter:description" content="Free online tool to check website HTTP status codes. Diagnose 404 errors and 301 redirects instantly.">
+    <meta name="twitter:image" content="https://simpliconvert.com/images/http-status-checker-og.jpg">
+
+    <link rel="canonical" href="https://simpliconvert.com/http_status_code_checker/">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "HTTP Status Code Checker",
+      "url": "https://simpliconvert.com/http_status_code_checker/",
+      "description": "A free online tool to check HTTP status codes and server headers for any website URL.",
+      "applicationCategory": "DeveloperApplication",
+      "operatingSystem": "Web Browser",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "SimpliConvert",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://simpliconvert.com/logo.png"
+        }
+      }
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [{
+        "@type": "Question",
+        "name": "What is an HTTP status code?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "An HTTP status code is a three-digit number returned by a server in response to a browser's request. It indicates whether the request was successful (200 OK), redirected (301/302), or encountered an error (404/500)."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Why is checking HTTP status codes important for SEO?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Search engines prefer sites with clean 200 OK responses. Too many 404 errors or broken redirect chains can negatively impact your search rankings and user experience."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Can I check multiple URLs at once?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Currently, this tool is optimized for single URL deep-dives to provide detailed header information and status verification."
+        }
+      }]
+    }
+    </script>
+
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://simpliconvert.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Developer Tools",
+      "item": "https://simpliconvert.com/developer_tools/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "HTTP Status Code Checker",
+      "item": "https://simpliconvert.com/http_status_code_checker/"
+    }
+  ]
+}
+</script>
+
+<script src="/components/core.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #da3f0b;
+            --primary-hover: #b53409;
+            --primary-light: #fff5f2;
+            --bg: #f8fafc;
+            --text-dark: #0f172a;
+            --success: #16a34a;
+            --danger: #dc2626;
+            --warning: #ca8a04;
+            --info: #0284c7;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text-dark);
+        }
+
+        .code-font {
+            font-family: 'Fira Code', monospace;
+        }
+
+        .hero-card {
+            background: white;
+            border: 1px solid #f1f5f9;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background-color: var(--primary);
+        }
+
+        .prose a {
+            color: #da3f0b;
+            text-decoration: none; 
+        }
+        .prose a:hover {
+            text-decoration: underline; 
+        }
+
+        .animate-fade { animation: fadeIn 0.3s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+        .tool-card {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .tool-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+        }
+
+        .status-badge {
+            padding: 0.5rem 1rem;
+            border-radius: 9999px;
+            font-weight: 800;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .status-2xx { background-color: #dcfce7; color: #166534; }
+        .status-3xx { background-color: #fef9c3; color: #854d0e; }
+        .status-4xx { background-color: #fee2e2; color: #991b1b; }
+        .status-5xx { background-color: #f1f5f9; color: #1e293b; }
+        
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 min-h-screen flex flex-col">
+    <div id="navbar"></div>
+
+    <section class="hero-white text-black py-2 md:py-10">
+        <div class="container mx-auto px-4 text-center">
+            <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-2">HTTP Status Code Checker</h1>
+            <p class="text-base text-gray-700 leading-relaxed max-w-2xl mx-auto">
+                Quickly verify website availability and server response headers. Enter any URL to check for <strong>200 OK, 301 Redirects, 404 Not Found</strong>, and other critical HTTP status codes.
+            </p>
+        </div>
+    </section>
+
+    <div id="root" class="w-full max-w-6xl mx-auto p-4 sm:p-6"></div>
+
+    <script type="text/babel">
+    const { useState } = React;
+
+    const App = () => {
+      const [url, setUrl] = useState('');
+      const [loading, setLoading] = useState(false);
+      const [result, setResult] = useState(null);
+      const [error, setError] = useState('');
+
+      const checkStatus = async (e) => {
+        e.preventDefault();
+        if (!url) return;
+
+        let targetUrl = url;
+        if (!/^https?:\/\//i.test(url)) {
+          targetUrl = 'https://' + url;
+        }
+
+        setLoading(true);
+        setError('');
+        setResult(null);
+
+        try {
+          // Using a CORS proxy to allow client-side checking of any URL
+          const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(targetUrl)}`;
+          const response = await fetch(proxyUrl);
+          const data = await response.json();
+
+          if (data.status) {
+            setResult({
+              statusCode: data.status.http_code || 200,
+              statusText: getStatusText(data.status.http_code || 200),
+              url: targetUrl,
+              contentLength: data.status.content_length || 'N/A',
+              contentType: data.status.content_type || 'text/html',
+            });
+          } else {
+            throw new Error('Could not retrieve status');
+          }
+        } catch (err) {
+          setError('Failed to fetch status. The website might be down or blocking automated requests.');
+        } finally {
+          setLoading(false);
+        }
+      };
+
+      const getStatusText = (code) => {
+        const codes = {
+          200: 'OK',
+          201: 'Created',
+          301: 'Moved Permanently',
+          302: 'Found',
+          400: 'Bad Request',
+          401: 'Unauthorized',
+          403: 'Forbidden',
+          404: 'Not Found',
+          500: 'Internal Server Error',
+          502: 'Bad Gateway',
+          503: 'Service Unavailable'
+        };
+        return codes[code] || 'Unknown Status';
+      };
+
+      const getStatusClass = (code) => {
+        if (code >= 200 && code < 300) return 'status-2xx';
+        if (code >= 300 && code < 400) return 'status-3xx';
+        if (code >= 400 && code < 500) return 'status-4xx';
+        return 'status-5xx';
+      };
+
+      return (
+        <div className="bg-white rounded-[2rem] shadow-2xl overflow-hidden border border-slate-100">
+          <header className="bg-slate-50/50 border-b border-slate-100 p-6 md:p-8">
+            <div className="flex flex-col md:flex-row items-center gap-6">
+              <div className="bg-[#da3f0b] text-white p-4 rounded-2xl shadow-lg shadow-[#da3f0b30]">
+                <i className="fas fa-server text-2xl"></i>
+              </div>
+              <div className="flex-grow text-center md:text-left">
+                <h2 className="text-2xl font-black text-slate-800 tracking-tight">Server Header & Status Inspector</h2>
+                <p className="text-sm text-slate-500 font-medium">Analyze URL response codes and server metadata instantly.</p>
+              </div>
+            </div>
+          </header>
+
+          <main className="p-6 md:p-10">
+            <form onSubmit={checkStatus} className="max-w-3xl mx-auto mb-10">
+              <div className="flex flex-col sm:flex-row gap-3">
+                <div className="relative flex-grow">
+                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                    <i className="fas fa-link text-slate-400"></i>
+                  </div>
+                  <input 
+                    type="text"
+                    aria-label="Website URL"
+                    placeholder="Enter URL (e.g., example.com)"
+                    className="w-full pl-11 pr-4 py-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-4 focus:ring-[#da3f0b15] focus:border-[#da3f0b] outline-none transition-all font-medium"
+                    value={url}
+                    onChange={(e) => setUrl(e.target.value)}
+                  />
+                </div>
+                <button 
+                  type="submit"
+                  disabled={loading}
+                  className="bg-[#da3f0b] hover:bg-[#b53409] text-white font-bold px-8 py-4 rounded-2xl transition-all shadow-lg shadow-[#da3f0b20] disabled:opacity-50 flex items-center justify-center gap-2"
+                >
+                  {loading ? <i className="fas fa-circle-notch animate-spin"></i> : <i className="fas fa-search"></i>}
+                  {loading ? 'Checking...' : 'Check Status'}
+                </button>
+              </div>
+            </form>
+
+            {error && (
+              <div className="max-w-3xl mx-auto p-4 bg-red-50 border border-red-100 text-red-600 rounded-2xl flex items-center gap-3 animate-fade">
+                <i className="fas fa-exclamation-circle"></i>
+                <p className="text-sm font-bold">{error}</p>
+              </div>
+            )}
+
+            {result && (
+              <div className="max-w-3xl mx-auto animate-fade">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="bg-slate-50 p-6 rounded-3xl border border-slate-100">
+                    <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-4">Response Status</span>
+                    <div className={`status-badge ${getStatusClass(result.statusCode)} text-xl`}>
+                      {result.statusCode} {result.statusText}
+                    </div>
+                    <p className="mt-4 text-sm text-slate-600 font-medium">
+                      <i className="fas fa-globe mr-2 text-slate-400"></i> {result.url}
+                    </p>
+                  </div>
+
+                  <div className="bg-slate-50 p-6 rounded-3xl border border-slate-100">
+                    <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-4">Server Details</span>
+                    <div className="space-y-3">
+                      <div className="flex justify-between items-center">
+                        <span className="text-xs font-bold text-slate-500">Content-Type</span>
+                        <span className="text-xs font-black text-slate-800">{result.contentType}</span>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-xs font-bold text-slate-500">Content-Length</span>
+                        <span className="text-xs font-black text-slate-800">{result.contentLength} bytes</span>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-xs font-bold text-slate-500">Check Time</span>
+                        <span className="text-xs font-black text-slate-800">{new Date().toLocaleTimeString()}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="mt-8 p-6 bg-white border border-slate-200 rounded-3xl">
+                   <h4 className="text-sm font-bold text-slate-800 mb-4 flex items-center gap-2">
+                     <i className="fas fa-info-circle text-[#da3f0b]"></i>
+                     What does this mean?
+                   </h4>
+                   <p className="text-sm text-slate-600 leading-relaxed">
+                     {result.statusCode === 200 ? 
+                       "Success! The server returned a 200 OK status, meaning the page is accessible and functioning correctly." :
+                       result.statusCode >= 300 && result.statusCode < 400 ?
+                       "This URL is redirecting. Search engines will follow this to a new destination. Ensure your 301 redirects are permanent for SEO." :
+                       "The server returned an error. This could be a broken link (404) or a server-side issue (500). You should investigate this immediately."
+                     }
+                   </p>
+                </div>
+              </div>
+            )}
+          </main>
+
+          <footer className="bg-slate-50 border-t border-slate-100 p-6 md:p-8">
+             <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+                 <div className="text-center md:text-left">
+                     <h4 className="text-sm font-bold text-slate-700 mb-1">Share this tool</h4>
+                     <p className="text-xs text-slate-400">Help others diagnose website connectivity issues.</p>
+                 </div>
+                 
+                 <div className="flex flex-wrap justify-center gap-3">
+                     <a href={`https://twitter.com/intent/tweet?text=Check HTTP Status Codes online!&url=${encodeURIComponent(window.location.href)}`} target="_blank" className="w-10 h-10 rounded-full flex items-center justify-center text-white bg-[#1DA1F2] hover:-translate-y-1 transition-transform"><i className="fab fa-twitter"></i></a>
+                     <a href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`} target="_blank" className="w-10 h-10 rounded-full flex items-center justify-center text-white bg-[#1877F2] hover:-translate-y-1 transition-transform"><i className="fab fa-facebook-f"></i></a>
+                     <a href={`https://api.whatsapp.com/send?text=HTTP Status Checker: ${encodeURIComponent(window.location.href)}`} target="_blank" className="w-10 h-10 rounded-full flex items-center justify-center text-white bg-[#25D366] hover:-translate-y-1 transition-transform"><i className="fab fa-whatsapp"></i></a>
+                 </div>
+             </div>
+          </footer>
+        </div>
+      );
+    };
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+    </script>
+
+    <p class="text-center mt-4 mb-10">
+        <a href="https://simpliconvert.com/developer_tools/" class="text-primary font-medium hover:underline">
+            ← Back to All Developer Tools
+        </a>
+    </p>
+
+    <section class="bg-white py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="prose prose-lg max-w-none prose-h2:text-gray-800 prose-p:text-gray-700">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">HTTP Status Checker – Diagnose Website Issues Instantly</h2>
+                <p class="mb-6 leading-relaxed">
+                    Ever wondered why a page isn't loading or if a redirect is working correctly? Our <strong>HTTP Status Code Checker</strong> provides a transparent look at what happens behind the scenes when a browser requests a URL. Whether you're a developer debugging a new deployment or an SEO specialist auditing a site for broken links, knowing the exact server response is the first step to a healthy website.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Why Monitor Server Response Codes?</h2>
+                <p class="mb-6 leading-relaxed">
+                    Server headers and status codes are the language of the web. A "200 OK" is the green light every webmaster wants to see, but errors like "404 Not Found" or "500 Internal Server Error" can drive users away and hurt your search engine rankings. By using this tool, you can quickly identify <strong>redirect chains</strong> that might be slowing down your site or find hidden errors before they impact your traffic.
+                </p>
+                <p class="mb-6 leading-relaxed">
+                    This tool is especially useful when paired with our <a href="https://simpliconvert.com/robots_txt_generator/" target="_blank">Robots.txt Generator</a> to ensure search bots can access your content without hitting unexpected roadblocks.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Key Features of Our Header Checker</h2>
+                <ul class="list-disc pl-6 mb-6 space-y-2 text-gray-700">
+                    <li><strong>Real-Time Status:</strong> Get instant feedback on whether a site is up or down.</li>
+                    <li><strong>Redirect Detection:</strong> See if a URL is using a 301 (permanent) or 302 (temporary) redirect.</li>
+                    <li><strong>Header Metadata:</strong> View content types and lengths to verify server configurations.</li>
+                    <li><strong>SEO Friendly:</strong> Identify broken links that could be leaking "link juice" and harming your domain authority.</li>
+                    <li><strong>No Installation:</strong> Works entirely in your browser—no command line or complex software required.</li>
+                </ul>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">How to Use the HTTP Status Tool</h2>
+                <ol class="list-decimal pl-6 mb-6 space-y-2 text-gray-700">
+                    <li><strong>Enter URL:</strong> Type or paste the full web address into the input field.</li>
+                    <li><strong>Analyze:</strong> Click the "Check Status" button to initiate the request.</li>
+                    <li><strong>Review Results:</strong> Look at the color-coded badge to see the status (Green for success, Yellow for redirects, Red for errors).</li>
+                    <li><strong>Troubleshoot:</strong> Use the provided explanation to fix any issues found on your server.</li>
+                </ol>
+
+                <p class="mb-6 leading-relaxed">
+                    For those working on site structure, combining this tool with our <a href="https://simpliconvert.com/url_slug_generator/" target="_blank">URL Slug Generator</a> ensures that your new pages are not only reachable but also optimized for readability and search performance.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-center text-gray-900 mb-8">HTTP Status – Frequently Asked Questions</h2>
+            <div class="space-y-4">
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-primary" aria-expanded="false">
+                        <span>What is the difference between a 301 and 302 redirect?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">
+                            A 301 redirect indicates that a page has moved permanently to a new location, passing nearly all ranking power to the new URL. A 302 redirect is temporary and does not pass SEO value in the same way.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-primary" aria-expanded="false">
+                        <span>Why does the tool show an error for a site I can visit?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">
+                            Some websites use security firewalls (like Cloudflare) that block automated requests or "headless" browsers. While you can see the site in your browser, the server might reject the tool's request to protect against bots.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-primary" aria-expanded="false">
+                        <span>How do I fix a 404 error?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">
+                            To fix a 404 error, you should either restore the deleted page, redirect the broken URL to a relevant existing page using a 301 redirect, or update any internal links that point to the missing URL.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 pb-16">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-slate-200 pt-16">
+            <h2 class="text-2xl font-bold text-center text-slate-800 mb-10">Popular Tools on SimpliConvert</h2>
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+                <a href="/meta_tag_generator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0 group-hover:bg-indigo-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-search text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Meta Tag Gen</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Optimize SEO with custom tags.</p>
+                    </div>
+                </a>
+                <a href="/url_slug_generator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center shrink-0 group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-link text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Slug Generator</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Create SEO-friendly URLs.</p>
+                    </div>
+                </a>
+                <a href="/robots_txt_generator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-slate-50 text-slate-800 flex items-center justify-center shrink-0 group-hover:bg-slate-900 group-hover:text-white transition-colors">
+                        <i class="fas fa-robot text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Robots.txt Gen</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Control search engine crawling.</p>
+                    </div>
+                </a>
+                <a href="/json_formatter_validator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-green-50 text-green-600 flex items-center justify-center shrink-0 group-hover:bg-green-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-code text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">JSON Formatter</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Beautify and validate JSON.</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <div id="footer"></div>
+
+    <script>
+    function initializeHeaderScripts() {
+        const header = document.getElementById('header');
+        if (header) {
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 10) {
+                    header.classList.add('scrolled-effect');
+                } else {
+                    header.classList.remove('scrolled-effect');
+                }
+            });
+        }
+    }
+    
+    function initializeFooterScripts() {
+        const yearSpan = document.getElementById('current-year');
+        if(yearSpan) {
+            yearSpan.textContent = new Date().getFullYear();
+        }
+    }
+
+    async function loadComponent(url, elementId, callback) {
+        try {
+            const response = await fetch(url);
+            if (!response.ok) throw new Error('Status: ' + response.status);
+            const text = await response.text();
+            const element = document.getElementById(elementId);
+            if (element) {
+                element.innerHTML = text;
+                if (callback) callback();
+            }
+        } catch (error) {
+            console.error('Error loading component:', error);
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        loadComponent('/components/navbar.html', 'navbar', initializeHeaderScripts);
+        loadComponent('/components/footer.html', 'footer', initializeFooterScripts);
+        
+        const faqToggles = document.querySelectorAll('[data-faq-toggle]');
+        faqToggles.forEach(button => {
+            button.addEventListener('click', () => {
+                const answer = button.nextElementSibling;
+                const icon = button.querySelector('.faq-icon');
+                const isOpening = !answer.style.maxHeight;
+
+                faqToggles.forEach(other => {
+                    if (other !== button) {
+                        other.nextElementSibling.style.maxHeight = null;
+                        other.querySelector('.faq-icon').classList.remove('rotate-90');
+                        other.querySelector('.faq-icon').classList.add('-rotate-90');
+                        other.setAttribute('aria-expanded', 'false');
+                    }
+                });
+
+                if (isOpening) {
+                    answer.style.maxHeight = answer.scrollHeight + "px";
+                    icon.classList.remove('-rotate-90');
+                    icon.classList.add('rotate-90');
+                    button.setAttribute('aria-expanded', 'true');
+                } else {
+                    answer.style.maxHeight = null;
+                    icon.classList.remove('rotate-90');
+                    icon.classList.add('-rotate-90');
+                    button.setAttribute('aria-expanded', 'false');
+                }
+            });
+        });
+    });
+    </script>
+</body>
+</html>

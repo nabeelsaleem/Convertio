@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Unix Time to Date Converter – Epoch to Human Readable Format | SimpliConvert</title>
+    <meta name="description" content="Convert Unix timestamps (epoch time) to human-readable dates instantly. Decode seconds or milliseconds into local time and UTC with our free online converter.">
+    <meta name="author" content="SimpliConvert">
+    <meta property="og:site_name" content="SimpliConvert">
+    <meta name="robots" content="index, follow">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://simpliconvert.com/unix_time_to_date/">
+    <meta property="og:title" content="Unix Time to Date Converter – Decode Epoch Timestamps">
+    <meta property="og:description" content="Translate cryptic Unix timestamps into a readable date and time format for your local timezone. Supports seconds and milliseconds.">
+    <meta property="og:image" content="https://simpliconvert.com/images/unix-converter-og.jpg">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://simpliconvert.com/unix_time_to_date/">
+    <meta name="twitter:title" content="Unix Time to Date – Epoch Timestamp Decoder">
+    <meta name="twitter:description" content="Free online tool to convert Unix timestamps to readable dates. Perfect for developers and data analysts.">
+    <meta name="twitter:image" content="https://simpliconvert.com/images/unix-converter-og.jpg">
+
+    <link rel="canonical" href="https://simpliconvert.com/unix_time_to_date/">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Unix Time to Date Converter",
+      "url": "https://simpliconvert.com/unix_time_to_date/",
+      "description": "A free online tool to translate Unix timestamps into readable date and time formats including Local, UTC, and ISO 8601.",
+      "applicationCategory": "DeveloperApplication",
+      "operatingSystem": "Web Browser",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "SimpliConvert",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://simpliconvert.com/logo.png"
+        }
+      }
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [{
+        "@type": "Question",
+        "name": "What is Unix Time?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Unix time (also known as Epoch time) is a system for describing a point in time as the total number of seconds that have elapsed since January 1, 1970 (UTC), not counting leap seconds."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Does this converter support milliseconds?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. You can toggle between seconds (standard Unix) and milliseconds (often used in JavaScript) to get an accurate date conversion."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Is my data sent to a server?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "No. All timestamp conversions are performed locally in your browser using JavaScript. Your data never leaves your device."
+        }
+      }]
+    }
+    </script>
+
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://simpliconvert.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Developer Tools",
+      "item": "https://simpliconvert.com/developer_tools/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "Unix Time to Date",
+      "item": "https://simpliconvert.com/unix_time_to_date/"
+    }
+  ]
+}
+</script>
+
+<script src="/components/core.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #da3f0b;
+            --primary-hover: #b53409;
+            --primary-light: #fff5f2;
+            --bg: #f8fafc;
+            --text-dark: #0f172a;
+            --success: #16a34a;
+            --danger: #dc2626;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text-dark);
+        }
+
+        .code-font {
+            font-family: 'Fira Code', monospace;
+        }
+
+        .hero-card {
+            background: white;
+            border: 1px solid #f1f5f9;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background-color: var(--primary);
+        }
+
+        .prose a {
+            color: #da3f0b;
+            text-decoration: none; 
+        }
+        .prose a:hover {
+            text-decoration: underline; 
+        }
+
+        .animate-fade { animation: fadeIn 0.3s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+        .tool-card {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .tool-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+        }
+        
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        .result-row {
+            @apply flex flex-col sm:flex-row sm:items-center justify-between p-4 border-b border-slate-100 last:border-0;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 min-h-screen flex flex-col">
+    <div id="navbar"></div>
+
+    <section class="hero-white text-black py-2 md:py-10">
+        <div class="container mx-auto px-4 text-center">
+            <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-2">Unix Time to Date Converter</h1>
+            <p class="text-base text-gray-700 leading-relaxed">
+                Easily convert <strong>Unix timestamps</strong> into human-readable dates. 
+                Decode epoch seconds or milliseconds into <strong>Local Time, UTC, and ISO 8601</strong> formats instantly.
+            </p>
+        </div>
+    </section>
+
+    <div id="root" class="w-full max-w-6xl mx-auto p-4 sm:p-6"></div>
+
+    <script type="text/babel">
+    const { useState, useEffect } = React;
+
+    const App = () => {
+      const [input, setInput] = useState(Math.floor(Date.now() / 1000).toString());
+      const [unit, setUnit] = useState('seconds');
+      const [results, setResults] = useState({
+        local: '',
+        utc: '',
+        iso: '',
+        relative: '',
+        isValid: true
+      });
+      const [copyStatus, setCopyStatus] = useState({});
+      const [showBookmarkToast, setShowBookmarkToast] = useState(false);
+
+      const convertTime = (val) => {
+        if (!val) {
+            setResults({ ...results, isValid: false });
+            return;
+        }
+
+        try {
+            const num = parseInt(val);
+            if (isNaN(num)) throw new Error();
+
+            const date = new Date(unit === 'seconds' ? num * 1000 : num);
+            
+            if (isNaN(date.getTime())) throw new Error();
+
+            setResults({
+                local: date.toString(),
+                utc: date.toUTCString(),
+                iso: date.toISOString(),
+                relative: getRelativeTime(date),
+                isValid: true
+            });
+        } catch (err) {
+            setResults({ ...results, isValid: false });
+        }
+      };
+
+      const getRelativeTime = (date) => {
+        const now = new Date();
+        const diff = now - date;
+        const seconds = Math.floor(diff / 1000);
+        const absSeconds = Math.abs(seconds);
+        
+        const rtf = new Intl.RelativeTimeFormat('en', { numeric: 'auto' });
+
+        if (absSeconds < 60) return rtf.format(-Math.floor(seconds), 'second');
+        if (absSeconds < 3600) return rtf.format(-Math.floor(seconds / 60), 'minute');
+        if (absSeconds < 86400) return rtf.format(-Math.floor(seconds / 3600), 'hour');
+        return rtf.format(-Math.floor(seconds / 86400), 'day');
+      };
+
+      useEffect(() => {
+        convertTime(input);
+      }, [input, unit]);
+
+      const handleCopy = (text, key) => {
+        navigator.clipboard.writeText(text);
+        setCopyStatus({ [key]: true });
+        setTimeout(() => setCopyStatus({}), 2000);
+      };
+
+      const setNow = () => {
+        const now = Date.now();
+        setInput(unit === 'seconds' ? Math.floor(now / 1000).toString() : now.toString());
+      };
+
+      const handleBookmark = () => {
+        setShowBookmarkToast(true);
+        setTimeout(() => setShowBookmarkToast(false), 3000);
+      };
+
+      return (
+        <div className="bg-white rounded-[2rem] shadow-2xl overflow-hidden border border-slate-100">
+          <header className="bg-slate-50/50 border-b border-slate-100 p-6 md:p-8 flex flex-col md:flex-row justify-between items-center gap-6">
+            <div className="text-center md:text-left">
+              <h2 className="text-2xl font-black text-slate-800 tracking-tight flex items-center justify-center md:justify-start gap-3">
+                <span className="bg-[#da3f0b] text-white p-2 rounded-xl text-lg shadow-lg shadow-[#da3f0b30]">
+                  <i className="fas fa-clock"></i>
+                </span>
+                Timestamp Decoder
+              </h2>
+            </div>
+            
+            <div className="flex flex-wrap justify-center gap-4">
+              <div className="relative min-w-[160px]">
+                <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1 ml-1">Time Unit</label>
+                <select 
+                  value={unit}
+                  onChange={(e) => setUnit(e.target.value)}
+                  aria-label="Select time unit"
+                  className="appearance-none w-full bg-white border border-slate-200 text-slate-700 py-2 pl-4 pr-10 rounded-xl text-xs font-bold focus:outline-none focus:ring-4 focus:ring-[#da3f0b15] focus:border-[#da3f0b] shadow-sm cursor-pointer"
+                >
+                  <option value="seconds">Seconds (Unix)</option>
+                  <option value="milliseconds">Milliseconds (JS)</option>
+                </select>
+                <div className="pointer-events-none absolute bottom-3 right-3 text-slate-400">
+                  <i className="fas fa-chevron-down text-[10px]"></i>
+                </div>
+              </div>
+
+              <div className="flex flex-col justify-end">
+                <button 
+                  onClick={setNow}
+                  aria-label="Set to current time"
+                  className="py-2 px-6 rounded-xl text-xs font-bold transition-all bg-slate-800 text-white hover:bg-black shadow-md"
+                >
+                  CURRENT TIME
+                </button>
+              </div>
+            </div>
+          </header>
+
+          <main className="flex flex-col lg:flex-row min-h-[400px]">
+            {/* Input Panel */}
+            <div className="lg:w-2/5 p-6 md:p-8 border-r border-slate-100 flex flex-col bg-slate-50/30">
+              <div className="mb-6">
+                <label className="block text-xs font-black text-slate-400 uppercase tracking-widest mb-3">Enter Unix Timestamp</label>
+                <input
+                  type="text"
+                  aria-label="Unix timestamp input"
+                  className={`w-full p-5 rounded-2xl border ${results.isValid ? 'border-slate-200' : 'border-red-500'} focus:ring-4 focus:ring-[#da3f0b15] focus:border-[#da3f0b] outline-none code-font text-xl shadow-inner bg-white`}
+                  placeholder="e.g. 1678900000"
+                  value={input}
+                  onChange={(e) => setInput(e.target.value)}
+                />
+                {!results.isValid && <p className="text-red-500 text-xs mt-2 font-bold">Invalid timestamp format</p>}
+              </div>
+              
+              <div className="mt-auto p-4 rounded-2xl bg-[#da3f0b08] border border-[#da3f0b15]">
+                <p className="text-xs text-slate-600 leading-relaxed">
+                  <i className="fas fa-info-circle text-[#da3f0b] mr-2"></i>
+                  Unix time is the number of seconds since the <strong>Unix Epoch</strong> (January 1st, 1970).
+                </p>
+              </div>
+            </div>
+
+            {/* Output Panel */}
+            <div className="lg:w-3/5 p-6 md:p-8 flex flex-col">
+              <span className="text-xs font-black text-slate-400 uppercase tracking-widest mb-4">Conversion Results</span>
+              
+              <div className="space-y-2">
+                {[
+                    { label: 'Local Time', value: results.local, key: 'local' },
+                    { label: 'UTC Time', value: results.utc, key: 'utc' },
+                    { label: 'ISO 8601', value: results.iso, key: 'iso' },
+                    { label: 'Relative', value: results.relative, key: 'rel' }
+                ].map((item) => (
+                    <div key={item.key} className="group bg-white border border-slate-100 rounded-2xl p-4 hover:border-[#da3f0b40] transition-all">
+                        <div className="flex justify-between items-start mb-1">
+                            <span className="text-[10px] font-black text-slate-400 uppercase tracking-tighter">{item.label}</span>
+                            <button 
+                                onClick={() => handleCopy(item.value, item.key)}
+                                className="text-slate-300 hover:text-[#da3f0b] transition-colors"
+                                title="Copy to clipboard"
+                            >
+                                <i className={`fas ${copyStatus[item.key] ? 'fa-check text-green-500' : 'fa-copy'}`}></i>
+                            </button>
+                        </div>
+                        <div className="code-font text-sm text-slate-800 break-all">
+                            {results.isValid ? item.value : '---'}
+                        </div>
+                    </div>
+                ))}
+              </div>
+            </div>
+          </main>
+
+          {/* Share & Bookmark Footer */}
+          <footer className="bg-slate-50 border-t border-slate-100 p-6 md:p-8">
+             <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+                 <div className="text-center md:text-left">
+                     <h4 className="text-sm font-bold text-slate-700 mb-1">Share this converter</h4>
+                     <p className="text-xs text-slate-400">Help others decode timestamps easily.</p>
+                 </div>
+                 
+                 <div className="flex flex-wrap justify-center gap-3">
+                     <a href={`https://twitter.com/intent/tweet?text=Check out this Unix Timestamp Converter!&url=${encodeURIComponent(window.location.href)}`} target="_blank" className="w-10 h-10 rounded-full flex items-center justify-center text-white bg-[#1DA1F2] hover:-translate-y-1 transition-transform"><i className="fab fa-twitter"></i></a>
+                     <a href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`} target="_blank" className="w-10 h-10 rounded-full flex items-center justify-center text-white bg-[#1877F2] hover:-translate-y-1 transition-transform"><i className="fab fa-facebook-f"></i></a>
+                     <a href={`https://api.whatsapp.com/send?text=Unix Time Converter: ${encodeURIComponent(window.location.href)}`} target="_blank" className="w-10 h-10 rounded-full flex items-center justify-center text-white bg-[#25D366] hover:-translate-y-1 transition-transform"><i className="fab fa-whatsapp"></i></a>
+                 </div>
+
+                 <div className="relative">
+                     <button 
+                        onClick={handleBookmark}
+                        className="flex items-center gap-2 bg-white border border-slate-200 hover:border-[#da3f0b] hover:text-[#da3f0b] text-slate-600 px-4 py-2 rounded-lg text-sm font-bold transition-all shadow-sm active:scale-95"
+                     >
+                        <i className="fas fa-bookmark"></i> Bookmark
+                     </button>
+                     {showBookmarkToast && (
+                         <div className="absolute bottom-full mb-3 left-1/2 -translate-x-1/2 bg-slate-800 text-white text-xs py-2 px-4 rounded-lg shadow-lg whitespace-nowrap animate-fade">
+                             Press <span className="font-bold text-[#da3f0b]">Ctrl + D</span> to bookmark
+                         </div>
+                     )}
+                 </div>
+             </div>
+          </footer>
+        </div>
+      );
+    };
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+    </script>
+
+    <p class="text-center mt-4 mb-10">
+        <a href="https://simpliconvert.com/developer_tools/" class="text-primary font-medium hover:underline">
+            ← Back to Developer Tools
+        </a>
+    </p>
+
+    <section class="bg-white py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="prose prose-lg max-w-none prose-h2:text-gray-800 prose-p:text-gray-700">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">Decode Epoch Timestamps Instantly</h2>
+                <p class="mb-6 leading-relaxed">
+                    If you've ever looked at a database log or an API response and seen a long string of numbers like <code>1715634000</code>, you've encountered Unix time. While computers love this format because it's just a simple integer, humans find it impossible to read. Our <strong>Unix Time to Date</strong> converter bridges that gap, allowing you to translate those seconds into a meaningful date and time.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">What is Unix Time?</h2>
+                <p class="mb-6 leading-relaxed">
+                    Unix time, also known as Epoch time, represents the number of seconds that have passed since 00:00:00 UTC on January 1, 1970. It is the standard way systems track time without worrying about time zones or daylight savings in the underlying data. Whether you are using our <a href="https://simpliconvert.com/unix_timestamp_converter_online/" target="_blank">Unix Timestamp Converter Online</a> or debugging a script, understanding this format is essential for modern development.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Features of the Timestamp Decoder</h2>
+                <ul class="list-disc pl-6 mb-6 space-y-2 text-gray-700">
+                    <li><strong>Dual Unit Support:</strong> Switch between seconds (standard) and milliseconds (JavaScript/Java style) with one click.</li>
+                    <li><strong>Local & UTC:</strong> See exactly what time it is in your current timezone and the universal standard.</li>
+                    <li><strong>ISO 8601 Format:</strong> Get the standardized string format (YYYY-MM-DDTHH:mm:ss.sssZ) used in most modern web applications.</li>
+                    <li><strong>Relative Time:</strong> Instantly see if a timestamp was "2 hours ago" or "in 3 days."</li>
+                    <li><strong>Privacy-Focused:</strong> Just like our <a href="https://simpliconvert.com/json_formatter_and_validator/" target="_blank">JSON Formatter</a>, all calculations happen in your browser.</li>
+                </ul>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">How to Convert Epoch to Date</h2>
+                <p class="mb-6 leading-relaxed">
+                    Converting time shouldn't be a chore. Simply paste your number into the input field. The tool detects changes in real-time and updates the display. You can also click the "Current Time" button to see the live Unix timestamp for right now. This is particularly helpful when you need to generate a timestamp for testing purposes or when using the <a href="https://simpliconvert.com/javascript_keycode_checker/" target="_blank">JavaScript Keycode Checker</a> to debug event timings.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-center text-gray-900 mb-8">Frequently Asked Questions</h2>
+            <div class="space-y-4">
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>Why is my timestamp showing the year 1970?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">
+                            This usually happens if you are using milliseconds in a field expecting seconds. If your timestamp is 13 digits long (e.g., 1678900000000), make sure to select the "Milliseconds" unit in the dropdown menu.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>Does this tool handle leap seconds?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">
+                            Unix time traditionally ignores leap seconds. Each day is treated as having exactly 86,400 seconds. This tool follows the standard POSIX conversion used by most programming languages.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>What happens in the year 2038?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">
+                            The "Year 2038 problem" affects 32-bit systems where the timestamp integer overflows. However, modern browsers and this tool use 64-bit floats for numbers, meaning it can accurately convert dates far beyond 2038.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 pb-16">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-slate-200 pt-16">
+            <h2 class="text-2xl font-bold text-center text-slate-800 mb-10">Explore More Developer Tools</h2>
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+                <a href="/json_formatter_and_validator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center shrink-0 group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-brackets-curly text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">JSON Format</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Clean and validate JSON data.</p>
+                    </div>
+                </a>
+
+                <a href="/base64_encoder_decoder_online/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-purple-50 text-purple-600 flex items-center justify-center shrink-0 group-hover:bg-purple-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-sync text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Base64</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Encode or decode Base64 strings.</p>
+                    </div>
+                </a>
+
+                <a href="/javascript_keycode_checker/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-orange-50 text-orange-600 flex items-center justify-center shrink-0 group-hover:bg-orange-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-keyboard text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Keycodes</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Find JS event key codes.</p>
+                    </div>
+                </a>
+
+                <a href="/sql_formatter_online/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-slate-50 text-slate-800 flex items-center justify-center shrink-0 group-hover:bg-slate-900 group-hover:text-white transition-colors">
+                        <i class="fas fa-database text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">SQL Format</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Beautify database queries.</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <div id="footer"></div>
+
+    <script>
+    function initializeHeaderScripts() {
+        const header = document.getElementById('header');
+        if (header) {
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 10) {
+                    header.classList.add('scrolled-effect');
+                } else {
+                    header.classList.remove('scrolled-effect');
+                }
+            });
+        }
+    }
+    
+    function initializeFooterScripts() {
+        const yearSpan = document.getElementById('current-year');
+        if(yearSpan) {
+            yearSpan.textContent = new Date().getFullYear();
+        }
+    }
+
+    async function loadComponent(url, elementId, callback) {
+        try {
+            const response = await fetch(url);
+            if (!response.ok) throw new Error('Status: ' + response.status);
+            const text = await response.text();
+            const element = document.getElementById(elementId);
+            if (element) {
+                element.innerHTML = text;
+                if (callback) callback();
+            }
+        } catch (error) {
+            console.error('Error loading component:', error);
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        loadComponent('/components/navbar.html', 'navbar', initializeHeaderScripts);
+        loadComponent('/components/footer.html', 'footer', initializeFooterScripts);
+        
+        const faqToggles = document.querySelectorAll('[data-faq-toggle]');
+        faqToggles.forEach(button => {
+            button.addEventListener('click', () => {
+                const answer = button.nextElementSibling;
+                const icon = button.querySelector('.faq-icon');
+                const isOpening = !answer.style.maxHeight;
+
+                faqToggles.forEach(other => {
+                    if (other !== button) {
+                        other.nextElementSibling.style.maxHeight = null;
+                        other.querySelector('.faq-icon').classList.remove('rotate-90');
+                        other.querySelector('.faq-icon').classList.add('-rotate-90');
+                    }
+                });
+
+                if (isOpening) {
+                    answer.style.maxHeight = answer.scrollHeight + "px";
+                    icon.classList.remove('-rotate-90');
+                    icon.classList.add('rotate-90');
+                } else {
+                    answer.style.maxHeight = null;
+                    icon.classList.remove('rotate-90');
+                    icon.classList.add('-rotate-90');
+                }
+            });
+        });
+    });
+    </script>
+</body>
+</html>

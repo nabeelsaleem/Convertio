@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>ISO Date Converter – Format Dates to ISO 8601 Standard | SimpliConvert</title>
+    <meta name="description" content="Quickly format any date or timestamp into the standard ISO 8601 format (YYYY-MM-DD). The perfect tool for developers needing UTC date conversion for APIs and databases.">
+    <meta name="author" content="SimpliConvert">
+    <meta property="og:site_name" content="SimpliConvert">
+    <meta name="robots" content="index, follow">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://simpliconvert.com/iso_date_converter/">
+    <meta property="og:title" content="ISO Date Converter – Standardize Your Timestamps">
+    <meta property="og:description" content="Convert messy date strings and Unix timestamps into clean, standard ISO 8601 format instantly. Supports UTC and local time zones.">
+    <meta property="og:image" content="https://simpliconvert.com/images/iso-date-og.jpg">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://simpliconvert.com/iso_date_converter/">
+    <meta name="twitter:title" content="ISO Date Converter – Standard Date Formatter">
+    <meta name="twitter:description" content="Free online tool to convert any date to ISO 8601. Essential for developers working with modern web APIs and databases.">
+    <meta name="twitter:image" content="https://simpliconvert.com/images/iso-date-og.jpg">
+
+    <link rel="canonical" href="https://simpliconvert.com/iso_date_converter/">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "ISO Date Converter",
+      "url": "https://simpliconvert.com/iso_date_converter/",
+      "description": "A free online tool to format and convert dates into the standard ISO 8601 format required by modern web applications.",
+      "applicationCategory": "DeveloperApplication",
+      "operatingSystem": "Web Browser",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "SimpliConvert",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://simpliconvert.com/logo.png"
+        }
+      }
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [{
+        "@type": "Question",
+        "name": "What is ISO 8601 format?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "ISO 8601 is an international standard for representing dates and times. The most common format is YYYY-MM-DDTHH:mm:ss.sssZ, which ensures consistency across different computer systems and time zones."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Can I convert a Unix timestamp to ISO format?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. Simply paste your Unix timestamp (in seconds or milliseconds) into the input field, and the tool will automatically detect it and provide the corresponding ISO 8601 date."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Is my date data processed on a server?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "No. All date calculations and formatting happen locally in your browser using JavaScript. Your data never leaves your device, ensuring total privacy."
+        }
+      }]
+    }
+    </script>
+
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://simpliconvert.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Developer Tools",
+      "item": "https://simpliconvert.com/developer_tools/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "ISO Date Converter",
+      "item": "https://simpliconvert.com/iso_date_converter/"
+    }
+  ]
+}
+</script>
+
+<script src="/components/core.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #da3f0b;
+            --primary-hover: #b53409;
+            --primary-light: #fff5f2;
+            --bg: #f8fafc;
+            --text-dark: #0f172a;
+            --success: #16a34a;
+            --danger: #dc2626;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text-dark);
+        }
+
+        .code-font {
+            font-family: 'Fira Code', monospace;
+        }
+
+        .hero-card {
+            background: white;
+            border: 1px solid #f1f5f9;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background-color: var(--primary);
+        }
+
+        .prose a {
+            color: #da3f0b;
+            text-decoration: none; 
+        }
+        .prose a:hover {
+            text-decoration: underline; 
+        }
+
+        .animate-fade { animation: fadeIn 0.3s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+        .tool-card {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .tool-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+        }
+
+        textarea {
+            resize: none;
+        }
+        
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 min-h-screen flex flex-col">
+    <div id="navbar"></div>
+
+    <section class="hero-white text-black py-2 md:py-10">
+        <div class="container mx-auto px-4 text-center">
+            <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-2">ISO Date Converter</h1>
+            <p class="text-base text-gray-700 leading-relaxed">
+                Transform any date, time, or Unix timestamp into the <strong>standard ISO 8601 format</strong>. 
+                Essential for developers working with <strong>UTC date conversion</strong>, database storage, and API integration.
+            </p>
+        </div>
+    </section>
+
+    <div id="root" class="w-full max-w-6xl mx-auto p-4 sm:p-6"></div>
+
+    <script type="text/babel">
+    const { useState, useEffect } = React;
+
+    const App = () => {
+      const [input, setInput] = useState('');
+      const [results, setResults] = useState({
+        iso: '',
+        dateOnly: '',
+        utc: '',
+        timestamp: ''
+      });
+      const [error, setError] = useState('');
+      const [copyStatus, setCopyStatus] = useState({});
+      const [showBookmarkToast, setShowBookmarkToast] = useState(false);
+
+      const parseDate = (val) => {
+        if (!val.trim()) {
+          setResults({ iso: '', dateOnly: '', utc: '', timestamp: '' });
+          setError('');
+          return;
+        }
+
+        let date;
+        // Check if it's a numeric timestamp
+        if (/^\d+$/.test(val.trim())) {
+          const ts = parseInt(val.trim());
+          // Detect if seconds or milliseconds
+          date = new Date(ts < 10000000000 ? ts * 1000 : ts);
+        } else {
+          date = new Date(val);
+        }
+
+        if (isNaN(date.getTime())) {
+          setError('Invalid Date Format. Try "2023-10-25" or a Unix Timestamp.');
+          setResults({ iso: '', dateOnly: '', utc: '', timestamp: '' });
+        } else {
+          setError('');
+          setResults({
+            iso: date.toISOString(),
+            dateOnly: date.toISOString().split('T')[0],
+            utc: date.toUTCString(),
+            timestamp: Math.floor(date.getTime() / 1000).toString()
+          });
+        }
+      };
+
+      useEffect(() => {
+        const timeoutId = setTimeout(() => {
+          parseDate(input);
+        }, 300);
+        return () => clearTimeout(timeoutId);
+      }, [input]);
+
+      const handleCopy = (text, key) => {
+        if (!text) return;
+        navigator.clipboard.writeText(text);
+        setCopyStatus({ [key]: 'Copied!' });
+        setTimeout(() => setCopyStatus({}), 2000);
+      };
+
+      const handleClear = () => {
+        setInput('');
+        setResults({ iso: '', dateOnly: '', utc: '', timestamp: '' });
+      };
+
+      const setNow = () => {
+        setInput(new Date().toISOString());
+      };
+
+      const handleBookmark = () => {
+        setShowBookmarkToast(true);
+        setTimeout(() => setShowBookmarkToast(false), 3000);
+      };
+
+      const ResultRow = ({ label, value, id }) => (
+        <div className="mb-4">
+          <div className="flex justify-between items-center mb-1 px-1">
+            <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{label}</label>
+            <button 
+              onClick={() => handleCopy(value, id)}
+              className="text-[10px] font-bold text-[#da3f0b] hover:text-black transition-colors"
+              aria-label={`Copy ${label}`}
+            >
+              {copyStatus[id] || 'COPY'}
+            </button>
+          </div>
+          <div className="bg-white border border-slate-200 rounded-xl p-3 code-font text-sm text-slate-700 break-all shadow-sm">
+            {value || '---'}
+          </div>
+        </div>
+      );
+
+      return (
+        <div className="bg-white rounded-[2rem] shadow-2xl overflow-hidden border border-slate-100">
+          <header className="bg-slate-50/50 border-b border-slate-100 p-6 md:p-8 flex flex-col md:flex-row justify-between items-center gap-6">
+            <div className="text-center md:text-left">
+              <h2 className="text-2xl font-black text-slate-800 tracking-tight flex items-center justify-center md:justify-start gap-3">
+                <span className="bg-[#da3f0b] text-white p-2 rounded-xl text-lg shadow-lg shadow-[#da3f0b30]">
+                  <i className="fas fa-calendar-alt"></i>
+                </span>
+                ISO 8601 Formatter
+              </h2>
+            </div>
+            
+            <div className="flex gap-3">
+              <button 
+                onClick={setNow}
+                className="bg-slate-800 text-white px-5 py-2 rounded-xl text-xs font-bold hover:bg-black transition-all shadow-md active:scale-95"
+                aria-label="Use current time"
+              >
+                <i className="fas fa-clock mr-2"></i> USE CURRENT TIME
+              </button>
+            </div>
+          </header>
+
+          <main className="flex flex-col lg:flex-row min-h-[450px]">
+            {/* Input Panel */}
+            <div className="lg:w-1/2 p-6 md:p-8 border-r border-slate-100 flex flex-col">
+              <div className="flex justify-between items-center mb-4 px-2">
+                <span className="text-xs font-black text-slate-400 uppercase tracking-widest">Input Date or Timestamp</span>
+                <button onClick={handleClear} className="text-[10px] font-bold text-slate-400 hover:text-red-500 transition-colors">
+                  <i className="fas fa-trash-alt mr-1"></i> CLEAR
+                </button>
+              </div>
+              <textarea
+                className={`flex-grow w-full p-5 rounded-2xl border ${error ? 'border-red-300 bg-red-50/30' : 'border-slate-200 bg-slate-50/30'} focus:ring-4 focus:ring-[#da3f0b15] focus:border-[#da3f0b] outline-none code-font text-base custom-scrollbar transition-all`}
+                placeholder="Paste date (e.g., Oct 25 2023) or Unix Timestamp (e.g., 1698220800)..."
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                aria-label="Date input field"
+              ></textarea>
+              {error && <p className="mt-3 text-xs font-bold text-red-500 animate-fade"><i className="fas fa-exclamation-circle mr-1"></i> {error}</p>}
+            </div>
+
+            {/* Output Panel */}
+            <div className="lg:w-1/2 p-6 md:p-8 bg-slate-50/50 flex flex-col">
+              <ResultRow label="ISO 8601 (Full)" value={results.iso} id="iso" />
+              <ResultRow label="ISO Date (YYYY-MM-DD)" value={results.dateOnly} id="date" />
+              <ResultRow label="UTC String" value={results.utc} id="utc" />
+              <ResultRow label="Unix Timestamp" value={results.timestamp} id="ts" />
+            </div>
+          </main>
+
+          {/* Share & Bookmark Footer */}
+          <footer className="bg-slate-50 border-t border-slate-100 p-6 md:p-8">
+             <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+                 <div className="text-center md:text-left">
+                     <h4 className="text-sm font-bold text-slate-700 mb-1">Share this tool</h4>
+                     <p className="text-xs text-slate-400">Help others standardize their date formats.</p>
+                 </div>
+                 
+                 <div className="flex flex-wrap justify-center gap-3">
+                     <a href={`https://twitter.com/intent/tweet?text=Check out this ISO Date Converter!&url=${encodeURIComponent(window.location.href)}`} target="_blank" className="w-10 h-10 rounded-full flex items-center justify-center text-white bg-[#1DA1F2] hover:-translate-y-1 transition-transform" aria-label="Share on Twitter"><i className="fab fa-twitter"></i></a>
+                     <a href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`} target="_blank" className="w-10 h-10 rounded-full flex items-center justify-center text-white bg-[#1877F2] hover:-translate-y-1 transition-transform" aria-label="Share on Facebook"><i className="fab fa-facebook-f"></i></a>
+                     <a href={`https://api.whatsapp.com/send?text=ISO Date Converter: ${encodeURIComponent(window.location.href)}`} target="_blank" className="w-10 h-10 rounded-full flex items-center justify-center text-white bg-[#25D366] hover:-translate-y-1 transition-transform" aria-label="Share on WhatsApp"><i className="fab fa-whatsapp"></i></a>
+                 </div>
+
+                 <div className="relative">
+                     <button 
+                        onClick={handleBookmark}
+                        className="flex items-center gap-2 bg-white border border-slate-200 hover:border-[#da3f0b] hover:text-[#da3f0b] text-slate-600 px-4 py-2 rounded-lg text-sm font-bold transition-all shadow-sm active:scale-95"
+                        aria-label="Bookmark this tool"
+                     >
+                        <i className="fas fa-bookmark"></i> Bookmark
+                     </button>
+                     {showBookmarkToast && (
+                         <div className="absolute bottom-full mb-3 left-1/2 -translate-x-1/2 bg-slate-800 text-white text-xs py-2 px-4 rounded-lg shadow-lg whitespace-nowrap animate-fade">
+                             Press <span className="font-bold text-[#da3f0b]">Ctrl + D</span> to bookmark
+                         </div>
+                     )}
+                 </div>
+             </div>
+          </footer>
+        </div>
+      );
+    };
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+    </script>
+
+    <p class="text-center mt-4 mb-10">
+        <a href="https://simpliconvert.com/developer_tools/" class="text-primary font-medium hover:underline">
+            ← Back to All Developer Tools
+        </a>
+    </p>
+
+    <section class="bg-white py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="prose prose-lg max-w-none prose-h2:text-gray-800 prose-p:text-gray-700">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">ISO Date Converter – Standardize Your Timestamps to ISO 8601</h2>
+                <p class="mb-6 leading-relaxed">
+                    In the world of modern software development, date and time consistency is non-negotiable. Our <strong>ISO Date Converter</strong> is a specialized utility built to help you bridge the gap between human-readable dates and machine-friendly standards. Whether you're dealing with legacy database records or building a new REST API, converting your data to the <strong>standard date format</strong> (ISO 8601) ensures your application remains robust and bug-free across different time zones.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Why ISO 8601 Matters for Developers</h2>
+                <p class="mb-6 leading-relaxed">
+                    ISO 8601 is the gold standard for date representation because it is unambiguous. Unlike regional formats (like MM/DD/YYYY vs DD/MM/YYYY), ISO 8601 follows a logical YYYY-MM-DD structure that sorts naturally as text. When preparing data for web services, pairing this tool with a <a href="https://simpliconvert.com/json_formatter_and_validator/" target="_blank">JSON Formatter and Validator</a> ensures your payloads are perfectly structured and ready for consumption by any modern framework.
+                </p>
+                <p class="mb-6 leading-relaxed">
+                    If you're working with backend systems or low-level logs, you might also need our <a href="https://simpliconvert.com/unix_timestamp_converter_online/" target="_blank">Unix Timestamp Converter Online</a> to handle raw epoch data before standardizing it here.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Features of Our ISO Date Formatter</h2>
+                <ul class="list-disc pl-6 mb-6 space-y-2 text-gray-700">
+                    <li><strong>Automatic Detection:</strong> Paste a Unix timestamp, a UTC string, or a local date, and our tool identifies it instantly.</li>
+                    <li><strong>Multiple Outputs:</strong> Get the full ISO string, the date-only portion, or the raw Unix timestamp in one go.</li>
+                    <li><strong>Privacy-Centric:</strong> No data is sent to our servers. All conversions happen within your browser's memory.</li>
+                    <li><strong>Developer Friendly:</strong> One-click copy buttons for every format to speed up your coding workflow.</li>
+                    <li><strong>Zero Dependencies:</strong> A lightweight, fast tool that works on mobile and desktop alike.</li>
+                </ul>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">How to Use the ISO Date Converter</h2>
+                <ol class="list-decimal pl-6 mb-6 space-y-2 text-gray-700">
+                    <li><strong>Enter Data:</strong> Type or paste your date string or numeric timestamp into the input box.</li>
+                    <li><strong>Real-time Update:</strong> Watch as the tool instantly generates the ISO 8601 equivalent.</li>
+                    <li><strong>Select Format:</strong> Choose between the full timestamp (with milliseconds and 'Z' indicator) or just the date.</li>
+                    <li><strong>Copy & Paste:</strong> Use the copy buttons to move the formatted date into your code or database manager.</li>
+                </ol>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Final Thoughts</h2>
+                <p class="mb-6 leading-relaxed">
+                    Don't let time zone offsets and regional date formats break your application. Use the <strong>ISO Date Converter</strong> to maintain a clean, standardized codebase. It's a simple step that prevents massive headaches during data migration and API integration.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-center text-gray-900 mb-8">ISO Date Converter – Frequently Asked Questions</h2>
+            <div class="space-y-4">
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-primary">
+                        <span>What is the difference between ISO 8601 and UTC?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">
+                            UTC (Coordinated Universal Time) is the time standard itself, while ISO 8601 is the formatting standard used to represent that time. Most ISO 8601 strings end with a 'Z' to indicate they are in UTC time.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-primary">
+                        <span>Does this tool handle milliseconds?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">
+                            Yes. The full ISO 8601 output includes milliseconds (e.g., .000Z) to ensure high-precision data remains intact during conversion.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-primary">
+                        <span>Why is my date showing as "Invalid"?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">
+                            This usually happens if the input string is too ambiguous for the browser to parse. Try using a standard format like "YYYY/MM/DD" or a numeric Unix timestamp for the best results.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 pb-16">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-slate-200 pt-16">
+            <h2 class="text-2xl font-bold text-center text-slate-800 mb-10">Explore More Developer Tools</h2>
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+                <a href="/unix_timestamp_converter_online/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-slate-50 text-slate-700 flex items-center justify-center shrink-0 group-hover:bg-slate-800 group-hover:text-white transition-colors">
+                        <i class="fas fa-history text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Unix Converter</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Convert epoch to human dates.</p>
+                    </div>
+                </a>
+
+                <a href="/json_formatter_and_validator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center shrink-0 group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-brackets-curly text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">JSON Formatter</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Clean and validate JSON data.</p>
+                    </div>
+                </a>
+
+                <a href="/uuid_generator_online/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-red-50 text-red-600 flex items-center justify-center shrink-0 group-hover:bg-red-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-fingerprint text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">UUID Gen</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Generate unique v4 identifiers.</p>
+                    </div>
+                </a>
+
+                <a href="/sql_formatter_online/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-slate-50 text-slate-800 flex items-center justify-center shrink-0 group-hover:bg-slate-900 group-hover:text-white transition-colors">
+                        <i class="fas fa-database text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">SQL Formatter</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Beautify database queries.</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <div id="footer"></div>
+
+    <script>
+    function initializeHeaderScripts() {
+        const header = document.getElementById('header');
+        if (header) {
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 10) {
+                    header.classList.add('scrolled-effect');
+                } else {
+                    header.classList.remove('scrolled-effect');
+                }
+            });
+        }
+    }
+    
+    function initializeFooterScripts() {
+        const yearSpan = document.getElementById('current-year');
+        if(yearSpan) {
+            yearSpan.textContent = new Date().getFullYear();
+        }
+    }
+
+    async function loadComponent(url, elementId, callback) {
+        try {
+            const response = await fetch(url);
+            if (!response.ok) throw new Error('Status: ' + response.status);
+            const text = await response.text();
+            const element = document.getElementById(elementId);
+            if (element) {
+                element.innerHTML = text;
+                if (callback) callback();
+            }
+        } catch (error) {
+            console.error('Error loading component:', error);
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        loadComponent('/components/navbar.html', 'navbar', initializeHeaderScripts);
+        loadComponent('/components/footer.html', 'footer', initializeFooterScripts);
+        
+        const faqToggles = document.querySelectorAll('[data-faq-toggle]');
+        faqToggles.forEach(button => {
+            button.addEventListener('click', () => {
+                const answer = button.nextElementSibling;
+                const icon = button.querySelector('.faq-icon');
+                const isOpening = !answer.style.maxHeight;
+
+                faqToggles.forEach(other => {
+                    if (other !== button) {
+                        other.nextElementSibling.style.maxHeight = null;
+                        other.querySelector('.faq-icon').classList.remove('rotate-90');
+                        other.querySelector('.faq-icon').classList.add('-rotate-90');
+                    }
+                });
+
+                if (isOpening) {
+                    answer.style.maxHeight = answer.scrollHeight + "px";
+                    icon.classList.remove('-rotate-90');
+                    icon.classList.add('rotate-90');
+                } else {
+                    answer.style.maxHeight = null;
+                    icon.classList.remove('rotate-90');
+                    icon.classList.add('-rotate-90');
+                }
+            });
+        });
+    });
+    </script>
+</body>
+</html>

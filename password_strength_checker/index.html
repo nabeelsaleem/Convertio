@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Password Strength Checker – How Strong is My Password? | SimpliConvert</title>
+    <meta name="description" content="Check how strong your password is with our security analyzer. Find out how long it takes to crack your password and get tips to improve your online security.">
+    <meta name="author" content="SimpliConvert">
+    <meta property="og:site_name" content="SimpliConvert">
+    <meta name="robots" content="index, follow">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://simpliconvert.com/password_strength_checker/">
+    <meta property="og:title" content="Password Strength Checker – Security Analyzer">
+    <meta property="og:description" content="Analyze your password to see how long it would take a computer to crack it. Check for entropy, length, and character variety instantly.">
+    <meta property="og:image" content="https://simpliconvert.com/images/password-strength-og.jpg">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://simpliconvert.com/password_strength_checker/">
+    <meta name="twitter:title" content="Password Strength Checker – Check Password Hack Time">
+    <meta name="twitter:description" content="Free online tool to rate your password strength. Improve your digital security by checking entropy and crack time.">
+    <meta name="twitter:image" content="https://simpliconvert.com/images/password-strength-og.jpg">
+
+    <link rel="canonical" href="https://simpliconvert.com/password_strength_checker/">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Password Strength Checker",
+      "url": "https://simpliconvert.com/password_strength_checker/",
+      "description": "A free online tool to analyze password security, calculate entropy, and estimate the time required to crack a password.",
+      "applicationCategory": "SecurityApplication",
+      "operatingSystem": "Web Browser",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "SimpliConvert",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://simpliconvert.com/logo.png"
+        }
+      }
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [{
+        "@type": "Question",
+        "name": "Is it safe to type my password into this tool?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. This tool runs entirely in your local browser using JavaScript. Your password is never sent to our servers, stored, or shared. You can even use it offline once the page is loaded."
+        }
+      }, {
+        "@type": "Question",
+        "name": "What is password entropy?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Entropy is a measure of how unpredictable a password is. It is calculated based on the length of the password and the size of the character set used (lowercase, uppercase, numbers, and symbols)."
+        }
+      }, {
+        "@type": "Question",
+        "name": "How is the 'Time to Crack' calculated?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The estimate is based on the number of possible combinations and an average brute-force speed of 10 billion guesses per second, which is typical for modern high-end hardware."
+        }
+      }]
+    }
+    </script>
+
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://simpliconvert.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Security Tools",
+      "item": "https://simpliconvert.com/security_tools/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "Password Strength Checker",
+      "item": "https://simpliconvert.com/password_strength_checker/"
+    }
+  ]
+}
+</script>
+
+<script src="/components/core.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #da3f0b;
+            --primary-hover: #b53409;
+            --primary-light: #fff5f2;
+            --bg: #f8fafc;
+            --text-dark: #0f172a;
+            --success: #16a34a;
+            --warning: #f59e0b;
+            --danger: #dc2626;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text-dark);
+        }
+
+        .code-font {
+            font-family: 'Fira Code', monospace;
+        }
+
+        .hero-card {
+            background: white;
+            border: 1px solid #f1f5f9;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background-color: var(--primary);
+        }
+
+        .prose a {
+            color: #da3f0b;
+            text-decoration: none; 
+        }
+        .prose a:hover {
+            text-decoration: underline; 
+        }
+
+        .animate-fade { animation: fadeIn 0.3s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+        .tool-card {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .tool-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+        }
+
+        .strength-bar {
+            height: 8px;
+            border-radius: 4px;
+            transition: all 0.4s ease;
+        }
+        
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 min-h-screen flex flex-col">
+    <div id="navbar"></div>
+
+    <section class="hero-white text-black py-2 md:py-10">
+        <div class="container mx-auto px-4 text-center">
+            <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-2">Password Strength Checker</h1>
+            <p class="text-base text-gray-700 leading-relaxed max-w-2xl mx-auto">
+                How strong is my password? Use our <strong>security analyzer</strong> to check for entropy, 
+                calculate hack time, and ensure your digital life is protected against brute-force attacks.
+            </p>
+        </div>
+    </section>
+
+    <div id="root" class="w-full max-w-6xl mx-auto p-4 sm:p-6"></div>
+
+    <script type="text/babel">
+    const { useState, useEffect } = React;
+
+    const App = () => {
+      const [password, setPassword] = useState('');
+      const [showPassword, setShowPassword] = useState(false);
+      const [analysis, setAnalysis] = useState({
+        score: 0,
+        label: 'Too Weak',
+        color: '#cbd5e1',
+        entropy: 0,
+        crackTime: 'Instantly',
+        checks: { length: false, upper: false, lower: false, number: false, symbol: false }
+      });
+      const [showBookmarkToast, setShowBookmarkToast] = useState(false);
+
+      const calculateStrength = (pwd) => {
+        if (!pwd) return { score: 0, label: 'Waiting...', color: '#cbd5e1', entropy: 0, crackTime: 'Instantly', checks: {} };
+
+        let score = 0;
+        const checks = {
+          length: pwd.length >= 12,
+          upper: /[A-Z]/.test(pwd),
+          lower: /[a-z]/.test(pwd),
+          number: /[0-9]/.test(pwd),
+          symbol: /[^A-Za-z0-9]/.test(pwd)
+        };
+
+        if (checks.length) score++;
+        if (checks.upper && checks.lower) score++;
+        if (checks.number) score++;
+        if (checks.symbol) score++;
+        if (pwd.length >= 16) score++;
+
+        // Entropy Calculation
+        let poolSize = 0;
+        if (checks.lower) poolSize += 26;
+        if (checks.upper) poolSize += 26;
+        if (checks.number) poolSize += 10;
+        if (checks.symbol) poolSize += 33;
+        
+        const entropy = poolSize > 0 ? Math.floor(pwd.length * Math.log2(poolSize)) : 0;
+
+        // Crack Time Estimation (Simplified)
+        // 10 billion guesses per second
+        const combinations = Math.pow(poolSize, pwd.length);
+        const secondsToCrack = combinations / 10000000000;
+        
+        let crackTime = 'Instantly';
+        if (secondsToCrack > 31536000 * 1000) crackTime = 'Centuries';
+        else if (secondsToCrack > 31536000) crackTime = Math.floor(secondsToCrack / 31536000) + ' Years';
+        else if (secondsToCrack > 86400) crackTime = Math.floor(secondsToCrack / 86400) + ' Days';
+        else if (secondsToCrack > 3600) crackTime = Math.floor(secondsToCrack / 3600) + ' Hours';
+        else if (secondsToCrack > 60) crackTime = Math.floor(secondsToCrack / 60) + ' Minutes';
+        else if (secondsToCrack > 1) crackTime = Math.floor(secondsToCrack) + ' Seconds';
+
+        const labels = ['Very Weak', 'Weak', 'Fair', 'Strong', 'Very Strong', 'Unbreakable'];
+        const colors = ['#dc2626', '#ef4444', '#f59e0b', '#10b981', '#059669', '#047857'];
+
+        return {
+          score: Math.min(score, 5),
+          label: labels[score],
+          color: colors[score],
+          entropy,
+          crackTime,
+          checks
+        };
+      };
+
+      useEffect(() => {
+        setAnalysis(calculateStrength(password));
+      }, [password]);
+
+      const handleBookmark = () => {
+        setShowBookmarkToast(true);
+        setTimeout(() => setShowBookmarkToast(false), 3000);
+      };
+
+      return (
+        <div className="bg-white rounded-[2rem] shadow-2xl overflow-hidden border border-slate-100">
+          <header className="bg-slate-50/50 border-b border-slate-100 p-6 md:p-8 flex flex-col md:flex-row justify-between items-center gap-6">
+            <div className="text-center md:text-left">
+              <h2 className="text-2xl font-black text-slate-800 tracking-tight flex items-center justify-center md:justify-start gap-3">
+                <span className="bg-[#da3f0b] text-white p-2 rounded-xl text-lg shadow-lg shadow-[#da3f0b30]">
+                  <i className="fas fa-shield-alt"></i>
+                </span>
+                Security Analyzer
+              </h2>
+            </div>
+            <div className="flex items-center gap-4">
+                <span className="text-xs font-bold text-slate-400 uppercase tracking-widest">Privacy Mode: Active</span>
+                <div className="w-3 h-3 rounded-full bg-green-500 animate-pulse"></div>
+            </div>
+          </header>
+
+          <main className="flex flex-col lg:flex-row min-h-[450px]">
+            {/* Input Panel */}
+            <div className="lg:w-1/2 p-6 md:p-10 border-r border-slate-100 flex flex-col justify-center">
+              <div className="mb-8">
+                <label className="block text-sm font-black text-slate-700 uppercase tracking-wider mb-4" htmlFor="pwd-input">
+                  Enter Password to Test
+                </label>
+                <div className="relative">
+                  <input
+                    id="pwd-input"
+                    type={showPassword ? "text" : "password"}
+                    aria-label="Password Input"
+                    className="w-full p-5 rounded-2xl border-2 border-slate-100 focus:ring-4 focus:ring-[#da3f0b15] focus:border-[#da3f0b] outline-none code-font text-xl transition-all bg-slate-50/30"
+                    placeholder="Type your password..."
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                  />
+                  <button 
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors"
+                    aria-label={showPassword ? "Hide password" : "Show password"}
+                  >
+                    <i className={`fas ${showPassword ? 'fa-eye-slash' : 'fa-eye'} text-lg`}></i>
+                  </button>
+                </div>
+              </div>
+
+              <div className="space-y-3">
+                <div className="flex justify-between items-center mb-1">
+                  <span className="text-xs font-bold text-slate-500 uppercase">Strength Rating</span>
+                  <span className="text-xs font-black uppercase" style={{ color: analysis.color }}>{analysis.label}</span>
+                </div>
+                <div className="w-full bg-slate-100 rounded-full h-3 overflow-hidden">
+                  <div 
+                    className="h-full transition-all duration-500 ease-out"
+                    style={{ width: `${(analysis.score / 5) * 100}%`, backgroundColor: analysis.color }}
+                  ></div>
+                </div>
+              </div>
+            </div>
+
+            {/* Analysis Panel */}
+            <div className="lg:w-1/2 p-6 md:p-10 bg-slate-50/30 flex flex-col">
+              <div className="grid grid-cols-2 gap-4 mb-8">
+                <div className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm">
+                  <span className="block text-[10px] font-black text-slate-400 uppercase mb-1">Entropy</span>
+                  <span className="text-2xl font-bold text-slate-800">{analysis.entropy} <small className="text-xs text-slate-400">bits</small></span>
+                </div>
+                <div className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm">
+                  <span className="block text-[10px] font-black text-slate-400 uppercase mb-1">Time to Crack</span>
+                  <span className="text-2xl font-bold text-slate-800">{analysis.crackTime}</span>
+                </div>
+              </div>
+
+              <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm flex-grow">
+                <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest mb-6">Security Checklist</h3>
+                <ul className="space-y-4">
+                  {[
+                    { key: 'length', label: 'At least 12 characters' },
+                    { key: 'upper', label: 'Contains Uppercase' },
+                    { key: 'lower', label: 'Contains Lowercase' },
+                    { key: 'number', label: 'Contains Numbers' },
+                    { key: 'symbol', label: 'Contains Symbols' }
+                  ].map(item => (
+                    <li key={item.key} className="flex items-center gap-3">
+                      <div className={`w-6 h-6 rounded-full flex items-center justify-center transition-colors ${analysis.checks[item.key] ? 'bg-green-100 text-green-600' : 'bg-slate-100 text-slate-300'}`}>
+                        <i className={`fas ${analysis.checks[item.key] ? 'fa-check' : 'fa-times'} text-[10px]`}></i>
+                      </div>
+                      <span className={`text-sm font-medium ${analysis.checks[item.key] ? 'text-slate-700' : 'text-slate-400'}`}>{item.label}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          </main>
+
+          <footer className="bg-slate-50 border-t border-slate-100 p-6 md:p-8">
+             <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+                 <div className="text-center md:text-left">
+                     <h4 className="text-sm font-bold text-slate-700 mb-1">Share this security tool</h4>
+                     <p className="text-xs text-slate-400">Help friends and family stay safe online.</p>
+                 </div>
+                 
+                 <div className="flex flex-wrap justify-center gap-3">
+                     <a href={`https://twitter.com/intent/tweet?text=Check how strong your password is!&url=${encodeURIComponent(window.location.href)}`} target="_blank" className="w-10 h-10 rounded-full flex items-center justify-center text-white bg-[#1DA1F2] hover:-translate-y-1 transition-transform"><i className="fab fa-twitter"></i></a>
+                     <a href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`} target="_blank" className="w-10 h-10 rounded-full flex items-center justify-center text-white bg-[#1877F2] hover:-translate-y-1 transition-transform"><i className="fab fa-facebook-f"></i></a>
+                     <a href={`https://api.whatsapp.com/send?text=Password Strength Checker: ${encodeURIComponent(window.location.href)}`} target="_blank" className="w-10 h-10 rounded-full flex items-center justify-center text-white bg-[#25D366] hover:-translate-y-1 transition-transform"><i className="fab fa-whatsapp"></i></a>
+                 </div>
+
+                 <div className="relative">
+                     <button 
+                        onClick={handleBookmark}
+                        className="flex items-center gap-2 bg-white border border-slate-200 hover:border-[#da3f0b] hover:text-[#da3f0b] text-slate-600 px-4 py-2 rounded-lg text-sm font-bold transition-all shadow-sm active:scale-95"
+                     >
+                        <i className="fas fa-bookmark"></i> Bookmark
+                     </button>
+                     {showBookmarkToast && (
+                         <div className="absolute bottom-full mb-3 left-1/2 -translate-x-1/2 bg-slate-800 text-white text-xs py-2 px-4 rounded-lg shadow-lg whitespace-nowrap animate-fade">
+                             Press <span className="font-bold text-[#da3f0b]">Ctrl + D</span> to bookmark
+                         </div>
+                     )}
+                 </div>
+             </div>
+          </footer>
+        </div>
+      );
+    };
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+    </script>
+
+    <p class="text-center mt-4 mb-10">
+        <a href="https://simpliconvert.com/developer_tools/" class="text-primary font-medium hover:underline">
+            ← Back to All Developer Tools
+        </a>
+    </p>
+
+    <section class="bg-white py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="prose prose-lg max-w-none prose-h2:text-gray-800 prose-p:text-gray-700">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">Password Strength Checker – Protect Your Digital Identity</h2>
+                <p class="mb-6 leading-relaxed">
+                    In an era where data breaches are common, your password is the primary barrier between hackers and your personal information. Our <strong>Password Strength Checker</strong> provides an instant, deep-dive analysis of your credentials. Unlike basic meters, this tool calculates <strong>password entropy</strong> and estimates the actual time a modern computer would take to crack your code using brute-force methods.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">How Strong is My Password?</h2>
+                <p class="mb-6 leading-relaxed">
+                    Strength isn't just about length; it's about complexity and unpredictability. A 12-character password like "Password123!" is significantly weaker than a random 12-character string like "4k#mZ9!pL2qR". Our security analyzer looks for character variety, including uppercase letters, lowercase letters, numbers, and special symbols. If you find your current password is too weak, you can use our <a href="https://simpliconvert.com/password_generator/" target="_blank">Password Generator</a> to create a cryptographically secure alternative.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Key Features of Our Security Analyzer</h2>
+                <ul class="list-disc pl-6 mb-6 space-y-2 text-gray-700">
+                    <li><strong>Real-time Entropy Calculation:</strong> Measure the mathematical randomness of your password in bits.</li>
+                    <li><strong>Crack Time Estimation:</strong> See how long it takes for a GPU cluster to guess your password.</li>
+                    <li><strong>Visual Feedback:</strong> A dynamic strength bar that changes color from red (danger) to green (secure).</li>
+                    <li><strong>Zero-Server Interaction:</strong> Your password never leaves your device. We use client-side JavaScript for 100% privacy.</li>
+                    <li><strong>Character Breakdown:</strong> A checklist to ensure you've met all modern security standards.</li>
+                </ul>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Understanding Password Entropy</h2>
+                <p class="mb-6 leading-relaxed">
+                    Entropy is the gold standard for measuring password security. It represents the number of attempts a hacker would need to exhaust all possibilities. A password with 60 bits of entropy is generally considered strong for most personal accounts, while 100+ bits is recommended for high-security environments. For developers working with sensitive data, tools like our <a href="https://simpliconvert.com/base64_encoder_decoder_online/" target="_blank">Base64 Encoder</a> can also help in handling data, but nothing replaces a solid master password.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Tips for a Better Password</h2>
+                <p class="mb-6 leading-relaxed">
+                    To achieve a "Very Strong" rating, aim for at least 16 characters. Use a mix of symbols and avoid common dictionary words or personal information like birthdays. Consider using a "passphrase"—a string of unrelated words—which is often easier for humans to remember but incredibly difficult for computers to crack.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-center text-gray-900 mb-8">Password Security – Frequently Asked Questions</h2>
+            <div class="space-y-4">
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>Is it safe to enter my real password here?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">
+                            Yes. Our tool is built with a "Privacy First" approach. All calculations happen locally in your browser. No data is sent to SimpliConvert servers. For maximum peace of mind, you can even disconnect your internet after the page loads and the tool will still work.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>What is a good entropy score?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">
+                            Generally, a score above 50 bits is okay for low-risk accounts. However, for email, banking, or social media, you should aim for 80 bits or higher. Our tool will highlight your password in green once it reaches a safe threshold.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>Why does it say my password can be cracked 'Instantly'?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">
+                            This usually happens if your password is too short (less than 8 characters) or only uses one type of character (like all lowercase). Modern hacking hardware can try billions of combinations per second, making simple passwords useless.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 pb-16">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-slate-200 pt-16">
+            <h2 class="text-2xl font-bold text-center text-slate-800 mb-10">Explore More Security & Dev Tools</h2>
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+                <a href="/password_generator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-slate-50 text-slate-700 flex items-center justify-center shrink-0 group-hover:bg-slate-800 group-hover:text-white transition-colors">
+                        <i class="fas fa-key text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Password Gen</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Create secure passwords.</p>
+                    </div>
+                </a>
+
+                <a href="/base64_encoder_decoder_online/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center shrink-0 group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-code text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Base64 Tool</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Encode and decode data.</p>
+                    </div>
+                </a>
+
+                <a href="/meta_tag_generator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0 group-hover:bg-indigo-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-search text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Meta Tag Gen</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Optimize SEO tags.</p>
+                    </div>
+                </a>
+
+                <a href="/qr_code_generator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-slate-50 text-slate-800 flex items-center justify-center shrink-0 group-hover:bg-slate-900 group-hover:text-white transition-colors">
+                        <i class="fas fa-qrcode text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">QR Creator</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Generate custom QR codes.</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <div id="footer"></div>
+
+    <script>
+    function initializeHeaderScripts() {
+        const header = document.getElementById('header');
+        if (header) {
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 10) {
+                    header.classList.add('scrolled-effect');
+                } else {
+                    header.classList.remove('scrolled-effect');
+                }
+            });
+        }
+    }
+    
+    function initializeFooterScripts() {
+        const yearSpan = document.getElementById('current-year');
+        if(yearSpan) {
+            yearSpan.textContent = new Date().getFullYear();
+        }
+    }
+
+    async function loadComponent(url, elementId, callback) {
+        try {
+            const response = await fetch(url);
+            if (!response.ok) throw new Error('Status: ' + response.status);
+            const text = await response.text();
+            const element = document.getElementById(elementId);
+            if (element) {
+                element.innerHTML = text;
+                if (callback) callback();
+            }
+        } catch (error) {
+            console.error('Error loading component:', error);
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        loadComponent('/components/navbar.html', 'navbar', initializeHeaderScripts);
+        loadComponent('/components/footer.html', 'footer', initializeFooterScripts);
+        
+        const faqToggles = document.querySelectorAll('[data-faq-toggle]');
+        faqToggles.forEach(button => {
+            button.addEventListener('click', () => {
+                const answer = button.nextElementSibling;
+                const icon = button.querySelector('.faq-icon');
+                const isOpening = !answer.style.maxHeight;
+
+                faqToggles.forEach(other => {
+                    if (other !== button) {
+                        other.nextElementSibling.style.maxHeight = null;
+                        other.querySelector('.faq-icon').classList.remove('rotate-90');
+                        other.querySelector('.faq-icon').classList.add('-rotate-90');
+                    }
+                });
+
+                if (isOpening) {
+                    answer.style.maxHeight = answer.scrollHeight + "px";
+                    icon.classList.remove('-rotate-90');
+                    icon.classList.add('rotate-90');
+                } else {
+                    answer.style.maxHeight = null;
+                    icon.classList.remove('rotate-90');
+                    icon.classList.add('-rotate-90');
+                }
+            });
+        });
+    });
+    </script>
+</body>
+</html>
