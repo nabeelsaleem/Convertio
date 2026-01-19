@@ -1,5 +1,9 @@
 (function() {
-    // 1. The Master Tool Database
+    'use strict';
+
+    // ============================================
+    // Master Tool Database
+    // ============================================
     const allTools = [
         { name: "Base64 Encoder Decoder", url: "https://simpliconvert.com/base64_encoder_decoder_online/" },
         { name: "JSON Formatter & Validator", url: "https://simpliconvert.com/json_formatter_and_validator/" },
@@ -109,7 +113,9 @@
         { name: "Zakat Cash Calc", url: "https://simpliconvert.com/zakat_calculator_cash/" }
     ];
 
-    // 2. Search Function
+    // ============================================
+    // Search Setup Function
+    // ============================================
     function setupSearch(inputId, resultsId, clearBtnId) {
         const input = document.getElementById(inputId);
         const results = document.getElementById(resultsId);
@@ -119,76 +125,106 @@
 
         function performSearch() {
             const query = input.value.toLowerCase().trim();
-            if (clearBtn) query.length > 0 ? clearBtn.classList.remove('hidden') : clearBtn.classList.add('hidden');
+            
+            // Show/hide clear button
+            if (clearBtn) {
+                clearBtn.style.display = query.length > 0 ? 'flex' : 'none';
+            }
 
+            // Hide results if empty query
             if (query.length === 0) {
-                results.classList.add('hidden');
+                results.style.display = 'none';
                 results.innerHTML = '';
                 return;
             }
 
+            // Filter tools
             const filteredTools = allTools.filter(tool => {
                 const searchableUrl = tool.url.replace(/[-_]/g, ' ');
                 return tool.name.toLowerCase().includes(query) || searchableUrl.toLowerCase().includes(query);
             }).slice(0, 10);
 
+            // Display results
             if (filteredTools.length > 0) {
-                results.innerHTML = filteredTools.map(tool => `
-                    <a href="${tool.url}" class="block px-4 py-3 border-b border-gray-100 last:border-0 hover:bg-gray-50 transition-colors group">
-                        <div class="flex items-center justify-between">
-                            <span class="font-medium text-gray-800 text-sm group-hover:text-primary">${tool.name}</span>
-                            <svg class="w-4 h-4 text-gray-300 group-hover:text-primary group-hover:translate-x-1 transition-all" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                results.innerHTML = filteredTools.map((tool, index) => `
+                    <a href="${tool.url}" style="display: block; padding: 0.75rem 1rem; border-bottom: 1px solid ${index === filteredTools.length - 1 ? 'transparent' : '#f3f4f6'}; text-decoration: none; transition: background-color 0.2s;" onmouseover="this.style.backgroundColor='#f9fafb'" onmouseout="this.style.backgroundColor='transparent'">
+                        <div style="display: flex; align-items: center; justify-content: space-between;">
+                            <span style="font-weight: 500; color: #1f2937; font-size: 0.875rem; transition: color 0.2s;" class="tool-name">${tool.name}</span>
+                            <svg style="width: 1rem; height: 1rem; color: #d1d5db; transition: all 0.2s;" class="tool-arrow" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
                             </svg>
                         </div>
                     </a>
                 `).join('');
-                results.classList.remove('hidden');
+                
+                // Add hover effect to change text and arrow color
+                const links = results.querySelectorAll('a');
+                links.forEach(link => {
+                    link.addEventListener('mouseenter', function() {
+                        const name = this.querySelector('.tool-name');
+                        const arrow = this.querySelector('.tool-arrow');
+                        if (name) name.style.color = '#da3f0b';
+                        if (arrow) {
+                            arrow.style.color = '#da3f0b';
+                            arrow.style.transform = 'translateX(4px)';
+                        }
+                    });
+                    link.addEventListener('mouseleave', function() {
+                        const name = this.querySelector('.tool-name');
+                        const arrow = this.querySelector('.tool-arrow');
+                        if (name) name.style.color = '#1f2937';
+                        if (arrow) {
+                            arrow.style.color = '#d1d5db';
+                            arrow.style.transform = 'translateX(0)';
+                        }
+                    });
+                });
+                
+                results.style.display = 'block';
             } else {
-                results.innerHTML = `<div class="px-4 py-3 text-sm text-gray-500 text-center">No tools found.</div>`;
-                results.classList.remove('hidden');
+                results.innerHTML = '<div style="padding: 0.75rem 1rem; font-size: 0.875rem; color: #6b7280; text-align: center;">No tools found.</div>';
+                results.style.display = 'block';
             }
         }
 
+        // Event listeners
         input.addEventListener('input', performSearch);
         input.addEventListener('focus', performSearch);
         
+        // Clear button
         if (clearBtn) {
-            clearBtn.addEventListener('click', () => {
+            clearBtn.addEventListener('click', function() {
                 input.value = '';
-                results.classList.add('hidden');
-                clearBtn.classList.add('hidden');
+                results.style.display = 'none';
+                clearBtn.style.display = 'none';
                 input.focus();
             });
         }
 
-        document.addEventListener('click', (e) => {
-            if (!input.contains(e.target) && !results.contains(e.target)) results.classList.add('hidden');
-        });
-    }
-
-    // 3. Initialize Everything Immediately
-    setupSearch('desktop-search-input', 'desktop-search-results', 'desktop-search-clear');
-    setupSearch('mobile-search-input', 'mobile-search-results', null);
-
-    // 4. Initialize Mobile Menu
-    const btn = document.getElementById('mobile-menu-button');
-    const menu = document.getElementById('mobile-menu');
-    const iconOpen = document.getElementById('mobile-menu-icon-open');
-    const iconClose = document.getElementById('mobile-menu-icon-close');
-
-    if(btn) {
-        btn.addEventListener('click', () => {
-            const isOpen = !menu.classList.contains('hidden');
-            if(isOpen) {
-                menu.classList.add('hidden');
-                iconOpen.classList.remove('hidden');
-                iconClose.classList.add('hidden');
-            } else {
-                menu.classList.remove('hidden');
-                iconOpen.classList.add('hidden');
-                iconClose.classList.remove('hidden');
+        // Click outside to close
+        document.addEventListener('click', function(e) {
+            if (!input.contains(e.target) && !results.contains(e.target)) {
+                results.style.display = 'none';
             }
         });
     }
+
+    // ============================================
+    // Initialize Search
+    // ============================================
+    function init() {
+        // Desktop search
+        setupSearch('desktop-search-input', 'desktop-search-results', 'desktop-search-clear');
+        
+        // Mobile search
+        setupSearch('mobile-search-input', 'mobile-search-results', null);
+    }
+
+    // Run initialization
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+    } else {
+        init();
+    }
+
 })();
