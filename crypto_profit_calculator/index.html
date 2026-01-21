@@ -80,10 +80,12 @@
     </script>
 
     <script src="https://cdn.tailwindcss.com"></script>
-<script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" media="print" onload="this.media='all'" />
+    <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" /></noscript>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     
     <style>
@@ -121,40 +123,6 @@
             background-color: var(--primary);
         }
 
-        /* Custom Range Slider */
-        input[type=range] {
-            height: 6px;
-            -webkit-appearance: none;
-            width: 100%;
-            background: #e2e8f0;
-            border-radius: 8px;
-            outline: none;
-        }
-        input[type=range]::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            appearance: none;
-            width: 18px;
-            height: 18px;
-            border-radius: 50%;
-            background: var(--primary);
-            cursor: pointer;
-            border: 2px solid white;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            transition: all 0.1s ease;
-        }
-        input[type=range]::-webkit-slider-thumb:hover {
-            transform: scale(1.1);
-            background: var(--primary-hover);
-        }
-
-        .prose a {
-            color: #da3f0b;
-            text-decoration: none; 
-        }
-        .prose a:hover {
-            text-decoration: underline; 
-        }
-
         /* Tooltip styling */
         .tooltip-container { position: relative; display: inline-block; }
         .tooltip-text {
@@ -185,11 +153,19 @@
             transform: translateY(-4px);
             box-shadow: 0 10px 20px rgba(0,0,0,0.05);
         }
+
+        .prose a {
+            color: #da3f0b;
+            text-decoration: none; 
+        }
+        .prose a:hover {
+            text-decoration: underline; 
+        }
     </style>
 </head>
 
 <body class="bg-gray-50 min-h-screen flex flex-col">
-    <div id="navbar"></div>
+    <div id="navbar" style="min-height: 70px;"></div>
 
     <section class="hero-white text-black py-2 md:py-10">
         <div class="container mx-auto px-4 text-center">
@@ -200,390 +176,373 @@
         </div>
     </section>
 
-    <div id="root" class="w-full max-w-6xl mx-auto p-4 sm:p-6"></div>
-
-    <script type="text/babel">
-    const { useState, useEffect, useMemo } = React;
-
-    const currencies = [
-      { code: 'USD', symbol: '$', locale: 'en-US' },
-      { code: 'EUR', symbol: '€', locale: 'de-DE' },
-      { code: 'GBP', symbol: '£', locale: 'en-GB' },
-      { code: 'JPY', symbol: '¥', locale: 'ja-JP' },
-      { code: 'AUD', symbol: 'A$', locale: 'en-AU' },
-      { code: 'CAD', symbol: 'C$', locale: 'en-CA' },
-      { code: 'INR', symbol: '₹', locale: 'en-IN' },
-      { code: 'PKR', symbol: 'Rs', locale: 'en-PK' }
-    ];
-
-    const presets = {
-      quickFlip: { label: 'Quick Flip (5%)', multiplier: 1.05 },
-      swingTrade: { label: 'Swing (20%)', multiplier: 1.20 },
-      doubler: { label: '2x Moonshot', multiplier: 2.0 },
-      stopLoss: { label: 'Stop Loss (-5%)', multiplier: 0.95 }
-    };
-
-    const Tooltip = ({ text }) => (
-      <span className="tooltip-container ml-2">
-        <i className="fas fa-info-circle text-slate-300 hover:text-[#da3f0b] cursor-help text-xs transition-colors"></i>
-        <span className="tooltip-text">{text}</span>
-      </span>
-    );
-
-    const NumberInput = ({ value, onChange, prefix, suffix, label, tooltip }) => (
-      <div className="mb-5">
-        <div className="flex items-center text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">
-          <label>{label}</label>
-          {tooltip && <Tooltip text={tooltip} />}
-        </div>
-        <div className="relative rounded-xl shadow-sm">
-          {prefix && (
-            <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-              <span className="text-slate-400 font-semibold">{prefix}</span>
-            </div>
-          )}
-          <input
-            type="number"
-            className={`block w-full rounded-xl border-slate-200 border py-3 focus:ring-4 focus:ring-[#da3f0b20] focus:border-[#da3f0b] sm:text-sm font-semibold text-slate-800 transition-all ${prefix ? 'pl-9' : 'pl-4'} ${suffix ? 'pr-12' : 'pr-4'} bg-white`}
-            value={value}
-            onChange={(e) => onChange(e.target.value)}
-            onFocus={(e) => e.target.select()}
-            placeholder="0.00"
-          />
-          {suffix && (
-            <div className="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none">
-              <span className="text-slate-400 font-semibold">{suffix}</span>
-            </div>
-          )}
-        </div>
-      </div>
-    );
-
-    const StatCard = ({ label, value, subtext, type = 'neutral', isMain = false }) => {
-      let colorClass = 'text-slate-900';
-      if (type === 'profit') colorClass = 'text-[#16a34a]';
-      if (type === 'loss') colorClass = 'text-[#dc2626]';
-
-      return (
-        <div className={`${isMain ? 'hero-card p-8' : 'bg-white p-5 rounded-2xl border border-slate-100 shadow-sm'} flex flex-col items-center text-center`}>
-          {isMain ? (
-            <>
-              <p className="text-xs font-black text-[#da3f0b] uppercase tracking-[0.2em] mb-4">{label}</p>
-              <div className="flex items-center justify-center">
-                <span className={`text-5xl md:text-6xl font-black tracking-tighter leading-none ${colorClass}`}>{value}</span>
-              </div>
-              {subtext && <p className="text-sm text-slate-400 font-medium mt-4">{subtext}</p>}
-            </>
-          ) : (
-            <div className="w-full">
-              <div className="text-[10px] font-black text-slate-400 uppercase tracking-widest flex items-center justify-center mb-1">
-                {label}
-              </div>
-              <p className={`text-xl font-extrabold ${colorClass}`}>{value}</p>
-              {subtext && <p className="text-[10px] text-slate-400 font-medium mt-1 uppercase tracking-tight">{subtext}</p>}
-            </div>
-          )}
-        </div>
-      );
-    };
-
-    const ShareButton = ({ platform, icon, color, url, title }) => {
-        let shareUrl = '';
-        switch(platform) {
-            case 'facebook': shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${url}`; break;
-            case 'twitter': shareUrl = `https://twitter.com/intent/tweet?url=${url}&text=${title}`; break;
-            case 'linkedin': shareUrl = `https://www.linkedin.com/shareArticle?mini=true&url=${url}`; break;
-            case 'whatsapp': shareUrl = `https://api.whatsapp.com/send?text=${title}%20${url}`; break;
-            case 'reddit': shareUrl = `https://www.reddit.com/submit?url=${url}&title=${title}`; break;
-            case 'telegram': shareUrl = `https://t.me/share/url?url=${url}&text=${title}`; break;
-            default: return null;
-        }
-
-        return (
-            <a 
-                href={shareUrl} 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className={`w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center text-white transition-transform hover:-translate-y-1 hover:shadow-lg ${color}`}
-                title={`Share on ${platform.charAt(0).toUpperCase() + platform.slice(1)}`}
-            >
-                <i className={`fab fa-${icon}`}></i>
-            </a>
-        );
-    };
-
-    const App = () => {
-      const [currency, setCurrency] = useState(currencies[0]);
-      const [investment, setInvestment] = useState(1000);
-      const [buyPrice, setBuyPrice] = useState(50000);
-      const [sellPrice, setSellPrice] = useState(55000);
-      const [buyFeePercent, setBuyFeePercent] = useState(0.1);
-      const [sellFeePercent, setSellFeePercent] = useState(0.1);
-      const [showBookmarkToast, setShowBookmarkToast] = useState(false);
-
-      const calculations = useMemo(() => {
-        const investVal = parseFloat(investment) || 0;
-        const buyVal = parseFloat(buyPrice) || 0;
-        const sellVal = parseFloat(sellPrice) || 0;
-        const buyFeeVal = parseFloat(buyFeePercent) || 0;
-        const sellFeeVal = parseFloat(sellFeePercent) || 0;
-
-        if (buyVal === 0) return { profit: 0, roi: 0, totalFees: 0, netReturn: 0, breakEven: 0 };
-
-        const entryFeeAmount = investVal * (buyFeeVal / 100);
-        const netInvestmentForCoins = investVal - entryFeeAmount;
-        const coins = netInvestmentForCoins / buyVal;
-        const grossSaleVal = coins * sellVal;
-        const exitFeeAmount = grossSaleVal * (sellFeeVal / 100);
-        const netReturn = grossSaleVal - exitFeeAmount;
-        const totalProfit = netReturn - investVal;
-        const totalFees = entryFeeAmount + exitFeeAmount;
-        const roi = investVal > 0 ? (totalProfit / investVal) * 100 : 0;
-        const breakEvenPrice = coins > 0 ? investVal / (coins * (1 - (sellFeeVal/100))) : 0;
-
-        return {
-          coins,
-          entryFeeAmount,
-          exitFeeAmount,
-          totalFees,
-          netReturn,
-          profit: totalProfit,
-          roi,
-          breakEven: breakEvenPrice
-        };
-      }, [investment, buyPrice, sellPrice, buyFeePercent, sellFeePercent]);
-
-      const formatMoney = (amount) => {
-        return new Intl.NumberFormat(currency.locale, {
-          style: 'currency',
-          currency: currency.code,
-          maximumFractionDigits: 2
-        }).format(amount);
-      };
-
-      const formatCrypto = (amount) => {
-        return new Intl.NumberFormat('en-US', {
-          minimumFractionDigits: 2,
-          maximumFractionDigits: 6
-        }).format(amount);
-      };
-
-      const applyPreset = (multiplier) => {
-        if(buyPrice) {
-          setSellPrice((parseFloat(buyPrice) * multiplier).toFixed(2));
-        }
-      };
-
-      const handleBookmark = () => {
-        setShowBookmarkToast(true);
-        setTimeout(() => setShowBookmarkToast(false), 3000);
-      };
-
-      const pageUrl = encodeURIComponent("https://simpliconvert.com/crypto_profit_calculator/");
-      const pageTitle = encodeURIComponent("Check out this Crypto Profit Calculator!");
-
-      return (
-        <div className="bg-white rounded-[2rem] shadow-2xl overflow-hidden border border-slate-100">
-          <header className="bg-slate-50/50 border-b border-slate-100 p-6 md:p-8 flex flex-col md:flex-row justify-between items-center gap-6">
-            <div className="text-center md:text-left">
-              <h2 className="text-2xl font-black text-slate-800 tracking-tight flex items-center justify-center md:justify-start gap-3">
-                <span className="bg-[#da3f0b] text-white p-2 rounded-xl text-lg shadow-lg shadow-[#da3f0b30]">
-                  <i className="fas fa-chart-line"></i>
-                </span>
-                Crypto investment return calculator
-              </h2>
-            </div>
-            
-            <div className="relative group min-w-[140px]">
-              <select 
-                value={currency.code}
-                onChange={(e) => setCurrency(currencies.find(c => c.code === e.target.value))}
-                className="appearance-none w-full bg-white border border-slate-200 text-slate-700 py-2.5 pl-4 pr-10 rounded-xl text-xs font-bold focus:outline-none focus:ring-4 focus:ring-[#da3f0b15] focus:border-[#da3f0b] shadow-sm cursor-pointer hover:border-[#da3f0b40]"
-              >
-                {currencies.map(c => (
-                  <option key={c.code} value={c.code}>{c.code} ({c.symbol})</option>
-                ))}
-              </select>
-              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-slate-400">
-                <i className="fas fa-chevron-down text-[10px]"></i>
-              </div>
-            </div>
-          </header>
-
-          <main className="flex flex-col lg:flex-row">
-            {/* Input Panel */}
-            <div className="lg:w-[50%] p-6 md:p-10 lg:p-12 border-r border-slate-100">
-              <div className="space-y-6">
+    <div id="calculator-app" class="w-full max-w-6xl mx-auto p-4 sm:p-6">
+        <div class="bg-white rounded-[2rem] shadow-2xl overflow-hidden border border-slate-100">
+            <header class="bg-slate-50/50 border-b border-slate-100 p-6 md:p-8 flex flex-col md:flex-row justify-between items-center gap-6">
+                <div class="text-center md:text-left">
+                  <h2 class="text-2xl font-black text-slate-800 tracking-tight flex items-center justify-center md:justify-start gap-3">
+                    <span class="bg-[#da3f0b] text-white p-2 rounded-xl text-lg shadow-lg shadow-[#da3f0b30]">
+                      <i class="fas fa-chart-line"></i>
+                    </span>
+                    Crypto investment return calculator
+                  </h2>
+                </div>
                 
-                {/* Investment & Buy */}
-                <div className="bg-slate-50 p-6 rounded-2xl border border-slate-100">
-                  <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest mb-6"><i className="fas fa-wallet mr-2"></i>Entry Position</h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <NumberInput 
-                      label="Invested Amount" 
-                      value={investment} 
-                      onChange={setInvestment} 
-                      prefix={currency.symbol}
-                      tooltip="Total capital you are putting into this trade."
-                    />
-                    <NumberInput 
-                      label="Buy Price" 
-                      value={buyPrice} 
-                      onChange={setBuyPrice} 
-                      prefix={currency.symbol}
-                      tooltip="The price of one coin at the time of purchase."
-                    />
-                  </div>
-                  <div className="flex justify-between items-center px-2 mt-2">
-                     <span className="text-xs font-bold text-slate-400">Coins Acquired:</span>
-                     <span className="text-sm font-black text-slate-700">{formatCrypto(calculations.coins)} Units</span>
+                <div class="relative group min-w-[140px]">
+                  <select id="currency-select" class="appearance-none w-full bg-white border border-slate-200 text-slate-700 py-2.5 pl-4 pr-10 rounded-xl text-xs font-bold focus:outline-none focus:ring-4 focus:ring-[#da3f0b15] focus:border-[#da3f0b] shadow-sm cursor-pointer hover:border-[#da3f0b40]">
+                    <option value="USD">USD ($)</option>
+                    <option value="EUR">EUR (€)</option>
+                    <option value="GBP">GBP (£)</option>
+                    <option value="JPY">JPY (¥)</option>
+                    <option value="AUD">AUD (A$)</option>
+                    <option value="CAD">CAD (C$)</option>
+                    <option value="INR">INR (₹)</option>
+                    <option value="PKR">PKR (Rs)</option>
+                  </select>
+                  <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-slate-400">
+                    <i class="fas fa-chevron-down text-[10px]"></i>
                   </div>
                 </div>
-
-                {/* Sell Target */}
-                <div className="bg-[#da3f0b08] p-6 rounded-2xl border border-[#da3f0b15]">
-                   <div className="flex justify-between items-center mb-6">
-                      <h3 className="text-xs font-black text-[#da3f0b] uppercase tracking-widest"><i className="fas fa-bullseye mr-2"></i>Exit Strategy</h3>
-                      <div className="flex gap-2">
-                         {Object.values(presets).map((p, idx) => (
-                           <button 
-                             key={idx} 
-                             onClick={() => applyPreset(p.multiplier)}
-                             className="text-[10px] bg-white border border-[#da3f0b20] text-[#da3f0b] px-2 py-1 rounded-md font-bold hover:bg-[#da3f0b] hover:text-white transition-all"
-                           >
-                             {p.label}
+            </header>
+    
+            <main class="flex flex-col lg:flex-row">
+                <div class="lg:w-[50%] p-6 md:p-10 lg:p-12 border-r border-slate-100">
+                    <div class="space-y-6">
+                        
+                        <div class="bg-slate-50 p-6 rounded-2xl border border-slate-100">
+                            <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-6"><i class="fas fa-wallet mr-2"></i>Entry Position</h3>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="mb-5">
+                                    <div class="flex items-center text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">
+                                        <label>Invested Amount</label>
+                                        <span class="tooltip-container ml-2">
+                                            <i class="fas fa-info-circle text-slate-300 hover:text-[#da3f0b] cursor-help text-xs transition-colors"></i>
+                                            <span class="tooltip-text">Total capital you are putting into this trade.</span>
+                                        </span>
+                                    </div>
+                                    <div class="relative rounded-xl shadow-sm">
+                                        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                            <span class="text-slate-400 font-semibold currency-symbol">$</span>
+                                        </div>
+                                        <input type="number" id="input-investment" value="1000" class="block w-full rounded-xl border-slate-200 border py-3 pl-9 pr-4 focus:ring-4 focus:ring-[#da3f0b20] focus:border-[#da3f0b] sm:text-sm font-semibold text-slate-800 transition-all bg-white" placeholder="0.00">
+                                    </div>
+                                </div>
+    
+                                <div class="mb-5">
+                                    <div class="flex items-center text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">
+                                        <label>Buy Price</label>
+                                        <span class="tooltip-container ml-2">
+                                            <i class="fas fa-info-circle text-slate-300 hover:text-[#da3f0b] cursor-help text-xs transition-colors"></i>
+                                            <span class="tooltip-text">The price of one coin at the time of purchase.</span>
+                                        </span>
+                                    </div>
+                                    <div class="relative rounded-xl shadow-sm">
+                                        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                            <span class="text-slate-400 font-semibold currency-symbol">$</span>
+                                        </div>
+                                        <input type="number" id="input-buy-price" value="50000" class="block w-full rounded-xl border-slate-200 border py-3 pl-9 pr-4 focus:ring-4 focus:ring-[#da3f0b20] focus:border-[#da3f0b] sm:text-sm font-semibold text-slate-800 transition-all bg-white" placeholder="0.00">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="flex justify-between items-center px-2 mt-2">
+                                 <span class="text-xs font-bold text-slate-400">Coins Acquired:</span>
+                                 <span class="text-sm font-black text-slate-700"><span id="display-coins">0.00</span> Units</span>
+                            </div>
+                        </div>
+    
+                        <div class="bg-[#da3f0b08] p-6 rounded-2xl border border-[#da3f0b15]">
+                           <div class="flex justify-between items-center mb-6">
+                              <h3 class="text-xs font-black text-[#da3f0b] uppercase tracking-widest"><i class="fas fa-bullseye mr-2"></i>Exit Strategy</h3>
+                              <div class="flex gap-2">
+                                   <button onclick="applyPreset(1.05)" class="text-[10px] bg-white border border-[#da3f0b20] text-[#da3f0b] px-2 py-1 rounded-md font-bold hover:bg-[#da3f0b] hover:text-white transition-all">Quick Flip (5%)</button>
+                                   <button onclick="applyPreset(1.20)" class="text-[10px] bg-white border border-[#da3f0b20] text-[#da3f0b] px-2 py-1 rounded-md font-bold hover:bg-[#da3f0b] hover:text-white transition-all">Swing (20%)</button>
+                                   <button onclick="applyPreset(2.0)" class="text-[10px] bg-white border border-[#da3f0b20] text-[#da3f0b] px-2 py-1 rounded-md font-bold hover:bg-[#da3f0b] hover:text-white transition-all">2x Moonshot</button>
+                                   <button onclick="applyPreset(0.95)" class="text-[10px] bg-white border border-[#da3f0b20] text-[#da3f0b] px-2 py-1 rounded-md font-bold hover:bg-[#da3f0b] hover:text-white transition-all">Stop Loss (-5%)</button>
+                              </div>
+                           </div>
+                           
+                           <div class="mb-5">
+                                <div class="flex items-center text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">
+                                    <label>Sell Price</label>
+                                    <span class="tooltip-container ml-2">
+                                        <i class="fas fa-info-circle text-slate-300 hover:text-[#da3f0b] cursor-help text-xs transition-colors"></i>
+                                        <span class="tooltip-text">Target price or actual price at which you sell.</span>
+                                    </span>
+                                </div>
+                                <div class="relative rounded-xl shadow-sm">
+                                    <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                        <span class="text-slate-400 font-semibold currency-symbol">$</span>
+                                    </div>
+                                    <input type="number" id="input-sell-price" value="55000" class="block w-full rounded-xl border-slate-200 border py-3 pl-9 pr-4 focus:ring-4 focus:ring-[#da3f0b20] focus:border-[#da3f0b] sm:text-sm font-semibold text-slate-800 transition-all bg-white" placeholder="0.00">
+                                </div>
+                           </div>
+                        </div>
+    
+                        <div class="p-2">
+                           <button onclick="toggleFees()" class="text-xs font-bold text-slate-400 flex items-center gap-2 hover:text-[#da3f0b] transition-colors">
+                             <i class="fas fa-sliders-h"></i> Exchange Fees (Advanced)
                            </button>
-                         ))}
-                      </div>
+                           <div id="fee-section" class="hidden grid grid-cols-2 gap-4 mt-4 animate-fade">
+                                <div class="mb-5">
+                                    <div class="flex items-center text-xs font-bold text-slate-500 uppercase tracking-widest mb-2"><label>Buy Fee</label></div>
+                                    <div class="relative rounded-xl shadow-sm">
+                                        <input type="number" id="input-buy-fee" value="0.1" class="block w-full rounded-xl border-slate-200 border py-3 pl-4 pr-12 focus:ring-4 focus:ring-[#da3f0b20] focus:border-[#da3f0b] sm:text-sm font-semibold text-slate-800 transition-all bg-white" placeholder="0.00">
+                                        <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none"><span class="text-slate-400 font-semibold">%</span></div>
+                                    </div>
+                                </div>
+                                <div class="mb-5">
+                                    <div class="flex items-center text-xs font-bold text-slate-500 uppercase tracking-widest mb-2"><label>Sell Fee</label></div>
+                                    <div class="relative rounded-xl shadow-sm">
+                                        <input type="number" id="input-sell-fee" value="0.1" class="block w-full rounded-xl border-slate-200 border py-3 pl-4 pr-12 focus:ring-4 focus:ring-[#da3f0b20] focus:border-[#da3f0b] sm:text-sm font-semibold text-slate-800 transition-all bg-white" placeholder="0.00">
+                                        <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none"><span class="text-slate-400 font-semibold">%</span></div>
+                                    </div>
+                                </div>
+                           </div>
+                        </div>
+                    </div>
+                </div>
+    
+                <div class="lg:w-[50%] bg-slate-50/50 p-6 md:p-10 lg:p-12 flex flex-col justify-center">
+                   <div class="space-y-6">
+                     
+                     <div class="hero-card p-8 flex flex-col items-center text-center">
+                         <p class="text-xs font-black text-[#da3f0b] uppercase tracking-[0.2em] mb-4">Net Profit / Loss</p>
+                         <div class="flex items-center justify-center">
+                           <span id="display-profit" class="text-5xl md:text-6xl font-black tracking-tighter leading-none text-[#16a34a]">$0.00</span>
+                         </div>
+                         <p class="text-sm text-slate-400 font-medium mt-4">Return on Investment: <span id="display-roi">0.00</span>%</p>
+                     </div>
+    
+                     <div class="grid grid-cols-2 gap-4">
+                         <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex flex-col items-center text-center">
+                            <div class="text-[10px] font-black text-slate-400 uppercase tracking-widest flex items-center justify-center mb-1">Total Fees</div>
+                            <p id="display-fees" class="text-xl font-extrabold text-slate-900">$0.00</p>
+                            <p class="text-[10px] text-slate-400 font-medium mt-1 uppercase tracking-tight">Exchange Costs</p>
+                         </div>
+                         <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex flex-col items-center text-center">
+                            <div class="text-[10px] font-black text-slate-400 uppercase tracking-widest flex items-center justify-center mb-1">Total Exit Value</div>
+                            <p id="display-net-return" class="text-xl font-extrabold text-slate-900">$0.00</p>
+                            <p class="text-[10px] text-slate-400 font-medium mt-1 uppercase tracking-tight">Cash in Hand</p>
+                         </div>
+                     </div>
+    
+                     <div class="bg-white rounded-xl p-6 border border-slate-100 shadow-sm mt-4">
+                         <div class="flex justify-between items-center mb-2">
+                            <span class="text-xs font-bold text-slate-400 uppercase tracking-widest">Break-Even Price</span>
+                            <span id="display-breakeven" class="text-lg font-black text-slate-700">$0.00</span>
+                         </div>
+                         <div class="w-full bg-slate-100 rounded-full h-2 mb-2 overflow-hidden">
+                            <div class="bg-slate-400 h-2 rounded-full transition-all duration-500" style="width: 100%"></div>
+                         </div>
+                         <p class="text-[10px] text-slate-400">
+                           You need to sell above <strong id="display-breakeven-sm">$0.00</strong> to cover your trading fees.
+                         </p>
+                     </div>
+    
+                     <div class="flex text-[10px] font-bold uppercase tracking-widest text-slate-400 justify-between px-2 pt-4">
+                         <span>Buy: <span id="gauge-buy">$0.00</span></span>
+                         <span>Target: <span id="gauge-sell">$0.00</span></span>
+                     </div>
+    
+                   </div>
+                </div>
+            </main>
+    
+            <footer class="bg-slate-50 border-t border-slate-100 p-6 md:p-8">
+               <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+                   <div class="text-center md:text-left">
+                       <h4 class="text-sm font-bold text-slate-700 mb-1">Share this calculator</h4>
+                       <p class="text-xs text-slate-400">Help others trade smarter.</p>
                    </div>
                    
-                   <NumberInput 
-                      label="Sell Price" 
-                      value={sellPrice} 
-                      onChange={setSellPrice} 
-                      prefix={currency.symbol}
-                      tooltip="Target price or actual price at which you sell."
-                   />
-                </div>
-
-                {/* Fees */}
-                <div className="p-2">
-                   <button 
-                     onClick={() => document.getElementById('fee-section').classList.toggle('hidden')}
-                     className="text-xs font-bold text-slate-400 flex items-center gap-2 hover:text-[#da3f0b] transition-colors"
-                   >
-                     <i className="fas fa-sliders-h"></i> Exchange Fees (Advanced)
-                   </button>
-                   <div id="fee-section" className="hidden grid grid-cols-2 gap-4 mt-4 animate-fade">
-                      <NumberInput 
-                        label="Buy Fee" 
-                        value={buyFeePercent} 
-                        onChange={setBuyFeePercent} 
-                        suffix="%"
-                      />
-                      <NumberInput 
-                        label="Sell Fee" 
-                        value={sellFeePercent} 
-                        onChange={setSellFeePercent} 
-                        suffix="%"
-                      />
+                   <div class="flex flex-wrap justify-center gap-3">
+                       <a href="#" onclick="shareSocial('facebook')" class="w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center text-white transition-transform hover:-translate-y-1 hover:shadow-lg bg-[#1877F2]"><i class="fab fa-facebook-f"></i></a>
+                       <a href="#" onclick="shareSocial('twitter')" class="w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center text-white transition-transform hover:-translate-y-1 hover:shadow-lg bg-[#1DA1F2]"><i class="fab fa-twitter"></i></a>
+                       <a href="#" onclick="shareSocial('linkedin')" class="w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center text-white transition-transform hover:-translate-y-1 hover:shadow-lg bg-[#0A66C2]"><i class="fab fa-linkedin-in"></i></a>
+                       <a href="#" onclick="shareSocial('whatsapp')" class="w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center text-white transition-transform hover:-translate-y-1 hover:shadow-lg bg-[#25D366]"><i class="fab fa-whatsapp"></i></a>
+                       <a href="#" onclick="shareSocial('reddit')" class="w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center text-white transition-transform hover:-translate-y-1 hover:shadow-lg bg-[#FF4500]"><i class="fab fa-reddit-alien"></i></a>
+                       <a href="#" onclick="shareSocial('telegram')" class="w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center text-white transition-transform hover:-translate-y-1 hover:shadow-lg bg-[#0088cc]"><i class="fab fa-telegram-plane"></i></a>
                    </div>
-                </div>
-
-              </div>
-            </div>
-
-            {/* Results Panel */}
-            <div className="lg:w-[50%] bg-slate-50/50 p-6 md:p-10 lg:p-12 flex flex-col justify-center">
-               <div className="space-y-6">
-                  
-                  <StatCard 
-                    isMain={true}
-                    label="Net Profit / Loss"
-                    value={formatMoney(calculations.profit)}
-                    type={calculations.profit >= 0 ? 'profit' : 'loss'}
-                    subtext={`Return on Investment: ${calculations.roi.toFixed(2)}%`}
-                  />
-
-                  <div className="grid grid-cols-2 gap-4">
-                     <StatCard 
-                       label="Total Fees" 
-                       value={formatMoney(calculations.totalFees)}
-                       subtext="Exchange Costs"
-                     />
-                     <StatCard 
-                       label="Total Exit Value" 
-                       value={formatMoney(calculations.netReturn)}
-                       subtext="Cash in Hand"
-                     />
-                  </div>
-
-                  {/* Break Even Indicator */}
-                  <div className="bg-white rounded-xl p-6 border border-slate-100 shadow-sm mt-4">
-                     <div className="flex justify-between items-center mb-2">
-                        <span className="text-xs font-bold text-slate-400 uppercase tracking-widest">Break-Even Price</span>
-                        <span className="text-lg font-black text-slate-700">{formatMoney(calculations.breakEven)}</span>
-                     </div>
-                     <div className="w-full bg-slate-100 rounded-full h-2 mb-2 overflow-hidden">
-                        {/* Visual marker relative to Buy Price */}
-                        <div 
-                           className="bg-slate-400 h-2 rounded-full transition-all duration-500" 
-                           style={{width: '100%'}} 
-                        ></div>
-                     </div>
-                     <p className="text-[10px] text-slate-400">
-                       You need to sell above <strong>{formatMoney(calculations.breakEven)}</strong> to cover your trading fees.
-                     </p>
-                  </div>
-
-                  {/* Visual Gauge */}
-                  <div className="flex text-[10px] font-bold uppercase tracking-widest text-slate-400 justify-between px-2 pt-4">
-                     <span>Buy: {formatMoney(buyPrice)}</span>
-                     <span>Target: {formatMoney(sellPrice)}</span>
-                  </div>
-
+    
+                   <div class="relative">
+                       <button onclick="handleBookmark()" class="flex items-center gap-2 bg-white border border-slate-200 hover:border-[#da3f0b] hover:text-[#da3f0b] text-slate-600 px-4 py-2 rounded-lg text-sm font-bold transition-all shadow-sm active:scale-95">
+                          <i class="fas fa-bookmark"></i> Bookmark
+                       </button>
+                       <div id="bookmark-toast" class="hidden absolute bottom-full mb-3 left-1/2 -translate-x-1/2 bg-slate-800 text-white text-xs py-2 px-4 rounded-lg shadow-lg whitespace-nowrap animate-fade">
+                           Press <span class="font-bold text-[#da3f0b]">Ctrl + D</span> to bookmark
+                       </div>
+                   </div>
                </div>
-            </div>
-          </main>
-
-          {/* Share & Bookmark Footer */}
-          <footer className="bg-slate-50 border-t border-slate-100 p-6 md:p-8">
-             <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-                 <div className="text-center md:text-left">
-                     <h4 className="text-sm font-bold text-slate-700 mb-1">Share this calculator</h4>
-                     <p className="text-xs text-slate-400">Help others trade smarter.</p>
-                 </div>
-                 
-                 <div className="flex flex-wrap justify-center gap-3">
-                     <ShareButton platform="facebook" icon="facebook-f" color="bg-[#1877F2]" url={pageUrl} title={pageTitle} />
-                     <ShareButton platform="twitter" icon="twitter" color="bg-[#1DA1F2]" url={pageUrl} title={pageTitle} />
-                     <ShareButton platform="linkedin" icon="linkedin-in" color="bg-[#0A66C2]" url={pageUrl} title={pageTitle} />
-                     <ShareButton platform="whatsapp" icon="whatsapp" color="bg-[#25D366]" url={pageUrl} title={pageTitle} />
-                     <ShareButton platform="reddit" icon="reddit-alien" color="bg-[#FF4500]" url={pageUrl} title={pageTitle} />
-                     <ShareButton platform="telegram" icon="telegram-plane" color="bg-[#0088cc]" url={pageUrl} title={pageTitle} />
-                 </div>
-
-                 <div className="relative">
-                     <button 
-                        onClick={handleBookmark}
-                        className="flex items-center gap-2 bg-white border border-slate-200 hover:border-[#da3f0b] hover:text-[#da3f0b] text-slate-600 px-4 py-2 rounded-lg text-sm font-bold transition-all shadow-sm active:scale-95"
-                     >
-                        <i className="fas fa-bookmark"></i> Bookmark
-                     </button>
-                     {showBookmarkToast && (
-                         <div className="absolute bottom-full mb-3 left-1/2 -translate-x-1/2 bg-slate-800 text-white text-xs py-2 px-4 rounded-lg shadow-lg whitespace-nowrap animate-fade">
-                             Press <span className="font-bold text-[#da3f0b]">Ctrl + D</span> to bookmark
-                         </div>
-                     )}
-                 </div>
-             </div>
-          </footer>
+            </footer>
         </div>
-      );
-    };
+    </div>
 
-    const root = ReactDOM.createRoot(document.getElementById('root'));
-    root.render(<App />);
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // State
+        const state = {
+            currency: { code: 'USD', symbol: '$', locale: 'en-US' },
+            investment: 1000,
+            buyPrice: 50000,
+            sellPrice: 55000,
+            buyFeePercent: 0.1,
+            sellFeePercent: 0.1
+        };
+
+        const currencies = [
+            { code: 'USD', symbol: '$', locale: 'en-US' },
+            { code: 'EUR', symbol: '€', locale: 'de-DE' },
+            { code: 'GBP', symbol: '£', locale: 'en-GB' },
+            { code: 'JPY', symbol: '¥', locale: 'ja-JP' },
+            { code: 'AUD', symbol: 'A$', locale: 'en-AU' },
+            { code: 'CAD', symbol: 'C$', locale: 'en-CA' },
+            { code: 'INR', symbol: '₹', locale: 'en-IN' },
+            { code: 'PKR', symbol: 'Rs', locale: 'en-PK' }
+        ];
+
+        // Elements
+        const els = {
+            inputs: {
+                investment: document.getElementById('input-investment'),
+                buyPrice: document.getElementById('input-buy-price'),
+                sellPrice: document.getElementById('input-sell-price'),
+                buyFee: document.getElementById('input-buy-fee'),
+                sellFee: document.getElementById('input-sell-fee'),
+                currency: document.getElementById('currency-select')
+            },
+            displays: {
+                coins: document.getElementById('display-coins'),
+                profit: document.getElementById('display-profit'),
+                roi: document.getElementById('display-roi'),
+                fees: document.getElementById('display-fees'),
+                netReturn: document.getElementById('display-net-return'),
+                breakeven: document.getElementById('display-breakeven'),
+                breakevenSm: document.getElementById('display-breakeven-sm'),
+                gaugeBuy: document.getElementById('gauge-buy'),
+                gaugeSell: document.getElementById('gauge-sell'),
+                symbols: document.querySelectorAll('.currency-symbol')
+            }
+        };
+
+        // Calculation Logic
+        function calculate() {
+            const investVal = parseFloat(state.investment) || 0;
+            const buyVal = parseFloat(state.buyPrice) || 0;
+            const sellVal = parseFloat(state.sellPrice) || 0;
+            const buyFeeVal = parseFloat(state.buyFeePercent) || 0;
+            const sellFeeVal = parseFloat(state.sellFeePercent) || 0;
+
+            if (buyVal === 0) return updateUI({ coins: 0, profit: 0, roi: 0, totalFees: 0, netReturn: 0, breakEven: 0 });
+
+            const entryFeeAmount = investVal * (buyFeeVal / 100);
+            const netInvestmentForCoins = investVal - entryFeeAmount;
+            const coins = netInvestmentForCoins / buyVal;
+            const grossSaleVal = coins * sellVal;
+            const exitFeeAmount = grossSaleVal * (sellFeeVal / 100);
+            const netReturn = grossSaleVal - exitFeeAmount;
+            const totalProfit = netReturn - investVal;
+            const totalFees = entryFeeAmount + exitFeeAmount;
+            const roi = investVal > 0 ? (totalProfit / investVal) * 100 : 0;
+            const breakEvenPrice = coins > 0 ? investVal / (coins * (1 - (sellFeeVal/100))) : 0;
+
+            updateUI({ coins, profit: totalProfit, roi, totalFees, netReturn, breakEven: breakEvenPrice });
+        }
+
+        // Formatters
+        function formatMoney(amount) {
+            return new Intl.NumberFormat(state.currency.locale, {
+                style: 'currency',
+                currency: state.currency.code,
+                maximumFractionDigits: 2
+            }).format(amount);
+        }
+
+        function formatCrypto(amount) {
+            return new Intl.NumberFormat('en-US', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 6
+            }).format(amount);
+        }
+
+        // UI Updates
+        function updateUI(data) {
+            els.displays.coins.textContent = formatCrypto(data.coins);
+            
+            // Profit
+            els.displays.profit.textContent = formatMoney(data.profit);
+            els.displays.profit.className = `text-5xl md:text-6xl font-black tracking-tighter leading-none ${data.profit >= 0 ? 'text-[#16a34a]' : 'text-[#dc2626]'}`;
+            
+            els.displays.roi.textContent = data.roi.toFixed(2);
+            els.displays.fees.textContent = formatMoney(data.totalFees);
+            els.displays.netReturn.textContent = formatMoney(data.netReturn);
+            els.displays.breakeven.textContent = formatMoney(data.breakEven);
+            els.displays.breakevenSm.textContent = formatMoney(data.breakEven);
+            
+            // Gauge
+            els.displays.gaugeBuy.textContent = formatMoney(state.buyPrice);
+            els.displays.gaugeSell.textContent = formatMoney(state.sellPrice);
+
+            // Symbols
+            els.displays.symbols.forEach(el => el.textContent = state.currency.symbol);
+        }
+
+        // Listeners
+        function addInputListener(key, element) {
+            element.addEventListener('input', (e) => {
+                state[key] = e.target.value;
+                calculate();
+            });
+        }
+
+        addInputListener('investment', els.inputs.investment);
+        addInputListener('buyPrice', els.inputs.buyPrice);
+        addInputListener('sellPrice', els.inputs.sellPrice);
+        addInputListener('buyFeePercent', els.inputs.buyFee);
+        addInputListener('sellFeePercent', els.inputs.sellFee);
+
+        els.inputs.currency.addEventListener('change', (e) => {
+            state.currency = currencies.find(c => c.code === e.target.value);
+            calculate();
+        });
+
+        // Global functions for onClick handlers
+        window.applyPreset = function(multiplier) {
+            if (state.buyPrice) {
+                const newSell = (parseFloat(state.buyPrice) * multiplier).toFixed(2);
+                state.sellPrice = newSell;
+                els.inputs.sellPrice.value = newSell;
+                calculate();
+            }
+        };
+
+        window.toggleFees = function() {
+            document.getElementById('fee-section').classList.toggle('hidden');
+        };
+
+        window.handleBookmark = function() {
+            const toast = document.getElementById('bookmark-toast');
+            toast.classList.remove('hidden');
+            setTimeout(() => toast.classList.add('hidden'), 3000);
+        };
+        
+        window.shareSocial = function(platform) {
+             const url = encodeURIComponent("https://simpliconvert.com/crypto_profit_calculator/");
+             const title = encodeURIComponent("Check out this Crypto Profit Calculator!");
+             let shareUrl = '';
+             switch(platform) {
+                case 'facebook': shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${url}`; break;
+                case 'twitter': shareUrl = `https://twitter.com/intent/tweet?url=${url}&text=${title}`; break;
+                case 'linkedin': shareUrl = `https://www.linkedin.com/shareArticle?mini=true&url=${url}`; break;
+                case 'whatsapp': shareUrl = `https://api.whatsapp.com/send?text=${title}%20${url}`; break;
+                case 'reddit': shareUrl = `https://www.reddit.com/submit?url=${url}&title=${title}`; break;
+                case 'telegram': shareUrl = `https://t.me/share/url?url=${url}&text=${title}`; break;
+             }
+             if(shareUrl) window.open(shareUrl, '_blank');
+        };
+
+        // Initial Calc
+        calculate();
+    });
     </script>
 
 
@@ -703,7 +662,7 @@
 </p>
 
 
-    
+   
 
       <h2 class="text-2xl font-bold mt-8 mb-4">Final Thoughts</h2>
       <p class="mb-6 leading-relaxed">
@@ -938,9 +897,11 @@
     }
 
     document.addEventListener('DOMContentLoaded', function() {
+        // Load partials
         loadComponent('/components/navbar.html', 'navbar', initializeHeaderScripts);
         loadComponent('/components/footer.html', 'footer', initializeFooterScripts);
         
+        // FAQ Toggle Logic
         const faqToggles = document.querySelectorAll('[data-faq-toggle]');
         faqToggles.forEach(button => {
             button.addEventListener('click', () => {
