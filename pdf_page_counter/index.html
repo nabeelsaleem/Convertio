@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>PDF Page Counter – Count Pages in PDF Instantly | SimpliConvert</title>
+    <meta name="description" content="Quickly count pages in one or multiple PDF files. Our free online tool helps you check PDF length and bulk count pages for printing or document management.">
+    <meta name="keywords" content="pdf page count, count pages in pdf, check pdf length, bulk pdf counter, pdf page checker, document length checker">
+    <meta name="author" content="SimpliConvert">
+    <meta property="og:site_name" content="SimpliConvert">
+    <meta name="robots" content="index, follow">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://simpliconvert.com/pdf_page_counter/">
+    <meta property="og:title" content="PDF Page Counter – Bulk PDF Page Checker">
+    <meta property="og:description" content="Upload one or multiple PDF files to instantly see the total page count. Perfect for calculating printing costs or checking document length.">
+    <meta property="og:image" content="https://simpliconvert.com/images/pdf-page-counter-og.jpg">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://simpliconvert.com/pdf_page_counter/">
+    <meta name="twitter:title" content="PDF Page Counter – Count Pages in PDF Instantly">
+    <meta name="twitter:description" content="Free tool to count pages in multiple PDF files at once. Secure, fast, and works entirely in your browser.">
+    <meta name="twitter:image" content="https://simpliconvert.com/images/pdf-page-counter-og.jpg">
+
+    <link rel="canonical" href="https://simpliconvert.com/pdf_page_counter/">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "PDF Page Counter",
+      "url": "https://simpliconvert.com/pdf_page_counter/",
+      "description": "An online tool to count the number of pages in one or multiple PDF files instantly. Ideal for bulk processing and printing estimates.",
+      "applicationCategory": "UtilitiesApplication",
+      "operatingSystem": "Web Browser",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "SimpliConvert",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://simpliconvert.com/logo.png"
+        }
+      }
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [{
+        "@type": "Question",
+        "name": "How can I count pages in multiple PDFs at once?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Simply drag and drop all your PDF files into the upload area. Our tool will process them simultaneously and provide both individual page counts and a combined total."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Is it safe to upload my PDF files here?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. Our PDF Page Counter processes files locally in your browser using JavaScript. Your documents are never uploaded to our servers, ensuring 100% privacy and security."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Is there a limit to how many PDFs I can count?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "There is no hard limit. You can upload dozens of files at once. However, performance may depend on your device's memory and the size of the PDF files."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Does this tool work on mobile devices?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Absolutely. The tool is fully responsive and works on any modern web browser on Android, iOS, Windows, or macOS."
+        }
+      }]
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [{
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://simpliconvert.com/"
+      },{
+        "@type": "ListItem",
+        "position": 2,
+        "name": "PDF Tools",
+        "item": "https://simpliconvert.com/pdf_tools/"
+      },{
+        "@type": "ListItem",
+        "position": 3,
+        "name": "PDF Page Counter",
+        "item": "https://simpliconvert.com/pdf_page_counter/"
+      }]
+    }
+    </script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" media="print" onload="this.media='all'" />
+    <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" /></noscript>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #da3f0b;
+            --primary-hover: #b53409;
+            --primary-light: #fff5f2;
+            --bg: #f8fafc;
+            --text-dark: #0f172a;
+            --success: #16a34a;
+            --danger: #dc2626;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text-dark);
+        }
+
+        .hero-card {
+            background: white;
+            border: 1px solid #f1f5f9;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background-color: var(--primary);
+        }
+
+        .tooltip-container { position: relative; display: inline-block; }
+        .tooltip-text {
+            visibility: hidden; width: 220px; background-color: #1e293b; color: #fff;
+            text-align: center; border-radius: 8px; padding: 10px; position: absolute;
+            z-index: 50; bottom: 125%; left: 50%; margin-left: -110px; opacity: 0;
+            transition: opacity 0.2s; font-size: 0.75rem; font-weight: 400;
+            pointer-events: none; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+        .tooltip-container:hover .tooltip-text { visibility: visible; opacity: 1; }
+        .tooltip-text::after {
+            content: ""; position: absolute; top: 100%; left: 50%; margin-left: -5px;
+            border-width: 5px; border-style: solid; border-color: #1e293b transparent transparent transparent;
+        }
+
+        .animate-fade { animation: fadeIn 0.3s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+        .tool-card {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .tool-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+        }
+
+        .prose a {
+            color: #da3f0b;
+            text-decoration: none; 
+        }
+        .prose a:hover {
+            text-decoration: underline; 
+        }
+
+        .drop-zone {
+            border: 2px dashed #e2e8f0;
+            transition: all 0.3s ease;
+        }
+        .drop-zone.drag-over {
+            border-color: var(--primary);
+            background-color: var(--primary-light);
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 min-h-screen flex flex-col">
+    <div id="navbar" style="min-height: 70px;"></div>
+
+    <nav class="container mx-auto px-4 py-4">
+        <ol class="flex items-center space-x-2 text-xs font-semibold text-slate-500">
+            <li><a href="https://simpliconvert.com/" class="hover:text-[#da3f0b] transition-colors">Home</a></li>
+            <li><i class="fas fa-chevron-right text-[8px]"></i></li>
+            <li><a href="https://simpliconvert.com/pdf_tools/" class="hover:text-[#da3f0b] transition-colors">PDF Tools</a></li>
+            <li><i class="fas fa-chevron-right text-[8px]"></i></li>
+            <li class="text-[#da3f0b]">PDF Page Counter</li>
+        </ol>
+    </nav>
+
+    <section class="hero-white text-black py-2 md:py-10">
+        <div class="container mx-auto px-4 text-center">
+            <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-2">PDF Page Counter – Bulk Page Checker</h1>
+            <p class="text-lg md:text-xl max-w-3xl mx-auto mb-2">
+                Instantly count pages in one or multiple PDF files. Secure, browser-based processing for quick document length verification and printing estimates.
+            </p>
+        </div>
+    </section>
+
+    <div id="calculator-app" class="w-full max-w-6xl mx-auto p-4 sm:p-6">
+        <div class="bg-white rounded-[2rem] shadow-2xl overflow-hidden border border-slate-100">
+            <header class="bg-slate-50/50 border-b border-slate-100 p-6 md:p-8 flex flex-col md:flex-row justify-between items-center gap-6">
+                <div class="text-center md:text-left">
+                  <h2 class="text-2xl font-black text-slate-800 tracking-tight flex items-center justify-center md:justify-start gap-3">
+                    <span class="bg-[#da3f0b] text-white p-2 rounded-xl text-lg shadow-lg shadow-[#da3f0b30]">
+                      <i class="fas fa-file-pdf"></i>
+                    </span>
+                    Bulk PDF Page Checker
+                  </h2>
+                </div>
+                
+                <div class="flex gap-3">
+                    <button id="btn-clear" class="bg-white border border-slate-200 text-slate-600 px-4 py-2 rounded-xl text-xs font-bold hover:bg-slate-50 transition-all flex items-center gap-2">
+                        <i class="fas fa-trash-alt"></i> Clear All
+                    </button>
+                </div>
+            </header>
+    
+            <main class="flex flex-col lg:flex-row">
+                <div class="lg:w-[50%] p-6 md:p-10 lg:p-12 border-r border-slate-100">
+                    <div class="space-y-6">
+                        
+                        <div id="drop-zone" class="drop-zone bg-slate-50 p-10 rounded-2xl border-2 border-dashed border-slate-200 flex flex-col items-center justify-center text-center cursor-pointer hover:bg-slate-100 transition-all">
+                            <div class="w-16 h-16 bg-white rounded-2xl shadow-sm flex items-center justify-center text-[#da3f0b] mb-4">
+                                <i class="fas fa-cloud-upload-alt text-2xl"></i>
+                            </div>
+                            <h3 class="text-lg font-bold text-slate-800 mb-1">Click or Drag PDFs here</h3>
+                            <p class="text-sm text-slate-500 mb-4">Upload multiple files to count pages in bulk</p>
+                            <input type="file" id="pdf-input" class="hidden" multiple accept="application/pdf">
+                            <button onclick="document.getElementById('pdf-input').click()" class="bg-[#da3f0b] text-white px-6 py-2.5 rounded-xl text-sm font-bold shadow-lg shadow-[#da3f0b30] hover:bg-[#b53409] transition-all">Select Files</button>
+                        </div>
+
+                        <div id="file-list-container" class="hidden">
+                            <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-4"><i class="fas fa-list mr-2"></i>File Breakdown</h3>
+                            <div id="file-list" class="space-y-3 max-h-[300px] overflow-y-auto pr-2">
+                                <!-- Files will be injected here -->
+                            </div>
+                        </div>
+
+                        <div id="empty-state" class="text-center py-10">
+                            <p class="text-slate-400 text-sm italic">No files selected yet.</p>
+                        </div>
+                    </div>
+                </div>
+    
+                <div class="lg:w-[50%] bg-slate-50/50 p-6 md:p-10 lg:p-12 flex flex-col justify-center">
+                   <div class="space-y-6">
+                     
+                     <div class="hero-card p-8 flex flex-col items-center text-center">
+                         <p class="text-xs font-black text-[#da3f0b] uppercase tracking-[0.2em] mb-4">Total Page Count</p>
+                         <div class="flex items-center justify-center">
+                           <span id="display-total-pages" class="text-7xl md:text-8xl font-black tracking-tighter leading-none text-slate-800">0</span>
+                         </div>
+                         <p class="text-sm text-slate-400 font-medium mt-4">Across <span id="display-file-count">0</span> PDF documents</p>
+                     </div>
+    
+                     <div class="grid grid-cols-2 gap-4">
+                         <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex flex-col items-center text-center">
+                            <div class="text-[10px] font-black text-slate-400 uppercase tracking-widest flex items-center justify-center mb-1">Avg. Pages</div>
+                            <p id="display-avg-pages" class="text-xl font-extrabold text-slate-900">0</p>
+                            <p class="text-[10px] text-slate-400 font-medium mt-1 uppercase tracking-tight">Per Document</p>
+                         </div>
+                         <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex flex-col items-center text-center">
+                            <div class="text-[10px] font-black text-slate-400 uppercase tracking-widest flex items-center justify-center mb-1">Total Size</div>
+                            <p id="display-total-size" class="text-xl font-extrabold text-slate-900">0 KB</p>
+                            <p class="text-[10px] text-slate-400 font-medium mt-1 uppercase tracking-tight">Combined Weight</p>
+                         </div>
+                     </div>
+    
+                     <div class="bg-white rounded-xl p-6 border border-slate-100 shadow-sm mt-4">
+                         <div class="flex justify-between items-center mb-2">
+                            <span class="text-xs font-bold text-slate-400 uppercase tracking-widest">Processing Status</span>
+                            <span id="display-status" class="text-xs font-black text-slate-700">Ready</span>
+                         </div>
+                         <div class="w-full bg-slate-100 rounded-full h-2 mb-2 overflow-hidden">
+                            <div id="progress-bar" class="bg-[#da3f0b] h-2 rounded-full transition-all duration-500" style="width: 0%"></div>
+                         </div>
+                         <p class="text-[10px] text-slate-400">
+                           Files are processed <strong>locally</strong>. Your data never leaves your device.
+                         </p>
+                     </div>
+                   </div>
+                </div>
+            </main>
+    
+            <footer class="bg-slate-50 border-t border-slate-100 p-6 md:p-8">
+               <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+                   <div class="text-center md:text-left">
+                       <h4 class="text-sm font-bold text-slate-700 mb-1">Share this tool</h4>
+                       <p class="text-xs text-slate-400">Help others count pages faster.</p>
+                   </div>
+                   
+                   <div class="flex flex-wrap justify-center gap-3">
+                       <a href="#" onclick="shareSocial('facebook')" class="w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center text-white transition-transform hover:-translate-y-1 hover:shadow-lg bg-[#1877F2]"><i class="fab fa-facebook-f"></i></a>
+                       <a href="#" onclick="shareSocial('twitter')" class="w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center text-white transition-transform hover:-translate-y-1 hover:shadow-lg bg-[#1DA1F2]"><i class="fab fa-twitter"></i></a>
+                       <a href="#" onclick="shareSocial('linkedin')" class="w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center text-white transition-transform hover:-translate-y-1 hover:shadow-lg bg-[#0A66C2]"><i class="fab fa-linkedin-in"></i></a>
+                       <a href="#" onclick="shareSocial('whatsapp')" class="w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center text-white transition-transform hover:-translate-y-1 hover:shadow-lg bg-[#25D366]"><i class="fab fa-whatsapp"></i></a>
+                       <a href="#" onclick="shareSocial('reddit')" class="w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center text-white transition-transform hover:-translate-y-1 hover:shadow-lg bg-[#FF4500]"><i class="fab fa-reddit-alien"></i></a>
+                       <a href="#" onclick="shareSocial('telegram')" class="w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center text-white transition-transform hover:-translate-y-1 hover:shadow-lg bg-[#0088cc]"><i class="fab fa-telegram-plane"></i></a>
+                   </div>
+    
+                   <div class="relative">
+                       <button onclick="handleBookmark()" class="flex items-center gap-2 bg-white border border-slate-200 hover:border-[#da3f0b] hover:text-[#da3f0b] text-slate-600 px-4 py-2 rounded-lg text-sm font-bold transition-all shadow-sm active:scale-95">
+                          <i class="fas fa-bookmark"></i> Bookmark
+                       </button>
+                       <div id="bookmark-toast" class="hidden absolute bottom-full mb-3 left-1/2 -translate-x-1/2 bg-slate-800 text-white text-xs py-2 px-4 rounded-lg shadow-lg whitespace-nowrap animate-fade">
+                           Press <span class="font-bold text-[#da3f0b]">Ctrl + D</span> to bookmark
+                       </div>
+                   </div>
+               </div>
+            </footer>
+        </div>
+    </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+        const dropZone = document.getElementById('drop-zone');
+        const pdfInput = document.getElementById('pdf-input');
+        const fileList = document.getElementById('file-list');
+        const fileListContainer = document.getElementById('file-list-container');
+        const emptyState = document.getElementById('empty-state');
+        const totalPagesDisplay = document.getElementById('display-total-pages');
+        const fileCountDisplay = document.getElementById('display-file-count');
+        const avgPagesDisplay = document.getElementById('display-avg-pages');
+        const totalSizeDisplay = document.getElementById('display-total-size');
+        const progressBar = document.getElementById('progress-bar');
+        const statusDisplay = document.getElementById('display-status');
+        const btnClear = document.getElementById('btn-clear');
+
+        let filesData = [];
+
+        // Event Listeners
+        dropZone.addEventListener('click', () => pdfInput.click());
+        dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('drag-over'); });
+        dropZone.addEventListener('dragleave', () => dropZone.classList.remove('drag-over'));
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZone.classList.remove('drag-over');
+            handleFiles(e.dataTransfer.files);
+        });
+        pdfInput.addEventListener('change', (e) => handleFiles(e.target.files));
+        btnClear.addEventListener('click', resetApp);
+
+        async function handleFiles(files) {
+            const pdfFiles = Array.from(files).filter(file => file.type === 'application/pdf');
+            if (pdfFiles.length === 0) return;
+
+            emptyState.classList.add('hidden');
+            fileListContainer.classList.remove('hidden');
+            statusDisplay.textContent = 'Processing...';
+            
+            let processedCount = 0;
+
+            for (const file of pdfFiles) {
+                try {
+                    const arrayBuffer = await file.arrayBuffer();
+                    const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+                    
+                    const fileInfo = {
+                        name: file.name,
+                        pages: pdf.numPages,
+                        size: file.size
+                    };
+                    
+                    filesData.push(fileInfo);
+                    addFileToList(fileInfo);
+                    
+                    processedCount++;
+                    const progress = (processedCount / pdfFiles.length) * 100;
+                    progressBar.style.width = `${progress}%`;
+                    
+                    updateStats();
+                } catch (error) {
+                    console.error('Error processing PDF:', file.name, error);
+                }
+            }
+            
+            statusDisplay.textContent = 'Completed';
+            setTimeout(() => { progressBar.style.width = '0%'; }, 2000);
+        }
+
+        function addFileToList(file) {
+            const div = document.createElement('div');
+            div.className = 'bg-white p-3 rounded-xl border border-slate-100 flex justify-between items-center animate-fade';
+            div.innerHTML = `
+                <div class="flex items-center gap-3 overflow-hidden">
+                    <i class="fas fa-file-pdf text-[#da3f0b]"></i>
+                    <span class="text-xs font-bold text-slate-700 truncate">${file.name}</span>
+                </div>
+                <span class="text-xs font-black text-[#da3f0b] bg-[#da3f0b10] px-2 py-1 rounded-md shrink-0">${file.pages} Pages</span>
+            `;
+            fileList.appendChild(div);
+        }
+
+        function updateStats() {
+            const totalPages = filesData.reduce((sum, f) => sum + f.pages, 0);
+            const totalSize = filesData.reduce((sum, f) => sum + f.size, 0);
+            const avgPages = filesData.length > 0 ? (totalPages / filesData.length).toFixed(1) : 0;
+
+            totalPagesDisplay.textContent = totalPages;
+            fileCountDisplay.textContent = filesData.length;
+            avgPagesDisplay.textContent = avgPages;
+            totalSizeDisplay.textContent = formatSize(totalSize);
+        }
+
+        function formatSize(bytes) {
+            if (bytes === 0) return '0 KB';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+
+        function resetApp() {
+            filesData = [];
+            fileList.innerHTML = '';
+            fileListContainer.classList.add('hidden');
+            emptyState.classList.remove('hidden');
+            totalPagesDisplay.textContent = '0';
+            fileCountDisplay.textContent = '0';
+            avgPagesDisplay.textContent = '0';
+            totalSizeDisplay.textContent = '0 KB';
+            progressBar.style.width = '0%';
+            statusDisplay.textContent = 'Ready';
+            pdfInput.value = '';
+        }
+
+        window.handleBookmark = function() {
+            const toast = document.getElementById('bookmark-toast');
+            toast.classList.remove('hidden');
+            setTimeout(() => toast.classList.add('hidden'), 3000);
+        };
+        
+        window.shareSocial = function(platform) {
+             const url = encodeURIComponent(window.location.href);
+             const title = encodeURIComponent("Check out this PDF Page Counter!");
+             let shareUrl = '';
+             switch(platform) {
+                case 'facebook': shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${url}`; break;
+                case 'twitter': shareUrl = `https://twitter.com/intent/tweet?url=${url}&text=${title}`; break;
+                case 'linkedin': shareUrl = `https://www.linkedin.com/shareArticle?mini=true&url=${url}`; break;
+                case 'whatsapp': shareUrl = `https://api.whatsapp.com/send?text=${title}%20${url}`; break;
+                case 'reddit': shareUrl = `https://www.reddit.com/submit?url=${url}&title=${title}`; break;
+                case 'telegram': shareUrl = `https://t.me/share/url?url=${url}&text=${title}`; break;
+             }
+             if(shareUrl) window.open(shareUrl, '_blank');
+        };
+    });
+    </script>
+
+    <section class="bg-white py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="prose prose-lg max-w-none prose-h2:text-gray-800 prose-p:text-gray-700">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">How to Use the PDF Page Counter</h2>
+                <p class="mb-6 leading-relaxed">
+                    Counting pages in a single PDF is easy, but what if you have dozens of documents? Our <strong>PDF Page Counter</strong> is designed to simplify this process. To get started, simply drag and drop your files into the upload area or click to select them from your device. The tool instantly reads the metadata of each file and displays the page count. You can even upload multiple files at once to get a bulk total, which is perfect for preparing large printing jobs or auditing document libraries.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Key Features of Our Bulk PDF Checker</h2>
+                <p class="mb-6 leading-relaxed">
+                    This tool isn't just a simple counter; it's a productivity powerhouse for anyone dealing with digital documents. Key features include:
+                </p>
+                <ul class="list-disc pl-6 mb-6 space-y-2 text-gray-700">
+                    <li><strong>Bulk Processing:</strong> Upload and count hundreds of PDFs in seconds.</li>
+                    <li><strong>Privacy First:</strong> All processing happens in your browser. Your files are never uploaded to a server.</li>
+                    <li><strong>Detailed Breakdown:</strong> See individual page counts alongside the grand total.</li>
+                    <li><strong>Size Estimation:</strong> View the total file size to manage storage or email attachments.</li>
+                    <li><strong>No Installation:</strong> Works entirely online on any device, from desktops to smartphones.</li>
+                </ul>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Why You Need a PDF Page Counter</h2>
+                <p class="mb-6 leading-relaxed">
+                    Whether you are a student, a legal professional, or a business owner, knowing the exact length of your documents is crucial. For instance, if you're using our <a href="https://simpliconvert.com/pdf_file_size_checker/" target="_blank">PDF File Size Checker</a> to optimize your files, knowing the page count helps you understand the density of your content. 
+                </p>
+                <p class="mb-6 leading-relaxed">
+                    Printing costs are often calculated per page. By using this tool, you can accurately estimate your expenses before heading to the print shop. Furthermore, if you need to reorganize your documents, tools like our <a href="https://simpliconvert.com/extract_pdf_pages/" target="_blank">Extract PDF Pages</a> utility work best when you already know the structure and length of your source files.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Secure and Private Document Auditing</h2>
+                <p class="mb-6 leading-relaxed">
+                    Security is a top priority when handling sensitive documents. Unlike other online converters that require you to upload files to their servers, our tool uses client-side JavaScript. This means your PDF stays on your computer. It's the safest way to <a href="https://simpliconvert.com/rotate_pdf/" target="_blank">manage your PDFs</a> without risking data leaks. 
+                </p>
+                <p class="mb-6 leading-relaxed">
+                    This "local-only" approach also makes the tool incredibly fast. Since there is no upload or download time, the results appear almost instantly, even for large files. It’s the perfect companion for anyone who values both speed and privacy in their digital workflow.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Final Thoughts on Document Management</h2>
+                <p class="mb-6 leading-relaxed">
+                    Managing a large volume of PDFs can be overwhelming. By integrating simple tools like this page counter into your routine, you can save hours of manual work. Once you've counted your pages, you might find that some documents are too long or contain unnecessary information, leading you to use our other specialized PDF utilities to refine your files.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-center text-gray-900 mb-8">PDF Page Counter – Frequently Asked Questions</h2>
+            <div class="space-y-4">
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>How can I count pages in multiple PDFs at once?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">Simply drag and drop all your PDF files into the upload area. Our tool will process them simultaneously and provide both individual page counts and a combined total.</p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>Is it safe to upload my PDF files here?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">Yes. Our PDF Page Counter processes files locally in your browser using JavaScript. Your documents are never uploaded to our servers, ensuring 100% privacy and security.</p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>Is there a limit to how many PDFs I can count?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">There is no hard limit. You can upload dozens of files at once. However, performance may depend on your device's memory and the size of the PDF files.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 pb-16">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-slate-200 pt-16">
+            <h2 class="text-2xl font-bold text-center text-slate-800 mb-10">Popular Tools on SimpliConvert</h2>
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+                <a href="/password_generator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-slate-50 text-slate-700 flex items-center justify-center shrink-0 group-hover:bg-slate-800 group-hover:text-white transition-colors">
+                        <i class="fas fa-key text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Password Gen</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Create secure, random passwords.</p>
+                    </div>
+                </a>
+                <a href="/image_resizer/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center shrink-0 group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-image text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Image Resizer</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Resize images without quality loss.</p>
+                    </div>
+                </a>
+                <a href="/split_pdf/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-red-50 text-red-600 flex items-center justify-center shrink-0 group-hover:bg-red-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-cut text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Split PDF</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Extract pages from PDF documents.</p>
+                    </div>
+                </a>
+                <a href="/qr_code_generator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-slate-50 text-slate-800 flex items-center justify-center shrink-0 group-hover:bg-slate-900 group-hover:text-white transition-colors">
+                        <i class="fas fa-qrcode text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">QR Creator</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Generate custom QR codes instantly.</p>
+                    </div>
+                </a>
+                <a href="/to_do_list/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-green-50 text-green-600 flex items-center justify-center shrink-0 group-hover:bg-green-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-check-square text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">To-Do List</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Manage tasks and stay organized.</p>
+                    </div>
+                </a>
+                <a href="/merge_pdf_online/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-red-50 text-red-600 flex items-center justify-center shrink-0 group-hover:bg-red-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-object-group text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Merge PDF</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Combine multiple PDFs into one.</p>
+                    </div>
+                </a>
+                <a href="/compress_pdf/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-orange-50 text-orange-600 flex items-center justify-center shrink-0 group-hover:bg-orange-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-compress-arrows-alt text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Compress PDF</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Reduce PDF file size online.</p>
+                    </div>
+                </a>
+                <a href="/jpg_to_pdf/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-purple-50 text-purple-600 flex items-center justify-center shrink-0 group-hover:bg-purple-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-file-pdf text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">JPG to PDF</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Convert images to PDF documents.</p>
+                    </div>
+                </a>
+                <a href="/roblox_devex_calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-gray-50 text-gray-800 flex items-center justify-center shrink-0 group-hover:bg-gray-900 group-hover:text-white transition-colors">
+                        <i class="fas fa-gamepad text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">DevEx Calc</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Calculate Roblox Robux to USD.</p>
+                    </div>
+                </a>
+                <a href="/meta_tag_generator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0 group-hover:bg-indigo-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-search text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Meta Tag Gen</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Optimize SEO with custom tags.</p>
+                    </div>
+                </a>
+                <a href="/freelance_hourly_rate_calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0 group-hover:bg-emerald-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-calculator text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Rate Calc</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Calculate freelance hourly rates.</p>
+                    </div>
+                </a>
+                <a href="/youtube_thumbnail_downloader/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-red-50 text-red-600 flex items-center justify-center shrink-0 group-hover:bg-red-600 group-hover:text-white transition-colors">
+                        <i class="fab fa-youtube text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Thumb Grabber</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Download YouTube video covers.</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <div id="footer"></div>
+
+    <script>
+    async function loadComponent(url, elementId, callback) {
+        try {
+            const response = await fetch(url);
+            if (!response.ok) throw new Error('Status: ' + response.status);
+            const text = await response.text();
+            const element = document.getElementById(elementId);
+            if (element) {
+                element.innerHTML = text;
+                if (callback) callback();
+            }
+        } catch (error) {
+            console.error('Error loading component:', error);
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        loadComponent('/components/navbar.html', 'navbar');
+        loadComponent('/components/footer.html', 'footer', () => {
+            const yearSpan = document.getElementById('current-year');
+            if(yearSpan) yearSpan.textContent = new Date().getFullYear();
+        });
+        
+        const faqToggles = document.querySelectorAll('[data-faq-toggle]');
+        faqToggles.forEach(button => {
+            button.addEventListener('click', () => {
+                const answer = button.nextElementSibling;
+                const icon = button.querySelector('.faq-icon');
+                const isOpening = !answer.style.maxHeight;
+
+                faqToggles.forEach(other => {
+                    if (other !== button) {
+                        other.nextElementSibling.style.maxHeight = null;
+                        other.querySelector('.faq-icon').classList.remove('rotate-90');
+                        other.querySelector('.faq-icon').classList.add('-rotate-90');
+                    }
+                });
+
+                if (isOpening) {
+                    answer.style.maxHeight = answer.scrollHeight + "px";
+                    icon.classList.remove('-rotate-90');
+                    icon.classList.add('rotate-90');
+                } else {
+                    answer.style.maxHeight = null;
+                    icon.classList.remove('rotate-90');
+                    icon.classList.add('-rotate-90');
+                }
+            });
+        });
+    });
+    </script>
+</body>
+</html>
