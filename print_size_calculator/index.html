@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Print Size Calculator – Calculate Max Print Size from Image Resolution | SimpliConvert</title>
+    <meta name="description" content="Determine the maximum high-quality print size for your digital photo. Find out if your image resolution is high enough for 4x6, 8x10, or poster printing.">
+    <meta name="keywords" content="photo print quality check, poster size calc, best print dimensions, megapixels to print, photo lab tool, calculate max print size from image resolution">
+    <meta name="author" content="SimpliConvert">
+    <meta property="og:site_name" content="SimpliConvert">
+    <meta name="robots" content="index, follow">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://simpliconvert.com/print_size_calculator/">
+    <meta property="og:title" content="Print Size Calculator – Calculate Max Print Size from Image Resolution">
+    <meta property="og:description" content="Instantly calculate the best print dimensions for your photos based on pixel resolution and DPI.">
+    <meta property="og:image" content="https://simpliconvert.com/images/print-size-calculator-og.jpg">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://simpliconvert.com/print_size_calculator/">
+    <meta name="twitter:title" content="Print Size Calculator – Photo Resolution Tool">
+    <meta name="twitter:description" content="Free tool to check if your photo resolution is high enough for quality printing. Calculate inches and cm from pixels.">
+    <meta name="twitter:image" content="https://simpliconvert.com/images/print-size-calculator-og.jpg">
+
+    <link rel="canonical" href="https://simpliconvert.com/print_size_calculator/">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Print Size Calculator",
+      "url": "https://simpliconvert.com/print_size_calculator/",
+      "description": "A free online tool to calculate the maximum high-quality print size for digital images based on pixel dimensions and DPI.",
+      "applicationCategory": "MultimediaApplication",
+      "operatingSystem": "Web Browser",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "SimpliConvert",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://simpliconvert.com/logo.png"
+        }
+      }
+    }
+    </script>
+
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [{
+    "@type": "ListItem",
+    "position": 1,
+    "name": "Home",
+    "item": "https://simpliconvert.com/"
+  },{
+    "@type": "ListItem",
+    "position": 2,
+    "name": "Image Tools",
+    "item": "https://simpliconvert.com/image_tools/"
+  },{
+    "@type": "ListItem",
+    "position": 3,
+    "name": "Print Size Calculator",
+    "item": "https://simpliconvert.com/print_size_calculator/"
+  }]
+}
+</script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [{
+        "@type": "Question",
+        "name": "What is the best DPI for printing photos?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "For high-quality photo prints, 300 DPI (Dots Per Inch) is the industry standard. For large posters viewed from a distance, 150 DPI is often sufficient."
+        }
+      }, {
+        "@type": "Question",
+        "name": "How many megapixels do I need for an 8x10 print?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "To get a high-quality 8x10 inch print at 300 DPI, you need a resolution of 2400 x 3000 pixels, which is approximately 7.2 megapixels."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Can I print a low-resolution image in a large size?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "You can, but the result will be pixelated or blurry. Our calculator helps you determine the 'Quality Rating' so you know if your image will look sharp or fuzzy at your desired size."
+        }
+      }]
+    }
+    </script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #da3f0b;
+            --primary-hover: #b53409;
+            --primary-light: #fff5f2;
+            --bg: #f8fafc;
+            --text-dark: #0f172a;
+            --success: #16a34a;
+            --warning: #f59e0b;
+            --danger: #dc2626;
+        }
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: var(--text-dark); }
+        .hero-card { background: white; border: 1px solid #f1f5f9; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05); position: relative; overflow: hidden; }
+        .hero-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px; background-color: var(--primary); }
+        .tooltip-container { position: relative; display: inline-block; }
+        .tooltip-text {
+            visibility: hidden; width: 220px; background-color: #1e293b; color: #fff;
+            text-align: center; border-radius: 8px; padding: 10px; position: absolute;
+            z-index: 50; bottom: 125%; left: 50%; margin-left: -110px; opacity: 0;
+            transition: opacity 0.2s; font-size: 0.75rem; font-weight: 400;
+            pointer-events: none; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+        .tooltip-container:hover .tooltip-text { visibility: visible; opacity: 1; }
+        .animate-fade { animation: fadeIn 0.3s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+        .tool-card { transition: transform 0.2s ease, box-shadow 0.2s ease; }
+        .tool-card:hover { transform: translateY(-4px); box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
+        .prose a { color: #da3f0b; text-decoration: none; }
+        .prose a:hover { text-decoration: underline; }
+    </style>
+</head>
+
+<body class="bg-gray-50 min-h-screen flex flex-col">
+    <div id="navbar" style="min-height: 70px;"></div>
+	
+	<section class="hero-white text-black py-2 md:py-10">
+        <div class="container mx-auto px-4">
+            <nav class="flex pb-4 text-sm text-slate-500 items-center space-x-2 justify-center">
+                <a href="https://simpliconvert.com/" class="hover:text-[#da3f0b] transition-colors">Home</a>
+                <i class="fas fa-chevron-right text-[10px]"></i>
+                <a href="https://simpliconvert.com/image_tools/" class="hover:text-[#da3f0b] transition-colors">Image Tools</a>
+                <i class="fas fa-chevron-right text-[10px]"></i>
+                <span class="text-slate-900 font-medium">Print Size Calculator</span>
+            </nav>
+            <div class="text-center">
+                <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-2">calculate max print size from image resolution</h1>
+                <p class="text-lg md:text-xl max-w-3xl mx-auto mb-2 text-slate-600">
+                Determine the maximum high-quality print dimensions for your digital photos. Check if your image is sharp enough for posters or standard prints.
+                </p>
+            </div>
+        </div>
+    </section>		
+
+    <div id="calculator-app" class="w-full max-w-6xl mx-auto p-4 sm:p-6">
+        <div class="bg-white rounded-[2rem] shadow-2xl overflow-hidden border border-slate-100">
+            <header class="bg-slate-50/50 border-b border-slate-100 p-6 md:p-8 flex flex-col md:flex-row justify-between items-center gap-6">
+                <div class="text-center md:text-left">
+                  <h2 class="text-2xl font-black text-slate-800 tracking-tight flex items-center justify-center md:justify-start gap-3">
+                    <span class="bg-[#da3f0b] text-white p-2 rounded-xl text-lg shadow-lg shadow-[#da3f0b30]">
+                      <i class="fas fa-print"></i>
+                    </span>
+                    Photo Print Quality Checker
+                  </h2>
+                </div>
+                
+                <div class="flex gap-4">
+                    <label class="cursor-pointer bg-white border border-slate-200 text-slate-700 py-2.5 px-4 rounded-xl text-xs font-bold hover:border-[#da3f0b] transition-all shadow-sm">
+                        <i class="fas fa-upload mr-2 text-[#da3f0b]"></i> Upload Image
+                        <input type="file" id="image-upload" accept="image/*" class="hidden">
+                    </label>
+                </div>
+            </header>
+    
+            <main class="flex flex-col lg:flex-row">
+                <div class="lg:w-[50%] p-6 md:p-10 lg:p-12 border-r border-slate-100">
+                    <div class="space-y-6">
+                        <div class="bg-slate-50 p-6 rounded-2xl border border-slate-100">
+                            <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-6"><i class="fas fa-expand mr-2"></i>Image Dimensions</h3>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="mb-5">
+                                    <label class="flex items-center text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Width (Pixels)</label>
+                                    <input type="number" id="input-width" value="3000" class="block w-full rounded-xl border-slate-200 border py-3 px-4 focus:ring-4 focus:ring-[#da3f0b20] focus:border-[#da3f0b] sm:text-sm font-semibold text-slate-800 transition-all bg-white" placeholder="e.g. 3000">
+                                </div>
+                                <div class="mb-5">
+                                    <label class="flex items-center text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Height (Pixels)</label>
+                                    <input type="number" id="input-height" value="2000" class="block w-full rounded-xl border-slate-200 border py-3 px-4 focus:ring-4 focus:ring-[#da3f0b20] focus:border-[#da3f0b] sm:text-sm font-semibold text-slate-800 transition-all bg-white" placeholder="e.g. 2000">
+                                </div>
+                            </div>
+                            <div class="flex justify-between items-center px-2 mt-2">
+                                 <span class="text-xs font-bold text-slate-400">Total Megapixels:</span>
+                                 <span class="text-sm font-black text-slate-700"><span id="display-mp">6.0</span> MP</span>
+                            </div>
+                        </div>
+    
+                        <div class="bg-[#da3f0b08] p-6 rounded-2xl border border-[#da3f0b15]">
+                           <h3 class="text-xs font-black text-[#da3f0b] uppercase tracking-widest mb-6"><i class="fas fa-sliders-h mr-2"></i>Print Quality (DPI)</h3>
+                           <div class="mb-5">
+                                <select id="input-dpi" class="block w-full rounded-xl border-slate-200 border py-3 px-4 focus:ring-4 focus:ring-[#da3f0b20] focus:border-[#da3f0b] sm:text-sm font-semibold text-slate-800 transition-all bg-white">
+                                    <option value="300">300 DPI (Excellent / Photo Lab)</option>
+                                    <option value="240">240 DPI (High Quality)</option>
+                                    <option value="150">150 DPI (Good / Posters)</option>
+                                    <option value="72">72 DPI (Web / Low Quality)</option>
+                                    <option value="custom">Custom DPI...</option>
+                                </select>
+                           </div>
+                           <div id="custom-dpi-container" class="hidden animate-fade">
+                                <label class="flex items-center text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Enter Custom DPI</label>
+                                <input type="number" id="input-custom-dpi" value="300" class="block w-full rounded-xl border-slate-200 border py-3 px-4 focus:ring-4 focus:ring-[#da3f0b20] focus:border-[#da3f0b] sm:text-sm font-semibold text-slate-800 transition-all bg-white">
+                           </div>
+                        </div>
+
+                        <div class="p-2">
+                            <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-4">Quick Presets</h3>
+                            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                                <button onclick="setDimensions(1200, 1800)" class="text-[10px] bg-white border border-slate-200 text-slate-600 px-2 py-2 rounded-lg font-bold hover:border-[#da3f0b] hover:text-[#da3f0b] transition-all">4x6 Print</button>
+                                <button onclick="setDimensions(2400, 3000)" class="text-[10px] bg-white border border-slate-200 text-slate-600 px-2 py-2 rounded-lg font-bold hover:border-[#da3f0b] hover:text-[#da3f0b] transition-all">8x10 Print</button>
+                                <button onclick="setDimensions(3508, 4961)" class="text-[10px] bg-white border border-slate-200 text-slate-600 px-2 py-2 rounded-lg font-bold hover:border-[#da3f0b] hover:text-[#da3f0b] transition-all">A3 Size</button>
+                                <button onclick="setDimensions(1920, 1080)" class="text-[10px] bg-white border border-slate-200 text-slate-600 px-2 py-2 rounded-lg font-bold hover:border-[#da3f0b] hover:text-[#da3f0b] transition-all">Full HD</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+    
+                <div class="lg:w-[50%] bg-slate-50/50 p-6 md:p-10 lg:p-12 flex flex-col justify-center">
+                   <div class="space-y-6">
+                     <div class="hero-card p-8 flex flex-col items-center text-center">
+                         <p class="text-xs font-black text-[#da3f0b] uppercase tracking-[0.2em] mb-4">Recommended Max Size</p>
+                         <div class="flex flex-col items-center justify-center">
+                           <span id="display-size-inches" class="text-4xl md:text-5xl font-black tracking-tighter leading-none text-slate-800">10" x 6.6"</span>
+                           <span id="display-size-cm" class="text-lg text-slate-400 font-medium mt-2">25.4 x 16.9 cm</span>
+                         </div>
+                         <div id="quality-badge" class="mt-6 px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest bg-green-100 text-green-700">
+                            Excellent Quality
+                         </div>
+                     </div>
+    
+                     <div class="grid grid-cols-2 gap-4">
+                         <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex flex-col items-center text-center">
+                            <div class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Aspect Ratio</div>
+                            <p id="display-ratio" class="text-xl font-extrabold text-slate-900">3:2</p>
+                            <p class="text-[10px] text-slate-400 font-medium mt-1 uppercase tracking-tight">Landscape</p>
+                         </div>
+                         <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex flex-col items-center text-center">
+                            <div class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Print Density</div>
+                            <p id="display-dpi-val" class="text-xl font-extrabold text-slate-900">300 DPI</p>
+                            <p class="text-[10px] text-slate-400 font-medium mt-1 uppercase tracking-tight">Dots Per Inch</p>
+                         </div>
+                     </div>
+    
+                     <div class="bg-white rounded-xl p-6 border border-slate-100 shadow-sm mt-4">
+                         <div class="flex justify-between items-center mb-2">
+                            <span class="text-xs font-bold text-slate-400 uppercase tracking-widest">Quality Score</span>
+                            <span id="display-score" class="text-lg font-black text-slate-700">95/100</span>
+                         </div>
+                         <div class="w-full bg-slate-100 rounded-full h-2 mb-2 overflow-hidden">
+                            <div id="score-bar" class="bg-[#16a34a] h-2 rounded-full transition-all duration-500" style="width: 95%"></div>
+                         </div>
+                         <p id="quality-desc" class="text-[10px] text-slate-400">
+                           This image is perfect for high-end photo printing and professional portfolios.
+                         </p>
+                     </div>
+                   </div>
+                </div>
+            </main>
+    
+            <footer class="bg-slate-50 border-t border-slate-100 p-6 md:p-8">
+               <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+                   <div class="text-center md:text-left">
+                       <h4 class="text-sm font-bold text-slate-700 mb-1">Share this tool</h4>
+                       <p class="text-xs text-slate-400">Help others print better photos.</p>
+                   </div>
+                   <div class="flex flex-wrap justify-center gap-3">
+                       <a href="#" onclick="shareSocial('facebook')" class="w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center text-white transition-transform hover:-translate-y-1 hover:shadow-lg bg-[#1877F2]"><i class="fab fa-facebook-f"></i></a>
+                       <a href="#" onclick="shareSocial('twitter')" class="w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center text-white transition-transform hover:-translate-y-1 hover:shadow-lg bg-[#1DA1F2]"><i class="fab fa-twitter"></i></a>
+                       <a href="#" onclick="shareSocial('whatsapp')" class="w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center text-white transition-transform hover:-translate-y-1 hover:shadow-lg bg-[#25D366]"><i class="fab fa-whatsapp"></i></a>
+                       <a href="#" onclick="shareSocial('telegram')" class="w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center text-white transition-transform hover:-translate-y-1 hover:shadow-lg bg-[#0088cc]"><i class="fab fa-telegram-plane"></i></a>
+                   </div>
+                   <button onclick="handleBookmark()" class="flex items-center gap-2 bg-white border border-slate-200 hover:border-[#da3f0b] hover:text-[#da3f0b] text-slate-600 px-4 py-2 rounded-lg text-sm font-bold transition-all shadow-sm active:scale-95">
+                      <i class="fas fa-bookmark"></i> Bookmark
+                   </button>
+               </div>
+            </footer>
+        </div>
+    </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const inputs = {
+            width: document.getElementById('input-width'),
+            height: document.getElementById('input-height'),
+            dpiSelect: document.getElementById('input-dpi'),
+            customDpi: document.getElementById('input-custom-dpi'),
+            file: document.getElementById('image-upload')
+        };
+
+        const displays = {
+            mp: document.getElementById('display-mp'),
+            inches: document.getElementById('display-size-inches'),
+            cm: document.getElementById('display-size-cm'),
+            ratio: document.getElementById('display-ratio'),
+            dpiVal: document.getElementById('display-dpi-val'),
+            badge: document.getElementById('quality-badge'),
+            score: document.getElementById('display-score'),
+            scoreBar: document.getElementById('score-bar'),
+            qualityDesc: document.getElementById('quality-desc')
+        };
+
+        function calculate() {
+            const w = parseInt(inputs.width.value) || 0;
+            const h = parseInt(inputs.height.value) || 0;
+            let dpi = inputs.dpiSelect.value === 'custom' ? parseInt(inputs.customDpi.value) : parseInt(inputs.dpiSelect.value);
+            if (!dpi || dpi <= 0) dpi = 300;
+
+            // Megapixels
+            const mp = (w * h) / 1000000;
+            displays.mp.textContent = mp.toFixed(1);
+
+            // Dimensions
+            const inchW = w / dpi;
+            const inchH = h / dpi;
+            const cmW = inchW * 2.54;
+            const cmH = inchH * 2.54;
+
+            displays.inches.textContent = `${inchW.toFixed(1)}" x ${inchH.toFixed(1)}"`;
+            displays.cm.textContent = `${cmW.toFixed(1)} x ${cmH.toFixed(1)} cm`;
+            displays.dpiVal.textContent = `${dpi} DPI`;
+
+            // Ratio
+            const gcd = (a, b) => b ? gcd(b, a % b) : a;
+            const common = gcd(w, h);
+            displays.ratio.textContent = common > 0 ? `${w/common}:${h/common}` : '0:0';
+
+            // Quality Logic
+            let score = 0;
+            let label = "";
+            let color = "";
+            let desc = "";
+
+            if (dpi >= 300) {
+                score = 95; label = "Excellent Quality"; color = "bg-green-100 text-green-700";
+                desc = "Perfect for high-end photo printing and professional portfolios.";
+            } else if (dpi >= 200) {
+                score = 75; label = "High Quality"; color = "bg-blue-100 text-blue-700";
+                desc = "Great for home photo prints and standard framing.";
+            } else if (dpi >= 150) {
+                score = 50; label = "Good / Poster Quality"; color = "bg-yellow-100 text-yellow-700";
+                desc = "Suitable for large posters viewed from a distance of 3+ feet.";
+            } else {
+                score = 25; label = "Low Quality"; color = "bg-red-100 text-red-700";
+                desc = "Image will likely appear pixelated or blurry when printed.";
+            }
+
+            displays.badge.textContent = label;
+            displays.badge.className = `mt-6 px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest ${color}`;
+            displays.score.textContent = `${score}/100`;
+            displays.scoreBar.style.width = `${score}%`;
+            displays.scoreBar.style.backgroundColor = dpi >= 200 ? '#16a34a' : (dpi >= 150 ? '#f59e0b' : '#dc2626');
+            displays.qualityDesc.textContent = desc;
+        }
+
+        inputs.width.addEventListener('input', calculate);
+        inputs.height.addEventListener('input', calculate);
+        inputs.customDpi.addEventListener('input', calculate);
+        inputs.dpiSelect.addEventListener('change', () => {
+            document.getElementById('custom-dpi-container').classList.toggle('hidden', inputs.dpiSelect.value !== 'custom');
+            calculate();
+        });
+
+        inputs.file.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const img = new Image();
+                img.onload = function() {
+                    inputs.width.value = this.width;
+                    inputs.height.value = this.height;
+                    calculate();
+                };
+                img.src = URL.createObjectURL(file);
+            }
+        });
+
+        window.setDimensions = (w, h) => {
+            inputs.width.value = w;
+            inputs.height.value = h;
+            calculate();
+        };
+
+        calculate();
+    });
+
+    function shareSocial(platform) {
+        const url = encodeURIComponent(window.location.href);
+        const text = encodeURIComponent("Check out this Print Size Calculator!");
+        const shares = {
+            facebook: `https://www.facebook.com/sharer/sharer.php?u=${url}`,
+            twitter: `https://twitter.com/intent/tweet?url=${url}&text=${text}`,
+            whatsapp: `https://api.whatsapp.com/send?text=${text}%20${url}`,
+            telegram: `https://t.me/share/url?url=${url}&text=${text}`
+        };
+        window.open(shares[platform], '_blank');
+    }
+
+    function handleBookmark() {
+        alert("Press Ctrl+D (or Cmd+D on Mac) to bookmark this tool.");
+    }
+    </script>
+
+    <section class="bg-white py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="prose prose-lg max-w-none prose-h2:text-gray-800 prose-p:text-gray-700">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">How to calculate max print size from image resolution</h2>
+                <p class="mb-6 leading-relaxed">
+                    Have you ever printed a photo only to find it looks blurry or "blocky"? This happens because the digital image didn't have enough pixels for the physical size of the paper. Our <strong>Print Size Calculator</strong> solves this by helping you <em>calculate max print size from image resolution</em> instantly. By understanding the relationship between pixels and DPI (Dots Per Inch), you can ensure every photo you print looks professional and sharp.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Understanding DPI and Print Quality</h2>
+                <p class="mb-6 leading-relaxed">
+                    DPI stands for Dots Per Inch. It is the measure of how many pixels are packed into every inch of a physical print. The higher the DPI, the more detail the print will have. For standard photo lab quality, 300 DPI is the gold standard. If you are creating a large poster that will be viewed from several feet away, you can often get away with 150 DPI. Our tool allows you to toggle between these settings to see how large you can go without losing quality. If you need to check the specific density of an existing file, you can use our <a href="https://simpliconvert.com/image_dpi_checker/">Image DPI Checker</a>.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Megapixels vs. Physical Dimensions</h2>
+                <p class="mb-6 leading-relaxed">
+                    Many people believe that more megapixels always mean better prints. While megapixels represent the total volume of data, the <em>resolution</em> (width x height) determines the shape and maximum size. For example, a 12MP image can easily produce a high-quality 8x10 print, but it might struggle with a 24x36 poster. Using our <a href="https://simpliconvert.com/image_resolution_calculator/">Image Resolution Calculator</a> alongside this tool helps you understand exactly what your camera sensor is capable of producing.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Converting Pixels to Inches and CM</h2>
+                <p class="mb-6 leading-relaxed">
+                    The math behind printing is simple: <strong>Pixels / DPI = Inches</strong>. If you have a 3000-pixel wide image and want to print at 300 DPI, the width will be 10 inches. Our calculator automates this math for both inches and centimeters. For those working on specific design projects, we also offer specialized tools like <a href="https://simpliconvert.com/image_pixels_to_inches/">Pixels to Inches Converter</a> to help you bridge the gap between digital screens and physical media.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Common Print Sizes and Requirements</h2>
+                <ul class="list-disc pl-6 mb-6 space-y-2 text-gray-700">
+                    <li><strong>4x6 Inches:</strong> Requires 1200 x 1800 pixels (approx 2.2 MP).</li>
+                    <li><strong>8x10 Inches:</strong> Requires 2400 x 3000 pixels (approx 7.2 MP).</li>
+                    <li><strong>A4 Size:</strong> Requires 2480 x 3508 pixels (approx 8.7 MP).</li>
+                    <li><strong>Poster (18x24):</strong> Requires 5400 x 7200 pixels at 300 DPI, or 2700 x 3600 at 150 DPI.</li>
+                </ul>
+                <p class="mb-6 leading-relaxed">
+                    Before you send your files to the lab, always perform a <strong>photo print quality check</strong> using our calculator to avoid wasting money on prints that won't meet your expectations.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-center text-gray-900 mb-8">Print Size FAQ</h2>
+            <div class="space-y-4">
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>What is the difference between PPI and DPI?</span>
+                        <i class="fas fa-chevron-down faq-icon transition-transform"></i>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-300">
+                        <p class="p-5 pt-0 text-gray-600">PPI (Pixels Per Inch) refers to digital displays, while DPI (Dots Per Inch) refers to physical printers. In most casual contexts, they are used interchangeably to describe image density.</p>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>Can I increase my image resolution for a larger print?</span>
+                        <i class="fas fa-chevron-down faq-icon transition-transform"></i>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-300">
+                        <p class="p-5 pt-0 text-gray-600">You can "upscale" an image using software, but this doesn't add real detail. It simply stretches existing pixels. For the best results, always start with the highest original resolution possible.</p>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>Why does my 4K photo only print at a certain size?</span>
+                        <i class="fas fa-chevron-down faq-icon transition-transform"></i>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-300">
+                        <p class="p-5 pt-0 text-gray-600">A 4K image is roughly 3840 x 2160 pixels. At a high-quality 300 DPI, this results in a print size of about 12.8 x 7.2 inches. To go larger, you must lower the DPI or accept lower sharpness.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 pb-16">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-slate-200 pt-16">
+            <h2 class="text-2xl font-bold text-center text-slate-800 mb-10">Popular Image Tools</h2>
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+                <a href="/image_dpi_checker/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-slate-50 text-slate-700 flex items-center justify-center shrink-0 group-hover:bg-slate-800 group-hover:text-white transition-colors"><i class="fas fa-info-circle text-lg"></i></div>
+                    <div><h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">DPI Checker</h3><p class="text-xs text-slate-500 leading-snug">Check image DPI density.</p></div>
+                </a>
+                <a href="/image_dpi_converter/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center shrink-0 group-hover:bg-blue-600 group-hover:text-white transition-colors"><i class="fas fa-sync text-lg"></i></div>
+                    <div><h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">DPI Converter</h3><p class="text-xs text-slate-500 leading-snug">Change image DPI values.</p></div>
+                </a>
+                <a href="/image_resolution_calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-red-50 text-red-600 flex items-center justify-center shrink-0 group-hover:bg-red-600 group-hover:text-white transition-colors"><i class="fas fa-calculator text-lg"></i></div>
+                    <div><h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Res Calc</h3><p class="text-xs text-slate-500 leading-snug">Calculate total megapixels.</p></div>
+                </a>
+                <a href="/image_pixels_to_inches/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-slate-50 text-slate-800 flex items-center justify-center shrink-0 group-hover:bg-slate-900 group-hover:text-white transition-colors"><i class="fas fa-ruler-combined text-lg"></i></div>
+                    <div><h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Px to Inches</h3><p class="text-xs text-slate-500 leading-snug">Convert pixels to inches.</p></div>
+                </a>
+                <a href="/inches_to_pixels/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-green-50 text-green-600 flex items-center justify-center shrink-0 group-hover:bg-green-600 group-hover:text-white transition-colors"><i class="fas fa-vector-square text-lg"></i></div>
+                    <div><h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Inches to Px</h3><p class="text-xs text-slate-500 leading-snug">Convert inches to pixels.</p></div>
+                </a>
+                <a href="/image_cropper/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-red-50 text-red-600 flex items-center justify-center shrink-0 group-hover:bg-red-600 group-hover:text-white transition-colors"><i class="fas fa-crop text-lg"></i></div>
+                    <div><h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Image Cropper</h3><p class="text-xs text-slate-500 leading-snug">Crop images to any size.</p></div>
+                </a>
+                <a href="/jpg_to_png/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-orange-50 text-orange-600 flex items-center justify-center shrink-0 group-hover:bg-orange-600 group-hover:text-white transition-colors"><i class="fas fa-file-image text-lg"></i></div>
+                    <div><h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">JPG to PNG</h3><p class="text-xs text-slate-500 leading-snug">Convert JPG files to PNG.</p></div>
+                </a>
+                <a href="/png_to_jpg/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-purple-50 text-purple-600 flex items-center justify-center shrink-0 group-hover:bg-purple-600 group-hover:text-white transition-colors"><i class="fas fa-file-alt text-lg"></i></div>
+                    <div><h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">PNG to JPG</h3><p class="text-xs text-slate-500 leading-snug">Convert PNG files to JPG.</p></div>
+                </a>
+                <a href="/image_metadata_viewer/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-gray-50 text-gray-800 flex items-center justify-center shrink-0 group-hover:bg-gray-900 group-hover:text-white transition-colors"><i class="fas fa-database text-lg"></i></div>
+                    <div><h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Metadata View</h3><p class="text-xs text-slate-500 leading-snug">View image EXIF data.</p></div>
+                </a>
+                <a href="/image_color_picker/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0 group-hover:bg-indigo-600 group-hover:text-white transition-colors"><i class="fas fa-eye-dropper text-lg"></i></div>
+                    <div><h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Color Picker</h3><p class="text-xs text-slate-500 leading-snug">Extract colors from images.</p></div>
+                </a>
+                <a href="/image_resizer/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0 group-hover:bg-emerald-600 group-hover:text-white transition-colors"><i class="fas fa-compress text-lg"></i></div>
+                    <div><h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Image Resizer</h3><p class="text-xs text-slate-500 leading-snug">Resize images online.</p></div>
+                </a>
+                <a href="/image_watermark_adder/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-red-50 text-red-600 flex items-center justify-center shrink-0 group-hover:bg-red-600 group-hover:text-white transition-colors"><i class="fas fa-stamp text-lg"></i></div>
+                    <div><h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Watermark</h3><p class="text-xs text-slate-500 leading-snug">Add watermarks to photos.</p></div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <div id="footer"></div>
+
+    <script>
+    async function loadComponent(url, elementId, callback) {
+        try {
+            const response = await fetch(url);
+            if (!response.ok) throw new Error('Status: ' + response.status);
+            const text = await response.text();
+            const element = document.getElementById(elementId);
+            if (element) {
+                element.innerHTML = text;
+                if (callback) callback();
+            }
+        } catch (error) {
+            console.error('Error loading component:', error);
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        loadComponent('/components/navbar.html', 'navbar');
+        loadComponent('/components/footer.html', 'footer');
+        
+        const faqToggles = document.querySelectorAll('[data-faq-toggle]');
+        faqToggles.forEach(button => {
+            button.addEventListener('click', () => {
+                const answer = button.nextElementSibling;
+                const icon = button.querySelector('.faq-icon');
+                const isOpening = !answer.style.maxHeight || answer.style.maxHeight === '0px';
+
+                faqToggles.forEach(other => {
+                    other.nextElementSibling.style.maxHeight = '0px';
+                    other.querySelector('.faq-icon').style.transform = 'rotate(0deg)';
+                });
+
+                if (isOpening) {
+                    answer.style.maxHeight = answer.scrollHeight + "px";
+                    icon.style.transform = 'rotate(180deg)';
+                }
+            });
+        });
+    });
+    </script>
+</body>
+</html>

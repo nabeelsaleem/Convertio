@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Image Sharpen Tool – Unblur Image and Enhance Details Online | SimpliConvert</title>
+    <meta name="description" content="Sharpen blurry images and bring out hidden details instantly. Improve clarity and crispness of your photos with our free online image sharpening tool.">
+    <meta name="keywords" content="fix blurry photo, increase clarity, photo crispness, detail enhancer, unsharp mask, sharpen image online, unblur photo free">
+    <meta name="author" content="SimpliConvert">
+    <meta property="og:site_name" content="SimpliConvert">
+    <meta name="robots" content="index, follow">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://simpliconvert.com/image_sharpen_tool/">
+    <meta property="og:title" content="Image Sharpen Tool – Unblur Image and Enhance Details Online">
+    <meta property="og:description" content="Bring your photos back to life. Use our intelligent sharpening tool to fix blur and enhance fine details in seconds.">
+    <meta property="og:image" content="https://simpliconvert.com/images/image-sharpen-tool-og.jpg">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://simpliconvert.com/image_sharpen_tool/">
+    <meta name="twitter:title" content="Image Sharpen Tool – Fix Blurry Photos Online">
+    <meta name="twitter:description" content="Free tool to sharpen images and enhance details. Perfect for photographers and social media users.">
+    <meta name="twitter:image" content="https://simpliconvert.com/images/image-sharpen-tool-og.jpg">
+
+    <link rel="canonical" href="https://simpliconvert.com/image_sharpen_tool/">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Image Sharpen Tool",
+      "url": "https://simpliconvert.com/image_sharpen_tool/",
+      "description": "An online tool that allows users to sharpen blurry images, enhance details, and improve photo clarity using advanced sharpening algorithms.",
+      "applicationCategory": "ImageApplication",
+      "operatingSystem": "Web Browser",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "SimpliConvert",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://simpliconvert.com/logo.png"
+        }
+      }
+    }
+    </script>
+
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [{
+    "@type": "ListItem",
+    "position": 1,
+    "name": "Home",
+    "item": "https://simpliconvert.com/"
+  },{
+    "@type": "ListItem",
+    "position": 2,
+    "name": "Image Tools",
+    "item": "https://simpliconvert.com/image_tools/"
+  },{
+    "@type": "ListItem",
+    "position": 3,
+    "name": "Image Sharpen Tool",
+    "item": "https://simpliconvert.com/image_sharpen_tool/"
+  }]
+}
+</script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [{
+        "@type": "Question",
+        "name": "How does the image sharpening tool work?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The tool uses a convolution matrix algorithm (similar to an unsharp mask) that detects edges in your photo and increases the contrast between adjacent pixels. This creates the appearance of a sharper, more detailed image."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Can this tool fix a very out-of-focus photo?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "While sharpening can significantly improve slight motion blur or lens softness, it cannot perfectly reconstruct details from a completely out-of-focus image. It is best used for enhancing clarity in slightly soft photos."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Is my uploaded image stored on your servers?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "No. All image processing happens locally in your browser using JavaScript. Your images are never uploaded to our servers, ensuring 100% privacy."
+        }
+      }]
+    }
+    </script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #da3f0b;
+            --primary-hover: #b53409;
+            --bg: #f8fafc;
+            --text-dark: #0f172a;
+        }
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: var(--text-dark); }
+        .hero-card { background: white; border: 1px solid #f1f5f9; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05); position: relative; overflow: hidden; }
+        .hero-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px; background-color: var(--primary); }
+        .tool-card { transition: transform 0.2s ease, box-shadow 0.2s ease; }
+        .tool-card:hover { transform: translateY(-4px); box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
+        .drop-zone { border: 2px dashed #e2e8f0; transition: all 0.3s ease; }
+        .drop-zone.drag-over { border-color: var(--primary); background-color: #fff5f2; }
+        #canvas-container { max-width: 100%; overflow: auto; background: #eee; border-radius: 8px; }
+        canvas { display: block; margin: 0 auto; max-width: 100%; height: auto; }
+        .prose a { color: #da3f0b; text-decoration: none; }
+        .prose a:hover { text-decoration: underline; }
+        input[type=range] { accent-color: var(--primary); }
+    </style>
+</head>
+
+<body class="bg-gray-50 min-h-screen flex flex-col">
+    <div id="navbar" style="min-height: 70px;"></div>
+	
+	<section class="hero-white text-black py-2 md:py-10">
+        <div class="container mx-auto px-4">
+            <nav class="flex pb-4 text-sm text-slate-500 items-center space-x-2 justify-center">
+                <a href="https://simpliconvert.com/" class="hover:text-[#da3f0b] transition-colors">Home</a>
+                <i class="fas fa-chevron-right text-[10px]"></i>
+                <a href="https://simpliconvert.com/image_tools/" class="hover:text-[#da3f0b] transition-colors">Image Tools</a>
+                <i class="fas fa-chevron-right text-[10px]"></i>
+                <span class="text-slate-900 font-medium">Image Sharpen Tool</span>
+            </nav>
+            <div class="text-center">
+                <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-2">unblur image and enhance details online</h1>
+                <p class="text-lg md:text-xl max-w-3xl mx-auto mb-2 text-slate-600">
+                Instantly fix blurry photos and bring out hidden textures. Our professional sharpening algorithm works entirely in your browser.
+                </p>
+            </div>
+        </div>
+    </section>		
+
+    <div id="tool-app" class="w-full max-w-6xl mx-auto p-4 sm:p-6">
+        <div class="bg-white rounded-[2rem] shadow-2xl overflow-hidden border border-slate-100">
+            <header class="bg-slate-50/50 border-b border-slate-100 p-6 md:p-8">
+                <div class="flex flex-col md:flex-row justify-between items-center gap-6">
+                    <h2 class="text-xl font-black text-slate-800 tracking-tight flex items-center gap-3">
+                        <span class="bg-[#da3f0b] text-white p-2 rounded-xl text-lg shadow-lg shadow-[#da3f0b30]">
+                            <i class="fas fa-wand-magic-sparkles"></i>
+                        </span>
+                        Photo Detail Enhancer
+                    </h2>
+                    <div id="file-info" class="hidden text-sm font-bold text-slate-500 bg-white px-4 py-2 rounded-full border border-slate-200">
+                        <span id="filename-display">image.jpg</span> • <span id="filesize-display">0 KB</span>
+                    </div>
+                </div>
+            </header>
+    
+            <main class="flex flex-col lg:flex-row">
+                <!-- Left: Controls -->
+                <div class="lg:w-[35%] p-6 md:p-10 border-r border-slate-100 bg-slate-50/30">
+                    <div id="upload-container" class="space-y-6">
+                        <div id="drop-zone" class="drop-zone rounded-2xl p-8 text-center cursor-pointer bg-white">
+                            <input type="file" id="file-input" class="hidden" accept="image/*">
+                            <div class="space-y-4">
+                                <div class="w-16 h-16 bg-[#da3f0b10] text-[#da3f0b] rounded-full flex items-center justify-center mx-auto">
+                                    <i class="fas fa-cloud-upload-alt text-2xl"></i>
+                                </div>
+                                <div>
+                                    <p class="text-sm font-bold text-slate-700">Click to upload or drag & drop</p>
+                                    <p class="text-xs text-slate-400 mt-1">PNG, JPG, WEBP (Max 10MB)</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="controls-container" class="hidden space-y-8 mt-8 animate-fade">
+                        <div>
+                            <div class="flex justify-between items-center mb-4">
+                                <label class="text-xs font-black text-slate-500 uppercase tracking-widest">Sharpen Intensity</label>
+                                <span id="intensity-val" class="text-sm font-black text-[#da3f0b] bg-[#da3f0b10] px-2 py-1 rounded">50%</span>
+                            </div>
+                            <input type="range" id="sharpen-intensity" min="0" max="100" value="50" class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer">
+                            <div class="flex justify-between mt-2 text-[10px] font-bold text-slate-400 uppercase">
+                                <span>Soft</span>
+                                <span>Crisp</span>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 gap-4">
+                            <button id="apply-btn" class="w-full bg-[#da3f0b] hover:bg-[#b53409] text-white font-bold py-4 rounded-xl shadow-lg shadow-[#da3f0b30] transition-all flex items-center justify-center gap-2">
+                                <i class="fas fa-bolt"></i> Sharpen Image
+                            </button>
+                            <button id="reset-btn" class="w-full bg-white border border-slate-200 text-slate-600 font-bold py-3 rounded-xl hover:bg-slate-50 transition-all">
+                                <i class="fas fa-undo mr-2"></i> Reset
+                            </button>
+                        </div>
+
+                        <div class="bg-blue-50 p-4 rounded-xl border border-blue-100">
+                            <p class="text-[11px] text-blue-700 leading-relaxed">
+                                <i class="fas fa-info-circle mr-1"></i> 
+                                <strong>Pro Tip:</strong> Over-sharpening can create "halos" around edges. If the image looks grainy, try reducing the intensity.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+    
+                <!-- Right: Preview -->
+                <div class="lg:w-[65%] p-6 md:p-10 flex flex-col items-center justify-center min-h-[400px] bg-slate-100/50">
+                    <div id="preview-placeholder" class="text-center space-y-4">
+                        <i class="fas fa-image text-6xl text-slate-200"></i>
+                        <p class="text-slate-400 font-medium">Upload an image to see the magic</p>
+                    </div>
+
+                    <div id="canvas-wrapper" class="hidden w-full space-y-6">
+                        <div class="flex justify-center gap-4 mb-2">
+                            <span class="text-[10px] font-bold uppercase tracking-widest text-slate-400 px-3 py-1 bg-white rounded-full border border-slate-200">Sharpened Preview</span>
+                        </div>
+                        <div id="canvas-container" class="shadow-2xl border-4 border-white rounded-lg">
+                            <canvas id="main-canvas"></canvas>
+                        </div>
+                        <div class="flex justify-center">
+                            <button id="download-btn" class="bg-slate-900 hover:bg-black text-white px-8 py-4 rounded-xl font-bold flex items-center gap-3 transition-all transform hover:scale-105">
+                                <i class="fas fa-download"></i> Download Sharpened Image
+                            </button>
+                        </div>
+                    </div>
+
+                    <div id="loading-overlay" class="hidden flex flex-col items-center gap-4">
+                        <div class="w-12 h-12 border-4 border-[#da3f0b] border-t-transparent rounded-full animate-spin"></div>
+                        <p class="text-sm font-bold text-slate-600">Processing Pixels...</p>
+                    </div>
+                </div>
+            </main>
+    
+            <footer class="bg-slate-50 border-t border-slate-100 p-6 md:p-8">
+               <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+                   <div class="text-center md:text-left">
+                       <h4 class="text-sm font-bold text-slate-700 mb-1">Privacy Guaranteed</h4>
+                       <p class="text-xs text-slate-400">Processing happens locally. Your photos never leave your device.</p>
+                   </div>
+                   
+                   <div class="flex flex-wrap justify-center gap-3">
+                       <a href="#" onclick="shareSocial('facebook')" class="w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center text-white transition-transform hover:-translate-y-1 hover:shadow-lg bg-[#1877F2]"><i class="fab fa-facebook-f"></i></a>
+                       <a href="#" onclick="shareSocial('twitter')" class="w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center text-white transition-transform hover:-translate-y-1 hover:shadow-lg bg-[#1DA1F2]"><i class="fab fa-twitter"></i></a>
+                       <a href="#" onclick="shareSocial('whatsapp')" class="w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center text-white transition-transform hover:-translate-y-1 hover:shadow-lg bg-[#25D366]"><i class="fab fa-whatsapp"></i></a>
+                   </div>
+               </div>
+            </footer>
+        </div>
+    </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const fileInput = document.getElementById('file-input');
+        const dropZone = document.getElementById('drop-zone');
+        const intensitySlider = document.getElementById('sharpen-intensity');
+        const intensityVal = document.getElementById('intensity-val');
+        const applyBtn = document.getElementById('apply-btn');
+        const resetBtn = document.getElementById('reset-btn');
+        const downloadBtn = document.getElementById('download-btn');
+        const canvas = document.getElementById('main-canvas');
+        const ctx = canvas.getContext('2d');
+        
+        const uploadContainer = document.getElementById('upload-container');
+        const controlsContainer = document.getElementById('controls-container');
+        const previewPlaceholder = document.getElementById('preview-placeholder');
+        const canvasWrapper = document.getElementById('canvas-wrapper');
+        const loadingOverlay = document.getElementById('loading-overlay');
+        const fileInfo = document.getElementById('file-info');
+
+        let originalImage = null;
+
+        // Drag and Drop
+        dropZone.addEventListener('click', () => fileInput.click());
+        dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('drag-over'); });
+        dropZone.addEventListener('dragleave', () => dropZone.classList.remove('drag-over'));
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZone.classList.remove('drag-over');
+            if (e.dataTransfer.files.length) handleFile(e.dataTransfer.files[0]);
+        });
+
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files.length) handleFile(e.target.files[0]);
+        });
+
+        function handleFile(file) {
+            if (!file.type.startsWith('image/')) return alert('Please upload an image file.');
+            
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                originalImage = new Image();
+                originalImage.onload = () => {
+                    displayImage(originalImage);
+                    document.getElementById('filename-display').textContent = file.name;
+                    document.getElementById('filesize-display').textContent = Math.round(file.size / 1024) + ' KB';
+                    fileInfo.classList.remove('hidden');
+                    controlsContainer.classList.remove('hidden');
+                    previewPlaceholder.classList.add('hidden');
+                    canvasWrapper.classList.remove('hidden');
+                };
+                originalImage.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function displayImage(img) {
+            canvas.width = img.width;
+            canvas.height = img.height;
+            ctx.drawImage(img, 0, 0);
+        }
+
+        intensitySlider.addEventListener('input', (e) => {
+            intensityVal.textContent = e.target.value + '%';
+        });
+
+        applyBtn.addEventListener('click', () => {
+            if (!originalImage) return;
+            
+            loadingOverlay.classList.remove('hidden');
+            canvasWrapper.classList.add('opacity-50');
+
+            setTimeout(() => {
+                const amount = parseFloat(intensitySlider.value) / 100;
+                sharpenImage(amount);
+                loadingOverlay.classList.add('hidden');
+                canvasWrapper.classList.remove('opacity-50');
+            }, 50);
+        });
+
+        resetBtn.addEventListener('click', () => {
+            if (originalImage) displayImage(originalImage);
+            intensitySlider.value = 50;
+            intensityVal.textContent = '50%';
+        });
+
+        downloadBtn.addEventListener('click', () => {
+            const link = document.createElement('a');
+            link.download = 'sharpened-image.png';
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        });
+
+        // Sharpening Algorithm (Convolution Matrix)
+        function sharpenImage(amount) {
+            // Re-draw original first
+            ctx.drawImage(originalImage, 0, 0);
+            
+            const w = canvas.width;
+            const h = canvas.height;
+            const imageData = ctx.getImageData(0, 0, w, h);
+            const pixels = imageData.data;
+            const output = ctx.createImageData(w, h);
+            const dst = output.data;
+
+            // Matrix: 
+            // [ 0, -a,  0]
+            // [-a, 1+4a, -a]
+            // [ 0, -a,  0]
+            const a = amount;
+            const center = 1 + 4 * a;
+            const side = -a;
+
+            for (let y = 1; y < h - 1; y++) {
+                for (let x = 1; x < w - 1; x++) {
+                    const idx = (y * w + x) * 4;
+                    
+                    for (let c = 0; c < 3; c++) { // RGB
+                        const i = idx + c;
+                        const val = pixels[i] * center +
+                                    (pixels[i - 4] + pixels[i + 4] + 
+                                     pixels[i - w * 4] + pixels[i + w * 4]) * side;
+                        
+                        dst[i] = Math.min(255, Math.max(0, val));
+                    }
+                    dst[idx + 3] = pixels[idx + 3]; // Alpha
+                }
+            }
+            ctx.putImageData(output, 0, 0);
+        }
+
+        window.shareSocial = function(platform) {
+             const url = encodeURIComponent(window.location.href);
+             const title = encodeURIComponent("Check out this Image Sharpen Tool!");
+             let shareUrl = '';
+             switch(platform) {
+                case 'facebook': shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${url}`; break;
+                case 'twitter': shareUrl = `https://twitter.com/intent/tweet?url=${url}&text=${title}`; break;
+                case 'whatsapp': shareUrl = `https://api.whatsapp.com/send?text=${title}%20${url}`; break;
+             }
+             if(shareUrl) window.open(shareUrl, '_blank');
+        };
+    });
+    </script>
+
+    <section class="bg-white py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="prose prose-lg max-w-none prose-h2:text-gray-800 prose-p:text-gray-700">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">How to Unblur Image and Enhance Details Online</h2>
+                <p class="mb-6 leading-relaxed">
+                    Have you ever captured a perfect moment only to find the photo is slightly blurry? Whether it's due to camera shake, a moving subject, or a soft lens, our <strong>Image Sharpen Tool</strong> is designed to bring back the clarity you need. By using advanced convolution algorithms, this tool detects edges and textures, increasing their contrast to make the image appear significantly crisper.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Why Use an Online Image Sharpener?</h2>
+                <p class="mb-6 leading-relaxed">
+                    Professional photo editing software can be expensive and complex. Our tool offers a simple, free alternative to <strong>unblur image and enhance details online</strong> without needing to install any software. It's perfect for:
+                </p>
+                <ul class="list-disc pl-6 mb-6 space-y-2 text-gray-700">
+                    <li><strong>Social Media:</strong> Make your Instagram or Facebook photos pop with extra detail.</li>
+                    <li><strong>Product Photography:</strong> Enhance the textures of products for e-commerce listings.</li>
+                    <li><strong>Old Photos:</strong> Bring new life to scanned family memories that may have lost their sharpness over time.</li>
+                    <li><strong>Text Clarity:</strong> Improve the readability of text in blurry document scans.</li>
+                </ul>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">The Science Behind Sharpening</h2>
+                <p class="mb-6 leading-relaxed">
+                    Sharpening isn't magic; it's math. Our tool applies what is known as an "Unsharp Mask" or a convolution matrix. It looks for areas where colors change—these are your edges. By slightly darkening the dark side of the edge and lightening the light side, it tricks the human eye into perceiving more detail. If you find your image is too sharp, you can always use our <a href="https://simpliconvert.com/image_blur_tool/">image blur tool</a> to soften specific areas or create artistic effects.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Tips for Professional Results</h2>
+                <p class="mb-6 leading-relaxed">
+                    To get the best results when you <strong>enhance details online</strong>, follow these pro tips:
+                </p>
+                <ul class="list-disc pl-6 mb-6 space-y-2 text-gray-700">
+                    <li><strong>Start with High Resolution:</strong> Sharpening works best on high-quality files. Use our <a href="https://simpliconvert.com/image_resolution_calculator/">image resolution calculator</a> to check if your file is suitable for printing after sharpening.</li>
+                    <li><strong>Avoid Over-Sharpening:</strong> Setting the intensity too high can introduce "noise" or white halos around objects. Aim for a natural look.</li>
+                    <li><strong>Crop First:</strong> If you only need a specific part of the photo, use the <a href="https://simpliconvert.com/image_cropper/">image cropper</a> before sharpening to focus the algorithm on the most important details.</li>
+                </ul>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">100% Private and Secure</h2>
+                <p class="mb-6 leading-relaxed">
+                    Unlike other online converters, SimpliConvert processes your images directly in your browser. This means your sensitive photos are never uploaded to a server, keeping your data private and making the process lightning-fast.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-center text-gray-900 mb-8">Frequently Asked Questions</h2>
+            <div class="space-y-4">
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>Will sharpening increase my file size?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">Sharpening adds high-frequency detail, which can sometimes make compressed files (like JPG) slightly larger because the compression algorithm has more "edges" to track. However, the difference is usually negligible.</p>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>Can I sharpen a specific part of the image?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">Currently, our tool applies sharpening to the entire image. For selective sharpening, we recommend cropping the image to the area of interest first.</p>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>What is the best format for sharpened images?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">We recommend downloading as PNG if you want to preserve the maximum amount of detail, or JPG if you need a smaller file size for web use.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 pb-16">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-slate-200 pt-16">
+            <h2 class="text-2xl font-bold text-center text-slate-800 mb-10">Popular Image Tools</h2>
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+                <a href="/image_blur_tool/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center shrink-0 group-hover:bg-blue-600 group-hover:text-white transition-colors"><i class="fas fa-droplet text-lg"></i></div>
+                    <div><h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Image Blur</h3><p class="text-xs text-slate-500 leading-snug">Soften images or hide details.</p></div>
+                </a>
+                <a href="/image_cropper/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-green-50 text-green-600 flex items-center justify-center shrink-0 group-hover:bg-green-600 group-hover:text-white transition-colors"><i class="fas fa-crop text-lg"></i></div>
+                    <div><h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Image Cropper</h3><p class="text-xs text-slate-500 leading-snug">Trim images to perfect size.</p></div>
+                </a>
+                <a href="/image_resolution_calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-purple-50 text-purple-600 flex items-center justify-center shrink-0 group-hover:bg-purple-600 group-hover:text-white transition-colors"><i class="fas fa-expand text-lg"></i></div>
+                    <div><h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Res Calc</h3><p class="text-xs text-slate-500 leading-snug">Calculate DPI and print size.</p></div>
+                </a>
+                <a href="/jpg_to_png/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-orange-50 text-orange-600 flex items-center justify-center shrink-0 group-hover:bg-orange-600 group-hover:text-white transition-colors"><i class="fas fa-exchange-alt text-lg"></i></div>
+                    <div><h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">JPG to PNG</h3><p class="text-xs text-slate-500 leading-snug">Convert formats instantly.</p></div>
+                </a>
+                <a href="/image_metadata_viewer/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-slate-50 text-slate-700 flex items-center justify-center shrink-0 group-hover:bg-slate-800 group-hover:text-white transition-colors"><i class="fas fa-info text-lg"></i></div>
+                    <div><h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">EXIF Viewer</h3><p class="text-xs text-slate-500 leading-snug">View hidden image data.</p></div>
+                </a>
+                <a href="/image_color_picker/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-red-50 text-red-600 flex items-center justify-center shrink-0 group-hover:bg-red-600 group-hover:text-white transition-colors"><i class="fas fa-eye-dropper text-lg"></i></div>
+                    <div><h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Color Picker</h3><p class="text-xs text-slate-500 leading-snug">Extract hex codes from photos.</p></div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <div id="footer"></div>
+
+    <script>
+    async function loadComponent(url, elementId, callback) {
+        try {
+            const response = await fetch(url);
+            const text = await response.text();
+            const element = document.getElementById(elementId);
+            if (element) {
+                element.innerHTML = text;
+                if (callback) callback();
+            }
+        } catch (error) {
+            console.error('Error loading component:', error);
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        loadComponent('/components/navbar.html', 'navbar');
+        loadComponent('/components/footer.html', 'footer', () => {
+            const yearSpan = document.getElementById('current-year');
+            if(yearSpan) yearSpan.textContent = new Date().getFullYear();
+        });
+        
+        const faqToggles = document.querySelectorAll('[data-faq-toggle]');
+        faqToggles.forEach(button => {
+            button.addEventListener('click', () => {
+                const answer = button.nextElementSibling;
+                const icon = button.querySelector('.faq-icon');
+                const isOpening = !answer.style.maxHeight;
+                faqToggles.forEach(other => {
+                    if (other !== button) {
+                        other.nextElementSibling.style.maxHeight = null;
+                        other.querySelector('.faq-icon').classList.replace('rotate-90', '-rotate-90');
+                    }
+                });
+                if (isOpening) {
+                    answer.style.maxHeight = answer.scrollHeight + "px";
+                    icon.classList.replace('-rotate-90', 'rotate-90');
+                } else {
+                    answer.style.maxHeight = null;
+                    icon.classList.replace('rotate-90', '-rotate-90');
+                }
+            });
+        });
+    });
+    </script>
+</body>
+</html>

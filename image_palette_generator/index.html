@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Image Palette Generator – Extract Colors from Photos Online | SimpliConvert</title>
+    <meta name="description" content="Instantly generate a color palette from any image. Extract dominant colors, hex codes, and create beautiful design schemes for free with our online tool.">
+    <meta name="keywords" content="generate color palette from image online, extract colors from photo, image color scheme generator, hex code extractor, design mood board tool, photo color palette">
+    <meta name="author" content="SimpliConvert">
+    <meta property="og:site_name" content="SimpliConvert">
+    <meta name="robots" content="index, follow">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://simpliconvert.com/image_palette_generator/">
+    <meta property="og:title" content="Image Palette Generator – Extract Colors from Photos">
+    <meta property="og:description" content="Upload any photo and get a professional color palette instantly. Perfect for designers, artists, and brand builders.">
+    <meta property="og:image" content="https://simpliconvert.com/images/image-palette-generator-og.jpg">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://simpliconvert.com/image_palette_generator/">
+    <meta name="twitter:title" content="Image Palette Generator – Extract Colors from Photos">
+    <meta name="twitter:description" content="Free tool to extract dominant colors and hex codes from any image. Create harmonious palettes in seconds.">
+    <meta name="twitter:image" content="https://simpliconvert.com/images/image-palette-generator-og.jpg">
+
+    <link rel="canonical" href="https://simpliconvert.com/image_palette_generator/">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Image Palette Generator",
+      "url": "https://simpliconvert.com/image_palette_generator/",
+      "description": "A free online tool to extract dominant colors and generate beautiful color palettes from any uploaded image.",
+      "applicationCategory": "DesignApplication",
+      "operatingSystem": "Web Browser",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "SimpliConvert",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://simpliconvert.com/logo.png"
+        }
+      }
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [{
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://simpliconvert.com/"
+      },{
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Image Tools",
+        "item": "https://simpliconvert.com/image_tools/"
+      },{
+        "@type": "ListItem",
+        "position": 3,
+        "name": "Image Palette Generator",
+        "item": "https://simpliconvert.com/image_palette_generator/"
+      }]
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [{
+        "@type": "Question",
+        "name": "How do I generate a color palette from an image?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Simply upload your image (JPG, PNG, or WebP) to our tool. The algorithm will analyze the pixels and extract the most dominant and harmonious colors, providing you with their exact Hex codes."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Can I choose how many colors to extract?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes, you can adjust the slider to extract anywhere from 3 to 10 dominant colors from your photo."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Is my data safe when using this tool?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Absolutely. All image processing happens locally in your browser. Your images are never uploaded to our servers, ensuring 100% privacy."
+        }
+      }]
+    }
+    </script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #da3f0b;
+            --primary-hover: #b53409;
+            --primary-light: #fff5f2;
+            --bg: #f8fafc;
+            --text-dark: #0f172a;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text-dark);
+        }
+
+        .hero-card {
+            background: white;
+            border: 1px solid #f1f5f9;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background-color: var(--primary);
+        }
+
+        .drop-zone {
+            border: 2px dashed #e2e8f0;
+            transition: all 0.3s ease;
+        }
+
+        .drop-zone.drag-over {
+            border-color: var(--primary);
+            background-color: var(--primary-light);
+        }
+
+        .color-swatch {
+            transition: transform 0.2s ease;
+            cursor: pointer;
+        }
+
+        .color-swatch:hover {
+            transform: scale(1.05);
+        }
+
+        .animate-fade { animation: fadeIn 0.3s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+        .tool-card {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .tool-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+        }
+
+        .prose a { color: #da3f0b; text-decoration: none; }
+        .prose a:hover { text-decoration: underline; }
+    </style>
+</head>
+
+<body class="bg-gray-50 min-h-screen flex flex-col">
+    <div id="navbar" style="min-height: 70px;"></div>
+	
+	<section class="hero-white text-black py-2 md:py-10">
+        <div class="container mx-auto px-4">
+            <nav class="flex pb-4 text-sm text-slate-500 items-center space-x-2 justify-center">
+                <a href="https://simpliconvert.com/" class="hover:text-[#da3f0b] transition-colors">Home</a>
+                <i class="fas fa-chevron-right text-[10px]"></i>
+                <a href="https://simpliconvert.com/image_tools/" class="hover:text-[#da3f0b] transition-colors">Image Tools</a>
+                <i class="fas fa-chevron-right text-[10px]"></i>
+                <span class="text-slate-900 font-medium">Image Palette Generator</span>
+            </nav>
+            <div class="text-center">
+                <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-2">generate color palette from image online</h1>
+                <p class="text-lg md:text-xl max-w-3xl mx-auto mb-2 text-slate-600">
+                    Extract dominant colors from any photo to create beautiful, harmonious design schemes and mood boards instantly.
+                </p>
+            </div>
+        </div>
+    </section>		
+
+    <div id="tool-app" class="w-full max-w-6xl mx-auto p-4 sm:p-6">
+        <div class="bg-white rounded-[2rem] shadow-2xl overflow-hidden border border-slate-100">
+            <header class="bg-slate-50/50 border-b border-slate-100 p-6 md:p-8">
+                <div class="flex flex-col md:flex-row justify-between items-center gap-6">
+                    <h2 class="text-2xl font-black text-slate-800 tracking-tight flex items-center gap-3">
+                        <span class="bg-[#da3f0b] text-white p-2 rounded-xl text-lg shadow-lg shadow-[#da3f0b30]">
+                            <i class="fas fa-palette"></i>
+                        </span>
+                        Color Extractor Tool
+                    </h2>
+                    <div class="flex items-center gap-4">
+                        <label class="text-xs font-bold text-slate-500 uppercase tracking-widest">Colors to extract:</label>
+                        <input type="range" id="color-count" min="3" max="10" value="6" class="w-32 accent-[#da3f0b]">
+                        <span id="count-display" class="text-sm font-black text-slate-700 w-4">6</span>
+                    </div>
+                </div>
+            </header>
+    
+            <main class="flex flex-col lg:flex-row">
+                <!-- Left: Upload & Preview -->
+                <div class="lg:w-[50%] p-6 md:p-10 lg:p-12 border-r border-slate-100">
+                    <div id="drop-zone" class="drop-zone rounded-3xl p-8 text-center cursor-pointer flex flex-col items-center justify-center min-h-[300px] bg-slate-50/50">
+                        <input type="file" id="file-input" class="hidden" accept="image/*">
+                        <div id="upload-prompt">
+                            <div class="w-20 h-20 bg-white rounded-2xl shadow-sm flex items-center justify-center mb-6 mx-auto text-[#da3f0b]">
+                                <i class="fas fa-cloud-upload-alt text-3xl"></i>
+                            </div>
+                            <h3 class="text-lg font-bold text-slate-800 mb-2">Drop your image here</h3>
+                            <p class="text-sm text-slate-500 mb-6">Supports JPG, PNG, WebP</p>
+                            <button class="bg-[#da3f0b] text-white px-6 py-3 rounded-xl font-bold hover:bg-[#b53409] transition-all shadow-lg shadow-[#da3f0b20]">
+                                Browse Files
+                            </button>
+                        </div>
+                        <div id="preview-container" class="hidden w-full h-full">
+                            <img id="image-preview" class="max-w-full max-h-[400px] rounded-2xl shadow-md mx-auto object-contain" src="" alt="Preview">
+                            <button id="reset-btn" class="mt-4 text-xs font-bold text-slate-400 hover:text-[#da3f0b] transition-colors">
+                                <i class="fas fa-redo mr-1"></i> Change Image
+                            </button>
+                        </div>
+                    </div>
+                </div>
+    
+                <!-- Right: Results -->
+                <div class="lg:w-[50%] bg-slate-50/50 p-6 md:p-10 lg:p-12 flex flex-col">
+                    <div id="results-placeholder" class="flex-1 flex flex-col items-center justify-center text-center text-slate-400">
+                        <i class="fas fa-wand-magic-sparkles text-5xl mb-4 opacity-20"></i>
+                        <p class="font-medium">Upload an image to generate your palette</p>
+                    </div>
+
+                    <div id="results-container" class="hidden flex-1 flex flex-col">
+                        <div class="flex justify-between items-center mb-6">
+                            <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest">Extracted Palette</h3>
+                            <button id="copy-all" class="text-[10px] bg-white border border-slate-200 text-slate-600 px-3 py-1.5 rounded-lg font-bold hover:border-[#da3f0b] hover:text-[#da3f0b] transition-all shadow-sm">
+                                <i class="fas fa-copy mr-1"></i> Copy All Hex
+                            </button>
+                        </div>
+
+                        <div id="palette-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
+                            <!-- Swatches injected here -->
+                        </div>
+
+                        <div class="mt-auto">
+                            <div class="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm">
+                                <h4 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-4">Design Tip</h4>
+                                <p class="text-sm text-slate-600 leading-relaxed">
+                                    Use the dominant color for your primary brand elements and the lighter shades for backgrounds or secondary accents to maintain visual balance.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+    
+            <footer class="bg-slate-50 border-t border-slate-100 p-6 md:p-8">
+               <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+                   <div class="text-center md:text-left">
+                       <h4 class="text-sm font-bold text-slate-700 mb-1">Share your palette</h4>
+                       <p class="text-xs text-slate-400">Inspire other designers with your colors.</p>
+                   </div>
+                   
+                   <div class="flex flex-wrap justify-center gap-3">
+                       <button onclick="shareSocial('facebook')" class="w-10 h-10 rounded-full flex items-center justify-center text-white transition-transform hover:-translate-y-1 hover:shadow-lg bg-[#1877F2]"><i class="fab fa-facebook-f"></i></button>
+                       <button onclick="shareSocial('twitter')" class="w-10 h-10 rounded-full flex items-center justify-center text-white transition-transform hover:-translate-y-1 hover:shadow-lg bg-[#1DA1F2]"><i class="fab fa-twitter"></i></button>
+                       <button onclick="shareSocial('pinterest')" class="w-10 h-10 rounded-full flex items-center justify-center text-white transition-transform hover:-translate-y-1 hover:shadow-lg bg-[#E60023]"><i class="fab fa-pinterest-p"></i></button>
+                       <button onclick="shareSocial('whatsapp')" class="w-10 h-10 rounded-full flex items-center justify-center text-white transition-transform hover:-translate-y-1 hover:shadow-lg bg-[#25D366]"><i class="fab fa-whatsapp"></i></button>
+                   </div>
+    
+                   <div class="relative">
+                       <button onclick="handleBookmark()" class="flex items-center gap-2 bg-white border border-slate-200 hover:border-[#da3f0b] hover:text-[#da3f0b] text-slate-600 px-4 py-2 rounded-lg text-sm font-bold transition-all shadow-sm active:scale-95">
+                          <i class="fas fa-bookmark"></i> Bookmark
+                       </button>
+                       <div id="bookmark-toast" class="hidden absolute bottom-full mb-3 left-1/2 -translate-x-1/2 bg-slate-800 text-white text-xs py-2 px-4 rounded-lg shadow-lg whitespace-nowrap animate-fade">
+                           Press <span class="font-bold text-[#da3f0b]">Ctrl + D</span> to bookmark
+                       </div>
+                   </div>
+               </div>
+            </footer>
+        </div>
+    </div>
+
+    <!-- SEO Content Section -->
+    <section class="bg-white py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="prose prose-lg max-w-none prose-h2:text-gray-800 prose-p:text-gray-700">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">Why Use an Image Palette Generator?</h2>
+                <p class="mb-6 leading-relaxed">
+                    Creating a cohesive color scheme is one of the most challenging parts of design. Whether you're building a website, designing a logo, or decorating a room, nature and photography often provide the best inspiration. Our <strong>image palette generator</strong> allows you to "steal" the color harmony found in professional photography and apply it to your own projects. By extracting dominant colors directly from an image, you ensure that your design feels natural and balanced.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">How to Extract Colors from Photos Online</h2>
+                <p class="mb-6 leading-relaxed">
+                    Our tool uses a sophisticated pixel-sampling algorithm to identify the most prominent colors in your photo. Unlike a simple <a href="https://simpliconvert.com/image_color_picker/">image color picker</a> which requires you to click individual pixels, this generator analyzes the entire image to find a balanced set of shades. 
+                </p>
+                <ul class="list-disc pl-6 mb-6 space-y-2 text-gray-700">
+                    <li><strong>Upload:</strong> Drag and drop any image file into the tool.</li>
+                    <li><strong>Analyze:</strong> The tool automatically scans the image data.</li>
+                    <li><strong>Customize:</strong> Use the slider to choose how many colors you want in your palette.</li>
+                    <li><strong>Export:</strong> Copy the Hex codes directly to your clipboard for use in tools like Canva, Photoshop, or CSS.</li>
+                </ul>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Perfect for Branding and Mood Boards</h2>
+                <p class="mb-6 leading-relaxed">
+                    Branding starts with a feeling. If you have a photo that represents the "vibe" of your brand, you can use this tool to create a professional brand palette in seconds. It's also an essential tool for creating mood boards. If you find that your image is too large for certain platforms, you can use our <a href="https://simpliconvert.com/image_resizer/">image resizer</a> before or after extracting your colors.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Privacy-First Color Extraction</h2>
+                <p class="mb-6 leading-relaxed">
+                    We value your privacy. Unlike other online tools that upload your photos to a server, our <strong>generate color palette from image online</strong> tool works entirely within your browser. Your images never leave your computer. If you are concerned about the data hidden within your images, you can also use our <a href="https://simpliconvert.com/image_metadata_viewer/">image metadata viewer</a> to see what information is stored in your files.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Tips for a Great Color Palette</h2>
+                <p class="mb-6 leading-relaxed">
+                    When extracting colors, try to use high-quality images with a clear subject. Landscapes, architecture, and macro photography usually yield the most diverse and usable palettes. Remember the 60-30-10 rule: use your primary color for 60% of the design, a secondary color for 30%, and an accent color for the final 10%.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="bg-gray-50 py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-center text-gray-900 mb-8">Frequently Asked Questions</h2>
+            <div class="space-y-4">
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>What image formats are supported?</span>
+                        <i class="fas fa-chevron-down faq-icon transition-transform duration-300"></i>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500">
+                        <p class="p-5 pt-0 text-gray-600">We support all standard web formats, including JPG, PNG, WebP, and GIF. For the best color extraction results, we recommend using high-resolution JPG or PNG files.</p>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>Can I use these colors for commercial projects?</span>
+                        <i class="fas fa-chevron-down faq-icon transition-transform duration-300"></i>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500">
+                        <p class="p-5 pt-0 text-gray-600">Yes! The color codes generated are yours to use in any personal or commercial project. Color combinations themselves are not subject to copyright.</p>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>Does the tool work on mobile devices?</span>
+                        <i class="fas fa-chevron-down faq-icon transition-transform duration-300"></i>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500">
+                        <p class="p-5 pt-0 text-gray-600">Yes, the Image Palette Generator is fully responsive and works perfectly on smartphones and tablets. You can even take a photo with your camera and upload it directly.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Related Tools -->
+    <section class="bg-gray-50 pb-16">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-slate-200 pt-16">
+            <h2 class="text-2xl font-bold text-center text-slate-800 mb-10">More Image Tools</h2>
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+                <a href="/image_color_picker/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-orange-50 text-orange-600 flex items-center justify-center shrink-0 group-hover:bg-orange-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-eye-dropper text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Color Picker</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Pick specific colors from images.</p>
+                    </div>
+                </a>
+                <a href="/image_resizer/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center shrink-0 group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-expand text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Resizer</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Change image dimensions easily.</p>
+                    </div>
+                </a>
+                <a href="/image_metadata_viewer/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-slate-50 text-slate-700 flex items-center justify-center shrink-0 group-hover:bg-slate-800 group-hover:text-white transition-colors">
+                        <i class="fas fa-info-circle text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">EXIF Viewer</h3>
+                        <p class="text-xs text-slate-500 leading-snug">View hidden image metadata.</p>
+                    </div>
+                </a>
+                <a href="/jpg_to_png/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-purple-50 text-purple-600 flex items-center justify-center shrink-0 group-hover:bg-purple-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-sync text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">JPG to PNG</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Convert image formats instantly.</p>
+                    </div>
+                </a>
+                <a href="/image_cropper/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-green-50 text-green-600 flex items-center justify-center shrink-0 group-hover:bg-green-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-crop text-lg"></i>
+                    </div>
+                    <div>

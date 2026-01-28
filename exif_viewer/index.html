@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>EXIF Viewer – Read Photo Metadata & Camera Settings | SimpliConvert</title>
+    <meta name="description" content="Extract and analyze the EXIF data from your photographs. See the exact camera settings, lens info, and location data used to capture the shot with our free online EXIF reader.">
+    <meta name="keywords" content="shutter speed viewer, iso checker, camera model finder, gps photo locator, photography stats, read exif data, image metadata viewer">
+    <meta name="author" content="SimpliConvert">
+    <meta property="og:site_name" content="SimpliConvert">
+    <meta name="robots" content="index, follow">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://simpliconvert.com/exif_viewer/">
+    <meta property="og:title" content="EXIF Viewer – Read Photo Metadata & Camera Settings">
+    <meta property="og:description" content="Instantly view camera settings, lens details, and GPS coordinates from any photo. Free, secure, and browser-based EXIF analysis.">
+    <meta property="og:image" content="https://simpliconvert.com/images/exif-viewer-og.jpg">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://simpliconvert.com/exif_viewer/">
+    <meta name="twitter:title" content="EXIF Viewer – Analyze Your Photography Stats">
+    <meta name="twitter:description" content="Free tool to extract EXIF data including ISO, aperture, and shutter speed. Perfect for photographers and digital forensics.">
+    <meta name="twitter:image" content="https://simpliconvert.com/images/exif-viewer-og.jpg">
+
+    <link rel="canonical" href="https://simpliconvert.com/exif_viewer/">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "EXIF Viewer",
+      "url": "https://simpliconvert.com/exif_viewer/",
+      "description": "A free online tool to read and analyze EXIF metadata from images, including camera settings, lens information, and GPS data.",
+      "applicationCategory": "MultimediaApplication",
+      "operatingSystem": "Web Browser",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "SimpliConvert",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://simpliconvert.com/logo.png"
+        }
+      }
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [{
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://simpliconvert.com/"
+      },{
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Image Tools",
+        "item": "https://simpliconvert.com/image_tools/"
+      },{
+        "@type": "ListItem",
+        "position": 3,
+        "name": "EXIF Viewer",
+        "item": "https://simpliconvert.com/exif_viewer/"
+      }]
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [{
+        "@type": "Question",
+        "name": "What is EXIF data?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "EXIF (Exchangeable Image File Format) data is metadata embedded in image files. It records technical details like camera model, shutter speed, aperture, ISO, focal length, and sometimes GPS coordinates where the photo was taken."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Is it safe to upload my photos here?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. Our EXIF viewer processes your images locally in your browser. Your photos are not uploaded to our servers, ensuring your privacy and data security."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Why can't I see GPS data on some photos?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "GPS data is only available if the camera had a GPS module (or was a smartphone) and the user had location services enabled. Additionally, many social media platforms strip EXIF data automatically for privacy."
+        }
+      }]
+    }
+    </script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/exif-js"></script>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" media="print" onload="this.media='all'" />
+    <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" /></noscript>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #da3f0b;
+            --primary-hover: #b53409;
+            --primary-light: #fff5f2;
+            --bg: #f8fafc;
+            --text-dark: #0f172a;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text-dark);
+        }
+
+        .hero-card {
+            background: white;
+            border: 1px solid #f1f5f9;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background-color: var(--primary);
+        }
+
+        .drop-zone {
+            border: 2px dashed #e2e8f0;
+            transition: all 0.3s ease;
+        }
+        .drop-zone.drag-over {
+            border-color: var(--primary);
+            background-color: var(--primary-light);
+        }
+
+        .data-row:nth-child(even) { background-color: #f8fafc; }
+        
+        .tool-card {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .tool-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+        }
+
+        .prose a { color: #da3f0b; text-decoration: none; }
+        .prose a:hover { text-decoration: underline; }
+    </style>
+</head>
+
+<body class="bg-gray-50 min-h-screen flex flex-col">
+    <div id="navbar" style="min-height: 70px;"></div>
+	
+	<section class="hero-white text-black py-2 md:py-10">
+        <div class="container mx-auto px-4">
+            <nav class="flex pb-4 text-sm text-slate-500 items-center space-x-2 justify-center">
+                <a href="https://simpliconvert.com/" class="hover:text-[#da3f0b] transition-colors">Home</a>
+                <i class="fas fa-chevron-right text-[10px]"></i>
+                <a href="https://simpliconvert.com/image_tools/" class="hover:text-[#da3f0b] transition-colors">Image Tools</a>
+                <i class="fas fa-chevron-right text-[10px]"></i>
+                <span class="text-slate-900 font-medium">EXIF Viewer</span>
+            </nav>
+            <div class="text-center">
+                <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-2">read photo exif data and camera settings</h1>
+                <p class="text-lg md:text-xl max-w-3xl mx-auto mb-2 text-slate-600">
+                Instantly extract hidden metadata from your images. Discover camera models, exposure settings, lens details, and GPS locations.
+                </p>
+            </div>
+        </div>
+    </section>		
+
+    <div id="calculator-app" class="w-full max-w-6xl mx-auto p-4 sm:p-6">
+        <div class="bg-white rounded-[2rem] shadow-2xl overflow-hidden border border-slate-100">
+            <header class="bg-slate-50/50 border-b border-slate-100 p-6 md:p-8 flex flex-col md:flex-row justify-between items-center gap-6">
+                <div class="text-center md:text-left">
+                  <h2 class="text-2xl font-black text-slate-800 tracking-tight flex items-center justify-center md:justify-start gap-3">
+                    <span class="bg-[#da3f0b] text-white p-2 rounded-xl text-lg shadow-lg shadow-[#da3f0b30]">
+                      <i class="fas fa-camera"></i>
+                    </span>
+                    Image Metadata Inspector
+                  </h2>
+                </div>
+                <div class="text-xs font-bold text-slate-400 uppercase tracking-widest">
+                    <i class="fas fa-shield-alt mr-1"></i> 100% Client-Side Processing
+                </div>
+            </header>
+    
+            <main class="flex flex-col lg:flex-row">
+                <!-- Upload Section -->
+                <div class="lg:w-[40%] p-6 md:p-10 border-r border-slate-100">
+                    <div id="drop-zone" class="drop-zone rounded-3xl p-8 text-center cursor-pointer flex flex-col items-center justify-center min-h-[300px] group">
+                        <input type="file" id="file-input" class="hidden" accept="image/jpeg,image/tiff,image/webp">
+                        <div class="w-20 h-20 bg-slate-100 rounded-full flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+                            <i class="fas fa-cloud-upload-alt text-3xl text-slate-400 group-hover:text-[#da3f0b]"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-slate-700 mb-2">Drop your photo here</h3>
+                        <p class="text-sm text-slate-400 mb-6">Supports JPG, TIFF, and WebP</p>
+                        <button onclick="document.getElementById('file-input').click()" class="bg-[#da3f0b] text-white px-6 py-3 rounded-xl font-bold text-sm hover:bg-[#b53409] transition-all shadow-lg shadow-[#da3f0b30]">
+                            Select Image
+                        </button>
+                    </div>
+
+                    <div id="preview-container" class="hidden mt-8 animate-fade">
+                        <h4 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-4">Image Preview</h4>
+                        <div class="rounded-2xl overflow-hidden border border-slate-200 shadow-inner bg-slate-50">
+                            <img id="img-preview" src="" alt="Preview" class="w-full h-auto max-h-[400px] object-contain mx-auto">
+                        </div>
+                        <button id="reset-btn" class="w-full mt-4 text-xs font-bold text-slate-400 hover:text-[#da3f0b] transition-colors">
+                            <i class="fas fa-redo mr-2"></i> Analyze Another Image
+                        </button>
+                    </div>
+                </div>
+    
+                <!-- Results Section -->
+                <div class="lg:w-[60%] bg-slate-50/50 p-6 md:p-10 flex flex-col">
+                    <div id="empty-state" class="flex-1 flex flex-col items-center justify-center text-center py-20">
+                        <div class="text-slate-200 text-6xl mb-6">
+                            <i class="fas fa-list-ul"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-slate-400">No Data Extracted</h3>
+                        <p class="text-sm text-slate-400 max-w-xs mx-auto mt-2">Upload a photo to view its technical specifications and metadata.</p>
+                    </div>
+
+                    <div id="results-container" class="hidden space-y-6 animate-fade">
+                        <!-- Quick Stats Grid -->
+                        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                            <div class="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm text-center">
+                                <p class="text-[10px] font-black text-slate-400 uppercase mb-1">ISO</p>
+                                <p id="stat-iso" class="text-lg font-black text-slate-800">-</p>
+                            </div>
+                            <div class="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm text-center">
+                                <p class="text-[10px] font-black text-slate-400 uppercase mb-1">Aperture</p>
+                                <p id="stat-aperture" class="text-lg font-black text-slate-800">-</p>
+                            </div>
+                            <div class="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm text-center">
+                                <p class="text-[10px] font-black text-slate-400 uppercase mb-1">Shutter</p>
+                                <p id="stat-shutter" class="text-lg font-black text-slate-800">-</p>
+                            </div>
+                            <div class="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm text-center">
+                                <p class="text-[10px] font-black text-slate-400 uppercase mb-1">Focal</p>
+                                <p id="stat-focal" class="text-lg font-black text-slate-800">-</p>
+                            </div>
+                        </div>
+
+                        <!-- Detailed Table -->
+                        <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+                            <div class="p-4 border-b border-slate-50 bg-slate-50/50 flex justify-between items-center">
+                                <h3 class="text-xs font-black text-slate-500 uppercase tracking-widest">Technical Specifications</h3>
+                                <button id="copy-data" class="text-[10px] font-bold text-[#da3f0b] hover:underline">Copy All</button>
+                            </div>
+                            <div id="exif-table" class="divide-y divide-slate-50">
+                                <!-- Rows injected by JS -->
+                            </div>
+                        </div>
+
+                        <!-- GPS Section -->
+                        <div id="gps-container" class="hidden bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
+                            <div class="flex items-center gap-3 mb-4">
+                                <div class="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                </div>
+                                <h3 class="text-sm font-bold text-slate-700">Location Data Found</h3>
+                            </div>
+                            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                                <div>
+                                    <p id="gps-coords" class="text-sm font-mono text-slate-600">0.000, 0.000</p>
+                                    <p class="text-[10px] text-slate-400 uppercase font-bold mt-1">Latitude & Longitude</p>
+                                </div>
+                                <a id="maps-link" href="#" target="_blank" class="text-xs font-bold bg-slate-800 text-white px-4 py-2 rounded-lg hover:bg-black transition-all">
+                                    View on Google Maps
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+    
+            <footer class="bg-slate-50 border-t border-slate-100 p-6 md:p-8">
+               <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+                   <div class="text-center md:text-left">
+                       <h4 class="text-sm font-bold text-slate-700 mb-1">Share this tool</h4>
+                       <p class="text-xs text-slate-400">Help fellow photographers analyze their shots.</p>
+                   </div>
+                   
+                   <div class="flex flex-wrap justify-center gap-3">
+                       <a href="#" onclick="shareSocial('facebook')" class="w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center text-white transition-transform hover:-translate-y-1 hover:shadow-lg bg-[#1877F2]"><i class="fab fa-facebook-f"></i></a>
+                       <a href="#" onclick="shareSocial('twitter')" class="w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center text-white transition-transform hover:-translate-y-1 hover:shadow-lg bg-[#1DA1F2]"><i class="fab fa-twitter"></i></a>
+                       <a href="#" onclick="shareSocial('whatsapp')" class="w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center text-white transition-transform hover:-translate-y-1 hover:shadow-lg bg-[#25D366]"><i class="fab fa-whatsapp"></i></a>
+                       <a href="#" onclick="shareSocial('telegram')" class="w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center text-white transition-transform hover:-translate-y-1 hover:shadow-lg bg-[#0088cc]"><i class="fab fa-telegram-plane"></i></a>
+                   </div>
+    
+                   <div class="relative">
+                       <button onclick="handleBookmark()" class="flex items-center gap-2 bg-white border border-slate-200 hover:border-[#da3f0b] hover:text-[#da3f0b] text-slate-600 px-4 py-2 rounded-lg text-sm font-bold transition-all shadow-sm active:scale-95">
+                          <i class="fas fa-bookmark"></i> Bookmark
+                       </button>
+                       <div id="bookmark-toast" class="hidden absolute bottom-full mb-3 left-1/2 -translate-x-1/2 bg-slate-800 text-white text-xs py-2 px-4 rounded-lg shadow-lg whitespace-nowrap animate-fade">
+                           Press <span class="font-bold text-[#da3f0b]">Ctrl + D</span> to bookmark
+                       </div>
+                   </div>
+               </div>
+            </footer>
+        </div>
+    </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const dropZone = document.getElementById('drop-zone');
+        const fileInput = document.getElementById('file-input');
+        const imgPreview = document.getElementById('img-preview');
+        const previewContainer = document.getElementById('preview-container');
+        const resultsContainer = document.getElementById('results-container');
+        const emptyState = document.getElementById('empty-state');
+        const exifTable = document.getElementById('exif-table');
+        const resetBtn = document.getElementById('reset-btn');
+
+        // Drag & Drop Handlers
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            dropZone.addEventListener(eventName, preventDefaults, false);
+        });
+
+        function preventDefaults(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+
+        ['dragenter', 'dragover'].forEach(eventName => {
+            dropZone.addEventListener(eventName, () => dropZone.classList.add('drag-over'), false);
+        });
+
+        ['dragleave', 'drop'].forEach(eventName => {
+            dropZone.addEventListener(eventName, () => dropZone.classList.remove('drag-over'), false);
+        });
+
+        dropZone.addEventListener('drop', handleDrop, false);
+        fileInput.addEventListener('change', (e) => handleFiles(e.target.files), false);
+        resetBtn.addEventListener('click', resetTool);
+
+        function handleDrop(e) {
+            const dt = e.dataTransfer;
+            const files = dt.files;
+            handleFiles(files);
+        }
+
+        function handleFiles(files) {
+            if (files.length === 0) return;
+            const file = files[0];
+            
+            // Preview
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                imgPreview.src = e.target.result;
+                dropZone.classList.add('hidden');
+                previewContainer.classList.remove('hidden');
+            };
+            reader.readAsDataURL(file);
+
+            // EXIF Extraction
+            EXIF.getData(file, function() {
+                const allMetaData = EXIF.getAllTags(this);
+                displayData(allMetaData);
+            });
+        }
+
+        function displayData(data) {
+            if (!data || Object.keys(data).length === 0) {
+                alert("No EXIF data found in this image.");
+                resetTool();
+                return;
+            }
+
+            emptyState.classList.add('hidden');
+            resultsContainer.classList.remove('hidden');
+            exifTable.innerHTML = '';
+
+            // Map stats
+            document.getElementById('stat-iso').textContent = data.ISOSpeedRatings || '-';
+            document.getElementById('stat-aperture').textContent = data.FNumber ? `f/${data.FNumber}` : '-';
+            document.getElementById('stat-shutter').textContent = formatShutter(data.ExposureTime);
+            document.getElementById('stat-focal').textContent = data.FocalLength ? `${data.FocalLength}mm` : '-';
+
+            // Detailed Rows
+            const importantTags = {
+                'Make': 'Manufacturer',
+                'Model': 'Camera Model',
+                'Software': 'Software',
+                'DateTime': 'Date Captured',
+                'LensModel': 'Lens Model',
+                'ExposureProgram': 'Exposure Mode',
+                'MeteringMode': 'Metering Mode',
+                'Flash': 'Flash Status',
+                'WhiteBalance': 'White Balance',
+                'PixelXDimension': 'Width (px)',
+                'PixelYDimension': 'Height (px)'
+            };
+
+            for (const [tag, label] of Object.entries(importantTags)) {
+                if (data[tag]) {
+                    addRow(label, data[tag]);
+                }
+            }
+
+            // GPS Handling
+            if (data.GPSLatitude && data.GPSLongitude) {
+                const lat = decodeGPS(data.GPSLatitude, data.GPSLatitudeRef);
+                const lng = decodeGPS(data.GPSLongitude, data.GPSLongitudeRef);
+                document.getElementById('gps-container').classList.remove('hidden');
+                document.getElementById('gps-coords').textContent = `${lat.toFixed(6)}, ${lng.toFixed(6)}`;
+                document.getElementById('maps-link').href = `https://www.google.com/maps?q=${lat},${lng}`;
+            } else {
+                document.getElementById('gps-container').classList.add('hidden');
+            }
+        }
+
+        function addRow(label, value) {
+            const row = document.createElement('div');
+            row.className = 'data-row flex justify-between items-center p-4 text-sm';
+            row.innerHTML = `
+                <span class="font-bold text-slate-500">${label}</span>
+                <span class="text-slate-800 font-medium text-right">${value}</span>
+            `;
+            exifTable.appendChild(row);
+        }
+
+        function formatShutter(exposure) {
+            if (!exposure) return '-';
+            if (exposure >= 1) return `${exposure}s`;
+            return `1/${Math.round(1/exposure)}s`;
+        }
+
+        function decodeGPS(coords, ref) {
+            let decimal = coords[0] + (coords[1] / 60) + (coords[2] / 3600);
+            if (ref === 'S' || ref === 'W') decimal = -decimal;
+            return decimal;
+        }
+
+        function resetTool() {
+            dropZone.classList.remove('hidden');
+            previewContainer.classList.add('hidden');
+            resultsContainer.classList.add('hidden');
+            emptyState.classList.remove('hidden');
+            fileInput.value = '';
+        }
+
+        window.shareSocial = function(platform) {
+             const url = encodeURIComponent(window.location.href);
+             const title = encodeURIComponent("Check out this EXIF Viewer tool!");
+             let shareUrl = '';
+             switch(platform) {
+                case 'facebook': shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${url}`; break;
+                case 'twitter': shareUrl = `https://twitter.com/intent/tweet?url=${url}&text=${title}`; break;
+                case 'whatsapp': shareUrl = `https://api.whatsapp.com/send?text=${title}%20${url}`; break;
+                case 'telegram': shareUrl = `https://t.me/share/url?url=${url}&text=${title}`; break;
+             }
+             if(shareUrl) window.open(shareUrl, '_blank');
+        };
+
+        window.handleBookmark = function() {
+            const toast = document.getElementById('bookmark-toast');
+            toast.classList.remove('hidden');
+            setTimeout(() => toast.classList.add('hidden'), 3000);
+        };
+    });
+    </script>
+
+    <section class="bg-white py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="prose prose-lg max-w-none prose-h2:text-gray-800 prose-p:text-gray-700">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">Why Use an EXIF Viewer for Your Photos?</h2>
+                <p class="mb-6 leading-relaxed">
+                    Every digital photograph contains a wealth of hidden information known as EXIF data. When you <strong>read photo exif data and camera settings</strong>, you unlock the technical blueprint of how a shot was captured. This tool is essential for photographers who want to analyze their own work or learn from others by seeing the exact ISO, aperture, and shutter speed used in a professional shot.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Understanding Camera Settings and Metadata</h2>
+                <p class="mb-6 leading-relaxed">
+                    Our EXIF reader extracts more than just the basics. You can find the specific camera model, lens focal length, and even the software used to edit the image. For those concerned about privacy, using an <a href="https://simpliconvert.com/image_metadata_viewer/">image metadata viewer</a> is the first step in identifying what information you are sharing online. If you find sensitive data, you might want to use a tool to <a href="https://simpliconvert.com/remove_image_metadata/">remove image metadata</a> before posting to social media.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">GPS Data and Location Tracking</h2>
+                <p class="mb-6 leading-relaxed">
+                    Modern smartphones and high-end cameras often embed GPS coordinates into image files. Our tool acts as a <em>gps photo locator</em>, allowing you to see exactly where a photo was taken on a map. This is incredibly useful for travel photographers trying to remember a specific spot or for digital forensics to verify the authenticity of a location.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Improve Your Photography Skills</h2>
+                <p class="mb-6 leading-relaxed">
+                    By analyzing <em>photography stats</em>, you can spot patterns in your shooting style. Do you consistently shoot with a high ISO? Maybe it's time to invest in a faster lens. Are your images blurry? Check the shutter speed viewer to see if you're shooting too slow for handheld work. This data-driven approach is one of the fastest ways to improve your technical execution.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Privacy and Security First</h2>
+                <p class="mb-6 leading-relaxed">
+                    We understand that your photos are private. Unlike other online tools, our EXIF viewer processes everything locally in your browser. Your files are never uploaded to our servers, meaning your <em>camera model finder</em> results and location data stay strictly on your device. It's the safest way to inspect your digital assets.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-center text-gray-900 mb-

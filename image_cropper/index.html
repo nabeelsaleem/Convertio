@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Image Cropper - Crop Photo to Specific Ratio Online | SimpliConvert</title>
+    <meta name="description" content="Crop your images to exact dimensions or aspect ratios online. Perfect for social media, profile pictures, and web design. Free, fast, and high-quality image trimmer.">
+    <meta name="keywords" content="crop photo to specific ratio online, cut image, photo trimmer, aspect ratio clipper, frame adjustment, social media crop, image cropper free">
+    <meta name="author" content="SimpliConvert">
+    <meta property="og:site_name" content="SimpliConvert">
+    <meta name="robots" content="index, follow">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://simpliconvert.com/image_cropper/">
+    <meta property="og:title" content="Crop Photo to Specific Ratio Online - Free Image Cropper">
+    <meta property="og:description" content="Easily crop images to 1:1, 16:9, 4:3 or custom ratios. High-quality output for all your photo trimming needs.">
+    <meta property="og:image" content="https://simpliconvert.com/images/image-cropper-og.jpg">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://simpliconvert.com/image_cropper/">
+    <meta name="twitter:title" content="Image Cropper - Crop Photo to Specific Ratio Online">
+    <meta name="twitter:description" content="Free online tool to crop images with precision. Support for multiple aspect ratios and custom dimensions.">
+    <meta name="twitter:image" content="https://simpliconvert.com/images/image-cropper-og.jpg">
+
+    <link rel="canonical" href="https://simpliconvert.com/image_cropper/">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Image Cropper",
+      "url": "https://simpliconvert.com/image_cropper/",
+      "description": "A free online tool to crop images to specific aspect ratios or custom dimensions with a real-time preview.",
+      "applicationCategory": "ImageEditorApplication",
+      "operatingSystem": "Web Browser",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "SimpliConvert",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://simpliconvert.com/logo.png"
+        }
+      }
+    }
+    </script>
+
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [{
+    "@type": "ListItem",
+    "position": 1,
+    "name": "Home",
+    "item": "https://simpliconvert.com/"
+  },{
+    "@type": "ListItem",
+    "position": 2,
+    "name": "Image Tools",
+    "item": "https://simpliconvert.com/image_tools/"
+  },{
+    "@type": "ListItem",
+    "position": 3,
+    "name": "Image cropper",
+    "item": "https://simpliconvert.com/image_cropper/"
+  }]
+}
+</script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [{
+        "@type": "Question",
+        "name": "Does cropping an image reduce its quality?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Our tool uses high-quality canvas rendering to ensure that the cropped portion of your image retains its original resolution and clarity as much as possible."
+        }
+      }, {
+        "@type": "Question",
+        "name": "What aspect ratios are supported?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "We support common presets like 1:1 (Square), 4:3 (Standard), 16:9 (Widescreen), and 9:16 (Story/Reels), as well as a 'Free' mode for custom dimensions."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Is my data safe when using this cropper?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. All image processing happens locally in your browser. Your photos are never uploaded to our servers, ensuring 100% privacy."
+        }
+      }]
+    }
+    </script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #da3f0b;
+            --primary-hover: #b53409;
+            --primary-light: #fff5f2;
+            --bg: #f8fafc;
+            --text-dark: #0f172a;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text-dark);
+        }
+
+        .hero-card {
+            background: white;
+            border: 1px solid #f1f5f9;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background-color: var(--primary);
+        }
+
+        .crop-container {
+            position: relative;
+            max-width: 100%;
+            overflow: hidden;
+            background: #e2e8f0;
+            border-radius: 1rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 300px;
+        }
+
+        #image-to-crop {
+            max-width: 100%;
+            max-height: 600px;
+            display: block;
+        }
+
+        .crop-overlay {
+            position: absolute;
+            border: 2px solid white;
+            box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.5);
+            cursor: move;
+            touch-action: none;
+        }
+
+        .crop-handle {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            background: white;
+            border: 2px solid var(--primary);
+            border-radius: 50%;
+        }
+
+        .handle-nw { top: -6px; left: -6px; cursor: nw-resize; }
+        .handle-ne { top: -6px; right: -6px; cursor: ne-resize; }
+        .handle-sw { bottom: -6px; left: -6px; cursor: sw-resize; }
+        .handle-se { bottom: -6px; right: -6px; cursor: se-resize; }
+
+        .tool-card {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .tool-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+        }
+
+        .prose a { color: #da3f0b; text-decoration: none; }
+        .prose a:hover { text-decoration: underline; }
+    </style>
+</head>
+
+<body class="bg-gray-50 min-h-screen flex flex-col">
+    <div id="navbar" style="min-height: 70px;"></div>
+	
+	<section class="hero-white text-black py-2 md:py-10">
+        <div class="container mx-auto px-4">
+            <nav class="flex pb-4 text-sm text-slate-500 items-center space-x-2 justify-center">
+                <a href="https://simpliconvert.com/" class="hover:text-[#da3f0b] transition-colors">Home</a>
+                <i class="fas fa-chevron-right text-[10px]"></i>
+                <a href="https://simpliconvert.com/image_tools/" class="hover:text-[#da3f0b] transition-colors">Image Tools</a>
+                <i class="fas fa-chevron-right text-[10px]"></i>
+                <span class="text-slate-900 font-medium">Image cropper</span>
+            </nav>
+            <div class="text-center">
+                <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-2">crop photo to specific ratio online</h1>
+                <p class="text-lg md:text-xl max-w-3xl mx-auto mb-2 text-slate-600">
+                Professional-grade image cropping tool. Adjust aspect ratios, focus on subjects, and prepare your photos for any platform instantly.
+                </p>
+            </div>
+        </div>
+    </section>		
+
+    <div id="calculator-app" class="w-full max-w-6xl mx-auto p-4 sm:p-6">
+        <div class="bg-white rounded-[2rem] shadow-2xl overflow-hidden border border-slate-100">
+            <header class="bg-slate-50/50 border-b border-slate-100 p-6 md:p-8 flex flex-col md:flex-row justify-between items-center gap-6">
+                <div class="text-center md:text-left">
+                  <h2 class="text-2xl font-black text-slate-800 tracking-tight flex items-center justify-center md:justify-start gap-3">
+                    <span class="bg-[#da3f0b] text-white p-2 rounded-xl text-lg shadow-lg shadow-[#da3f0b30]">
+                      <i class="fas fa-crop-alt"></i>
+                    </span>
+                    Photo Trimmer & Clipper
+                  </h2>
+                </div>
+                
+                <div class="flex gap-3">
+                    <label for="file-upload" class="cursor-pointer bg-[#da3f0b] text-white px-6 py-2.5 rounded-xl font-bold text-sm hover:bg-[#b53409] transition-all shadow-md flex items-center gap-2">
+                        <i class="fas fa-upload"></i> Upload Image
+                    </label>
+                    <input id="file-upload" type="file" class="hidden" accept="image/*">
+                </div>
+            </header>
+    
+            <main class="flex flex-col lg:flex-row">
+                <div class="lg:w-[65%] p-6 md:p-8 border-r border-slate-100 bg-slate-50/30">
+                    <div id="drop-zone" class="crop-container relative group">
+                        <div id="upload-placeholder" class="text-center p-10">
+                            <i class="fas fa-images text-6xl text-slate-200 mb-4"></i>
+                            <p class="text-slate-400 font-medium">Drag and drop your image here or use the upload button</p>
+                        </div>
+                        <img id="image-to-crop" src="" alt="" class="hidden">
+                        <div id="crop-box" class="crop-overlay hidden">
+                            <div class="crop-handle handle-nw"></div>
+                            <div class="crop-handle handle-ne"></div>
+                            <div class="crop-handle handle-sw"></div>
+                            <div class="crop-handle handle-se"></div>
+                        </div>
+                    </div>
+                </div>
+    
+                <div class="lg:w-[35%] p-6 md:p-8 flex flex-col gap-6">
+                    <div>
+                        <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-4"><i class="fas fa-expand-arrows-alt mr-2"></i>Aspect Ratio</h3>
+                        <div class="grid grid-cols-2 gap-2">
+                            <button data-ratio="free" class="ratio-btn active bg-white border-2 border-[#da3f0b] text-[#da3f0b] py-2 rounded-xl text-xs font-bold transition-all">Free Form</button>
+                            <button data-ratio="1:1" class="ratio-btn bg-white border border-slate-200 text-slate-600 py-2 rounded-xl text-xs font-bold hover:border-[#da3f0b] transition-all">1:1 Square</button>
+                            <button data-ratio="4:3" class="ratio-btn bg-white border border-slate-200 text-slate-600 py-2 rounded-xl text-xs font-bold hover:border-[#da3f0b] transition-all">4:3 Standard</button>
+                            <button data-ratio="16:9" class="ratio-btn bg-white border border-slate-200 text-slate-600 py-2 rounded-xl text-xs font-bold hover:border-[#da3f0b] transition-all">16:9 Wide</button>
+                            <button data-ratio="9:16" class="ratio-btn bg-white border border-slate-200 text-slate-600 py-2 rounded-xl text-xs font-bold hover:border-[#da3f0b] transition-all">9:16 Story</button>
+                            <button data-ratio="3:2" class="ratio-btn bg-white border border-slate-200 text-slate-600 py-2 rounded-xl text-xs font-bold hover:border-[#da3f0b] transition-all">3:2 Classic</button>
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-50 p-5 rounded-2xl border border-slate-100">
+                        <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-4"><i class="fas fa-sliders-h mr-2"></i>Selection Info</h3>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="text-[10px] font-bold text-slate-500 uppercase">Width (px)</label>
+                                <input type="number" id="crop-w" readonly class="w-full bg-transparent border-b border-slate-200 py-1 font-bold text-slate-800 focus:outline-none" value="0">
+                            </div>
+                            <div>
+                                <label class="text-[10px] font-bold text-slate-500 uppercase">Height (px)</label>
+                                <input type="number" id="crop-h" readonly class="w-full bg-transparent border-b border-slate-200 py-1 font-bold text-slate-800 focus:outline-none" value="0">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-auto space-y-3">
+                        <button id="download-btn" disabled class="w-full bg-[#da3f0b] text-white py-4 rounded-2xl font-black text-sm shadow-lg shadow-[#da3f0b30] hover:bg-[#b53409] transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3">
+                            <i class="fas fa-download"></i> CROP & DOWNLOAD
+                        </button>
+                        <p class="text-[10px] text-center text-slate-400 font-medium uppercase tracking-tighter">High-quality PNG output</p>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const fileInput = document.getElementById('file-upload');
+        const img = document.getElementById('image-to-crop');
+        const cropBox = document.getElementById('crop-box');
+        const placeholder = document.getElementById('upload-placeholder');
+        const downloadBtn = document.getElementById('download-btn');
+        const ratioBtns = document.querySelectorAll('.ratio-btn');
+        const inputW = document.getElementById('crop-w');
+        const inputH = document.getElementById('crop-h');
+        
+        let currentRatio = 'free';
+        let isDragging = false;
+        let isResizing = false;
+        let startX, startY, startLeft, startTop, startWidth, startHeight, activeHandle;
+
+        fileInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    img.src = event.target.result;
+                    img.classList.remove('hidden');
+                    placeholder.classList.add('hidden');
+                    cropBox.classList.remove('hidden');
+                    downloadBtn.disabled = false;
+                    
+                    img.onload = () => {
+                        // Initial crop box size
+                        const initialSize = Math.min(img.clientWidth, img.clientHeight) * 0.8;
+                        cropBox.style.width = initialSize + 'px';
+                        cropBox.style.height = initialSize + 'px';
+                        cropBox.style.left = (img.offsetLeft + (img.clientWidth - initialSize) / 2) + 'px';
+                        cropBox.style.top = (img.offsetTop + (img.clientHeight - initialSize) / 2) + 'px';
+                        updateInfo();
+                    };
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Ratio Selection
+        ratioBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                ratioBtns.forEach(b => {
+                    b.classList.remove('active', 'border-[#da3f0b]', 'text-[#da3f0b]');
+                    b.classList.add('border-slate-200', 'text-slate-600');
+                });
+                btn.classList.add('active', 'border-[#da3f0b]', 'text-[#da3f0b]');
+                btn.classList.remove('border-slate-200', 'text-slate-600');
+                currentRatio = btn.dataset.ratio;
+                applyRatio();
+            });
+        });
+
+        function applyRatio() {
+            if (currentRatio === 'free') return;
+            const [rw, rh] = currentRatio.split(':').map(Number);
+            let w = parseFloat(cropBox.style.width);
+            let h = w * (rh / rw);
+            
+            if (h > img.clientHeight) {
+                h = img.clientHeight * 0.8;
+                w = h * (rw / rh);
+            }
+            
+            cropBox.style.width = w + 'px';
+            cropBox.style.height = h + 'px';
+            updateInfo();
+        }
+
+        // Drag and Resize Logic
+        cropBox.addEventListener('mousedown', startAction);
+        window.addEventListener('mousemove', doAction);
+        window.addEventListener('mouseup', endAction);
+
+        function startAction(e) {
+            if (e.target.classList.contains('crop-handle')) {
+                isResizing = true;
+                activeHandle = e.target;
+            } else {
+                isDragging = true;
+            }
+            startX = e.clientX;
+            startY = e.clientY;
+            startLeft = parseFloat(cropBox.style.left);
+            startTop = parseFloat(cropBox.style.top);
+            startWidth = parseFloat(cropBox.style.width);
+            startHeight = parseFloat(cropBox.style.height);
+            e.preventDefault();
+        }
+
+        function doAction(e) {
+            if (!isDragging && !isResizing) return;
+
+            const dx = e.clientX - startX;
+            const dy = e.clientY - startY;
+
+            if (isDragging) {
+                let newLeft = startLeft + dx;
+                let newTop = startTop + dy;
+
+                // Bounds
+                newLeft = Math.max(img.offsetLeft, Math.min(newLeft, img.offsetLeft + img.clientWidth - startWidth));
+                newTop = Math.max(img.offsetTop, Math.min(newTop, img.offsetTop + img.clientHeight - startHeight));
+
+                cropBox.style.left = newLeft + 'px';
+                cropBox.style.top = newTop + 'px';
+            }
+
+            if (isResizing) {
+                let newWidth = startWidth;
+                let newHeight = startHeight;
+
+                if (activeHandle.classList.contains('handle-se')) {
+                    newWidth = startWidth + dx;
+                    newHeight = currentRatio === 'free' ? startHeight + dy : newWidth * (startHeight / startWidth);
+                }
+                // Add other handles if needed, SE is primary for simplicity
+
+                // Bounds
+                newWidth = Math.max(50, Math.min(newWidth, img.offsetLeft + img.clientWidth - startLeft));
+                newHeight = Math.max(50, Math.min(newHeight, img.offsetTop + img.clientHeight - startTop));
+
+                if (currentRatio !== 'free') {
+                    const [rw, rh] = currentRatio.split(':').map(Number);
+                    if (newWidth / newHeight !== rw / rh) {
+                        newHeight = newWidth * (rh / rw);
+                    }
+                }
+
+                cropBox.style.width = newWidth + 'px';
+                cropBox.style.height = newHeight + 'px';
+            }
+            updateInfo();
+        }
+
+        function endAction() {
+            isDragging = false;
+            isResizing = false;
+        }
+
+        function updateInfo() {
+            const scaleX = img.naturalWidth / img.clientWidth;
+            const scaleY = img.naturalHeight / img.clientHeight;
+            inputW.value = Math.round(parseFloat(cropBox.style.width) * scaleX);
+            inputH.value = Math.round(parseFloat(cropBox.style.height) * scaleY);
+        }
+
+        downloadBtn.addEventListener('click', () => {
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            
+            const scaleX = img.naturalWidth / img.clientWidth;
+            const scaleY = img.naturalHeight / img.clientHeight;
+            
+            const x = (parseFloat(cropBox.style.left) - img.offsetLeft) * scaleX;
+            const y = (parseFloat(cropBox.style.top) - img.offsetTop) * scaleY;
+            const w = parseFloat(cropBox.style.width) * scaleX;
+            const h = parseFloat(cropBox.style.height) * scaleY;
+            
+            canvas.width = w;
+            canvas.height = h;
+            
+            ctx.drawImage(img, x, y, w, h, 0, 0, w, h);
+            
+            const link = document.createElement('a');
+            link.download = 'cropped-image.png';
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        });
+    });
+    </script>
+
+    <section class="bg-white py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="prose prose-lg max-w-none prose-h2:text-gray-800 prose-p:text-gray-700">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">Why Use an Online Image Cropper?</h2>
+                <p class="mb-6 leading-relaxed">
+                    In the digital age, presentation is everything. Whether you're updating your LinkedIn profile, posting on Instagram, or designing a website, the composition of your images matters. To <strong>crop photo to specific ratio online</strong> means you can remove distracting backgrounds, focus on the subject, and ensure your visuals fit perfectly into their intended frames. Our tool provides a seamless, browser-based experience without the need for heavy software like Photoshop.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Understanding Aspect Ratios for Social Media</h2>
+                <p class="mb-6 leading-relaxed">
+                    Different platforms require different dimensions. A square 1:1 ratio is standard for Instagram posts, while 9:16 is essential for TikTok and Reels. Using our <a href="https://simpliconvert.com/profile_picture_cropper/">profile picture cropper</a> presets ensures that your headshot is perfectly centered. By selecting the right ratio before you download, you avoid the awkward auto-cropping that many social media apps perform, giving you full creative control.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Maintain Quality While You Trim</h2>
+                <p class="mb-6 leading-relaxed">
+                    One common concern is losing image quality during the cropping process. Our tool uses advanced canvas rendering to preserve the pixel density of your original file. If you find your file size is too large after cropping, you can always use our <a href="https://simpliconvert.com/image_size_reducer/">image size reducer</a> to optimize it for the web. This combination of tools allows you to maintain a balance between visual clarity and fast loading times.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">How to Use the Image Cropper Effectively</h2>
+                <p class="mb-6 leading-relaxed">
+                    Using the tool is simple: upload your image, select a preset ratio or choose "Free Form," and drag the selection box over the area you want to keep. You can resize the box using the handles. Once you're satisfied with the preview, hit the "Crop & Download" button. For those working with specific print requirements, you might also find our <a href="https://simpliconvert.com/image_pixels_to_inches/">image pixels to inches</a> converter helpful to ensure your crop meets physical size standards.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Privacy and Security First</h2>
+                <p class="mb-6 leading-relaxed">
+                    At SimpliConvert, we prioritize your privacy. Unlike other online editors that upload your files to a cloud server, our image cropper processes everything locally within your browser. Your sensitive photos never leave your device, making it the safest way to edit personal or professional images online.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-center text-gray-900 mb-8">Frequently Asked Questions</h2>
+            <div class="space-y-4">
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg transition-all">
+                        <span>What file formats are supported?</span>
+                        <i class="fas fa-chevron-down faq-icon transition-transform duration-300"></i>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-300">
+                        <p class="p-5 pt-0 text-gray-600">We support all major image formats including JPG, PNG, WebP, and BMP. The output is currently optimized as a high-quality PNG to preserve transparency and detail.</p>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg transition-all">
+                        <span>Can I crop an image to a specific pixel size?</span>
+                        <i class="fas fa-chevron-down faq-icon transition-transform duration-300"></i>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-300">
+                        <p class="p-5 pt-0 text-gray-600">Yes! You can see the real-time pixel dimensions in the "Selection Info" box as you drag and resize the crop area.</p>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg transition-all">
+                        <span>Is there a limit on file size?</span>
+                        <i class="fas fa-chevron-down faq-icon transition-transform duration-300"></i>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-300">
+                        <p class="p-5 pt-0 text-gray-600">Since the processing happens in your browser, the limit depends on your device's memory. Most modern browsers can easily handle images up to 20MB or more.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 pb-16">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-slate-200 pt-16">
+            <h2 class="text-2xl font-bold text-center text-slate-800 mb-10">Related Image Tools</h2>
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+                <a href="/profile_picture_cropper/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-orange-50 text-orange-600 flex items-center justify-center shrink-0 group-hover:bg-orange-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-user-circle text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">PFP Cropper</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Perfect circles for profiles.</p>
+                    </div>
+                </a>
+                <a href="/image_resizer/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center shrink-0 group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-expand text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Image Resizer</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Change dimensions easily.</p>
+                    </div>
+                </a>
+                <a href="/jpg_to_png/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-purple-50 text-purple-600 flex items-center justify-center shrink-0 group-hover:bg-purple-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-exchange-alt text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">JPG to PNG</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Convert image formats.</p>
+                    </div>
+                </a>
+                <a href="/image_color_picker/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-green-50 text-green-600 flex items-center justify-center shrink-0 group-hover:bg-green-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-eye-dropper text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Color Picker</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Extract hex codes from images.</p>
+                    </div>
+                </a>
+                <a href="/image_rotator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-red-50 text-red-600 flex items-center justify-center shrink-0 group-hover:bg-red-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-sync text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Image Rotator</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Flip or rotate your photos.</p>
+                    </div>
+                </a>
+                <a href="/image_metadata_viewer/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-slate-100 text-slate-700 flex items-center justify-center shrink-0 group-hover:bg-slate-800 group-hover:text-white transition-colors">
+                        <i class="fas fa-info-circle text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">EXIF Viewer</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Check image metadata.</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <div id="footer"></div>
+
+    <script>
+    async function loadComponent(url, elementId, callback) {
+        try {
+            const response = await fetch(url);
+            if (!response.ok) throw new Error('Status: ' + response.status);
+            const text = await response.text();
+            const element = document.getElementById(elementId);
+            if (element) {
+                element.innerHTML = text;
+                if (callback) callback();
+            }
+        } catch (error) {
+            console.error('Error loading component:', error);
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        loadComponent('/components/navbar.html', 'navbar');
+        loadComponent('/components/footer.html', 'footer', () => {
+            const yearSpan = document.getElementById('current-year');
+            if(yearSpan) yearSpan.textContent = new Date().getFullYear();
+        });
+        
+        const faqToggles = document.querySelectorAll('[data-faq-toggle]');
+        faqToggles.forEach(button => {
+            button.addEventListener('click', () => {
+                const answer = button.nextElementSibling;
+                const icon = button.querySelector('.faq-icon');
+                const isOpen = answer.style.maxHeight !== '0px' && answer.style.maxHeight !== '';
+
+                faqToggles.forEach(other => {
+                    other.nextElementSibling.style.maxHeight = '0px';
+                    other.querySelector('.faq-icon').style.transform = 'rotate(0deg)';
+                });
+
+                if (!isOpen) {
+                    answer.style.maxHeight = answer.scrollHeight + "px";
+                    icon.style.transform = 'rotate(180deg)';
+                }
+            });
+        });
+    });
+    </script>
+</body>
+</html>

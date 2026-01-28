@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Facebook Cover Size Checker - Preview Mobile & Desktop View | SimpliConvert</title>
+    <meta name="description" content="Check how your Facebook cover photo appears on both desktop and mobile. Optimize the focal point to prevent critical info from being hidden behind the profile picture.">
+    <meta name="keywords" content="fb header size, page banner dimension, cover photo optimizer, safe area check, profile branding, facebook cover preview tool">
+    <meta name="author" content="SimpliConvert">
+    <meta property="og:site_name" content="SimpliConvert">
+    <meta name="robots" content="index, follow">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://simpliconvert.com/facebook_cover_size_checker/">
+    <meta property="og:title" content="Facebook Cover Size Checker - Preview Mobile & Desktop">
+    <meta property="og:description" content="Stop guessing how your Facebook banner looks. Preview desktop and mobile crops instantly with our safe area checker.">
+    <meta property="og:image" content="https://simpliconvert.com/images/facebook-cover-checker-og.jpg">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://simpliconvert.com/facebook_cover_size_checker/">
+    <meta name="twitter:title" content="Facebook Cover Size Checker - Optimize Your Page">
+    <meta name="twitter:description" content="Free tool to preview Facebook cover photo crops on mobile and desktop. Ensure your branding stays in the safe zone.">
+    <meta name="twitter:image" content="https://simpliconvert.com/images/facebook-cover-checker-og.jpg">
+
+    <link rel="canonical" href="https://simpliconvert.com/facebook_cover_size_checker/">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Facebook Cover Size Checker",
+      "url": "https://simpliconvert.com/facebook_cover_size_checker/",
+      "description": "An online tool to preview how Facebook cover photos are cropped on desktop and mobile devices, helping users keep important content within the safe area.",
+      "applicationCategory": "DesignApplication",
+      "operatingSystem": "Web Browser",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "SimpliConvert",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://simpliconvert.com/logo.png"
+        }
+      }
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [{
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://simpliconvert.com/"
+      },{
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Image Tools",
+        "item": "https://simpliconvert.com/image_tools/"
+      },{
+        "@type": "ListItem",
+        "position": 3,
+        "name": "Facebook cover size checker",
+        "item": "https://simpliconvert.com/facebook_cover_size_checker/"
+      }]
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [{
+        "@type": "Question",
+        "name": "What is the best size for a Facebook cover photo in 2024?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The recommended size is 820 pixels wide by 360 pixels tall. This size ensures that your image looks good on both desktop (where it displays at 820x312) and mobile (where it displays at 640x360)."
+        }
+      }, {
+        "@type": "Question",
+        "name": "What is the 'Safe Area' for Facebook covers?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The safe area is the central part of your image (approx. 640x312 pixels) that is visible on both mobile and desktop. You should place all text and logos within this zone to prevent them from being cropped."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Why does my Facebook cover look blurry?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Facebook compresses images. To minimize quality loss, use an sRGB JPG or PNG file under 100KB, and ensure your dimensions match the recommended 820x360 pixels."
+        }
+      }]
+    }
+    </script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #1877F2; /* Facebook Blue */
+            --primary-hover: #166fe5;
+            --primary-light: #e7f3ff;
+            --bg: #f0f2f5;
+            --text-dark: #1c1e21;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text-dark);
+        }
+
+        .hero-card {
+            background: white;
+            border-radius: 1.5rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        .preview-container {
+            background: #ddd;
+            position: relative;
+            overflow: hidden;
+            background-size: cover;
+            background-position: center;
+            transition: all 0.3s ease;
+        }
+
+        /* Desktop Preview: 820x312 aspect ratio */
+        .desktop-preview {
+            width: 100%;
+            aspect-ratio: 820 / 312;
+            max-width: 820px;
+            margin: 0 auto;
+            border: 8px solid #333;
+            border-radius: 8px;
+        }
+
+        /* Mobile Preview: 640x360 aspect ratio */
+        .mobile-preview {
+            width: 280px;
+            aspect-ratio: 640 / 360;
+            margin: 0 auto;
+            border: 8px solid #333;
+            border-radius: 24px;
+        }
+
+        .profile-pic-desktop {
+            position: absolute;
+            bottom: -20px;
+            left: 30px;
+            width: 120px;
+            height: 120px;
+            background: #eee;
+            border: 4px solid white;
+            border-radius: 50%;
+            z-index: 10;
+        }
+
+        .profile-pic-mobile {
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 70px;
+            height: 70px;
+            background: #eee;
+            border: 3px solid white;
+            border-radius: 50%;
+            z-index: 10;
+        }
+
+        .safe-area-overlay {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            height: 100%;
+            width: 78%; /* Approx safe width for mobile on a desktop-sized image */
+            border: 2px dashed rgba(255, 255, 255, 0.5);
+            pointer-events: none;
+            display: none;
+        }
+
+        .tool-card {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .tool-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+        }
+
+        .animate-fade { animation: fadeIn 0.3s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+
+<body class="min-h-screen flex flex-col">
+    <div id="navbar" style="min-height: 70px;"></div>
+	
+	<section class="py-10">
+        <div class="container mx-auto px-4">
+            <nav class="flex pb-4 text-sm text-slate-500 items-center space-x-2 justify-center">
+                <a href="https://simpliconvert.com/" class="hover:text-[#1877F2] transition-colors">Home</a>
+                <i class="fas fa-chevron-right text-[10px]"></i>
+                <a href="https://simpliconvert.com/image_tools/" class="hover:text-[#1877F2] transition-colors">Image Tools</a>
+                <i class="fas fa-chevron-right text-[10px]"></i>
+                <span class="text-slate-900 font-medium">Facebook cover size checker</span>
+            </nav>
+            <div class="text-center">
+                <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-4">preview facebook page cover on mobile and desktop</h1>
+                <p class="text-lg max-w-3xl mx-auto text-slate-600">
+                    Upload your banner to see how it crops on different devices. Ensure your logo and text stay within the "Safe Area" to avoid being cut off.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <div id="tool-app" class="w-full max-w-6xl mx-auto p-4 sm:p-6 mb-12">
+        <div class="hero-card overflow-hidden border border-slate-200">
+            <div class="p-6 md:p-10 border-b border-slate-100 bg-white">
+                <div class="flex flex-col items-center justify-center border-2 border-dashed border-slate-300 rounded-2xl p-8 transition-colors hover:border-[#1877F2] bg-slate-50" id="drop-zone">
+                    <input type="file" id="file-input" class="hidden" accept="image/*">
+                    <i class="fas fa-cloud-upload-alt text-4xl text-slate-400 mb-4"></i>
+                    <h3 class="text-lg font-bold text-slate-700 mb-2">Upload your cover photo</h3>
+                    <p class="text-sm text-slate-500 mb-6">Drag and drop or click to browse (Recommended: 820x360px)</p>
+                    <button onclick="document.getElementById('file-input').click()" class="bg-[#1877F2] text-white px-8 py-3 rounded-xl font-bold hover:bg-[#166fe5] transition-all shadow-lg shadow-blue-200">
+                        Select Image
+                    </button>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-0">
+                <!-- Desktop Preview Section -->
+                <div class="p-6 md:p-10 bg-white border-r border-slate-100">
+                    <div class="flex items-center justify-between mb-6">
+                        <h2 class="text-xl font-bold text-slate-800"><i class="fas fa-desktop mr-2 text-slate-400"></i> Desktop View</h2>
+                        <span class="text-xs font-bold bg-slate-100 text-slate-500 px-3 py-1 rounded-full">820 x 312 px</span>
+                    </div>
+                    <div class="relative">
+                        <div id="desktop-preview" class="preview-container desktop-preview shadow-inner flex items-center justify-center text-slate-300 italic text-sm">
+                            No image uploaded
+                            <div class="profile-pic-desktop"></div>
+                        </div>
+                        <p class="mt-4 text-xs text-slate-400 text-center">On desktop, Facebook crops the <strong>top and bottom</strong> of taller images.</p>
+                    </div>
+                </div>
+
+                <!-- Mobile Preview Section -->
+                <div class="p-6 md:p-10 bg-slate-50/50">
+                    <div class="flex items-center justify-between mb-6">
+                        <h2 class="text-xl font-bold text-slate-800"><i class="fas fa-mobile-alt mr-2 text-slate-400"></i> Mobile View</h2>
+                        <span class="text-xs font-bold bg-slate-100 text-slate-500 px-3 py-1 rounded-full">640 x 360 px</span>
+                    </div>
+                    <div class="relative">
+                        <div id="mobile-preview" class="preview-container mobile-preview shadow-2xl flex items-center justify-center text-slate-300 italic text-xs text-center px-4">
+                            No image uploaded
+                            <div class="profile-pic-mobile"></div>
+                        </div>
+                        <p class="mt-4 text-xs text-slate-400 text-center">On mobile, Facebook crops the <strong>left and right sides</strong> of wider images.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="p-6 bg-white border-t border-slate-100 flex flex-wrap justify-center gap-4">
+                <div class="flex items-center gap-2">
+                    <input type="checkbox" id="toggle-safe-area" class="w-4 h-4 text-[#1877F2] rounded focus:ring-[#1877F2]">
+                    <label for="toggle-safe-area" class="text-sm font-semibold text-slate-600">Show Safe Area Guide</label>
+                </div>
+                <button onclick="resetTool()" class="text-sm font-bold text-slate-400 hover:text-red-500 transition-colors">
+                    <i class="fas fa-undo mr-1"></i> Reset
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const fileInput = document.getElementById('file-input');
+            const dropZone = document.getElementById('drop-zone');
+            const desktopPrev = document.getElementById('desktop-preview');
+            const mobilePrev = document.getElementById('mobile-preview');
+            const safeAreaToggle = document.getElementById('toggle-safe-area');
+
+            // Handle File Selection
+            fileInput.addEventListener('change', handleFile);
+
+            // Drag and Drop
+            dropZone.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                dropZone.classList.add('border-[#1877F2]', 'bg-blue-50');
+            });
+
+            dropZone.addEventListener('dragleave', () => {
+                dropZone.classList.remove('border-[#1877F2]', 'bg-blue-50');
+            });
+
+            dropZone.addEventListener('drop', (e) => {
+                e.preventDefault();
+                dropZone.classList.remove('border-[#1877F2]', 'bg-blue-50');
+                const files = e.dataTransfer.files;
+                if (files.length) handleFile({ target: { files } });
+            });
+
+            function handleFile(e) {
+                const file = e.target.files[0];
+                if (!file || !file.type.startsWith('image/')) return;
+
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    const imgUrl = event.target.result;
+                    
+                    // Update Desktop
+                    desktopPrev.style.backgroundImage = `url(${imgUrl})`;
+                    desktopPrev.textContent = '';
+                    desktopPrev.innerHTML = '<div class="profile-pic-desktop"></div><div class="safe-area-overlay" id="safe-desktop"></div>';
+                    
+                    // Update Mobile
+                    mobilePrev.style.backgroundImage = `url(${imgUrl})`;
+                    mobilePrev.textContent = '';
+                    mobilePrev.innerHTML = '<div class="profile-pic-mobile"></div>';
+
+                    updateSafeArea();
+                };
+                reader.readAsDataURL(file);
+            }
+
+            safeAreaToggle.addEventListener('change', updateSafeArea);
+
+            function updateSafeArea() {
+                const overlay = document.getElementById('safe-desktop');
+                if (overlay) {
+                    overlay.style.display = safeAreaToggle.checked ? 'block' : 'none';
+                }
+            }
+
+            window.resetTool = function() {
+                desktopPrev.style.backgroundImage = '';
+                desktopPrev.innerHTML = 'No image uploaded <div class="profile-pic-desktop"></div>';
+                mobilePrev.style.backgroundImage = '';
+                mobilePrev.innerHTML = 'No image uploaded <div class="profile-pic-mobile"></div>';
+                fileInput.value = '';
+            };
+        });
+    </script>
+
+    <section class="bg-white py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="prose prose-lg max-w-none prose-h2:text-slate-800 prose-p:text-slate-600">
+                <h2 class="text-3xl font-bold mb-6">Why You Need a Facebook Cover Size Checker</h2>
+                <p>
+                    Creating a stunning Facebook cover photo is only half the battle. The real challenge lies in how Facebook displays that image across different devices. Because Facebook uses a single image for both desktop and mobile views, it applies different cropping rules to each. If you don't use a <strong>cover photo optimizer</strong>, your carefully designed text or logo might end up hidden behind your profile picture or cropped out entirely on smartphones.
+                </p>
+                <p>
+                    Our tool allows you to <strong>preview facebook page cover on mobile and desktop</strong> instantly. By uploading your design, you can see exactly where the "danger zones" are. This is essential for maintaining professional <a href="https://simpliconvert.com/profile_picture_cropper/" class="text-[#1877F2] hover:underline">profile branding</a> and ensuring your marketing message is always visible.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-10 mb-4">Understanding Desktop vs. Mobile Dimensions</h2>
+                <p>
+                    Facebook's official dimensions can be confusing. On desktop, the cover photo displays at 820 pixels wide by 312 pixels tall. However, on mobile devices, it displays at 640 pixels wide by 360 pixels tall. 
+                </p>
+                <ul class="list-disc pl-6 space-y-2">
+                    <li><strong>Desktop View:</strong> Crops the top and bottom of your image to fit a wider, shorter aspect ratio.</li>
+                    <li><strong>Mobile View:</strong> Crops the left and right sides of your image to fit a taller, narrower aspect ratio.</li>
+                </ul>
+                <p>
+                    To satisfy both, the "sweet spot" is <strong>820px by 360px</strong>. Using our <a href="https://simpliconvert.com/social_media_image_resizer/" class="text-[#1877F2] hover:underline">social media image resizer</a> alongside this checker ensures your banner is perfectly optimized for every visitor.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-10 mb-4">The Importance of the "Safe Area"</h2>
+                <p>
+                    The "Safe Area" is the central portion of your cover photo that is guaranteed to be visible on all devices. For a standard 820x360px image, the safe area is roughly the middle 640x312px. This is where you should place your most important content:
+                </p>
+                <ul class="list-disc pl-6 space-y-2">
+                    <li>Company Logo</li>
+                    <li>Call to Action (CTA) text</li>
+                    <li>Event dates or contact information</li>
+                    <li>Key faces or products</li>
+                </ul>
+                <p>
+                    Using our <strong>safe area check</strong> feature, you can toggle a guide that shows exactly where these boundaries lie. This prevents the frustration of uploading a banner only to realize your phone number is cut off on iPhones.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-10 mb-4">Pro Tips for Facebook Page Banners</h2>
+                <p>
+                    Beyond just size, consider the composition. On desktop, your profile picture covers a small portion of the bottom-left corner of your cover photo. On mobile, the profile picture is centered and covers a larger portion of the bottom. 
+                </p>
+                <p>
+                    If you're managing multiple platforms, don't forget to check your other assets. We also offer a <a href="https://simpliconvert.com/youtube_banner_size_checker/" class="text-[#1877F2] hover:underline">YouTube banner size checker</a> to help you maintain a consistent look across your entire social media presence.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-slate-50 py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-center text-slate-900 mb-8">Frequently Asked Questions</h2>
+            <div class="space-y-4">
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+                    <button class="w-full flex justify-between items-center text-left p-5 font-semibold text-slate-800 hover:bg-slate-50 transition-colors" onclick="this.nextElementSibling.classList.toggle('hidden')">
+                        <span>What is the best file format for Facebook covers?</span>
+                        <i class="fas fa-chevron-down text-slate-400"></i>
+                    </button>
+                    <div class="p-5 pt-0 text-slate-600 hidden border-t border-slate-100">
+                        For the best quality, use a PNG file if your cover has a logo or text. If it's a photograph, a high-quality JPG (sRGB) works well. Try to keep the file size under 100KB to prevent Facebook from applying heavy compression.
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+                    <button class="w-full flex justify-between items-center text-left p-5 font-semibold text-slate-800 hover:bg-slate-50 transition-colors" onclick="this.nextElementSibling.classList.toggle('hidden')">
+                        <span>Does this tool work for Facebook Groups and Events?</span>
+                        <i class="fas fa-chevron-down text-slate-400"></i>
+                    </button>
+                    <div class="p-5 pt-0 text-slate-600 hidden border-t border-slate-100">
+                        This specific tool is optimized for Facebook Business/Fan Pages. Facebook Groups (1640x856) and Events (1200x628) use different aspect ratios. However, the principle of checking mobile vs. desktop crops remains the same.
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+                    <button class="w-full flex justify-between items-center text-left p-5 font-semibold text-slate-800 hover:bg-slate-50 transition-colors" onclick="this.nextElementSibling.classList.toggle('hidden')">
+                        <span>Why does my cover look different on my own phone?</span>
+                        <i class="fas fa-chevron-down text-slate-400"></i>
+                    </button>
+                    <div class="p-5 pt-0 text-slate-600 hidden border-t border-slate-100">
+                        Different screen sizes and app versions can slightly alter the display. Our tool uses the standard 16:9 mobile ratio used by the Facebook app, which covers the vast majority of modern smartphones.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-white pb-16">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-slate-100 pt-16">
+            <h2 class="text-2xl font-bold text-center text-slate-800 mb-10">Explore More Social Media Tools</h2>
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+                
+                <a href="https://simpliconvert.com/youtube_banner_size_checker/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#1877F2] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-red-50 text-red-600 flex items-center justify-center shrink-0 group-hover:bg-red-600 group-hover:text-white transition-colors">
+                        <i class="fab fa-youtube text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#1877F2]">YouTube Banner</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Check TV, Desktop & Mobile crops.</p>
+                    </div>
+                </a>
+
+                <a href="https://simpliconvert.com/profile_picture_cropper/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#1877F2] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center shrink-0 group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-user-circle text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#1877F2]">Profile Cropper</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Perfect circle crops for social.</p>
+                    </div>
+                </a>
+
+                <a href="https://simpliconvert.com/instagram_story_size_checker/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#1877F2] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-purple-50 text-purple-600 flex items-center justify-center shrink-0 group-hover:bg-purple-600 group-hover:text-white transition-colors">
+                        <i class="fab fa-instagram text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#1877F2]">IG Story Check</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Avoid UI element overlaps.</p>
+                    </div>
+                </a>
+
+                <a href="https://simpliconvert.com/facebook_post_formatter/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#1877F2] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-slate-50 text-slate-700 flex items-center justify-center shrink-0 group-hover:bg-[#1877F2] group-hover:text-white transition-colors">
+                        <i class="fas fa-align-left text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#1877F2]">FB Formatter</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Style your Facebook posts.</p>
+                    </div>
+                </a>
+
+                <a href="https://simpliconvert.com/social_media_image_resizer/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#1877F2] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-green-50 text-green-600 flex items-center justify-center shrink-0 group-hover:bg-green-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-expand-arrows-alt text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#1877F2]">Image Resizer</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Resize for all platforms at once.</p>
+                    </div>
+                </a>
+
+                <a href="https://simpliconvert.com/image_dpi_checker/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#1877F2] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-orange-50 text-orange-600 flex items-center justify-center shrink-0 group-hover:bg-orange-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-print text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#1877F2]">DPI Checker</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Check image resolution quality.</p>
+                    </div>
+                </a>
+
+            </div>
+        </div>
+    </section>
+
+    <div id="footer"></div>
+
+    <script>
+        async function loadComponent(url, elementId, callback) {
+            try {
+                const response = await fetch(url);
+                const text = await response.text();
+                const element = document.getElementById(elementId);
+                if (element) {
+                    element.innerHTML = text;
+                    if (callback) callback();
+                }
+            } catch (error) {
+                console.error('Error loading component:', error);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            loadComponent('/components/navbar.html', 'navbar');
+            loadComponent('/components/footer.html', 'footer', () => {
+                const yearSpan = document.getElementById('current-year');
+                if(yearSpan) yearSpan.textContent = new Date().getFullYear();
+            });
+        });
+    </script>
+</body>
+</html>

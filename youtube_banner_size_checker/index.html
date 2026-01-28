@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>YouTube Banner Size Checker – Check Channel Art Dimensions | SimpliConvert</title>
+    <meta name="description" content="Verify your YouTube banner fits all devices, from TV screens to mobiles. Visualize the 'safe zone' to ensure your logo and text aren't cut off with our free checker.">
+    <meta name="keywords" content="check youtube channel art dimensions, channel header fix, safe zone viewer, tv vs mobile view, banner cropper, channel branding, youtube banner size guide">
+    <meta name="author" content="SimpliConvert">
+    <meta property="og:site_name" content="SimpliConvert">
+    <meta name="robots" content="index, follow">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://simpliconvert.com/youtube_banner_size_checker/">
+    <meta property="og:title" content="YouTube Banner Size Checker – Safe Zone Viewer">
+    <meta property="og:description" content="Stop guessing your channel art. Instantly check if your YouTube banner is mobile-friendly and fits the safe zone.">
+    <meta property="og:image" content="https://simpliconvert.com/images/youtube-banner-checker-og.jpg">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://simpliconvert.com/youtube_banner_size_checker/">
+    <meta name="twitter:title" content="YouTube Banner Size Checker – Check Channel Art Dimensions">
+    <meta name="twitter:description" content="Free tool to visualize YouTube banner safe zones for TV, Desktop, and Mobile. Ensure your branding is never cut off.">
+    <meta name="twitter:image" content="https://simpliconvert.com/images/youtube-banner-checker-og.jpg">
+
+    <link rel="canonical" href="https://simpliconvert.com/youtube_banner_size_checker/">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "YouTube Banner Size Checker",
+      "url": "https://simpliconvert.com/youtube_banner_size_checker/",
+      "description": "A free online tool to check YouTube channel art dimensions and visualize safe zones for mobile, tablet, desktop, and TV views.",
+      "applicationCategory": "DesignApplication",
+      "operatingSystem": "Web Browser",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "SimpliConvert",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://simpliconvert.com/logo.png"
+        }
+      }
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [{
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://simpliconvert.com/"
+      },{
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Image Tools",
+        "item": "https://simpliconvert.com/image_tools/"
+      },{
+        "@type": "ListItem",
+        "position": 3,
+        "name": "YouTube banner size checker",
+        "item": "https://simpliconvert.com/youtube_banner_size_checker/"
+      }]
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [{
+        "@type": "Question",
+        "name": "What are the official YouTube banner dimensions for 2024?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The recommended YouTube banner size is 2560 x 1440 pixels. The minimum dimension for upload is 2048 x 1152 pixels. The file size should be 6MB or less."
+        }
+      }, {
+        "@type": "Question",
+        "name": "What is the YouTube banner safe area?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The safe area is the central 1546 x 423 pixel block of your banner. Any text or logos placed within this area will be visible on all devices, including mobile phones and tablets."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Why does my YouTube banner look different on TV vs Mobile?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "YouTube displays the full 2560 x 1440 image on TV screens, but crops it significantly for desktop and mobile. Mobile users only see the center 'safe zone', which is why critical branding must be centered."
+        }
+      }]
+    }
+    </script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #FF0000;
+            --primary-hover: #cc0000;
+            --primary-light: #fff5f5;
+            --bg: #f8fafc;
+            --text-dark: #0f172a;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text-dark);
+        }
+
+        .hero-card {
+            background: white;
+            border: 1px solid #f1f5f9;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background-color: var(--primary);
+        }
+
+        .preview-container {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            background: #e2e8f0;
+            border-radius: 0.75rem;
+            overflow: hidden;
+            border: 2px dashed #cbd5e1;
+        }
+
+        .preview-image {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            display: none;
+        }
+
+        /* Overlay Styles */
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            display: none;
+        }
+
+        .guide-box {
+            position: absolute;
+            border: 2px solid rgba(255, 255, 255, 0.8);
+            box-sizing: border-box;
+        }
+
+        .safe-area {
+            background: rgba(34, 197, 94, 0.1);
+            border: 2px solid #22c55e;
+            z-index: 10;
+        }
+
+        .desktop-area {
+            border: 2px solid #3b82f6;
+            z-index: 5;
+        }
+
+        .label-tag {
+            position: absolute;
+            padding: 2px 6px;
+            font-size: 10px;
+            font-weight: 800;
+            color: white;
+            text-transform: uppercase;
+            border-radius: 4px;
+        }
+
+        .tool-card {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .tool-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+        }
+
+        .prose a { color: #FF0000; text-decoration: none; }
+        .prose a:hover { text-decoration: underline; }
+    </style>
+</head>
+
+<body class="bg-gray-50 min-h-screen flex flex-col">
+    <div id="navbar" style="min-height: 70px;"></div>
+	
+	<section class="hero-white text-black py-2 md:py-10">
+        <div class="container mx-auto px-4">
+            <nav class="flex pb-4 text-sm text-slate-500 items-center space-x-2 justify-center">
+                <a href="https://simpliconvert.com/" class="hover:text-[#FF0000] transition-colors">Home</a>
+                <i class="fas fa-chevron-right text-[10px]"></i>
+                <a href="https://simpliconvert.com/image_tools/" class="hover:text-[#FF0000] transition-colors">Image Tools</a>
+                <i class="fas fa-chevron-right text-[10px]"></i>
+                <span class="text-slate-900 font-medium">YouTube Banner Size Checker</span>
+            </nav>
+            <div class="text-center">
+                <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-2">check youtube channel art dimensions</h1>
+                <p class="text-lg md:text-xl max-w-3xl mx-auto mb-2 text-slate-600">
+                    Upload your banner to visualize safe zones for Mobile, Desktop, and TV. Ensure your branding is never cut off.
+                </p>
+            </div>
+        </div>
+    </section>		
+
+    <div id="calculator-app" class="w-full max-w-6xl mx-auto p-4 sm:p-6">
+        <div class="bg-white rounded-[2rem] shadow-2xl overflow-hidden border border-slate-100">
+            <header class="bg-slate-50/50 border-b border-slate-100 p-6 md:p-8 flex flex-col md:flex-row justify-between items-center gap-6">
+                <div class="text-center md:text-left">
+                  <h2 class="text-2xl font-black text-slate-800 tracking-tight flex items-center justify-center md:justify-start gap-3">
+                    <span class="bg-[#FF0000] text-white p-2 rounded-xl text-lg shadow-lg shadow-[#FF000030]">
+                      <i class="fab fa-youtube"></i>
+                    </span>
+                    YouTube Channel Art Safe Zone Viewer
+                  </h2>
+                </div>
+                <div class="flex gap-2">
+                    <span class="px-3 py-1 bg-green-100 text-green-700 text-xs font-bold rounded-full">2560 x 1440 Recommended</span>
+                </div>
+            </header>
+    
+            <main class="flex flex-col lg:flex-row">
+                <div class="lg:w-[40%] p-6 md:p-10 border-r border-slate-100">
+                    <div class="space-y-6">
+                        <div class="bg-slate-50 p-6 rounded-2xl border border-slate-100">
+                            <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-4"><i class="fas fa-upload mr-2"></i>Upload Banner</h3>
+                            
+                            <label for="banner-upload" class="flex flex-col items-center justify-center w-full h-48 border-2 border-dashed border-slate-300 rounded-xl cursor-pointer bg-white hover:bg-slate-50 transition-all">
+                                <div class="flex flex-col items-center justify-center pt-5 pb-6">
+                                    <i class="fas fa-cloud-upload-alt text-3xl text-slate-400 mb-3"></i>
+                                    <p class="mb-2 text-sm text-slate-500 font-semibold">Click to upload or drag and drop</p>
+                                    <p class="text-xs text-slate-400">JPG, PNG or WEBP (Max 6MB)</p>
+                                </div>
+                                <input id="banner-upload" type="file" class="hidden" accept="image/*" />
+                            </label>
+                        </div>
+
+                        <div id="file-info" class="hidden bg-white p-4 rounded-xl border border-slate-100 shadow-sm animate-fade">
+                            <h4 class="text-xs font-bold text-slate-400 uppercase mb-3">Image Properties</h4>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <p class="text-[10px] text-slate-400 uppercase">Dimensions</p>
+                                    <p id="info-dim" class="font-bold text-slate-800">-</p>
+                                </div>
+                                <div>
+                                    <p class="text-[10px] text-slate-400 uppercase">Status</p>
+                                    <p id="info-status" class="font-bold text-slate-800">-</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="space-y-3">
+                            <h4 class="text-xs font-bold text-slate-400 uppercase">Visibility Toggles</h4>
+                            <div class="flex flex-wrap gap-2">
+                                <button onclick="toggleOverlay('safe')" class="px-4 py-2 bg-green-500 text-white text-xs font-bold rounded-lg hover:bg-green-600 transition-all">Mobile Safe Area</button>
+                                <button onclick="toggleOverlay('desktop')" class="px-4 py-2 bg-blue-500 text-white text-xs font-bold rounded-lg hover:bg-blue-600 transition-all">Desktop View</button>
+                                <button onclick="toggleOverlay('tablet')" class="px-4 py-2 bg-purple-500 text-white text-xs font-bold rounded-lg hover:bg-purple-600 transition-all">Tablet View</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+    
+                <div class="lg:w-[60%] bg-slate-50/50 p-6 md:p-10 flex flex-col items-center justify-center">
+                   <div class="w-full max-w-2xl">
+                        <div class="preview-container" id="drop-zone">
+                            <img id="img-preview" class="preview-image" alt="YouTube Banner Preview">
+                            
+                            <div id="overlay-container" class="overlay">
+                                <!-- TV Area (Full) -->
+                                <div class="label-tag bg-slate-800" style="top: 5px; left: 5px;">TV View (2560x1440)</div>
+                                
+                                <!-- Desktop Area -->
+                                <div id="guide-desktop" class="guide-box desktop-area" style="width: 100%; height: 29.37%; top: 35.31%; left: 0;">
+                                    <div class="label-tag bg-blue-500" style="top: -20px; left: 0;">Desktop (2560x423)</div>
+                                </div>
+
+                                <!-- Tablet Area -->
+                                <div id="guide-tablet" class="guide-box" style="width: 72.46%; height: 29.37%; top: 35.31%; left: 13.77%; border: 2px solid #a855f7;">
+                                    <div class="label-tag bg-purple-500" style="bottom: -20px; left: 0;">Tablet (1855x423)</div>
+                                </div>
+
+                                <!-- Safe Area (Mobile) -->
+                                <div id="guide-safe" class="guide-box safe-area" style="width: 60.39%; height: 29.37%; top: 35.31%; left: 19.80%;">
+                                    <div class="label-tag bg-green-500" style="top: 50%; left: 50%; transform: translate(-50%, -50%); white-space: nowrap;">Safe Area (1546x423)</div>
+                                </div>
+                            </div>
+
+                            <div id="placeholder-text" class="absolute inset-0 flex flex-col items-center justify-center text-slate-400">
+                                <i class="fab fa-youtube text-5xl mb-4"></i>
+                                <p class="font-bold">No Image Selected</p>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div class="bg-white p-4 rounded-xl border border-slate-100 shadow-sm text-center">
+                                <i class="fas fa-mobile-alt text-green-500 mb-2"></i>
+                                <p class="text-[10px] font-bold text-slate-400 uppercase">Mobile</p>
+                                <p class="text-xs font-semibold">1546 x 423 px</p>
+                            </div>
+                            <div class="bg-white p-4 rounded-xl border border-slate-100 shadow-sm text-center">
+                                <i class="fas fa-desktop text-blue-500 mb-2"></i>
+                                <p class="text-[10px] font-bold text-slate-400 uppercase">Desktop</p>
+                                <p class="text-xs font-semibold">2560 x 423 px</p>
+                            </div>
+                            <div class="bg-white p-4 rounded-xl border border-slate-100 shadow-sm text-center">
+                                <i class="fas fa-tv text-slate-700 mb-2"></i>
+                                <p class="text-[10px] font-bold text-slate-400 uppercase">TV</p>
+                                <p class="text-xs font-semibold">2560 x 1440 px</p>
+                            </div>
+                        </div>
+                   </div>
+                </div>
+            </main>
+    
+            <footer class="bg-slate-50 border-t border-slate-100 p-6 md:p-8">
+               <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+                   <div class="text-center md:text-left">
+                       <h4 class="text-sm font-bold text-slate-700 mb-1">Share this tool</h4>
+                       <p class="text-xs text-slate-400">Help other creators fix their channel art.</p>
+                   </div>
+                   
+                   <div class="flex flex-wrap justify-center gap-3">
+                       <a href="#" onclick="shareSocial('facebook')" class="w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center text-white transition-transform hover:-translate-y-1 hover:shadow-lg bg-[#1877F2]"><i class="fab fa-facebook-f"></i></a>
+                       <a href="#" onclick="shareSocial('twitter')" class="w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center text-white transition-transform hover:-translate-y-1 hover:shadow-lg bg-[#1DA1F2]"><i class="fab fa-twitter"></i></a>
+                       <a href="#" onclick="shareSocial('whatsapp')" class="w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center text-white transition-transform hover:-translate-y-1 hover:shadow-lg bg-[#25D366]"><i class="fab fa-whatsapp"></i></a>
+                       <a href="#" onclick="shareSocial('telegram')" class="w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center text-white transition-transform hover:-translate-y-1 hover:shadow-lg bg-[#0088cc]"><i class="fab fa-telegram-plane"></i></a>
+                   </div>
+    
+                   <div class="relative">
+                       <button onclick="handleBookmark()" class="flex items-center gap-2 bg-white border border-slate-200 hover:border-[#FF0000] hover:text-[#FF0000] text-slate-600 px-4 py-2 rounded-lg text-sm font-bold transition-all shadow-sm active:scale-95">
+                          <i class="fas fa-bookmark"></i> Bookmark
+                       </button>
+                       <div id="bookmark-toast" class="hidden absolute bottom-full mb-3 left-1/2 -translate-x-1/2 bg-slate-800 text-white text-xs py-2 px-4 rounded-lg shadow-lg whitespace-nowrap animate-fade">
+                           Press <span class="font-bold text-[#FF0000]">Ctrl + D</span> to bookmark
+                       </div>
+                   </div>
+               </div>
+            </footer>
+        </div>
+    </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const uploadInput = document.getElementById('banner-upload');
+        const imgPreview = document.getElementById('img-preview');
+        const overlayContainer = document.getElementById('overlay-container');
+        const placeholder = document.getElementById('placeholder-text');
+        const infoDim = document.getElementById('info-dim');
+        const infoStatus = document.getElementById('info-status');
+        const fileInfo = document.getElementById('file-info');
+
+        uploadInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    imgPreview.src = event.target.result;
+                    imgPreview.style.display = 'block';
+                    overlayContainer.style.display = 'block';
+                    placeholder.style.display = 'none';
+                    fileInfo.classList.remove('hidden');
+
+                    const img = new Image();
+                    img.onload = function() {
+                        const w = this.width;
+                        const h = this.height;
+                        infoDim.textContent = `${w} x ${h} px`;
+                        
+                        if (w >= 2048 && h >= 1152) {
+                            infoStatus.textContent = '✅ Valid Size';
+                            infoStatus.className = 'font-bold text-green-600';
+                        } else {
+                            infoStatus.textContent = '❌ Too Small';
+                            infoStatus.className = 'font-bold text-red-600';
+                        }
+                    };
+                    img.src = event.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        window.toggleOverlay = function(type) {
+            const safe = document.getElementById('guide-safe');
+            const desktop = document.getElementById('guide-desktop');
+            const tablet = document.getElementById('guide-tablet');
+
+            if (type === 'safe') safe.style.display = safe.style.display === 'none' ? 'block' : 'none';
+            if (type === 'desktop') desktop.style.display = desktop.style.display === 'none' ? 'block' : 'none';
+            if (type === 'tablet') tablet.style.display = tablet.style.display === 'none' ? 'block' : 'none';
+        };
+
+        window.handleBookmark = function() {
+            const toast = document.getElementById('bookmark-toast');
+            toast.classList.remove('hidden');
+            setTimeout(() => toast.classList.add('hidden'), 3000);
+        };
+
+        window.shareSocial = function(platform) {
+             const url = encodeURIComponent(window.location.href);
+             const title = encodeURIComponent("Check your YouTube Banner Safe Zones with this tool!");
+             let shareUrl = '';
+             switch(platform) {
+                case 'facebook': shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${url}`; break;
+                case 'twitter': shareUrl = `https://twitter.com/intent/tweet?url=${url}&text=${title}`; break;
+                case 'whatsapp': shareUrl = `https://api.whatsapp.com/send?text=${title}%20${url}`; break;
+                case 'telegram': shareUrl = `https://t.me/share/url?url=${url}&text=${title}`; break;
+             }
+             if(shareUrl) window.open(shareUrl, '_blank');
+        };
+    });
+    </script>
+
+    <section class="bg-white py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="prose prose-lg max-w-none prose-h2:text-gray-800 prose-p:text-gray-700">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">Why You Need to Check YouTube Channel Art Dimensions</h2>
+                <p class="mb-6 leading-relaxed">
+                    Creating a stunning YouTube banner is only half the battle. The real challenge lies in ensuring that your branding, social media handles, and call-to-action (CTA) are visible across all devices. Because YouTube displays channel art differently on TVs, desktops, tablets, and smartphones, your design can easily get cropped in the wrong places. Our <strong>YouTube banner size checker</strong> helps you visualize these "safe zones" before you upload.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Understanding the YouTube Safe Area (1546 x 423)</h2>
+                <p class="mb-6 leading-relaxed">
+                    The "Safe Area" is the most critical part of your YouTube banner. It is the central 1546 x 423 pixel area that is guaranteed to be visible on every single device, including the smallest mobile screens. If you place your logo or channel name outside this box, mobile users—who make up over 70% of YouTube traffic—might never see it. 
+                </p>
+                <p class="mb-6 leading-relaxed">
+                    When you <strong>check youtube channel art dimensions</strong> using our tool, we overlay a green box to show you exactly where this safe zone is. If your text spills out of this box, it's time to head back to your editor or use a <a href="https://simpliconvert.com/social_media_image_resizer/" target="_blank">social media image resizer</a> to adjust your layout.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">TV vs. Desktop vs. Mobile: The Scaling Problem</h2>
+                <p class="mb-6 leading-relaxed">
+                    YouTube banners are unique because they use a single image (2560 x 1440 px) to cover vastly different aspect ratios:
+                </p>
+                <ul class="list-disc pl-6 mb-6 space-y-2 text-gray-700">
+                    <li><strong>TV View:</strong> Displays the entire 2560 x 1440 image. This is why you should have a high-quality background.</li>
+                    <li><strong>Desktop View:</strong> Crops the image to a wide strip of 2560 x 423 pixels.</li>
+                    <li><strong>Tablet View:</strong> A slightly narrower strip of 1855 x 423 pixels.</li>
+                    <li><strong>Mobile View:</strong> The narrowest view, showing only the 1546 x 423 safe area.</li>
+                </ul>
+                <p class="mb-6 leading-relaxed">
+                    Using our viewer, you can toggle these different views to see how your background image holds up. If your banner looks great on TV but loses its meaning on mobile, you need a <em>channel header fix</em>.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Pro Tips for Perfect YouTube Branding</h2>
+                <p class="mb-6 leading-relaxed">
+                    To make your channel look professional, follow these branding guidelines:
+                </p>
+                <ul class="list-disc pl-6 mb-6 space-y-2 text-gray-700">
+                    <li><strong>Center Your Content:</strong> Always keep your logo and text in the dead center.</li>
+                    <li><strong>Check File Size:</strong> YouTube has a 6MB limit. If your file is too large, use an <a href="https://simpliconvert.com/image_size_reducer/" target="_blank">image size reducer</a>.</li>
+                    <li><strong>High Resolution:</strong> Even though mobile view is small, upload at 2560x1440 to ensure it looks crisp on 4K monitors and TVs.</li>
+                    <li><strong>Complement Your Avatar:</strong> Ensure your banner doesn't clash with your profile picture. You can use our <a href="https://simpliconvert.com/profile_picture_cropper/" target="_blank">profile picture cropper</a> to align your brand assets perfectly.</li>
+                </ul>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">How to Use the YouTube Banner Checker</h2>
+                <p class="mb-6 leading-relaxed">
+                    Using this tool is simple. Just drag and drop your image into the preview area. Our system will automatically detect the dimensions and tell you if it meets YouTube's minimum requirements. Once uploaded, use the visibility toggles to see how the image is cropped on different devices. This <em>safe zone viewer</em> is the final step every creator should take before hitting the "Publish" button on their channel customization page.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-center text-gray-900 mb-8">Frequently Asked Questions</h2>
+            <div class="space-y-4">
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>What is the minimum size for a YouTube banner?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">The absolute minimum dimensions for a YouTube banner upload are 2048 x 1152 pixels with an aspect ratio of 16:9. However, for the best results across all devices, 2560 x 1440 pixels is highly recommended.</p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>Will this tool crop my image for me?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">This tool is a "checker" and "viewer" designed to help you visualize safe zones. It does not modify your file. If you need to resize or crop your image, we recommend using our dedicated Image Cropper or Resizer tools.</p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>Why is my banner blurry on YouTube?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">Blurriness usually happens if you upload an image smaller than the recommended 2560x1440 pixels, causing YouTube to stretch it. It can also happen if your file compression is too high. Always use high-quality PNG or JPG files.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 pb-16">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-slate-200 pt-16">
+            <h2 class="text-2xl font-bold text-center text-slate-800 mb-10">Popular Tools on SimpliConvert</h2>
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+                <a href="/social_media_image_resizer/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#FF0000] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center shrink-0 group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-expand-arrows-alt text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#FF0000]">Image Resizer</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Resize for all social platforms.</p>
+                    </div>
+                </a>
+
+                <a href="/youtube_thumbnail_downloader/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#FF0000] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-red-50 text-red-600 flex items-center justify-center shrink-0 group-hover:bg-red-600 group-hover:text-white transition-colors">
+                        <i class="fab fa-youtube text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#FF0000]">Thumb Grabber</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Download YouTube covers.</p>
+                    </div>
+                </a>
+
+                <a href="/profile_picture_cropper/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#FF0000] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-green-50 text-green-600 flex items-center justify-center shrink-0 group-hover:bg-green-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-user-circle text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#FF0000]">PFP Cropper</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Perfect circle crops for profiles.</p>
+                    </div>
+                </a>
+
+                <a href="/image_size_reducer/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#FF0000] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-orange-50 text-orange-600 flex items-center justify-center shrink-0 group-hover:bg-orange-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-compress-arrows-alt text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#FF0000]">Size Reducer</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Compress images to under 6MB.</p>
+                    </div>
+                </a>
+
+                <a href="/instagram_story_size_checker/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#FF0000] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-purple-50 text-purple-600 flex items-center justify-center shrink-0 group-hover:bg-purple-600 group-hover:text-white transition-colors">
+                        <i class="fab fa-instagram text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#FF0000]">Story Checker</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Check IG story safe zones.</p>
+                    </div>
+                </a>
+
+                <a href="/image_metadata_viewer/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#FF0000] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-slate-50 text-slate-700 flex items-center justify-center shrink-0 group-hover:bg-slate-800 group-hover:text-white transition-colors">
+                        <i class="fas fa-info-circle text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#FF0000]">EXIF Viewer</h3>
+                        <p class="text-xs text-slate-500 leading-snug">View hidden image metadata.</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <div id="footer"></div>
+
+    <script>
+    async function loadComponent(url, elementId, callback) {
+        try {
+            const response = await fetch(url);
+            if (!response.ok) throw new Error('Status: ' + response.status);
+            const text = await response.text();
+            const element = document.getElementById(elementId);
+            if (element) {
+                element.innerHTML = text;
+                if (callback) callback();
+            }
+        } catch (error) {
+            console.error('Error loading component:', error);
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        loadComponent('/components/navbar.html', 'navbar');
+        loadComponent('/components/footer.html', 'footer');
+        
+        const faqToggles = document.querySelectorAll('[data-faq-toggle]');
+        faqToggles.forEach(button => {
+            button.addEventListener('click', () => {
+                const answer = button.nextElementSibling;
+                const icon = button.querySelector('.faq-icon');
+                const isOpening = !answer.style.maxHeight;
+
+                faqToggles.forEach(other => {
+                    if (other !== button) {
+                        other.nextElementSibling.style.maxHeight = null;
+                        other.querySelector('.faq-icon').classList.remove('rotate-90');
+                        other.querySelector('.faq-icon').classList.add('-rotate-90');
+                    }
+                });
+
+                if (isOpening) {
+                    answer.style.maxHeight = answer.scrollHeight + "px";
+                    icon.classList.remove('-rotate-90');
+                    icon.classList.add('rotate-90');
+                } else {
+                    answer.style.maxHeight = null;
+                    icon.classList.remove('rotate-90');
+                    icon.classList.add('-rotate-90');
+                }
+            });
+        });
+    });
+    </script>
+</body>
+</html>

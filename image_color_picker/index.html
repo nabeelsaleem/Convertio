@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Image Color Picker – Extract HEX Color Code from Image | SimpliConvert</title>
+    <meta name="description" content="Upload an image and pick any color to get its exact HEX, RGB, or HSL code. Use our free eyedropper tool to extract hex color codes from images instantly.">
+    <meta name="keywords" content="extract hex color code from image, find color in photo, hex code finder, rgb picker, color identifier tool, eyedropper tool, image color detector">
+    <meta name="author" content="SimpliConvert">
+    <meta property="og:site_name" content="SimpliConvert">
+    <meta name="robots" content="index, follow">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://simpliconvert.com/image_color_picker/">
+    <meta property="og:title" content="Image Color Picker – Extract HEX & RGB Codes">
+    <meta property="og:description" content="Easily extract hex color codes from any image. Upload your photo and use the eyedropper to find the perfect color match.">
+    <meta property="og:image" content="https://simpliconvert.com/images/image-color-picker-og.jpg">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://simpliconvert.com/image_color_picker/">
+    <meta name="twitter:title" content="Image Color Picker – Find HEX Codes from Photos">
+    <meta name="twitter:description" content="Free online tool to pick colors from images. Get HEX, RGB, and HSL values with a single click.">
+    <meta name="twitter:image" content="https://simpliconvert.com/images/image-color-picker-og.jpg">
+
+    <link rel="canonical" href="https://simpliconvert.com/image_color_picker/">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Image Color Picker",
+      "url": "https://simpliconvert.com/image_color_picker/",
+      "description": "A free online tool to extract hex color codes from images. Supports HEX, RGB, and HSL formats with an interactive eyedropper.",
+      "applicationCategory": "DesignApplication",
+      "operatingSystem": "Web Browser",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "SimpliConvert",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://simpliconvert.com/logo.png"
+        }
+      }
+    }
+    </script>
+
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [{
+    "@type": "ListItem",
+    "position": 1,
+    "name": "Home",
+    "item": "https://simpliconvert.com/"
+  },{
+    "@type": "ListItem",
+    "position": 2,
+    "name": "Image Tools",
+    "item": "https://simpliconvert.com/image_tools/"
+  },{
+    "@type": "ListItem",
+    "position": 3,
+    "name": "Image Color Picker",
+    "item": "https://simpliconvert.com/image_color_picker/"
+  }]
+}
+</script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [{
+        "@type": "Question",
+        "name": "How do I extract a hex color code from an image?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Simply upload your image to our tool, click on any part of the image using the cursor, and the tool will instantly display the HEX, RGB, and HSL codes for that specific pixel."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Is my image uploaded to a server?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "No. Our Image Color Picker processes everything locally in your browser. Your images are never sent to our servers, ensuring 100% privacy."
+        }
+      }, {
+        "@type": "Question",
+        "name": "What color formats are supported?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The tool provides color codes in HEX (e.g., #FF5733), RGB (e.g., 255, 87, 51), and HSL (e.g., 11°, 100%, 60%) formats."
+        }
+      }]
+    }
+    </script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #da3f0b;
+            --primary-hover: #b53409;
+            --bg: #f8fafc;
+            --text-dark: #0f172a;
+        }
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: var(--text-dark); }
+        .hero-card { background: white; border: 1px solid #f1f5f9; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05); position: relative; overflow: hidden; }
+        .hero-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px; background-color: var(--primary); }
+        .canvas-container { position: relative; cursor: crosshair; overflow: auto; max-height: 600px; background-image: linear-gradient(45deg, #f0f0f0 25%, transparent 25%), linear-gradient(-45deg, #f0f0f0 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #f0f0f0 75%), linear-gradient(-45deg, transparent 75%, #f0f0f0 75%); background-size: 20px 20px; background-position: 0 0, 0 10px, 10px -10px, -10px 0px; }
+        .magnifier { position: absolute; width: 100px; height: 100px; border: 3px solid #fff; border-radius: 50%; pointer-events: none; display: none; box-shadow: 0 0 10px rgba(0,0,0,0.3); z-index: 10; overflow: hidden; }
+        .tool-card { transition: transform 0.2s ease, box-shadow 0.2s ease; }
+        .tool-card:hover { transform: translateY(-4px); box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
+        .color-history-item { width: 32px; height: 32px; border-radius: 8px; cursor: pointer; border: 2px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.1); transition: transform 0.1s; }
+        .color-history-item:hover { transform: scale(1.1); }
+        #image-canvas { display: block; margin: 0 auto; max-width: 100%; height: auto; }
+    </style>
+</head>
+
+<body class="bg-gray-50 min-h-screen flex flex-col">
+    <div id="navbar" style="min-height: 70px;"></div>
+	
+	<section class="hero-white text-black py-2 md:py-10">
+        <div class="container mx-auto px-4">
+            <nav class="flex pb-4 text-sm text-slate-500 items-center space-x-2 justify-center">
+                <a href="https://simpliconvert.com/" class="hover:text-[#da3f0b] transition-colors">Home</a>
+                <i class="fas fa-chevron-right text-[10px]"></i>
+                <a href="https://simpliconvert.com/image_tools/" class="hover:text-[#da3f0b] transition-colors">Image Tools</a>
+                <i class="fas fa-chevron-right text-[10px]"></i>
+                <span class="text-slate-900 font-medium">Image Color Picker</span>
+            </nav>
+            <div class="text-center">
+                <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-2">extract hex color code from image</h1>
+                <p class="text-lg md:text-xl max-w-3xl mx-auto mb-2 text-slate-600">
+                Upload any photo and use our interactive eyedropper to find exact HEX, RGB, and HSL values instantly.
+                </p>
+            </div>
+        </div>
+    </section>		
+
+    <div id="calculator-app" class="w-full max-w-6xl mx-auto p-4 sm:p-6">
+        <div class="bg-white rounded-[2rem] shadow-2xl overflow-hidden border border-slate-100">
+            <header class="bg-slate-50/50 border-b border-slate-100 p-6 md:p-8 flex flex-col md:flex-row justify-between items-center gap-6">
+                <div class="text-center md:text-left">
+                  <h2 class="text-2xl font-black text-slate-800 tracking-tight flex items-center justify-center md:justify-start gap-3">
+                    <span class="bg-[#da3f0b] text-white p-2 rounded-xl text-lg shadow-lg shadow-[#da3f0b30]">
+                      <i class="fas fa-eye-dropper"></i>
+                    </span>
+                    Professional Color Identifier
+                  </h2>
+                </div>
+                <div class="flex gap-3">
+                    <label for="image-input" class="cursor-pointer bg-[#da3f0b] hover:bg-[#b53409] text-white px-6 py-2.5 rounded-xl font-bold text-sm transition-all shadow-lg shadow-[#da3f0b30] flex items-center gap-2">
+                        <i class="fas fa-upload"></i> Upload Image
+                    </label>
+                    <input type="file" id="image-input" class="hidden" accept="image/*">
+                </div>
+            </header>
+    
+            <main class="flex flex-col lg:flex-row">
+                <!-- Left: Canvas Area -->
+                <div class="lg:w-[65%] p-4 md:p-6 border-r border-slate-100 bg-slate-50/30">
+                    <div id="drop-zone" class="canvas-container rounded-2xl border-2 border-dashed border-slate-200 min-h-[400px] flex items-center justify-center relative">
+                        <div id="upload-placeholder" class="text-center p-10">
+                            <div class="w-20 h-20 bg-white rounded-full flex items-center justify-center mx-auto mb-4 shadow-sm">
+                                <i class="fas fa-images text-3xl text-slate-300"></i>
+                            </div>
+                            <p class="text-slate-500 font-medium">Drag and drop an image here or click upload</p>
+                            <p class="text-slate-400 text-xs mt-2">Supports JPG, PNG, WEBP, BMP</p>
+                        </div>
+                        <canvas id="image-canvas" class="hidden"></canvas>
+                        <div id="magnifier" class="magnifier">
+                            <canvas id="magnifier-canvas" width="100" height="100"></canvas>
+                        </div>
+                    </div>
+                </div>
+    
+                <!-- Right: Results Area -->
+                <div class="lg:w-[35%] p-6 md:p-8 flex flex-col gap-6">
+                    <div class="hero-card p-6 rounded-2xl">
+                        <p class="text-xs font-black text-[#da3f0b] uppercase tracking-widest mb-4">Selected Color</p>
+                        <div class="flex items-center gap-6">
+                            <div id="color-preview" class="w-20 h-20 rounded-2xl shadow-inner border border-slate-100 bg-slate-200"></div>
+                            <div class="flex-1">
+                                <div class="text-3xl font-black text-slate-800 mb-1" id="hex-display">#------</div>
+                                <p class="text-xs text-slate-400 font-bold uppercase" id="color-name-display">Click image to pick</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="space-y-4">
+                        <div class="bg-slate-50 p-4 rounded-xl border border-slate-100">
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">HEX Code</span>
+                                <button onclick="copyToClipboard('hex-display')" class="text-[#da3f0b] hover:text-[#b53409] text-xs font-bold"><i class="far fa-copy mr-1"></i> Copy</button>
+                            </div>
+                            <input type="text" id="hex-input" readonly class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm font-mono font-bold text-slate-700 focus:outline-none" value="#------">
+                        </div>
+
+                        <div class="bg-slate-50 p-4 rounded-xl border border-slate-100">
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">RGB Values</span>
+                                <button onclick="copyToClipboard('rgb-input')" class="text-[#da3f0b] hover:text-[#b53409] text-xs font-bold"><i class="far fa-copy mr-1"></i> Copy</button>
+                            </div>
+                            <input type="text" id="rgb-input" readonly class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm font-mono font-bold text-slate-700 focus:outline-none" value="rgb(---, ---, ---)">
+                        </div>
+
+                        <div class="bg-slate-50 p-4 rounded-xl border border-slate-100">
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">HSL Values</span>
+                                <button onclick="copyToClipboard('hsl-input')" class="text-[#da3f0b] hover:text-[#b53409] text-xs font-bold"><i class="far fa-copy mr-1"></i> Copy</button>
+                            </div>
+                            <input type="text" id="hsl-input" readonly class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm font-mono font-bold text-slate-700 focus:outline-none" value="hsl(---, ---%, ---%)">
+                        </div>
+                    </div>
+
+                    <div>
+                        <h3 class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3">Recent Picks</h3>
+                        <div id="color-history" class="flex flex-wrap gap-2">
+                            <!-- History items injected here -->
+                        </div>
+                    </div>
+                </div>
+            </main>
+    
+            <footer class="bg-slate-50 border-t border-slate-100 p-6 md:p-8">
+               <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+                   <div class="text-center md:text-left">
+                       <h4 class="text-sm font-bold text-slate-700 mb-1">Share this tool</h4>
+                       <p class="text-xs text-slate-400">Help designers find the perfect color.</p>
+                   </div>
+                   <div class="flex flex-wrap justify-center gap-3">
+                       <button onclick="shareSocial('facebook')" class="w-10 h-10 rounded-full flex items-center justify-center text-white bg-[#1877F2] hover:scale-110 transition-transform"><i class="fab fa-facebook-f"></i></button>
+                       <button onclick="shareSocial('twitter')" class="w-10 h-10 rounded-full flex items-center justify-center text-white bg-[#1DA1F2] hover:scale-110 transition-transform"><i class="fab fa-twitter"></i></button>
+                       <button onclick="shareSocial('whatsapp')" class="w-10 h-10 rounded-full flex items-center justify-center text-white bg-[#25D366] hover:scale-110 transition-transform"><i class="fab fa-whatsapp"></i></button>
+                       <button onclick="shareSocial('telegram')" class="w-10 h-10 rounded-full flex items-center justify-center text-white bg-[#0088cc] hover:scale-110 transition-transform"><i class="fab fa-telegram-plane"></i></button>
+                   </div>
+                   <button onclick="handleBookmark()" class="flex items-center gap-2 bg-white border border-slate-200 hover:border-[#da3f0b] hover:text-[#da3f0b] text-slate-600 px-4 py-2 rounded-lg text-sm font-bold transition-all shadow-sm">
+                      <i class="fas fa-bookmark"></i> Bookmark Tool
+                   </button>
+               </div>
+            </footer>
+        </div>
+    </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const imageInput = document.getElementById('image-input');
+        const canvas = document.getElementById('image-canvas');
+        const ctx = canvas.getContext('2d', { willReadFrequently: true });
+        const dropZone = document.getElementById('drop-zone');
+        const placeholder = document.getElementById('upload-placeholder');
+        const magnifier = document.getElementById('magnifier');
+        const magCanvas = document.getElementById('magnifier-canvas');
+        const magCtx = magCanvas.getContext('2d');
+        
+        const hexDisplay = document.getElementById('hex-display');
+        const hexInput = document.getElementById('hex-input');
+        const rgbInput = document.getElementById('rgb-input');
+        const hslInput = document.getElementById('hsl-input');
+        const colorPreview = document.getElementById('color-preview');
+        const historyContainer = document.getElementById('color-history');
+
+        let img = new Image();
+        let history = [];
+
+        // File Handling
+        imageInput.addEventListener('change', handleFile);
+        dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('border-[#da3f0b]'); });
+        dropZone.addEventListener('dragleave', () => dropZone.classList.remove('border-[#da3f0b]'));
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZone.classList.remove('border-[#da3f0b]');
+            if (e.dataTransfer.files.length) handleFile({ target: { files: e.dataTransfer.files } });
+        });
+
+        function handleFile(e) {
+            const file = e.target.files[0];
+            if (!file || !file.type.startsWith('image/')) return;
+
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                img.onload = () => {
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+                    ctx.drawImage(img, 0, 0);
+                    canvas.classList.remove('hidden');
+                    placeholder.classList.add('hidden');
+                };
+                img.src = event.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // Color Picking Logic
+        canvas.addEventListener('mousemove', handleMove);
+        canvas.addEventListener('click', handleClick);
+        canvas.addEventListener('mouseleave', () => magnifier.style.display = 'none');
+
+        function getMousePos(e) {
+            const rect = canvas.getBoundingClientRect();
+            const scaleX = canvas.width / rect.width;
+            const scaleY = canvas.height / rect.height;
+            return {
+                x: (e.clientX - rect.left) * scaleX,
+                y: (e.clientY - rect.top) * scaleY,
+                screenX: e.clientX - rect.left,
+                screenY: e.clientY - rect.top
+            };
+        }
+
+        function handleMove(e) {
+            if (!img.src) return;
+            const pos = getMousePos(e);
+            
+            // Show Magnifier
+            magnifier.style.display = 'block';
+            magnifier.style.left = `${pos.screenX - 50}px`;
+            magnifier.style.top = `${pos.screenY - 50}px`;
+
+            // Draw Magnified Area
+            magCtx.clearRect(0, 0, 100, 100);
+            magCtx.imageSmoothingEnabled = false;
+            magCtx.drawImage(canvas, pos.x - 5, pos.y - 5, 10, 10, 0, 0, 100, 100);
+            
+            // Draw Crosshair in magnifier
+            magCtx.strokeStyle = '#fff';
+            magCtx.lineWidth = 1;
+            magCtx.beginPath();
+            magCtx.moveTo(50, 0); magCtx.lineTo(50, 100);
+            magCtx.moveTo(0, 50); magCtx.lineTo(100, 50);
+            magCtx.stroke();
+        }
+
+        function handleClick(e) {
+            const pos = getMousePos(e);
+            const pixel = ctx.getImageData(pos.x, pos.y, 1, 1).data;
+            const r = pixel[0], g = pixel[1], b = pixel[2];
+            updateColorUI(r, g, b);
+        }
+
+        function updateColorUI(r, g, b) {
+            const hex = rgbToHex(r, g, b);
+            const rgb = `rgb(${r}, ${g}, ${b})`;
+            const hsl = rgbToHsl(r, g, b);
+
+            hexDisplay.textContent = hex;
+            hexInput.value = hex;
+            rgbInput.value = rgb;
+            hslInput.value = hsl;
+            colorPreview.style.backgroundColor = hex;
+
+            addToHistory(hex);
+        }
+
+        function addToHistory(hex) {
+            if (history.includes(hex)) return;
+            history.unshift(hex);
+            if (history.length > 10) history.pop();
+            renderHistory();
+        }
+
+        function renderHistory() {
+            historyContainer.innerHTML = '';
+            history.forEach(hex => {
+                const div = document.createElement('div');
+                div.className = 'color-history-item';
+                div.style.backgroundColor = hex;
+                div.title = hex;
+                div.onclick = () => {
+                    const rgb = hexToRgb(hex);
+                    updateColorUI(rgb.r, rgb.g, rgb.b);
+                };
+                historyContainer.appendChild(div);
+            });
+        }
+
+        // Conversions
+        function rgbToHex(r, g, b) {
+            return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1).toUpperCase();
+        }
+
+        function hexToRgb(hex) {
+            const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+            return result ? {
+                r: parseInt(result[1], 16),
+                g: parseInt(result[2], 16),
+                b: parseInt(result[3], 16)
+            } : null;
+        }
+
+        function rgbToHsl(r, g, b) {
+            r /= 255; g /= 255; b /= 255;
+            const max = Math.max(r, g, b), min = Math.min(r, g, b);
+            let h, s, l = (max + min) / 2;
+            if (max === min) { h = s = 0; } else {
+                const d = max - min;
+                s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+                switch (max) {
+                    case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+                    case g: h = (b - r) / d + 2; break;
+                    case b: h = (r - g) / d + 4; break;
+                }
+                h /= 6;
+            }
+            return `hsl(${Math.round(h * 360)}°, ${Math.round(s * 100)}%, ${Math.round(l * 100)}%)`;
+        }
+
+        window.copyToClipboard = (id) => {
+            const el = document.getElementById(id);
+            const val = el.tagName === 'INPUT' ? el.value : el.textContent;
+            navigator.clipboard.writeText(val).then(() => {
+                const btn = event.currentTarget;
+                const original = btn.innerHTML;
+                btn.innerHTML = '<i class="fas fa-check mr-1"></i> Copied!';
+                setTimeout(() => btn.innerHTML = original, 2000);
+            });
+        };
+
+        window.shareSocial = (platform) => {
+            const url = encodeURIComponent(window.location.href);
+            const text = encodeURIComponent("Check out this free Image Color Picker tool!");
+            const shares = {
+                facebook: `https://www.facebook.com/sharer/sharer.php?u=${url}`,
+                twitter: `https://twitter.com/intent/tweet?url=${url}&text=${text}`,
+                whatsapp: `https://api.whatsapp.com/send?text=${text}%20${url}`,
+                telegram: `https://t.me/share/url?url=${url}&text=${text}`
+            };
+            window.open(shares[platform], '_blank');
+        };
+
+        window.handleBookmark = () => alert("Press Ctrl+D (or Cmd+D on Mac) to bookmark this tool.");
+    });
+    </script>
+
+    <section class="bg-white py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="prose prose-lg max-w-none prose-h2:text-gray-800 prose-p:text-gray-700">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">How to Extract HEX Color Codes from Images</h2>
+                <p class="mb-6 leading-relaxed">
+                    Whether you are a web designer, digital artist, or branding expert, finding the perfect color match is essential. Our <strong>Image Color Picker</strong> allows you to <em>extract hex color codes from images</em> with pixel-perfect accuracy. Instead of guessing or using complex software like Photoshop, you can simply upload your photo and click to identify any shade.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Why Use an Online Eyedropper Tool?</h2>
+                <p class="mb-6 leading-relaxed">
+                    In the world of design, consistency is key. If you are trying to match a logo's color or find a complementary palette from a beautiful photograph, you need the exact values. Our tool provides HEX, RGB, and HSL formats, making it compatible with CSS, graphic design software, and mobile app development. For those looking to build a full theme, you might also find our <a href="https://simpliconvert.com/image_palette_generator/" class="text-[#da3f0b] hover:underline">Image Palette Generator</a> useful for creating cohesive color schemes.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Privacy-First Color Identification</h2>
+                <p class="mb-6 leading-relaxed">
+                    We understand that your images might contain sensitive information. That’s why our tool processes everything <strong>locally in your browser</strong>. Your image is never uploaded to our servers, ensuring that your data remains private. This makes it a secure alternative to other online tools. If you're concerned about other hidden data in your photos, check out our <a href="https://simpliconvert.com/image_metadata_viewer/" class="text-[#da3f0b] hover:underline">Image Metadata Viewer</a> to see what information is stored in your files.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Understanding HEX, RGB, and HSL</h2>
+                <p class="mb-6 leading-relaxed">
+                    Our tool doesn't just give you one code; it provides three essential formats:
+                </p>
+                <ul class="list-disc pl-6 mb-6 space-y-2 text-gray-7

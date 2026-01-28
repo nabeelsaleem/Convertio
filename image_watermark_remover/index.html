@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Remove Unwanted Watermark from Photo Online - Free Tool | SimpliConvert</title>
+    <meta name="description" content="Easily remove unwanted watermarks from photos online. Delete logos, clean up images, and restore your visuals with our free object eraser tool. No software required.">
+    <meta name="keywords" content="remove unwanted watermark from photo, delete logo from image, clean image online, object eraser tool, photo restoration, remove text from image">
+    <meta name="author" content="SimpliConvert">
+    <meta property="og:site_name" content="SimpliConvert">
+    <meta name="robots" content="index, follow">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://simpliconvert.com/image_watermark_remover/">
+    <meta property="og:title" content="Remove Unwanted Watermark from Photo - Free Online Tool">
+    <meta property="og:description" content="Clean up your images by removing logos, text, and watermarks instantly using our advanced browser-based eraser.">
+    <meta property="og:image" content="https://simpliconvert.com/images/image-watermark-remover-og.jpg">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://simpliconvert.com/image_watermark_remover/">
+    <meta name="twitter:title" content="Image Watermark Remover – Clean Your Photos Instantly">
+    <meta name="twitter:description" content="Free tool to delete unwanted objects and watermarks from photos. Fast, secure, and works in your browser.">
+    <meta name="twitter:image" content="https://simpliconvert.com/images/image-watermark-remover-og.jpg">
+
+    <link rel="canonical" href="https://simpliconvert.com/image_watermark_remover/">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Image Watermark Remover",
+      "url": "https://simpliconvert.com/image_watermark_remover/",
+      "description": "A free online tool to remove unwanted watermarks, logos, and objects from images directly in the browser.",
+      "applicationCategory": "ImageEditorApplication",
+      "operatingSystem": "Web Browser",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "SimpliConvert"
+      }
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [{
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://simpliconvert.com/"
+      },{
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Image Tools",
+        "item": "https://simpliconvert.com/image_tools/"
+      },{
+        "@type": "ListItem",
+        "position": 3,
+        "name": "Image Watermark Remover",
+        "item": "https://simpliconvert.com/image_watermark_remover/"
+      }]
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [{
+        "@type": "Question",
+        "name": "How does the watermark remover work?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The tool uses a content-aware fill algorithm. When you brush over a watermark, the tool analyzes the surrounding pixels and intelligently fills the area to blend with the background."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Is it safe to upload my photos here?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. All processing happens locally in your browser. Your images are never uploaded to our servers, ensuring 100% privacy."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Can I remove complex logos?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "It works best on watermarks over simple or textured backgrounds. For very complex patterns, you may need to apply the brush multiple times for the best result."
+        }
+      }]
+    }
+    </script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #da3f0b;
+            --primary-hover: #b53409;
+            --bg: #f8fafc;
+        }
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg); }
+        .canvas-container { position: relative; max-width: 100%; overflow: auto; background: #e2e8f0; border-radius: 1rem; }
+        #imageCanvas { cursor: crosshair; display: block; margin: 0 auto; }
+        .tool-card { transition: transform 0.2s ease; }
+        .tool-card:hover { transform: translateY(-4px); }
+        .drop-zone { border: 2px dashed #cbd5e1; transition: all 0.3s ease; }
+        .drop-zone.active { border-color: var(--primary); background: #fff5f2; }
+        .loader { border-top-color: var(--primary); animation: spinner 0.6s linear infinite; }
+        @keyframes spinner { to { transform: rotate(360deg); } }
+    </style>
+</head>
+
+<body class="min-h-screen flex flex-col">
+    <div id="navbar" style="min-height: 70px;"></div>
+	
+	<section class="py-10">
+        <div class="container mx-auto px-4">
+            <nav class="flex pb-4 text-sm text-slate-500 items-center space-x-2 justify-center">
+                <a href="https://simpliconvert.com/" class="hover:text-[#da3f0b]">Home</a>
+                <i class="fas fa-chevron-right text-[10px]"></i>
+                <a href="https://simpliconvert.com/image_tools/" class="hover:text-[#da3f0b]">Image Tools</a>
+                <i class="fas fa-chevron-right text-[10px]"></i>
+                <span class="text-slate-900 font-medium">Image Watermark Remover</span>
+            </nav>
+            <div class="text-center">
+                <h1 class="text-3xl md:text-5xl font-extrabold mb-4 text-slate-900">remove unwanted watermark from photo</h1>
+                <p class="text-lg text-slate-600 max-w-2xl mx-auto">
+                    Clean up your images instantly. Brush over watermarks, logos, or unwanted objects to erase them using our smart content-aware tool.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <main class="flex-grow container mx-auto px-4 pb-12">
+        <div class="max-w-5xl mx-auto bg-white rounded-3xl shadow-xl overflow-hidden border border-slate-100">
+            <div id="upload-section" class="p-8 md:p-12">
+                <div id="drop-zone" class="drop-zone rounded-2xl p-12 text-center cursor-pointer">
+                    <input type="file" id="file-input" class="hidden" accept="image/*">
+                    <div class="flex flex-col items-center">
+                        <div class="w-20 h-20 bg-[#da3f0b10] text-[#da3f0b] rounded-full flex items-center justify-center mb-4">
+                            <i class="fas fa-cloud-upload-alt text-3xl"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-slate-800 mb-2">Upload your image</h3>
+                        <p class="text-slate-500 mb-6">Drag and drop or click to browse (JPG, PNG, WebP)</p>
+                        <button onclick="document.getElementById('file-input').click()" class="bg-[#da3f0b] text-white px-8 py-3 rounded-xl font-bold hover:bg-[#b53409] transition-all shadow-lg shadow-[#da3f0b30]">
+                            Select Image
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="editor-section" class="hidden flex flex-col lg:flex-row">
+                <div class="lg:w-3/4 p-6 bg-slate-50 border-r border-slate-100">
+                    <div class="canvas-container shadow-inner">
+                        <canvas id="imageCanvas"></canvas>
+                    </div>
+                    <div class="mt-4 flex flex-wrap items-center justify-between gap-4">
+                        <div class="flex items-center gap-4">
+                            <div class="flex items-center gap-2">
+                                <span class="text-xs font-bold text-slate-500 uppercase">Brush Size</span>
+                                <input type="range" id="brush-size" min="5" max="100" value="30" class="w-32 h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-[#da3f0b]">
+                                <span id="brush-size-val" class="text-sm font-bold text-slate-700 w-8">30</span>
+                            </div>
+                        </div>
+                        <div class="flex gap-2">
+                            <button id="undo-btn" class="p-2 text-slate-600 hover:text-[#da3f0b] transition-colors" title="Clear Mask">
+                                <i class="fas fa-eraser mr-1"></i> Clear Mask
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="lg:w-1/4 p-8 flex flex-col gap-6">
+                    <div>
+                        <h4 class="text-sm font-black text-slate-400 uppercase tracking-widest mb-4">Instructions</h4>
+                        <ul class="text-xs text-slate-600 space-y-3">
+                            <li class="flex gap-2"><i class="fas fa-paint-brush text-[#da3f0b]"></i> <span>Paint over the watermark or object you want to remove.</span></li>
+                            <li class="flex gap-2"><i class="fas fa-magic text-[#da3f0b]"></i> <span>Click "Erase" to process the image.</span></li>
+                            <li class="flex gap-2"><i class="fas fa-download text-[#da3f0b]"></i> <span>Download your cleaned photo.</span></li>
+                        </ul>
+                    </div>
+
+                    <div class="mt-auto space-y-3">
+                        <button id="erase-btn" class="w-full bg-slate-900 text-white py-4 rounded-xl font-bold hover:bg-black transition-all flex items-center justify-center gap-2">
+                            <i class="fas fa-magic"></i> Erase Watermark
+                        </button>
+                        <button id="download-btn" class="w-full bg-[#da3f0b] text-white py-4 rounded-xl font-bold hover:bg-[#b53409] transition-all flex items-center justify-center gap-2 shadow-lg shadow-[#da3f0b20]">
+                            <i class="fas fa-download"></i> Download Result
+                        </button>
+                        <button onclick="location.reload()" class="w-full border border-slate-200 text-slate-500 py-3 rounded-xl font-bold hover:bg-slate-50 transition-all text-sm">
+                            Start New
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- SEO Content Section -->
+    <section class="bg-white py-16">
+        <div class="max-w-4xl mx-auto px-4">
+            <div class="prose prose-slate max-w-none">
+                <h2 class="text-3xl font-bold text-slate-900 mb-6">How to Remove Unwanted Watermarks from Photos</h2>
+                <p>
+                    Having a perfect photo ruined by an intrusive watermark or a stray object is frustrating. Whether it's a date stamp, a logo, or an unwanted person in the background, our <strong>image watermark remover</strong> uses advanced browser-based algorithms to help you restore your visuals. Unlike complex software, this tool is designed for speed and simplicity.
+                </p>
+                
+                <h2 class="text-2xl font-bold text-slate-900 mt-10 mb-4">Why Use an Object Eraser Tool?</h2>
+                <p>
+                    Visual content is king in the digital age. A clean image looks more professional and engaging. Using an object eraser allows you to:
+                </p>
+                <ul class="list-disc pl-6 space-y-2">
+                    <li><strong>Delete Logos:</strong> Remove branding that distracts from the main subject.</li>
+                    <li><strong>Clean Images:</strong> Erase dust, scratches, or power lines from landscape shots.</li>
+                    <li><strong>Restore Photos:</strong> Fix old scanned photos by removing blemishes or stamps.</li>
+                </ul>
+                <p>
+                    If you need to do the opposite and protect your work, you can use our <a href="https://simpliconvert.com/image_watermark_adder/" class="text-[#da3f0b] font-semibold">Image Watermark Adder</a> to place your own branding securely.
+                </p>
+
+                <h2 class="text-2xl font-bold text-slate-900 mt-10 mb-4">Tips for Best Results</h2>
+                <p>
+                    While our tool is powerful, the quality of the "erase" depends on the background. For the best results:
+                </p>
+                <ol class="list-decimal pl-6 space-y-2">
+                    <li><strong>Use a Precise Brush:</strong> Adjust the brush size to cover only the watermark. Over-painting into complex areas can lead to blurring.</li>
+                    <li><strong>Work in Stages:</strong> If you have multiple objects, erase them one by one rather than all at once.</li>
+                    <li><strong>Check Resolution:</strong> If you need to adjust the size after cleaning, try our <a href="https://simpliconvert.com/social_media_image_resizer/" class="text-[#da3f0b] font-semibold">Social Media Image Resizer</a> to fit your specific platform needs.</li>
+                </ol>
+
+                <h2 class="text-2xl font-bold text-slate-900 mt-10 mb-4">100% Private and Secure</h2>
+                <p>
+                    Privacy is our priority. Unlike other online editors that upload your files to a server, SimpliConvert processes everything locally on your device. Your photos never leave your computer, making it the safest way to <strong>remove unwanted watermark from photo</strong> files.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="bg-slate-50 py-16">
+        <div class="max-w-3xl mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-10">Frequently Asked Questions</h2>
+            <div class="space-y-4">
+                <div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
+                    <button class="faq-btn w-full flex justify-between items-center p-5 text-left font-bold text-slate-800 hover:bg-slate-50">
+                        <span>Is this watermark remover free to use?</span>
+                        <i class="fas fa-chevron-down transition-transform"></i>
+                    </button>
+                    <div class="faq-content hidden p-5 pt-0 text-slate-600 border-t border-slate-50">
+                        Yes, our tool is completely free with no hidden costs or subscriptions. You can process as many images as you need.
+                    </div>
+                </div>
+                <div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
+                    <button class="faq-btn w-full flex justify-between items-center p-5 text-left font-bold text-slate-800 hover:bg-slate-50">
+                        <span>Does it work on mobile devices?</span>
+                        <i class="fas fa-chevron-down transition-transform"></i>
+                    </button>
+                    <div class="faq-content hidden p-5 pt-0 text-slate-600 border-t border-slate-50">
+                        Absolutely! The tool is fully responsive and works on iPhones, Android devices, and tablets directly through the web browser.
+                    </div>
+                </div>
+                <div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
+                    <button class="faq-btn w-full flex justify-between items-center p-5 text-left font-bold text-slate-800 hover:bg-slate-50">
+                        <span>What file formats are supported?</span>
+                        <i class="fas fa-chevron-down transition-transform"></i>
+                    </button>
+                    <div class="faq-content hidden p-5 pt-0 text-slate-600 border-t border-slate-50">
+                        We support all major image formats including JPG, PNG, WebP, and BMP. For best results, we recommend high-resolution JPG or PNG files.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Related Tools -->
+    <section class="py-16 bg-white">
+        <div class="max-w-6xl mx-auto px-4">
+            <h2 class="text-2xl font-bold text-center text-slate-800 mb-10">Explore More Image Tools</h2>
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+                <a href="https://simpliconvert.com/image_watermark_adder/" class="tool-card bg-slate-50 p-4 rounded-xl border border-slate-100 flex flex-col items-center text-center">
+                    <i class="fas fa-stamp text-[#da3f0b] mb-2"></i>
+                    <span class="text-xs font-bold">Add Watermark</span>
+                </a>
+                <a href="https://simpliconvert.com/image_cropper/" class="tool-card bg-slate-50 p-4 rounded-xl border border-slate-100 flex flex-col items-center text-center">
+                    <i class="fas fa-crop text-[#da3f0b] mb-2"></i>
+                    <span class="text-xs font-bold">Image Cropper</span>
+                </a>
+                <a href="https://simpliconvert.com/jpg_to_png/" class="tool-card bg-slate-50 p-4 rounded-xl border border-slate-100 flex flex-col items-center text-center">
+                    <i class="fas fa-exchange-alt text-[#da3f0b] mb-2"></i>
+                    <span class="text-xs font-bold">JPG to PNG</span>
+                </a>
+                <a href="https://simpliconvert.com/image_size_reducer/" class="tool-card bg-slate-50 p-4 rounded-xl border border-slate-100 flex flex-col items-center text-center">
+                    <i class="fas fa-compress-arrows-alt text-[#da3f0b] mb-2"></i>
+                    <span class="text-xs font-bold">Size Reducer</span>
+                </a>
+                <a href="https://simpliconvert.com/image_color_picker/" class="tool-card bg-slate-50 p-4 rounded-xl border border-slate-100 flex flex-col items-center text-center">
+                    <i class="fas fa-eye-dropper text-[#da3f0b] mb-2"></i>
+                    <span class="text-xs font-bold">Color Picker</span>
+                </a>
+                <a href="https://simpliconvert.com/image_metadata_viewer/" class="tool-card bg-slate-50 p-4 rounded-xl border border-slate-100 flex flex-col items-center text-center">
+                    <i class="fas fa-info-circle text-[#da3f0b] mb-2"></i>
+                    <span class="text-xs font-bold">EXIF Viewer</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <div id="footer"></div>
+
+    <script>
+        const dropZone = document.getElementById('drop-zone');
+        const fileInput = document.getElementById('file-input');
+        const uploadSection = document.getElementById('upload-section');
+        const editorSection = document.getElementById('editor-section');
+        const canvas = document.getElementById('imageCanvas');
+        const ctx = canvas.getContext('2d');
+        const brushSizeInput = document.getElementById('brush-size');
+        const brushSizeVal = document.getElementById('brush-size-val');
+        const eraseBtn = document.getElementById('erase-btn');
+        const downloadBtn = document.getElementById('download-btn');
+        const undoBtn = document.getElementById('undo-btn');
+
+        let originalImage = null;
+        let isDrawing = false;
+        let maskCanvas = document.createElement('canvas');
+        let maskCtx = maskCanvas.getContext('2d');
+
+        // Drag & Drop
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            dropZone.addEventListener(eventName, e => { e.preventDefault(); e.stopPropagation(); });
+        });
+
+        dropZone.addEventListener('dragover', () => dropZone.classList.add('active'));
+        dropZone.addEventListener('dragleave', () => dropZone.classList.remove('active'));
+        dropZone.addEventListener('drop', e => {
+            dropZone.classList.remove('active');
+            handleFile(e.dataTransfer.files[0]);
+        });
+
+        fileInput.addEventListener('change', e => handleFile(e.target.files[0]));
+
+        function handleFile(file) {
+            if (!file || !file.type.startsWith('image/')) return;
+            const reader = new FileReader();
+            reader.onload = e => {
+                originalImage = new Image();
+                originalImage.onload = () => setupEditor();
+                originalImage.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function setupEditor() {
+            uploadSection.classList.add('hidden');
+            editorSection.classList.remove('hidden');
+
+            // Scale canvas to fit container while maintaining aspect ratio
+            const maxWidth = 800;
+            const scale = Math.min(1, maxWidth / originalImage.width);
+            canvas.width = originalImage.width * scale;
+            canvas.height = originalImage.height * scale;
+            
+            maskCanvas.width = canvas.width;
+            maskCanvas.height = canvas.height;
+            
+            render();
+        }
+
+        function render() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.drawImage(originalImage, 0, 0, canvas.width, canvas.height);
+            
+            // Draw mask with transparency
+            ctx.globalAlpha = 0.5;
+            ctx.fillStyle = '#da3f0b';
+            ctx.drawImage(maskCanvas, 0, 0);
+            ctx.globalAlpha = 1.0;
+        }
+
+        // Drawing Logic
+        canvas.addEventListener('mousedown', startDrawing);
+        canvas.addEventListener('mousemove', draw);
+        canvas.addEventListener('mouseup', stopDrawing);
+        canvas.addEventListener('touchstart', e => { e.preventDefault(); startDrawing(e.touches[0]); });
+        canvas.addEventListener('touchmove', e => { e.preventDefault(); draw(e.touches[0]); });
+        canvas.addEventListener('touchend', stopDrawing);
+
+        function getPos(e) {
+            const rect = canvas.getBoundingClientRect();
+            return {
+                x: (e.clientX - rect.left) * (canvas.width / rect.width),
+                y: (e.clientY - rect.top) * (canvas.height / rect.height)
+            };
+        }
+
+        function startDrawing(e) {
+            isDrawing = true;
+            draw(e);
+        }
+
+        function draw(e) {
+            if (!isDrawing) return;
+            const pos = getPos(e);
+            const size = parseInt(brushSizeInput.value);
+            
+            maskCtx.fillStyle = '#da3f0b';
+            maskCtx.beginPath();
+            maskCtx.arc(pos.x, pos.y, size / 2, 0, Math.PI * 2);
+            maskCtx.fill();
+            render();
+        }
+
+        function stopDrawing() { isDrawing = false; maskCtx.beginPath(); }
+
+        brushSizeInput.addEventListener('input', () => {
+            brushSizeVal.textContent = brushSizeInput.value;
+        });
+
+        undoBtn.addEventListener('click', () => {
+            maskCtx.clearRect(0, 0, maskCanvas.width, maskCanvas.height);
+            render();
+        });
+
+        // Erase Logic (Content-Aware Approximation)
+        eraseBtn.addEventListener('click', () => {
+            const tempCanvas = document.createElement('canvas');
+            const tempCtx = tempCanvas.getContext('2d');
+            tempCanvas.width = canvas.width;
+            tempCanvas.height = canvas.height;
+            
+            // Draw original
+            tempCtx.drawImage(originalImage, 0, 0, canvas.width, canvas.height);
+            
+            const imageData = tempCtx.getImageData(0, 0, canvas.width, canvas.height);
+            const maskData = maskCtx.getImageData(0, 0, canvas.width, canvas.height);
+            const data = imageData.data;
+            const mData = maskData.data;
+
+            // Simple Inpainting: Replace masked pixels with average of surrounding non-masked pixels
+            for (let i = 0; i < mData.length; i += 4) {
+                if (mData[i + 3] > 0) { // If masked
+                    const x = (i / 4) % canvas.width;
+                    const y = Math.floor((i / 4) / canvas.width);
+                    
+                    let r = 0, g = 0, b = 0, count = 0;
+                    const radius = 5;
+
+                    for (let dy = -radius; dy <= radius; dy++) {
+                        for (let dx = -radius; dx <= radius; dx++) {
+                            const nx = x + dx;
+                            const ny = y + dy;
+                            if (nx >= 0 && nx < canvas.width && ny >= 0 && ny < canvas.height) {
+                                const ni = (ny * canvas.width + nx) * 4;
+                                if (mData[ni + 3] === 0) { // Use non-masked neighbors
+                                    r += data[ni];
+                                    g += data[ni + 1];
+                                    b += data[ni + 2];
+                                    count++;
+                                }
+                            }
+                        }
+                    }
+
+                    if (count > 0) {
+                        data[i] = r / count;
+                        data[i + 1] = g / count;
+                        data[i + 2] = b / count;
+                    }
+                }
+            }
+
+            tempCtx.putImageData(imageData, 0, 0);
+            
+            // Update originalImage with the result so user can erase more
+            const resultDataUrl = tempCanvas.toDataURL();
+            originalImage = new Image();
+            originalImage.onload = () => {
+                maskCtx.clearRect(0, 0, maskCanvas.width, maskCanvas.height);
+                render();
+            };
+            originalImage.src = resultDataUrl;
+        });
+
+        downloadBtn.addEventListener('click', () => {
+            const link = document.createElement('a');
+            link.download = 'cleaned-image.png';
+            // Create a high-res output by applying mask to original image dimensions
+            const outCanvas = document.createElement('canvas');
+            outCanvas.width = canvas.width;
+            outCanvas.height = canvas.height;
+            const outCtx = outCanvas.getContext('2d');
+            outCtx.drawImage(originalImage, 0, 0, canvas.width, canvas.height);
+            
+            link.href = outCanvas.toDataURL('image/png');
+            link.click();
+        });
+
+        // FAQ Toggle
+        document.querySelectorAll('.faq-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const content = btn.nextElementSibling;
+                const icon = btn.querySelector('i');
+                content.classList.toggle('hidden');
+                icon.classList.toggle('rotate-180');
+            });
+        });
+
+        // Load Components
+        async function loadComponent(url, elementId) {
+            try {
+                const response = await fetch(url);
+                const text = await response.text();
+                document.getElementById(elementId).innerHTML = text;
+            } catch (e) { console.error(e); }
+        }
+        loadComponent('/components/navbar.html', 'navbar');
+        loadComponent('/components/footer.html', 'footer');
+    </script>
+</body>
+</html>

@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Image Mirror Tool – Flip Image Horizontally or Vertically Online | SimpliConvert</title>
+    <meta name="description" content="Create a mirror effect by flipping your image horizontally or vertically. Perfect for correcting selfie orientation or creating symmetric artistic patterns. Free and fast.">
+    <meta name="keywords" content="mirror effect, reflection maker, reverse photo, symmetric image, selfie fixer, flip image online, horizontal flip, vertical flip">
+    <meta name="author" content="SimpliConvert">
+    <meta property="og:site_name" content="SimpliConvert">
+    <meta name="robots" content="index, follow">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://simpliconvert.com/image_mirror_tool/">
+    <meta property="og:title" content="Image Mirror Tool – Flip Image Horizontally or Vertically Online">
+    <meta property="og:description" content="Mirror your images instantly. Flip photos horizontally or vertically to fix selfie orientation or create artistic reflections.">
+    <meta property="og:image" content="https://simpliconvert.com/images/image-mirror-tool-og.jpg">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://simpliconvert.com/image_mirror_tool/">
+    <meta name="twitter:title" content="Image Mirror Tool – Flip Image Horizontally or Vertically Online">
+    <meta name="twitter:description" content="Free tool to flip images horizontally or vertically. Perfect for fixing selfies and creating mirror effects.">
+    <meta name="twitter:image" content="https://simpliconvert.com/images/image-mirror-tool-og.jpg">
+
+    <link rel="canonical" href="https://simpliconvert.com/image_mirror_tool/">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Image Mirror Tool",
+      "url": "https://simpliconvert.com/image_mirror_tool/",
+      "description": "A free online tool to flip images horizontally or vertically, creating a mirror effect or correcting photo orientation.",
+      "applicationCategory": "ImageManipulationApplication",
+      "operatingSystem": "Web Browser",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "SimpliConvert",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://simpliconvert.com/logo.png"
+        }
+      }
+    }
+    </script>
+
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [{
+    "@type": "ListItem",
+    "position": 1,
+    "name": "Home",
+    "item": "https://simpliconvert.com/"
+  },{
+    "@type": "ListItem",
+    "position": 2,
+    "name": "Image Tools",
+    "item": "https://simpliconvert.com/image_tools/"
+  },{
+    "@type": "ListItem",
+    "position": 3,
+    "name": "Image Mirror Tool",
+    "item": "https://simpliconvert.com/image_mirror_tool/"
+  }]
+}
+</script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [{
+        "@type": "Question",
+        "name": "What is the difference between horizontal and vertical flipping?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "A horizontal flip (mirroring) swaps the left and right sides of the image, which is commonly used to fix selfies. A vertical flip swaps the top and bottom, creating an upside-down reflection effect."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Will flipping my image reduce its quality?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "No. Our tool processes the image using your browser's canvas API, maintaining the original resolution and quality as much as possible during the transformation."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Is my uploaded image stored on your servers?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "No. All image processing happens locally in your web browser. Your photos are never uploaded to our servers, ensuring 100% privacy."
+        }
+      }]
+    }
+    </script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #da3f0b;
+            --primary-hover: #b53409;
+            --bg: #f8fafc;
+            --text-dark: #0f172a;
+        }
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: var(--text-dark); }
+        .hero-card { background: white; border: 1px solid #f1f5f9; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05); position: relative; overflow: hidden; }
+        .hero-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px; background-color: var(--primary); }
+        .drop-zone { border: 2px dashed #e2e8f0; transition: all 0.3s ease; }
+        .drop-zone.drag-over { border-color: var(--primary); background-color: #da3f0b05; }
+        .preview-container { max-height: 500px; overflow: hidden; display: flex; justify-content: center; align-items: center; background: #f1f5f9; border-radius: 1rem; }
+        #preview-canvas { max-width: 100%; max-height: 500px; object-fit: contain; }
+        .tool-card { transition: transform 0.2s ease, box-shadow 0.2s ease; }
+        .tool-card:hover { transform: translateY(-4px); box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
+        .prose a { color: #da3f0b; text-decoration: none; }
+        .prose a:hover { text-decoration: underline; }
+    </style>
+</head>
+
+<body class="bg-gray-50 min-h-screen flex flex-col">
+    <div id="navbar" style="min-height: 70px;"></div>
+	
+	<section class="hero-white text-black py-2 md:py-10">
+        <div class="container mx-auto px-4">
+            <nav class="flex pb-4 text-sm text-slate-500 items-center space-x-2 justify-center">
+                <a href="https://simpliconvert.com/" class="hover:text-[#da3f0b] transition-colors">Home</a>
+                <i class="fas fa-chevron-right text-[10px]"></i>
+                <a href="https://simpliconvert.com/image_tools/" class="hover:text-[#da3f0b] transition-colors">Image Tools</a>
+                <i class="fas fa-chevron-right text-[10px]"></i>
+                <span class="text-slate-900 font-medium">Image Mirror Tool</span>
+            </nav>
+            <div class="text-center">
+                <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-2">flip image horizontally or vertically online</h1>
+                <p class="text-lg md:text-xl max-w-3xl mx-auto mb-2 text-slate-600">
+                    Instantly mirror your photos. Fix selfie orientation, create artistic reflections, or flip graphics for design projects.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <div id="tool-app" class="w-full max-w-6xl mx-auto p-4 sm:p-6">
+        <div class="bg-white rounded-[2rem] shadow-2xl overflow-hidden border border-slate-100">
+            <header class="bg-slate-50/50 border-b border-slate-100 p-6 md:p-8">
+                <div class="flex flex-col md:flex-row justify-between items-center gap-6">
+                    <h2 class="text-xl font-black text-slate-800 tracking-tight flex items-center gap-3">
+                        <span class="bg-[#da3f0b] text-white p-2 rounded-xl text-lg shadow-lg shadow-[#da3f0b30]">
+                            <i class="fas fa-arrows-alt-h"></i>
+                        </span>
+                        Mirror & Reflection Maker
+                    </h2>
+                    <div id="file-info" class="hidden text-sm font-bold text-slate-500 bg-white px-4 py-2 rounded-lg border border-slate-200">
+                        <span id="filename-display">image.jpg</span>
+                    </div>
+                </div>
+            </header>
+
+            <main class="p-6 md:p-10">
+                <div id="upload-container" class="space-y-6">
+                    <div id="drop-zone" class="drop-zone rounded-3xl p-12 text-center cursor-pointer hover:bg-slate-50 transition-all">
+                        <input type="file" id="file-input" class="hidden" accept="image/*">
+                        <div class="flex flex-col items-center">
+                            <div class="w-20 h-20 bg-[#da3f0b10] text-[#da3f0b] rounded-2xl flex items-center justify-center mb-4">
+                                <i class="fas fa-cloud-upload-alt text-3xl"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-slate-800 mb-2">Click or Drag Image Here</h3>
+                            <p class="text-slate-500 text-sm">Supports JPG, PNG, WebP, and GIF</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="editor-container" class="hidden space-y-8 animate-fade">
+                    <div class="preview-container shadow-inner border border-slate-200">
+                        <canvas id="preview-canvas"></canvas>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <button onclick="flip('horizontal')" class="flex items-center justify-center gap-3 bg-white border-2 border-slate-200 hover:border-[#da3f0b] hover:text-[#da3f0b] py-4 px-6 rounded-2xl font-bold transition-all active:scale-95">
+                            <i class="fas fa-arrows-alt-h"></i> Flip Horizontal
+                        </button>
+                        <button onclick="flip('vertical')" class="flex items-center justify-center gap-3 bg-white border-2 border-slate-200 hover:border-[#da3f0b] hover:text-[#da3f0b] py-4 px-6 rounded-2xl font-bold transition-all active:scale-95">
+                            <i class="fas fa-arrows-alt-v"></i> Flip Vertical
+                        </button>
+                        <button onclick="resetImage()" class="flex items-center justify-center gap-3 bg-slate-100 text-slate-600 hover:bg-slate-200 py-4 px-6 rounded-2xl font-bold transition-all active:scale-95">
+                            <i class="fas fa-undo"></i> Reset
+                        </button>
+                    </div>
+
+                    <div class="flex flex-col sm:flex-row gap-4 justify-center pt-6 border-t border-slate-100">
+                        <button onclick="downloadImage()" class="flex items-center justify-center gap-3 bg-[#da3f0b] text-white py-4 px-10 rounded-2xl font-bold text-lg hover:bg-[#b53409] transition-all shadow-lg shadow-[#da3f0b30] active:scale-95">
+                            <i class="fas fa-download"></i> Download Mirrored Image
+                        </button>
+                        <button onclick="location.reload()" class="flex items-center justify-center gap-3 bg-slate-800 text-white py-4 px-10 rounded-2xl font-bold text-lg hover:bg-slate-900 transition-all active:scale-95">
+                            <i class="fas fa-plus"></i> Start New
+                        </button>
+                    </div>
+                </div>
+            </main>
+
+            <footer class="bg-slate-50 border-t border-slate-100 p-6 md:p-8">
+                <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+                    <div class="text-center md:text-left">
+                        <h4 class="text-sm font-bold text-slate-700 mb-1">Share this tool</h4>
+                        <p class="text-xs text-slate-400">Help others flip images easily.</p>
+                    </div>
+                    <div class="flex flex-wrap justify-center gap-3">
+                        <button onclick="shareSocial('facebook')" class="w-10 h-10 rounded-full flex items-center justify-center text-white transition-transform hover:-translate-y-1 bg-[#1877F2]"><i class="fab fa-facebook-f"></i></button>
+                        <button onclick="shareSocial('twitter')" class="w-10 h-10 rounded-full flex items-center justify-center text-white transition-transform hover:-translate-y-1 bg-[#1DA1F2]"><i class="fab fa-twitter"></i></button>
+                        <button onclick="shareSocial('whatsapp')" class="w-10 h-10 rounded-full flex items-center justify-center text-white transition-transform hover:-translate-y-1 bg-[#25D366]"><i class="fab fa-whatsapp"></i></button>
+                        <button onclick="shareSocial('telegram')" class="w-10 h-10 rounded-full flex items-center justify-center text-white transition-transform hover:-translate-y-1 bg-[#0088cc]"><i class="fab fa-telegram-plane"></i></button>
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </div>
+
+    <script>
+        const fileInput = document.getElementById('file-input');
+        const dropZone = document.getElementById('drop-zone');
+        const uploadContainer = document.getElementById('upload-container');
+        const editorContainer = document.getElementById('editor-container');
+        const fileInfo = document.getElementById('file-info');
+        const filenameDisplay = document.getElementById('filename-display');
+        const canvas = document.getElementById('preview-canvas');
+        const ctx = canvas.getContext('2d');
+
+        let originalImage = null;
+        let currentFlipH = 1;
+        let currentFlipV = 1;
+
+        // File Handling
+        dropZone.addEventListener('click', () => fileInput.click());
+        dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('drag-over'); });
+        dropZone.addEventListener('dragleave', () => dropZone.classList.remove('drag-over'));
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZone.classList.remove('drag-over');
+            handleFiles(e.dataTransfer.files);
+        });
+        fileInput.addEventListener('change', (e) => handleFiles(e.target.files));
+
+        function handleFiles(files) {
+            if (files.length === 0) return;
+            const file = files[0];
+            if (!file.type.startsWith('image/')) return;
+
+            filenameDisplay.textContent = file.name;
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                originalImage = new Image();
+                originalImage.onload = () => {
+                    uploadContainer.classList.add('hidden');
+                    editorContainer.classList.remove('hidden');
+                    fileInfo.classList.remove('hidden');
+                    resetImage();
+                };
+                originalImage.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function draw() {
+            canvas.width = originalImage.width;
+            canvas.height = originalImage.height;
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.save();
+            ctx.translate(currentFlipH === -1 ? canvas.width : 0, currentFlipV === -1 ? canvas.height : 0);
+            ctx.scale(currentFlipH, currentFlipV);
+            ctx.drawImage(originalImage, 0, 0);
+            ctx.restore();
+        }
+
+        function flip(type) {
+            if (type === 'horizontal') currentFlipH *= -1;
+            if (type === 'vertical') currentFlipV *= -1;
+            draw();
+        }
+
+        function resetImage() {
+            currentFlipH = 1;
+            currentFlipV = 1;
+            draw();
+        }
+
+        function downloadImage() {
+            const link = document.createElement('a');
+            link.download = `mirrored-${filenameDisplay.textContent}`;
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        }
+
+        function shareSocial(platform) {
+            const url = encodeURIComponent(window.location.href);
+            const text = encodeURIComponent("Check out this free Image Mirror Tool!");
+            let shareUrl = '';
+            if (platform === 'facebook') shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${url}`;
+            if (platform === 'twitter') shareUrl = `https://twitter.com/intent/tweet?url=${url}&text=${text}`;
+            if (platform === 'whatsapp') shareUrl = `https://api.whatsapp.com/send?text=${text}%20${url}`;
+            if (platform === 'telegram') shareUrl = `https://t.me/share/url?url=${url}&text=${text}`;
+            window.open(shareUrl, '_blank');
+        }
+    </script>
+
+    <section class="bg-white py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="prose prose-lg max-w-none prose-h2:text-gray-800 prose-p:text-gray-700">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">Why Use an Online Image Mirror Tool?</h2>
+                <p class="mb-6 leading-relaxed">
+                    Have you ever taken a perfect selfie only to realize your phone's front camera flipped the image, making text unreadable or your features look "off"? This is a common issue with modern smartphones. Our <strong>image mirror tool</strong> allows you to <em>flip image horizontally or vertically online</em> in seconds, restoring the natural look of your photos without needing complex software like Photoshop.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Correct Selfie Orientation Instantly</h2>
+                <p class="mb-6 leading-relaxed">
+                    Most front-facing cameras produce a "mirror" view while you're taking the photo but save the "real" view. This can be disorienting. By using a <strong>selfie fixer</strong>, you can revert the image to the perspective you saw on your screen. If you're preparing a photo for social media, you might also want to use our <a href="https://simpliconvert.com/profile_picture_cropper/">profile picture cropper</a> after mirroring to ensure the perfect framing.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Create Artistic Reflection Effects</h2>
+                <p class="mb-6 leading-relaxed">
+                    Mirroring isn't just for corrections; it's a powerful creative tool. By flipping a landscape photo vertically, you can create a stunning <strong>reflection maker</strong> effect that mimics water. Flipping graphics horizontally can help create symmetric patterns for web design or digital art. If your image needs further orientation adjustments, our <a href="https://simpliconvert.com/image_rotator/">image rotator</a> is the perfect companion tool.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">100% Private and Secure Processing</h2>
+                <p class="mb-6 leading-relaxed">
+                    Privacy is our priority. Unlike other online converters, our tool processes your images directly in your browser. Your files are never uploaded to a server, meaning your personal photos stay on your device. This makes it the safest way to <strong>reverse photos</strong> or create <strong>symmetric images</strong> online. Once you've mirrored your image, you can use our <a href="https://simpliconvert.com/image_cropper/">image cropper</a> to remove any unwanted edges.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">How to Flip an Image Online</h2>
+                <ol class="list-decimal pl-6 mb-6 space-y-2 text-gray-700">
+                    <li><strong>Upload:</strong> Drag and drop your image into the box above.</li>
+                    <li><strong>Choose Direction:</strong> Click "Flip Horizontal" for a mirror effect or "Flip Vertical" for an upside-down reflection.</li>
+                    <li><strong>Preview:</strong> See the changes instantly in the high-resolution preview window.</li>
+                    <li><strong>Download:</strong> Save your mirrored image as a high-quality PNG or JPG.</li>
+                </ol>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-center text-gray-900 mb-8">Frequently Asked Questions</h2>
+            <div class="space-y-4">
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg">
+                        <span>Can I flip an image both horizontally and vertically?</span>
+                        <i class="fas fa-chevron-down faq-icon transition-transform duration-300"></i>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500">
+                        <p class="p-5 pt-0 text-gray-600">Yes! You can apply both transformations to the same image to achieve a 180-degree rotation or a combined mirror-reflection effect.</p>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg">
+                        <span>Does this tool work on mobile devices?</span>
+                        <i class="fas fa-chevron-down faq-icon transition-transform duration-300"></i>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500">
+                        <p class="p-5 pt-0 text-gray-600">Absolutely. Our tool is fully responsive and works perfectly on iPhones, Android devices, and tablets directly through your mobile browser.</p>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg">
+                        <span>What image formats are supported?</span>
+                        <i class="fas fa-chevron-down faq-icon transition-transform duration-300"></i>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500">
+                        <p class="p-5 pt-0 text-gray-600">We support all major web formats including JPG, PNG, WebP, and GIF. The output is typically saved as a high-quality PNG to preserve transparency and detail.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 pb-16">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-slate-200 pt-16">
+            <h2 class="text-2xl font-bold text-center text-slate-800 mb-10">Popular Image Tools</h2>
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+                <a href="/image_cropper/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center shrink-0 group-hover:bg-blue-600 group-hover:text-white transition-colors"><i class="fas fa-crop-alt"></i></div>
+                    <div><h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Image Cropper</h3><p class="text-xs text-slate-500">Trim images to size.</p></div>
+                </a>
+                <a href="/image_rotator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-orange-50 text-orange-600 flex items-center justify-center shrink-0 group-hover:bg-orange-600 group-hover:text-white transition-colors"><i class="fas fa-redo"></i></div>
+                    <div><h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Image Rotator</h3><p class="text-xs text-slate-500">Rotate photos 90/180°.</p></div>
+                </a>
+                <a href="/profile_picture_cropper/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-purple-50 text-purple-600 flex items-center justify-center shrink-0 group-hover:bg-purple-600 group-hover:text-white transition-colors"><i class="fas fa-user-circle"></i></div>
+                    <div><h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Profile Cropper</h3><p class="text-xs text-slate-500">Perfect social avatars.</p></div>
+                </a>
+                <a href="/jpg_to_png/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-green-50 text-green-600 flex items-center justify-center shrink-0 group-hover:bg-green-600 group-hover:text-white transition-colors"><i class="fas fa-exchange-alt"></i></div>
+                    <div><h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">JPG to PNG</h3><p class="text-xs text-slate-500">Convert image formats.</p></div>
+                </a>
+                <a href="/image_resizer/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-red-50 text-red-600 flex items-center justify-center shrink-0 group-hover:bg-red-600 group-hover:text-white transition-colors"><i class="fas fa-expand-arrows-alt"></i></div>
+                    <div><h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Image Resizer</h3><p class="text-xs text-slate-500">Change dimensions.</p></div>
+                </a>
+                <a href="/image_color_picker/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0 group-hover:bg-indigo-600 group-hover:text-white transition-colors"><i class="fas fa-eye-dropper"></i></div>
+                    <div><h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Color Picker</h3><p class="text-xs text-slate-500">Get hex codes from images.</p></div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <div id="footer"></div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // FAQ Toggle Logic
+            const faqToggles = document.querySelectorAll('[data-faq-toggle]');
+            faqToggles.forEach(button => {
+                button.addEventListener('click', () => {
+                    const answer = button.nextElementSibling;
+                    const icon = button.querySelector('.faq-icon');
+                    const isOpening = !answer.style.maxHeight;
+
+                    faqToggles.forEach(other => {
+                        if (other !== button) {
+                            other.nextElementSibling.style.maxHeight = null;
+                            other.querySelector('.faq-icon').style.transform = 'rotate(0deg)';
+                        }
+                    });
+
+                    if (isOpening) {
+                        answer.style.maxHeight = answer.scrollHeight + "px";
+                        icon.style.transform = 'rotate(180deg)';
+                    } else {
+                        answer.style.maxHeight = null;
+                        icon.style.transform = 'rotate(0deg)';
+                    }
+                });
+            });
+
+            // Load components (Mocked for this environment)
+            const navbar = document.getElementById('navbar');
+            const footer = document.getElementById('footer');
+            if(navbar) navbar.innerHTML = `<div class="bg-white border-b border-slate-100 py-4 px-6 flex justify-between items-center"><a href="/" class="text-2xl font-black text-slate-800">Simpli<span class="text-[#da3f0b]">Convert</span></a></div>`;
+            if(footer) footer.innerHTML = `<footer class="bg-slate-900 text-slate-400 py-12 px-6 text-center"><p>&copy; ${new Date().getFullYear()} SimpliConvert. All rights reserved.</p></footer>`;
+        });
+    </script>
+</body>
+</html>

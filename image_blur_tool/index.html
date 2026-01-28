@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Blur Image Background or Faces Online – Privacy & Effect Tool | SimpliConvert</title>
+    <meta name="description" content="Easily blur image backgrounds, faces, or sensitive information online. Free tool for privacy protection and creative gaussian blur effects. No upload required.">
+    <meta name="keywords" content="hide sensitive info, privacy blur, gaussian blur effect, obscure photo details, soften image, blur faces online, blur license plate">
+    <meta name="author" content="SimpliConvert">
+    <meta property="og:site_name" content="SimpliConvert">
+    <meta name="robots" content="index, follow">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://simpliconvert.com/image_blur_tool/">
+    <meta property="og:title" content="Blur Image Background or Faces Online – Privacy Tool">
+    <meta property="og:description" content="Apply a professional blur effect to your photos. Hide faces, text, or create a soft focus background instantly in your browser.">
+    <meta property="og:image" content="https://simpliconvert.com/images/image-blur-tool-og.jpg">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://simpliconvert.com/image_blur_tool/">
+    <meta name="twitter:title" content="Free Online Image Blur Tool – Protect Your Privacy">
+    <meta name="twitter:description" content="Quickly obscure sensitive details or soften backgrounds with our free online gaussian blur tool.">
+    <meta name="twitter:image" content="https://simpliconvert.com/images/image-blur-tool-og.jpg">
+
+    <link rel="canonical" href="https://simpliconvert.com/image_blur_tool/">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Image Blur Tool",
+      "url": "https://simpliconvert.com/image_blur_tool/",
+      "description": "A free online tool to apply gaussian blur to entire images or specific areas to hide sensitive information like faces and license plates.",
+      "applicationCategory": "ImageEditor",
+      "operatingSystem": "Web Browser",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "SimpliConvert",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://simpliconvert.com/logo.png"
+        }
+      }
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [{
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://simpliconvert.com/"
+      },{
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Image Tools",
+        "item": "https://simpliconvert.com/image_tools/"
+      },{
+        "@type": "ListItem",
+        "position": 3,
+        "name": "Image Blur Tool",
+        "item": "https://simpliconvert.com/image_blur_tool/"
+      }]
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [{
+        "@type": "Question",
+        "name": "Is my image uploaded to a server?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "No. All image processing happens locally in your browser using JavaScript. Your photos never leave your device, ensuring 100% privacy."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Can I blur just a specific part of the image?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. Our tool allows you to select specific areas (like faces or license plates) to apply a blur effect while keeping the rest of the image sharp."
+        }
+      }, {
+        "@type": "Question",
+        "name": "What is Gaussian blur?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Gaussian blur is a mathematical algorithm used to reduce image noise and detail. It creates a smooth, soft-focus effect that is ideal for hiding sensitive information."
+        }
+      }]
+    }
+    </script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #da3f0b;
+            --primary-hover: #b53409;
+            --primary-light: #fff5f2;
+            --bg: #f8fafc;
+            --text-dark: #0f172a;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text-dark);
+        }
+
+        .hero-card {
+            background: white;
+            border: 1px solid #f1f5f9;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background-color: var(--primary);
+        }
+
+        .tool-card {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .tool-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+        }
+
+        #canvas-container {
+            max-width: 100%;
+            overflow: auto;
+            background: #e2e8f0;
+            border-radius: 1rem;
+            position: relative;
+            cursor: crosshair;
+        }
+
+        canvas {
+            display: block;
+            margin: 0 auto;
+            max-width: 100%;
+            height: auto;
+        }
+
+        .custom-range::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            background: var(--primary);
+            cursor: pointer;
+            border-radius: 50%;
+        }
+
+        .prose a { color: #da3f0b; text-decoration: none; }
+        .prose a:hover { text-decoration: underline; }
+    </style>
+</head>
+
+<body class="bg-gray-50 min-h-screen flex flex-col">
+    <div id="navbar" style="min-height: 70px;"></div>
+	
+	<section class="hero-white text-black py-2 md:py-10">
+        <div class="container mx-auto px-4">
+            <nav class="flex pb-4 text-sm text-slate-500 items-center space-x-2 justify-center">
+                <a href="https://simpliconvert.com/" class="hover:text-[#da3f0b] transition-colors">Home</a>
+                <i class="fas fa-chevron-right text-[10px]"></i>
+                <a href="https://simpliconvert.com/image_tools/" class="hover:text-[#da3f0b] transition-colors">Image Tools</a>
+                <i class="fas fa-chevron-right text-[10px]"></i>
+                <span class="text-slate-900 font-medium">Image Blur Tool</span>
+            </nav>
+            <div class="text-center">
+                <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-2">blur image background or faces online</h1>
+                <p class="text-lg md:text-xl max-w-3xl mx-auto mb-2 text-slate-600">
+                Protect your privacy by obscuring sensitive details or create artistic soft-focus effects with our free online gaussian blur tool.
+                </p>
+            </div>
+        </div>
+    </section>		
+
+    <div id="tool-app" class="w-full max-w-6xl mx-auto p-4 sm:p-6">
+        <div class="bg-white rounded-[2rem] shadow-2xl overflow-hidden border border-slate-100">
+            <header class="bg-slate-50/50 border-b border-slate-100 p-6 md:p-8 flex flex-col md:flex-row justify-between items-center gap-6">
+                <div class="text-center md:text-left">
+                  <h2 class="text-2xl font-black text-slate-800 tracking-tight flex items-center justify-center md:justify-start gap-3">
+                    <span class="bg-[#da3f0b] text-white p-2 rounded-xl text-lg shadow-lg shadow-[#da3f0b30]">
+                      <i class="fas fa-eye-slash"></i>
+                    </span>
+                    Privacy Blur Editor
+                  </h2>
+                </div>
+                <div class="flex gap-3">
+                    <label for="image-upload" class="cursor-pointer bg-[#da3f0b] text-white px-6 py-2.5 rounded-xl font-bold hover:bg-[#b53409] transition-all shadow-md flex items-center gap-2">
+                        <i class="fas fa-upload"></i> Upload Image
+                    </label>
+                    <input type="file" id="image-upload" class="hidden" accept="image/*">
+                    <button id="download-btn" disabled class="bg-slate-800 text-white px-6 py-2.5 rounded-xl font-bold hover:bg-slate-900 transition-all shadow-md flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed">
+                        <i class="fas fa-download"></i> Download
+                    </button>
+                </div>
+            </header>
+    
+            <main class="flex flex-col lg:flex-row">
+                <!-- Controls Sidebar -->
+                <div class="lg:w-[30%] p-6 md:p-8 border-r border-slate-100 bg-slate-50/30">
+                    <div class="space-y-8">
+                        <div>
+                            <label class="text-xs font-black text-slate-400 uppercase tracking-widest mb-4 block">Blur Intensity</label>
+                            <input type="range" id="blur-range" min="0" max="50" value="10" class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer custom-range">
+                            <div class="flex justify-between text-xs font-bold text-slate-500 mt-2">
+                                <span>Sharp</span>
+                                <span id="blur-value">10px</span>
+                                <span>Heavy</span>
+                            </div>
+                        </div>
+
+                        <div class="p-4 bg-white rounded-2xl border border-slate-100 shadow-sm">
+                            <label class="text-xs font-black text-slate-400 uppercase tracking-widest mb-3 block">Mode</label>
+                            <div class="grid grid-cols-1 gap-2">
+                                <button id="mode-global" class="flex items-center gap-3 p-3 rounded-xl border-2 border-[#da3f0b] bg-[#da3f0b08] text-[#da3f0b] font-bold transition-all">
+                                    <i class="fas fa-globe"></i> Global Blur
+                                </button>
+                                <button id="mode-selective" class="flex items-center gap-3 p-3 rounded-xl border-2 border-transparent bg-slate-100 text-slate-600 font-bold hover:bg-slate-200 transition-all">
+                                    <i class="fas fa-mouse-pointer"></i> Selective Area
+                                </button>
+                            </div>
+                            <p id="mode-hint" class="text-[10px] text-slate-400 mt-3 leading-relaxed">
+                                <strong>Global:</strong> Blurs the entire image.<br>
+                                <strong>Selective:</strong> Click and drag on the image to blur specific areas.
+                            </p>
+                        </div>
+
+                        <button id="reset-btn" class="w-full py-3 rounded-xl border border-slate-200 text-slate-500 font-bold hover:bg-red-50 hover:text-red-500 hover:border-red-200 transition-all flex items-center justify-center gap-2">
+                            <i class="fas fa-undo"></i> Reset Image
+                        </button>
+                    </div>
+                </div>
+    
+                <!-- Preview Area -->
+                <div class="lg:w-[70%] p-6 md:p-10 bg-slate-100/50 flex flex-col items-center justify-center min-h-[400px]">
+                    <div id="canvas-container" class="shadow-2xl border-4 border-white">
+                        <canvas id="main-canvas"></canvas>
+                        <div id="upload-placeholder" class="flex flex-col items-center justify-center py-20 px-10 text-slate-400">
+                            <i class="fas fa-images text-6xl mb-4 opacity-20"></i>
+                            <p class="font-bold text-lg">No image selected</p>
+                            <p class="text-sm">Upload a photo to start blurring</p>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- SEO Content Section -->
+    <section class="bg-white py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="prose prose-lg max-w-none prose-h2:text-gray-800 prose-p:text-gray-700">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">Why Use an Online Image Blur Tool?</h2>
+                <p class="mb-6 leading-relaxed">
+                    In an era where digital privacy is paramount, being able to <strong>blur image background or faces online</strong> is a vital skill. Whether you are sharing a photo on social media and want to hide a stranger's face, or you need to obscure a license plate or house number, our tool provides a quick and secure solution. Unlike complex software, this tool runs entirely in your browser, meaning your sensitive data never touches our servers.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Protecting Privacy with Selective Blurring</h2>
+                <p class="mb-6 leading-relaxed">
+                    Sometimes you don't want to blur the whole image—just the sensitive parts. Our "Selective Area" mode allows you to draw boxes over specific details. This is perfect for professionals who need to <a href="https://simpliconvert.com/remove_image_metadata/">remove image metadata</a> and then visually obscure identifying features before publication. It’s a common practice for journalists, real estate agents, and privacy-conscious parents.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Creative Uses for Gaussian Blur</h2>
+                <p class="mb-6 leading-relaxed">
+                    Beyond privacy, blurring is a powerful aesthetic tool. By applying a light global blur, you can create a "dreamy" or "soft focus" look. If you find your image is too sharp or grainy, a slight blur followed by using our <a href="https://simpliconvert.com/image_sharpen_tool/">image sharpen tool</a> can sometimes help balance the texture. It’s also great for creating background textures for graphic design projects or social media posts.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">How to Get the Best Results</h2>
+                <p class="mb-6 leading-relaxed">
+                    For the best results, start with a high-resolution image. If your file is too large for certain platforms, you can use our <a href="https://simpliconvert.com/image_cropper/">image cropper</a> first to focus on the subject. When blurring faces, use a higher intensity (20px or more) to ensure features are completely unrecognizable. For background bokeh effects, a lower intensity (5-10px) usually suffices to create that professional depth-of-field look.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="bg-gray-50 py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-center text-gray-900 mb-8">Frequently Asked Questions</h2>
+            <div class="space-y-4">
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg transition-all">
+                        <span>Is this tool free to use?</span>
+                        <i class="fas fa-chevron-down faq-icon transition-transform duration-300"></i>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500">
+                        <p class="p-5 pt-0 text-gray-600">Yes, the Image Blur Tool is 100% free with no hidden costs, subscriptions, or watermarks on your downloaded images.</p>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg transition-all">
+                        <span>What file formats are supported?</span>
+                        <i class="fas fa-chevron-down faq-icon transition-transform duration-300"></i>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500">
+                        <p class="p-5 pt-0 text-gray-600">We support all standard web formats, including JPG, PNG, WebP, and BMP. The output is typically saved as a high-quality PNG or JPG depending on your original file.</p>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg transition-all">
+                        <span>Can I undo a blur?</span>
+                        <i class="fas fa-chevron-down faq-icon transition-transform duration-300"></i>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500">
+                        <p class="p-5 pt-0 text-gray-600">While you are editing, you can use the "Reset Image" button to start over. However, once you download the image, the blur is permanent and cannot be removed from the saved file.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Related Tools -->
+    <section class="bg-gray-50 pb-16">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-slate-200 pt-16">
+            <h2 class="text-2xl font-bold text-center text-slate-800 mb-10">Popular Image Tools</h2>
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+                <a href="/image_sharpen_tool/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center shrink-0 group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-magic text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Sharpen Tool</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Enhance blurry photos.</p>
+                    </div>
+                </a>
+                <a href="/image_cropper/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-green-50 text-green-600 flex items-center justify-center shrink-0 group-hover:bg-green-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-crop text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Image Cropper</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Crop to perfect ratios.</p>
+                    </div>
+                </a>
+                <a href="/jpg_to_png/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-purple-50 text-purple-600 flex items-center justify-center shrink-0 group-hover:bg-purple-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-exchange-alt text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">JPG to PNG</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Convert image formats.</p>
+                    </div>
+                </a>
+                <a href="/remove_image_metadata/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-red-50 text-red-600 flex items-center justify-center shrink-0 group-hover:bg-red-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-shield-alt text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">EXIF Remover</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Clean photo metadata.</p>
+                    </div>
+                </a>
+                <a href="/image_grayscale_converter/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-gray-50 text-gray-600 flex items-center justify-center shrink-0 group-hover:bg-gray-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-tint-slash text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Grayscale</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Make photos B&W.</p>
+                    </div>
+                </a>
+                <a href="/image_color_picker/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-yellow-50 text-yellow-600 flex items-center justify-center shrink-0 group-hover:bg-yellow-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-eye-dropper text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Color Picker</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Extract hex codes.</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <div id="footer"></div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const uploadInput = document.getElementById('image-upload');
+            const canvas = document.getElementById('main-canvas');
+            const ctx = canvas.getContext('2d');
+            const blurRange = document.getElementById('blur-range');
+            const blurValueDisplay = document.getElementById('blur-value');
+            const downloadBtn = document.getElementById('download-btn');
+            const resetBtn = document.getElementById('reset-btn');
+            const placeholder = document.getElementById('upload-placeholder');
+            const modeGlobal = document.getElementById('mode-global');
+            const modeSelective = document.getElementById('mode-selective');
+
+            let originalImage = null;
+            let currentMode = 'global'; // 'global' or 'selective'
+            let isDrawing = false;
+            let startX, startY;
+
+            // Handle Image Upload
+            uploadInput.addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (!file) return;
+
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    const img = new Image();
+                    img.onload = function() {
+                        originalImage = img;
+                        canvas.width = img.width;
+                        canvas.height = img.height;
+                        placeholder.classList.add('hidden');
+                        downloadBtn.disabled = false;
+                        applyBlur();
+                    };
+                    img.src = event.target.result;
+                };
+                reader.readAsDataURL(file);
+            });
+
+            // Apply Blur Logic
+            function applyBlur() {
+                if (!originalImage) return;
+                
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                
+                if (currentMode === 'global') {
+                    ctx.filter = `blur(${blurRange.value}px)`;
+                    ctx.drawImage(originalImage, 0, 0);
+                    ctx.filter = 'none';
+                } else {
+                    // In selective mode, we draw the original first
+                    ctx.filter = 'none';
+                    ctx.drawImage(originalImage, 0, 0);
+                }
+            }
+
+            // Slider Update
+            blurRange.addEventListener('input', function() {
+                blurValueDisplay.textContent = `${this.value}px`;
+                if (currentMode === 'global') applyBlur();
+            });
+
+            // Mode Switching
+            modeGlobal.addEventListener('click', () => {
+                currentMode = 'global';
+                modeGlobal.classList.add('border-[#da3f0b]', 'bg-[#da3f0b08]', 'text-[#da3f0b]');
+                modeGlobal.classList.remove('border-transparent', 'bg-slate-100', 'text-slate-600');
+                modeSelective.classList.remove('border-[#da3f0b]', 'bg-[#da3f0b08]', 'text-[#da3f0b]');
+                modeSelective.classList.add('border-transparent', 'bg-slate-100', 'text-slate-600');
+                applyBlur();
+            });
+
+            modeSelective.addEventListener('click', () => {
+                currentMode = 'selective';
+                modeSelective.classList.add('border-[#da3f0b]', 'bg-[#da3f0b08]', 'text-[#da3f0b]');
+                modeSelective.classList.remove('border-transparent', 'bg-slate-100', 'text-slate-600');
+                modeGlobal.classList.remove('border-[#da3f0b]', 'bg-[#da3f0b08]', 'text-[#da3f0b]');
+                modeGlobal.classList.add('border-transparent', 'bg-slate-100', 'text-slate-600');
+                applyBlur();
+            });
+
+            // Selective Blur Drawing
+            canvas.addEventListener('mousedown', (e) => {
+                if (currentMode !== 'selective' || !originalImage) return;
+                isDrawing = true;
+                const rect = canvas.getBoundingClientRect();
+                const scaleX = canvas.width / rect.width;
+                const scaleY = canvas.height / rect.height;
+                startX = (e.clientX - rect.left) * scaleX;
+                startY = (e.clientY - rect.top) * scaleY;
+            });
+
+            canvas.addEventListener('mousemove', (e) => {
+                if (!isDrawing) return;
+                // Optional: Draw a preview rectangle
+            });
+
+            canvas.addEventListener('mouseup', (e) => {
+                if (!isDrawing) return;
+                isDrawing = false;
+                
+                const rect = canvas.getBoundingClientRect();
+                const scaleX = canvas.width / rect.width;
+                const scaleY = canvas.height / rect.height;
+                const endX = (e.clientX - rect.left) * scaleX;
+                const endY = (e.clientY - rect.top) * scaleY;
+
+                const width = endX - startX;
+                const height = endY - startY;
+
+                // Apply blur to the selected area
+                ctx.save();
+                ctx.beginPath();
+                ctx.rect(startX, startY, width, height);
+                ctx.clip();
+                ctx.filter = `blur(${blurRange.value}px)`;
+                ctx.drawImage(originalImage, 0, 0);
+                ctx.restore();
+            });
+
+            // Reset
+            resetBtn.addEventListener('click', () => {
+                if (originalImage) applyBlur();
+            });
+
+            // Download
+            downloadBtn.addEventListener('click', () => {
+                const link = document.createElement('a');
+                link.download = 'blurred-image.png';
+                link.href = canvas.toDataURL();
+                link.click();
+            });
+
+            // FAQ Toggles
+            document.querySelectorAll('[data-faq-toggle]').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const answer = btn.nextElementSibling;
+                    const icon = btn.querySelector('.faq-icon');
+                    if (answer.style.maxHeight) {
+                        answer.style.maxHeight = null;
+                        icon.style.transform = 'rotate(0deg)';
+                    } else {
+                        answer.style.maxHeight = answer.scrollHeight + "px";
+                        icon.style.transform = 'rotate(180deg)';
+                    }
+                });
+            });
+        });
+
+        // Component Loading
+        async function loadComponent(url, elementId) {
+            try {
+                const response = await fetch(url);
+                if (response.ok) {
+                    document.getElementById(elementId).innerHTML = await response.text();
+                }
+            } catch (e) { console.error(e); }
+        }
+        loadComponent('/components/navbar.html', 'navbar');
+        loadComponent('/components/footer.html', 'footer');
+    </script>
+</body>
+</html>
