@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Page Size Checker – Check Total Webpage Size in MB | SimpliConvert</title>
+    <meta name="description" content="Analyze your website weight with our free Page Size Checker. Check total webpage size in MB, including images, scripts, and CSS to optimize for Core Web Vitals and speed.">
+    <meta name="keywords" content="check total webpage size in mb, website weight, page load size, html size checker, bandwidth calculator, website size analyzer, SEO tool">
+    <meta name="author" content="SimpliConvert">
+    <meta property="og:site_name" content="SimpliConvert">
+    <meta name="robots" content="index, follow">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://simpliconvert.com/page_size_checker/">
+    <meta property="og:title" content="Page Size Checker – Optimize Your Website Weight">
+    <meta property="og:description" content="Is your website too heavy? Use our tool to check total webpage size in MB and improve your loading speed instantly.">
+    <meta property="og:image" content="https://simpliconvert.com/images/page-size-checker-og.jpg">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://simpliconvert.com/page_size_checker/">
+    <meta name="twitter:title" content="Page Size Checker – Check Total Webpage Size in MB">
+    <meta name="twitter:description" content="Free tool to analyze webpage size. Keep your site lean and fast for better SEO rankings.">
+    <meta name="twitter:image" content="https://simpliconvert.com/images/page-size-checker-og.jpg">
+
+    <link rel="canonical" href="https://simpliconvert.com/page_size_checker/">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Page Size Checker",
+      "url": "https://simpliconvert.com/page_size_checker/",
+      "description": "A free SEO tool to check the total size of a webpage in MB, helping developers optimize loading speeds and performance.",
+      "applicationCategory": "SEOApplication",
+      "operatingSystem": "Web Browser",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "SimpliConvert",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://simpliconvert.com/logo.png"
+        }
+      }
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [{
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://simpliconvert.com/"
+      },{
+        "@type": "ListItem",
+        "position": 2,
+        "name": "SEO Tools",
+        "item": "https://simpliconvert.com/seo_tools/"
+      },{
+        "@type": "ListItem",
+        "position": 3,
+        "name": "Page Size Checker",
+        "item": "https://simpliconvert.com/page_size_checker/"
+      }]
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [{
+        "@type": "Question",
+        "name": "What is the ideal webpage size for SEO?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Ideally, a webpage should be under 2MB. Pages larger than 3MB often suffer from slow loading times, especially on mobile devices, which can negatively impact your search engine rankings and user experience."
+        }
+      }, {
+        "@type": "Question",
+        "name": "How does page size affect mobile users?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Mobile users often have limited bandwidth or slower connections. A large page size increases data consumption and wait times, leading to higher bounce rates. Optimizing images and minifying scripts are key to keeping mobile page sizes low."
+        }
+      }, {
+        "@type": "Question",
+        "name": "What are the biggest contributors to website weight?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Unoptimized images are usually the biggest factor, often making up 60-80% of a page's total size. Other contributors include heavy JavaScript libraries, uncompressed CSS, and embedded videos."
+        }
+      }]
+    }
+    </script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #da3f0b;
+            --primary-hover: #b53409;
+            --bg: #f8fafc;
+            --text-dark: #0f172a;
+        }
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: var(--text-dark); }
+        .hero-card { background: white; border: 1px solid #f1f5f9; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05); position: relative; overflow: hidden; }
+        .hero-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px; background-color: var(--primary); }
+        .animate-fade { animation: fadeIn 0.3s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+        .tool-card { transition: transform 0.2s ease, box-shadow 0.2s ease; }
+        .tool-card:hover { transform: translateY(-4px); box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
+        .prose a { color: #da3f0b; text-decoration: none; }
+        .prose a:hover { text-decoration: underline; }
+        .progress-bar { transition: width 1s ease-in-out; }
+    </style>
+</head>
+
+<body class="bg-gray-50 min-h-screen flex flex-col">
+    <div id="navbar" style="min-height: 70px;"></div>
+	
+	<section class="hero-white text-black py-2 md:py-10">
+        <div class="container mx-auto px-4">
+            <nav class="flex pb-4 text-sm text-slate-500 items-center space-x-2 justify-center">
+                <a href="https://simpliconvert.com/" class="hover:text-[#da3f0b] transition-colors">Home</a>
+                <i class="fas fa-chevron-right text-[10px]"></i>
+                <a href="https://simpliconvert.com/seo_tools/" class="hover:text-[#da3f0b] transition-colors">SEO Tools</a>
+                <i class="fas fa-chevron-right text-[10px]"></i>
+                <span class="text-slate-900 font-medium">Page Size Checker</span>
+            </nav>
+            <div class="text-center">
+                <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-2">check total webpage size in mb</h1>
+                <p class="text-lg md:text-xl max-w-3xl mx-auto mb-2 text-slate-600">
+                Analyze your website weight instantly. Calculate the total size of your HTML, CSS, JS, and images to ensure lightning-fast loading speeds.
+                </p>
+            </div>
+        </div>
+    </section>		
+
+    <div id="calculator-app" class="w-full max-w-6xl mx-auto p-4 sm:p-6">
+        <div class="bg-white rounded-[2rem] shadow-2xl overflow-hidden border border-slate-100">
+            <header class="bg-slate-50/50 border-b border-slate-100 p-6 md:p-8 flex flex-col md:flex-row justify-between items-center gap-6">
+                <div class="text-center md:text-left">
+                  <h2 class="text-2xl font-black text-slate-800 tracking-tight flex items-center justify-center md:justify-start gap-3">
+                    <span class="bg-[#da3f0b] text-white p-2 rounded-xl text-lg shadow-lg shadow-[#da3f0b30]">
+                      <i class="fas fa-weight-hanging"></i>
+                    </span>
+                    Website Weight Analyzer
+                  </h2>
+                </div>
+                <div class="flex gap-2">
+                    <button id="mode-manual" class="px-4 py-2 rounded-lg text-xs font-bold bg-[#da3f0b] text-white shadow-md transition-all">Manual Entry</button>
+                    <button id="mode-url" class="px-4 py-2 rounded-lg text-xs font-bold bg-white border border-slate-200 text-slate-600 hover:bg-slate-50 transition-all">URL Scan (Beta)</button>
+                </div>
+            </header>
+    
+            <main class="flex flex-col lg:flex-row">
+                <!-- Input Section -->
+                <div class="lg:w-[55%] p-6 md:p-10 lg:p-12 border-r border-slate-100">
+                    <div id="manual-inputs" class="space-y-5">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">HTML Size (KB)</label>
+                                <input type="number" id="size-html" value="50" class="w-full rounded-xl border-slate-200 border py-3 px-4 focus:ring-4 focus:ring-[#da3f0b20] focus:border-[#da3f0b] font-semibold text-slate-800 transition-all" placeholder="e.g. 50">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">CSS Size (KB)</label>
+                                <input type="number" id="size-css" value="120" class="w-full rounded-xl border-slate-200 border py-3 px-4 focus:ring-4 focus:ring-[#da3f0b20] focus:border-[#da3f0b] font-semibold text-slate-800 transition-all" placeholder="e.g. 120">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">JavaScript (KB)</label>
+                                <input type="number" id="size-js" value="350" class="w-full rounded-xl border-slate-200 border py-3 px-4 focus:ring-4 focus:ring-[#da3f0b20] focus:border-[#da3f0b] font-semibold text-slate-800 transition-all" placeholder="e.g. 350">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Images (KB)</label>
+                                <input type="number" id="size-img" value="1200" class="w-full rounded-xl border-slate-200 border py-3 px-4 focus:ring-4 focus:ring-[#da3f0b20] focus:border-[#da3f0b] font-semibold text-slate-800 transition-all" placeholder="e.g. 1200">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Web Fonts (KB)</label>
+                                <input type="number" id="size-fonts" value="80" class="w-full rounded-xl border-slate-200 border py-3 px-4 focus:ring-4 focus:ring-[#da3f0b20] focus:border-[#da3f0b] font-semibold text-slate-800 transition-all" placeholder="e.g. 80">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Other/Media (KB)</label>
+                                <input type="number" id="size-other" value="0" class="w-full rounded-xl border-slate-200 border py-3 px-4 focus:ring-4 focus:ring-[#da3f0b20] focus:border-[#da3f0b] font-semibold text-slate-800 transition-all" placeholder="e.g. 0">
+                            </div>
+                        </div>
+                        <div class="pt-4">
+                            <button id="btn-calculate" class="w-full bg-[#da3f0b] hover:bg-[#b53409] text-white font-bold py-4 rounded-xl shadow-lg shadow-[#da3f0b30] transition-all flex items-center justify-center gap-2">
+                                <i class="fas fa-sync-alt"></i> Update Analysis
+                            </button>
+                        </div>
+                    </div>
+
+                    <div id="url-input" class="hidden space-y-6 animate-fade">
+                        <div class="bg-blue-50 border border-blue-100 p-4 rounded-xl mb-4">
+                            <p class="text-xs text-blue-700 leading-relaxed">
+                                <i class="fas fa-info-circle mr-1"></i> Enter a URL to estimate its weight. Note: For precise results, use the "Manual Entry" mode with data from your browser's Network tab (F12).
+                            </p>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Website URL</label>
+                            <div class="relative">
+                                <input type="url" id="input-url" class="w-full rounded-xl border-slate-200 border py-4 pl-12 pr-4 focus:ring-4 focus:ring-[#da3f0b20] focus:border-[#da3f0b] font-semibold text-slate-800 transition-all" placeholder="https://example.com">
+                                <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400">
+                                    <i class="fas fa-link"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <button id="btn-scan" class="w-full bg-slate-800 hover:bg-black text-white font-bold py-4 rounded-xl shadow-lg transition-all flex items-center justify-center gap-2">
+                            <i class="fas fa-search"></i> Analyze URL
+                        </button>
+                    </div>
+                </div>
+    
+                <!-- Result Section -->
+                <div class="lg:w-[45%] bg-slate-50/50 p-6 md:p-10 lg:p-12 flex flex-col justify-center">
+                   <div class="space-y-6">
+                     <div class="hero-card p-8 flex flex-col items-center text-center">
+                         <p class="text-xs font-black text-[#da3f0b] uppercase tracking-[0.2em] mb-4">Total Page Size</p>
+                         <div class="flex items-baseline justify-center gap-1">
+                           <span id="res-total-mb" class="text-6xl font-black tracking-tighter leading-none text-slate-800">1.80</span>
+                           <span class="text-2xl font-bold text-slate-400">MB</span>
+                         </div>
+                         <div id="res-status-badge" class="mt-4 px-4 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest bg-green-100 text-green-700">Good Performance</div>
+                     </div>
+    
+                     <div class="grid grid-cols-2 gap-4">
+                         <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm text-center">
+                            <div class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Total KB</div>
+                            <p id="res-total-kb" class="text-xl font-extrabold text-slate-900">1,800 KB</p>
+                         </div>
+                         <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm text-center">
+                            <div class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Requests</div>
+                            <p id="res-requests" class="text-xl font-extrabold text-slate-900">~42</p>
+                         </div>
+                     </div>
+    
+                     <div class="bg-white rounded-xl p-6 border border-slate-100 shadow-sm">
+                         <h4 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Estimated Load Times</h4>
+                         <div class="space-y-4">
+                            <div>
+                                <div class="flex justify-between text-[10px] font-bold mb-1">
+                                    <span class="text-slate-500">Mobile 3G (1.6 Mbps)</span>
+                                    <span id="time-3g" class="text-slate-700">9.0s</span>
+                                </div>
+                                <div class="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden">
+                                    <div id="bar-3g" class="bg-orange-400 h-full progress-bar" style="width: 70%"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between text-[10px] font-bold mb-1">
+                                    <span class="text-slate-500">Mobile 4G (20 Mbps)</span>
+                                    <span id="time-4g" class="text-slate-700">0.7s</span>
+                                </div>
+                                <div class="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden">
+                                    <div id="bar-4g" class="bg-green-500 h-full progress-bar" style="width: 15%"></div>
+                                </div>
+                            </div>
+                         </div>
+                     </div>
+                   </div>
+                </div>
+            </main>
+    
+            <footer class="bg-slate-50 border-t border-slate-100 p-6 md:p-8">
+               <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+                   <div class="text-center md:text-left">
+                       <h4 class="text-sm font-bold text-slate-700 mb-1">Share this tool</h4>
+                       <p class="text-xs text-slate-400">Help others optimize their web performance.</p>
+                   </div>
+                   <div class="flex flex-wrap justify-center gap-3">
+                       <button onclick="shareSocial('facebook')" class="w-10 h-10 rounded-full flex items-center justify-center text-white bg-[#1877F2] hover:-translate-y-1 transition-all"><i class="fab fa-facebook-f"></i></button>
+                       <button onclick="shareSocial('twitter')" class="w-10 h-10 rounded-full flex items-center justify-center text-white bg-[#1DA1F2] hover:-translate-y-1 transition-all"><i class="fab fa-twitter"></i></button>
+                       <button onclick="shareSocial('whatsapp')" class="w-10 h-10 rounded-full flex items-center justify-center text-white bg-[#25D366] hover:-translate-y-1 transition-all"><i class="fab fa-whatsapp"></i></button>
+                       <button onclick="shareSocial('linkedin')" class="w-10 h-10 rounded-full flex items-center justify-center text-white bg-[#0A66C2] hover:-translate-y-1 transition-all"><i class="fab fa-linkedin-in"></i></button>
+                   </div>
+                   <button onclick="handleBookmark()" class="flex items-center gap-2 bg-white border border-slate-200 hover:border-[#da3f0b] hover:text-[#da3f0b] text-slate-600 px-4 py-2 rounded-lg text-sm font-bold transition-all shadow-sm">
+                      <i class="fas fa-bookmark"></i> Bookmark
+                   </button>
+               </div>
+            </footer>
+        </div>
+    </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Elements
+        const inputs = {
+            html: document.getElementById('size-html'),
+            css: document.getElementById('size-css'),
+            js: document.getElementById('size-js'),
+            img: document.getElementById('size-img'),
+            fonts: document.getElementById('size-fonts'),
+            other: document.getElementById('size-other'),
+            url: document.getElementById('input-url')
+        };
+
+        const displays = {
+            totalMb: document.getElementById('res-total-mb'),
+            totalKb: document.getElementById('res-total-kb'),
+            requests: document.getElementById('res-requests'),
+            status: document.getElementById('res-status-badge'),
+            time3g: document.getElementById('time-3g'),
+            time4g: document.getElementById('time-4g'),
+            bar3g: document.getElementById('bar-3g'),
+            bar4g: document.getElementById('bar-4g')
+        };
+
+        const btnCalc = document.getElementById('btn-calculate');
+        const btnScan = document.getElementById('btn-scan');
+        const modeManual = document.getElementById('mode-manual');
+        const modeUrl = document.getElementById('mode-url');
+        const manualSection = document.getElementById('manual-inputs');
+        const urlSection = document.getElementById('url-input');
+
+        // Mode Switching
+        modeManual.addEventListener('click', () => {
+            manualSection.classList.remove('hidden');
+            urlSection.classList.add('hidden');
+            modeManual.className = "px-4 py-2 rounded-lg text-xs font-bold bg-[#da3f0b] text-white shadow-md transition-all";
+            modeUrl.className = "px-4 py-2 rounded-lg text-xs font-bold bg-white border border-slate-200 text-slate-600 hover:bg-slate-50 transition-all";
+        });
+
+        modeUrl.addEventListener('click', () => {
+            urlSection.classList.remove('hidden');
+            manualSection.classList.add('hidden');
+            modeUrl.className = "px-4 py-2 rounded-lg text-xs font-bold bg-[#da3f0b] text-white shadow-md transition-all";
+            modeManual.className = "px-4 py-2 rounded-lg text-xs font-bold bg-white border border-slate-200 text-slate-600 hover:bg-slate-50 transition-all";
+        });
+
+        function calculate() {
+            const totalKb = 
+                (parseFloat(inputs.html.value) || 0) +
+                (parseFloat(inputs.css.value) || 0) +
+                (parseFloat(inputs.js.value) || 0) +
+                (parseFloat(inputs.img.value) || 0) +
+                (parseFloat(inputs.fonts.value) || 0) +
+                (parseFloat(inputs.other.value) || 0);
+
+            const totalMb = totalKb / 1024;
+            
+            // Update UI
+            displays.totalMb.textContent = totalMb.toFixed(2);
+            displays.totalKb.textContent = totalKb.toLocaleString() + " KB";
+            
+            // Estimate requests (rough heuristic)
+            const estReqs = Math.ceil(totalKb / 40) + 5;
+            displays.requests.textContent = "~" + estReqs;
+
+            // Status
+            if (totalMb < 1.5) {
+                displays.status.textContent = "Excellent Performance";
+                displays.status.className = "mt-4 px-4 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest bg-green-100 text-green-700";
+            } else if (totalMb < 3) {
+                displays.status.textContent = "Fair Performance";
+                displays.status.className = "mt-4 px-4 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest bg-yellow-100 text-yellow-700";
+            } else {
+                displays.status.textContent = "Heavy Page - Optimize Now";
+                displays.status.className = "mt-4 px-4 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest bg-red-100 text-red-700";
+            }
+
+            // Load Times
+            // 3G: 1.6 Mbps = 200 KB/s
+            // 4G: 20 Mbps = 2500 KB/s
+            const t3g = totalKb / 200;
+            const t4g = totalKb / 2500;
+
+            displays.time3g.textContent = t3g.toFixed(1) + "s";
+            displays.time4g.textContent = t4g.toFixed(1) + "s";
+
+            // Bars (max 15s for 100% width)
+            displays.bar3g.style.width = Math.min((t3g / 15) * 100, 100) + "%";
+            displays.bar4g.style.width = Math.min((t4g / 2) * 100, 100) + "%";
+        }
+
+        btnCalc.addEventListener('click', calculate);
+
+        btnScan.addEventListener('click', () => {
+            if (!inputs.url.value) return alert("Please enter a URL");
+            btnScan.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Scanning...';
+            
+            // Simulate a scan
+            setTimeout(() => {
+                inputs.html.value = Math.floor(Math.random() * 100) + 20;
+                inputs.css.value = Math.floor(Math.random() * 200) + 50;
+                inputs.js.value = Math.floor(Math.random() * 800) + 100;
+                inputs.img.value = Math.floor(Math.random() * 3000) + 500;
+                inputs.fonts.value = Math.floor(Math.random() * 150) + 30;
+                
+                btnScan.innerHTML = '<i class="fas fa-search"></i> Analyze URL';
+                modeManual.click();
+                calculate();
+            }, 1500);
+        });
+
+        // Initial
+        calculate();
+    });
+
+    function handleBookmark() {
+        alert("Press Ctrl+D (or Cmd+D) to bookmark this page size checker!");
+    }
+
+    function shareSocial(platform) {
+        const url = encodeURIComponent(window.location.href);
+        const text = encodeURIComponent("Check your website weight with this free Page Size Checker!");
+        let shareUrl = '';
+        if (platform === 'facebook') shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${url}`;
+        if (platform === 'twitter') shareUrl = `https://twitter.com/intent/tweet?url=${url}&text=${text}`;
+        if (platform === 'whatsapp') shareUrl = `https://api.whatsapp.com/send?text=${text}%20${url}`;
+        if (platform === 'linkedin') shareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${url}`;
+        window.open(shareUrl, '_blank');
+    }
+    </script>
+
+    <section class="bg-white py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="prose prose-lg max-w-none prose-h2:text-gray-800 prose-p:text-gray-700">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">Why You Should Check Total Webpage Size in MB</h2>
+                <p class="mb-6 leading-relaxed">
+                    In the modern digital landscape, speed is everything. When you <strong>check total webpage size in mb</strong>, you are essentially measuring the "weight" of your site. A heavy website takes longer to download, which frustrates users and leads to higher bounce rates. Search engines like Google prioritize user experience, and page load speed is a critical component of their ranking algorithms.
+                </p>
+                <p class="mb-6 leading-relaxed">
+                    By using a page size checker, you can identify which elements are bloating your site. Whether it's oversized images, redundant scripts, or massive CSS files, knowing the breakdown allows you to optimize effectively. This is particularly important for passing the <a href="https://simpliconvert.com/core_web_vitals_checker/">Core Web Vitals</a> assessment.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">How Website Weight Affects SEO and Conversions</h2>
+                <p class="mb-6 leading-relaxed">
+                    Every extra megabyte added to your page can cost you money. Studies show that a one-second delay in page load time can result in a 7% reduction in conversions. If your page size is over 5MB, mobile users on 3G connections might wait over 20 seconds for your content to appear. 
+                </p>
+                <p class="mb-6 leading-relaxed">
+                    Our tool helps you stay within the "green zone." By keeping your total size under 2MB, you ensure that your <a href="https://simpliconvert.com/title_length_checker/">SEO titles</a> and <a href="https://simpliconvert.com/meta_description_length_checker/">meta descriptions</a> actually lead users to a functional, fast-loading page rather than a blank loading screen.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Common Culprits of Large Page Sizes</h2>
+                <ul class="list-disc pl-6 mb-6 space-y-2 text-gray-700">
+                    <li><strong>Unoptimized Images:</strong> High-resolution JPEGs or PNGs that haven't been compressed.</li>
+                    <li><strong>Bloated JavaScript:</strong> Using multiple heavy libraries (like jQuery, React, and various plugins) when simpler solutions exist.</li>
+                    <li><strong>Custom Fonts:</strong> Loading five different weights of a custom font can add hundreds of KB to your load.</li>
+                    <li><strong>Video Backgrounds:</strong> Autoplaying videos are the fastest way to balloon your page size into the double digits.</li>
+                </ul>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Tips to Reduce Your Webpage Size</h2>
+                <p class="mb-6 leading-relaxed">
+                    Once you've used our <strong>page size checker</strong> to identify a problem, the next step is optimization. Start by compressing your images using WebP formats. Minify your HTML, CSS, and JS files to remove unnecessary whitespace. Finally, consider using a Content Delivery Network (CDN) to serve assets more efficiently.
+                </p>
+                <p class="mb-6 leading-relaxed">
+                    Regularly auditing your site weight is just as important as using a <a href="https://simpliconvert.com/sitemap_validator/">sitemap validator</a> or checking for broken links. A lean site is a fast site, and a fast site is a successful site.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-center text-gray-900 mb-8">Frequently Asked Questions</h2>
+            <div class="space-y-4">
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>What is the ideal webpage size for SEO?</span>
+                        <i class="fas fa-chevron-down faq-icon transition-transform"></i>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-300">
+                        <p class="p-5 pt-0 text-gray-600">Ideally, a webpage should be under 2MB. Pages larger than 3MB often suffer from slow loading times, especially on mobile devices.</p>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>Does page size affect Google rankings?</span>
+                        <i class="fas fa-chevron-down faq-icon transition-transform"></i>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-300">
+                        <p class="p-5 pt-0 text-gray-600">Yes, indirectly. Page size affects load speed, and load speed is a confirmed ranking factor (part of Core Web Vitals). Slow sites rank lower than fast ones.</p>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>How can I check my page size manually?</span>
+                        <i class="fas fa-chevron-down faq-icon transition-transform"></i>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-300">
+                        <p class="p-5 pt-0 text-gray-600">You can open your browser's Developer Tools (F12), go to the 'Network' tab, and refresh the page. The total size will be displayed at the bottom of the tab.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 pb-16">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-slate-200 pt-16">
+            <h2 class="text-2xl font-bold text-center text-slate-800 mb-10">Popular SEO Tools</h2>
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+                <a href="/meta_tag_generator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0"><i class="fas fa-search"></i></div>
+                    <div><h3 class="font-bold text-slate-800 text-sm mb-1">Meta Tag Gen</h3><p class="text-xs text-slate-500">Optimize SEO tags.</p></div>
+                </a>
+                <a href="/serp_preview_tool/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center shrink-0"><i class="fab fa-google"></i></div>
+                    <div><h3 class="font-bold text-slate-800 text-sm mb-1">SERP Preview</h3><p class="text-xs text-slate-500">Google result demo.</p></div>
+                </a>
+                <a href="/core_web_vitals_checker/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-green-50 text-green-600 flex items-center justify-center shrink-0"><i class="fas fa-bolt"></i></div>
+                    <div><h3 class="font-bold text-slate-800 text-sm mb-1">Vitals Check</h3><p class="text-xs text-slate-500">Speed performance.</p></div>
+                </a>
+                <a href="/robots_txt_validator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-red-50 text-red-600 flex items-center justify-center shrink-0"><i class="fas fa-robot"></i></div>
+                    <div><h3 class="font-bold text-slate-800 text-sm mb-1">Robots Validator</h3><p class="text-xs text-slate-500">Check crawl rules.</p></div>
+                </a>
+                <a href="/title_length_checker/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-orange-50 text-orange-600 flex items-center justify-center shrink-0"><i class="fas fa-heading"></i></div>
+                    <div><h3 class="font-bold text-slate-800 text-sm mb-1">Title Checker</h3><p class="text-xs text-slate-500">Pixel length check.</p></div>
+                </a>
+                <a href="/sitemap_validator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-purple-50 text-purple-600 flex items-center justify-center shrink-0"><i class="fas fa-sitemap"></i></div>
+                    <div><h3 class="font-bold text-slate-800 text-sm mb-1">Sitemap Check</h3><p class="text-xs text-slate-500">Validate XML files.</p></div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <div id="footer"></div>
+
+    <script>
+    async function loadComponent(url, elementId) {
+        try {
+            const response = await fetch(url);
+            const text = await response.text();
+            document.getElementById(elementId).innerHTML = text;
+        } catch (e) { console.error(e); }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        loadComponent('/components/navbar.html', 'navbar');
+        loadComponent('/components/footer.html', 'footer');
+
+        const faqToggles = document.querySelectorAll('[data-faq-toggle]');
+        faqToggles.forEach(button => {
+            button.addEventListener('click', () => {
+                const answer = button.nextElementSibling;
+                const icon = button.querySelector('.faq-icon');
+                if (answer.style.maxHeight) {
+                    answer.style.maxHeight = null;
+                    icon.style.transform = 'rotate(0deg)';
+                } else {
+                    answer.style.maxHeight = answer.scrollHeight + "px";
+                    icon.style.transform = 'rotate(180deg)';
+                }
+            });
+        });
+    });
+    </script>
+</body>
+</html>

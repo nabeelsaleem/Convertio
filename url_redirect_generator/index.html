@@ -1,0 +1,988 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>URL Redirect Generator – Generate .htaccess & Nginx 301 Code | SimpliConvert</title>
+    <meta name="description" content="Quickly generate 301 and 302 redirect code for Apache (.htaccess) and Nginx servers. Ensure SEO-friendly URL migrations and preserve link equity with our free tool.">
+    <meta name="keywords" content="generate htaccess redirect code, 301 redirect generator, nginx redirect code, apache redirect tool, seo redirect generator, htaccess 301 snippet">
+    <meta name="author" content="SimpliConvert">
+    <meta property="og:site_name" content="SimpliConvert">
+    <meta name="robots" content="index, follow">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://simpliconvert.com/url_redirect_generator/">
+    <meta property="og:title" content="URL Redirect Generator – Generate .htaccess & Nginx Code">
+    <meta property="og:description" content="Create perfect 301 redirect code snippets for your web server instantly. Supports Apache and Nginx.">
+    <meta property="og:image" content="https://simpliconvert.com/images/url-redirect-generator-og.jpg">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://simpliconvert.com/url_redirect_generator/">
+    <meta name="twitter:title" content="URL Redirect Generator – Free SEO Tool">
+    <meta name="twitter:description" content="Generate the exact code snippets needed to set up 301 redirects on Apache or Nginx servers.">
+    <meta name="twitter:image" content="https://simpliconvert.com/images/url-redirect-generator-og.jpg">
+
+    <link rel="canonical" href="https://simpliconvert.com/url_redirect_generator/">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "URL Redirect Generator",
+      "url": "https://simpliconvert.com/url_redirect_generator/",
+      "description": "A free online tool to generate 301 and 302 redirect code for .htaccess (Apache) and Nginx configuration files.",
+      "applicationCategory": "SEOApplication",
+      "operatingSystem": "Web Browser",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "SimpliConvert",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://simpliconvert.com/logo.png"
+        }
+      }
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [{
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://simpliconvert.com/"
+      },{
+        "@type": "ListItem",
+        "position": 2,
+        "name": "SEO Tools",
+        "item": "https://simpliconvert.com/seo_tools/"
+      },{
+        "@type": "ListItem",
+        "position": 3,
+        "name": "URL Redirect Generator",
+        "item": "https://simpliconvert.com/url_redirect_generator/"
+      }]
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [{
+        "@type": "Question",
+        "name": "What is a 301 redirect?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "A 301 redirect is a permanent redirect from one URL to another. It signals to search engines that the page has moved permanently, transferring nearly all link equity (ranking power) to the new URL."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Where do I put the generated .htaccess code?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The .htaccess file is usually located in the root directory of your website on an Apache server. You should paste the generated code at the top of the file, or after 'RewriteEngine On' if you are using RewriteRules."
+        }
+      }, {
+        "@type": "Question",
+        "name": "What is the difference between 301 and 302 redirects?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "301 is a permanent redirect, best for SEO when a page is gone forever. 302 is a temporary redirect, used when you plan to bring the original URL back later. Search engines do not pass link equity through 302 redirects as effectively as 301s."
+        }
+      }]
+    }
+    </script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #da3f0b;
+            --primary-hover: #b53409;
+            --bg: #f8fafc;
+            --text-dark: #0f172a;
+        }
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: var(--text-dark); }
+        .hero-card { background: white; border: 1px solid #f1f5f9; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05); position: relative; overflow: hidden; }
+        .hero-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px; background-color: var(--primary); }
+        .code-output { font-family: 'Courier New', Courier, monospace; background-color: #1e293b; color: #e2e8f0; padding: 1.5rem; border-radius: 0.75rem; position: relative; min-height: 120px; }
+        .copy-btn { position: absolute; top: 0.75rem; right: 0.75rem; background: rgba(255,255,255,0.1); color: white; padding: 0.4rem 0.8rem; border-radius: 0.5rem; font-size: 0.75rem; transition: all 0.2s; }
+        .copy-btn:hover { background: var(--primary); }
+        .tool-card { transition: transform 0.2s ease, box-shadow 0.2s ease; }
+        .tool-card:hover { transform: translateY(-4px); box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
+        .animate-fade { animation: fadeIn 0.3s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+
+<body class="bg-gray-50 min-h-screen flex flex-col">
+    <div id="navbar" style="min-height: 70px;"></div>
+	
+	<section class="hero-white text-black py-2 md:py-10">
+        <div class="container mx-auto px-4">
+            <nav class="flex pb-4 text-sm text-slate-500 items-center space-x-2 justify-center">
+                <a href="https://simpliconvert.com/" class="hover:text-[#da3f0b] transition-colors">Home</a>
+                <i class="fas fa-chevron-right text-[10px]"></i>
+                <a href="https://simpliconvert.com/seo_tools/" class="hover:text-[#da3f0b] transition-colors">SEO Tools</a>
+                <i class="fas fa-chevron-right text-[10px]"></i>
+                <span class="text-slate-900 font-medium">URL Redirect Generator</span>
+            </nav>
+            <div class="text-center">
+                <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-2">generate htaccess redirect code</h1>
+                <p class="text-lg md:text-xl max-w-3xl mx-auto mb-2 text-slate-600">
+                Create SEO-friendly 301 and 302 redirect rules for Apache (.htaccess) and Nginx servers in seconds.
+                </p>
+            </div>
+        </div>
+    </section>		
+
+    <div id="calculator-app" class="w-full max-w-6xl mx-auto p-4 sm:p-6">
+        <div class="bg-white rounded-[2rem] shadow-2xl overflow-hidden border border-slate-100">
+            <header class="bg-slate-50/50 border-b border-slate-100 p-6 md:p-8 flex flex-col md:flex-row justify-between items-center gap-6">
+                <div class="text-center md:text-left">
+                  <h2 class="text-2xl font-black text-slate-800 tracking-tight flex items-center justify-center md:justify-start gap-3">
+                    <span class="bg-[#da3f0b] text-white p-2 rounded-xl text-lg shadow-lg shadow-[#da3f0b30]">
+                      <i class="fas fa-directions"></i>
+                    </span>
+                    Redirect Snippet Generator
+                  </h2>
+                </div>
+            </header>
+    
+            <main class="flex flex-col lg:flex-row">
+                <div class="lg:w-[45%] p-6 md:p-10 lg:p-12 border-r border-slate-100">
+                    <div class="space-y-6">
+                        <div>
+                            <label class="block text-xs font-black text-slate-500 uppercase tracking-widest mb-2">Server Type</label>
+                            <div class="grid grid-cols-2 gap-3">
+                                <button onclick="setServer('apache')" id="btn-apache" class="server-toggle py-3 px-4 rounded-xl border-2 border-[#da3f0b] bg-[#da3f0b08] text-[#da3f0b] font-bold text-sm transition-all">Apache (.htaccess)</button>
+                                <button onclick="setServer('nginx')" id="btn-nginx" class="server-toggle py-3 px-4 rounded-xl border-2 border-slate-100 bg-white text-slate-500 font-bold text-sm transition-all">Nginx</button>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-black text-slate-500 uppercase tracking-widest mb-2">Redirect Type</label>
+                            <select id="redirect-type" class="w-full bg-slate-50 border border-slate-200 text-slate-700 py-3 px-4 rounded-xl font-semibold focus:ring-4 focus:ring-[#da3f0b15] focus:border-[#da3f0b] outline-none transition-all">
+                                <option value="301">301 (Permanent)</option>
+                                <option value="302">302 (Temporary)</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-black text-slate-500 uppercase tracking-widest mb-2">Old URL Path (Source)</label>
+                            <input type="text" id="old-url" placeholder="/old-page-url" class="w-full bg-white border border-slate-200 text-slate-800 py-3 px-4 rounded-xl font-medium focus:ring-4 focus:ring-[#da3f0b15] focus:border-[#da3f0b] outline-none transition-all">
+                            <p class="text-[10px] text-slate-400 mt-1">Example: /blog/old-post or /old-category/</p>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-black text-slate-500 uppercase tracking-widest mb-2">New Destination URL</label>
+                            <input type="text" id="new-url" placeholder="https://example.com/new-page" class="w-full bg-white border border-slate-200 text-slate-800 py-3 px-4 rounded-xl font-medium focus:ring-4 focus:ring-[#da3f0b15] focus:border-[#da3f0b] outline-none transition-all">
+                            <p class="text-[10px] text-slate-400 mt-1">Full URL recommended for cross-domain or absolute paths.</p>
+                        </div>
+                    </div>
+                </div>
+    
+                <div class="lg:w-[55%] bg-slate-50/50 p-6 md:p-10 lg:p-12 flex flex-col">
+                   <div class="flex-grow">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest">Generated Code Snippet</h3>
+                            <span id="copy-status" class="text-[10px] font-bold text-[#16a34a] hidden animate-fade">Copied to clipboard!</span>
+                        </div>
+                        <div class="code-output">
+                            <button onclick="copyCode()" class="copy-btn"><i class="far fa-copy mr-1"></i> Copy</button>
+                            <pre id="output-code" class="whitespace-pre-wrap break-all text-sm leading-relaxed"># Select server and enter URLs to generate code</pre>
+                        </div>
+                        
+                        <div class="mt-8 p-6 bg-white rounded-2xl border border-slate-100 shadow-sm">
+                            <h4 class="text-sm font-bold text-slate-800 mb-3 flex items-center gap-2">
+                                <i class="fas fa-lightbulb text-yellow-500"></i> Implementation Tip
+                            </h4>
+                            <p id="tip-text" class="text-xs text-slate-500 leading-relaxed">
+                                For Apache, ensure <strong>mod_rewrite</strong> is enabled on your server. Place this code at the very top of your .htaccess file to ensure it triggers before other rules.
+                            </p>
+                        </div>
+                   </div>
+                </div>
+            </main>
+    
+            <footer class="bg-slate-50 border-t border-slate-100 p-6 md:p-8">
+               <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+                   <div class="text-center md:text-left">
+                       <h4 class="text-sm font-bold text-slate-700 mb-1">Share this tool</h4>
+                       <p class="text-xs text-slate-400">Help other webmasters with their migrations.</p>
+                   </div>
+                   
+                   <div class="flex flex-wrap justify-center gap-3">
+                       <button onclick="shareSocial('facebook')" class="w-10 h-10 rounded-full flex items-center justify-center text-white transition-transform hover:-translate-y-1 bg-[#1877F2]"><i class="fab fa-facebook-f"></i></button>
+                       <button onclick="shareSocial('twitter')" class="w-10 h-10 rounded-full flex items-center justify-center text-white transition-transform hover:-translate-y-1 bg-[#1DA1F2]"><i class="fab fa-twitter"></i></button>
+                       <button onclick="shareSocial('linkedin')" class="w-10 h-10 rounded-full flex items-center justify-center text-white transition-transform hover:-translate-y-1 bg-[#0A66C2]"><i class="fab fa-linkedin-in"></i></button>
+                       <button onclick="shareSocial('whatsapp')" class="w-10 h-10 rounded-full flex items-center justify-center text-white transition-transform hover:-translate-y-1 bg-[#25D366]"><i class="fab fa-whatsapp"></i></button>
+                   </div>
+    
+                   <div class="relative">
+                       <button onclick="handleBookmark()" class="flex items-center gap-2 bg-white border border-slate-200 hover:border-[#da3f0b] hover:text-[#da3f0b] text-slate-600 px-4 py-2 rounded-lg text-sm font-bold transition-all shadow-sm">
+                          <i class="fas fa-bookmark"></i> Bookmark
+                       </button>
+                       <div id="bookmark-toast" class="hidden absolute bottom-full mb-3 left-1/2 -translate-x-1/2 bg-slate-800 text-white text-xs py-2 px-4 rounded-lg shadow-lg whitespace-nowrap">
+                           Press <span class="font-bold text-[#da3f0b]">Ctrl + D</span> to bookmark
+                       </div>
+                   </div>
+               </div>
+            </footer>
+        </div>
+    </div>
+
+    <script>
+        let currentServer = 'apache';
+
+        function setServer(server) {
+            currentServer = server;
+            document.querySelectorAll('.server-toggle').forEach(btn => {
+                btn.classList.remove('border-[#da3f0b]', 'bg-[#da3f0b08]', 'text-[#da3f0b]');
+                btn.classList.add('border-slate-100', 'bg-white', 'text-slate-500');
+            });
+            const activeBtn = document.getElementById('btn-' + server);
+            activeBtn.classList.add('border-[#da3f0b]', 'bg-[#da3f0b08]', 'text-[#da3f0b]');
+            activeBtn.classList.remove('border-slate-100', 'bg-white', 'text-slate-500');
+            
+            const tip = document.getElementById('tip-text');
+            if(server === 'apache') {
+                tip.innerHTML = "For Apache, ensure <strong>mod_rewrite</strong> is enabled. Place this code at the top of your .htaccess file.";
+            } else {
+                tip.innerHTML = "For Nginx, you must place this code inside the <strong>server { ... }</strong> block of your configuration file and reload Nginx.";
+            }
+            generateCode();
+        }
+
+        function generateCode() {
+            const oldUrl = document.getElementById('old-url').value.trim() || '/old-path';
+            const newUrl = document.getElementById('new-url').value.trim() || 'https://example.com/new-path';
+            const type = document.getElementById('redirect-type').value;
+            const output = document.getElementById('output-code');
+
+            let code = "";
+            if (currentServer === 'apache') {
+                // Using Redirect directive for simplicity, or RewriteRule for more power
+                code = `Redirect ${type} ${oldUrl} ${newUrl}`;
+            } else {
+                const flag = (type === '301') ? 'permanent' : 'redirect';
+                // Nginx rewrite syntax
+                code = `rewrite ^${oldUrl.replace(/\//g, '\\/')}$ ${newUrl} ${flag};`;
+            }
+
+            output.textContent = code;
+        }
+
+        function copyCode() {
+            const code = document.getElementById('output-code').textContent;
+            navigator.clipboard.writeText(code).then(() => {
+                const status = document.getElementById('copy-status');
+                status.classList.remove('hidden');
+                setTimeout(() => status.classList.add('hidden'), 2000);
+            });
+        }
+
+        function handleBookmark() {
+            const toast = document.getElementById('bookmark-toast');
+            toast.classList.remove('hidden');
+            setTimeout(() => toast.classList.add('hidden'), 3000);
+        }
+
+        function shareSocial(platform) {
+            const url = encodeURIComponent(window.location.href);
+            const title = encodeURIComponent("Check out this URL Redirect Generator!");
+            let shareUrl = '';
+            if(platform === 'facebook') shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${url}`;
+            if(platform === 'twitter') shareUrl = `https://twitter.com/intent/tweet?url=${url}&text=${title}`;
+            if(platform === 'linkedin') shareUrl = `https://www.linkedin.com/shareArticle?mini=true&url=${url}`;
+            if(platform === 'whatsapp') shareUrl = `https://api.whatsapp.com/send?text=${title}%20${url}`;
+            window.open(shareUrl, '_blank');
+        }
+
+        document.getElementById('old-url').addEventListener('input', generateCode);
+        document.getElementById('new-url').addEventListener('input', generateCode);
+        document.getElementById('redirect-type').addEventListener('change', generateCode);
+
+        // Initial generation
+        window.onload = generateCode;
+    </script>
+
+    <section class="bg-white py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="prose prose-lg max-w-none prose-h2:text-gray-800 prose-p:text-gray-700">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">Why You Need to Generate htaccess Redirect Code</h2>
+                <p class="mb-6 leading-relaxed">
+                    Managing a website often involves changing URL structures, migrating content, or deleting old pages. Without a proper strategy, these changes can lead to "404 Not Found" errors, which frustrate users and hurt your search engine rankings. When you <strong>generate htaccess redirect code</strong>, you are essentially creating a roadmap for browsers and search bots, telling them exactly where the content has moved.
+                </p>
+                <p class="mb-6 leading-relaxed">
+                    A 301 redirect is the gold standard for SEO. It tells Google that a page has moved permanently, allowing you to pass nearly all the "link juice" from the old URL to the new one. This is critical for maintaining your authority in the SERPs. If you are also managing your site's technical SEO, you might find our <a href="https://simpliconvert.com/canonical_url_generator/">Canonical URL Generator</a> helpful for preventing duplicate content issues.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Apache vs. Nginx: Which Redirect Code Should You Use?</h2>
+                <p class="mb-6 leading-relaxed">
+                    The type of code you need depends entirely on your web server software. Apache servers use a file called <code>.htaccess</code> to handle configuration changes on a per-directory basis. It is highly flexible and common on shared hosting environments. Nginx, on the other hand, is known for its high performance and handles redirects within its main server block configuration.
+                </p>
+                <p class="mb-6 leading-relaxed">
+                    Our tool allows you to switch between both formats instantly. Whether you need a simple <code>Redirect 301</code> for Apache or a <code>rewrite</code> rule for Nginx, we provide the exact syntax required to ensure your server processes the request correctly without causing performance bottlenecks.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Common Redirect Mistakes to Avoid</h2>
+                <p class="mb-6 leading-relaxed">
+                    While redirects are powerful, they can be dangerous if implemented incorrectly. One of the most common issues is a "Redirect Loop," where URL A points to URL B, and URL B points back to URL A. This causes the browser to crash and prevents the page from loading. Always use a <a href="https://simpliconvert.com/redirect_checker/">Redirect Checker</a> after implementing your code to ensure the path is clean.
+                </p>
+                <ul class="list-disc pl-6 mb-6 space-y-2 text-gray-700">
+                    <li><strong>Avoid Redirect Chains:</strong> Don't redirect A to B, then B to C. Go straight from A to C.</li>
+                    <li><strong>Match the Protocol:</strong> Ensure you are redirecting to the correct HTTP or HTTPS version.</li>
+                    <li><strong>Test Before Deploying:</strong> A single typo in a .htaccess file can take your entire website offline (Internal Server Error 500).</li>
+                </ul>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">How Redirects Impact Your SEO Strategy</h2>
+                <p class="mb-6 leading-relaxed">
+                    Redirects are a core component of technical SEO. When you delete a page that has backlinks, that link equity is lost unless you redirect it to a relevant new page. By using our <strong>301 redirect generator</strong>, you ensure that your hard-earned backlinks continue to support your site's ranking. 
+                </p>
+                <p class="mb-6 leading-relaxed">
+                    Furthermore, if you are cleaning up your site's metadata, tools like our <a href="https://simpliconvert.com/meta_description_length_checker/">Meta Description Length Checker</a> can help ensure that your new destination pages are fully optimized for click-through rates once the redirect is in place.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-center text-gray-900 mb-8">Redirect Generator – Frequently Asked Questions</h2>
+            <div class="space-y-4">
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>Is a 301 redirect better than a 302?</span>
+                        <i class="fas fa-chevron-down faq-icon transition-transform duration-300"></i>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-300">
+                        <p class="p-5 pt-0 text-gray-600">For SEO purposes, yes. A 301 redirect passes the ranking power to the new page, whereas a 302 redirect is seen as temporary and does not transfer link equity.</p>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>Can I redirect an entire domain using this tool?</span>
+                        <i class="fas fa-chevron-down faq-icon transition-transform duration-300"></i>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-300">
+                        <p class="p-5 pt-0 text-gray-600">This tool is designed for individual page-to-page redirects. For entire domain migrations, you usually need a wildcard redirect rule in your server configuration.</p>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>Will redirects slow down my website?</span>
+                        <i class="fas fa-chevron-down faq-icon transition-transform duration-300"></i>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-300">
+                        <p class="p-5 pt-0 text-gray-600">A few redirects have a negligible impact. However, thousands of rules in a .htaccess file or long redirect chains can slightly increase server response time.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 pb-16">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-slate-200 pt-16">
+            <h2 class="text-2xl font-bold text-center text-slate-800 mb-10">Popular SEO Tools on SimpliConvert</h2>
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+                <a href="/canonical_url_generator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center shrink-0 group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-link text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Canonical Gen</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Prevent duplicate content issues.</p>
+                    </div>
+                </a>
+                <a href="/redirect_checker/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-green-50 text-green-600 flex items-center justify-center shrink-0 group-hover:bg-green-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-check-double text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Redirect Check</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Analyze redirect paths and status.</p>
+                    </div>
+                </a>
+                <a href="/meta_tag_generator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0 group-hover:bg-indigo-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-code text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Meta Tag Gen</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Create SEO meta tags easily.</p>
+                    </div>
+                </a>
+                <a href="/robots_txt_validator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-red-50 text-red-600 flex items-center justify-center shrink-0 group-hover:bg-red-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-robot text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Robots Validator</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Check your robots.txt for errors.</p>
+                    </div>
+                </a>
+                <a href="/title_length_checker/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-yellow-50 text-yellow-600 flex items-center justify-center shrink-0 group-hover:bg-yellow-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-heading text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Title Checker</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Optimize title lengths for SERPs.</p>
+                    </div>
+                </a>
+                <a href="/sitemap_validator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-purple-50 text-purple-600 flex items-center justify-center shrink-0 group-hover:bg-purple-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-sitemap text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Sitemap Check</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Validate your XML sitemap files.</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <div id="footer"></div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // FAQ Toggle Logic
+            const faqToggles = document.querySelectorAll('[data-faq-toggle]');
+            faqToggles.forEach(button => {
+                button.addEventListener('click', () => {
+                    const answer = button.nextElementSibling;
+                    const icon = button.querySelector('.faq-icon');
+                    const isOpening = !answer.style.maxHeight;
+
+                    faqToggles.forEach(other => {
+                        other.nextElementSibling.style.maxHeight = null;
+                        other.querySelector('.faq-icon').style.transform = 'rotate(0deg)';
+                    });
+
+                    if (isOpening) {
+                        answer.style.maxHeight = answer.scrollHeight + "px";
+                        icon.style.transform = 'rotate(180deg)';
+                    }
+                });
+            });
+
+            // Component Loader (Mock)
+            async function loadComponent(url, elementId) {
+                try {
+                    const response = await fetch(url);
+                    if (response.ok) {
+                        const text = await response.text();
+                        document.getElementById(elementId).innerHTML = text;
+                    }
+                } catch (e) { console.log("Component load failed", e); }
+            }
+            loadComponent('/components/navbar.html', 'navbar');
+            loadComponent('/components/footer.html', 'footer');
+        });
+    </script>
+</body>
+</html><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>URL Redirect Generator – Generate .htaccess & Nginx 301 Code | SimpliConvert</title>
+    <meta name="description" content="Quickly generate 301 and 302 redirect code for Apache (.htaccess) and Nginx servers. Ensure SEO-friendly URL migrations and preserve link equity with our free tool.">
+    <meta name="keywords" content="generate htaccess redirect code, 301 redirect generator, nginx redirect code, apache redirect tool, seo redirect generator, htaccess 301 snippet">
+    <meta name="author" content="SimpliConvert">
+    <meta property="og:site_name" content="SimpliConvert">
+    <meta name="robots" content="index, follow">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://simpliconvert.com/url_redirect_generator/">
+    <meta property="og:title" content="URL Redirect Generator – Generate .htaccess & Nginx Code">
+    <meta property="og:description" content="Create perfect 301 redirect code snippets for your web server instantly. Supports Apache and Nginx.">
+    <meta property="og:image" content="https://simpliconvert.com/images/url-redirect-generator-og.jpg">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://simpliconvert.com/url_redirect_generator/">
+    <meta name="twitter:title" content="URL Redirect Generator – Free SEO Tool">
+    <meta name="twitter:description" content="Generate the exact code snippets needed to set up 301 redirects on Apache or Nginx servers.">
+    <meta name="twitter:image" content="https://simpliconvert.com/images/url-redirect-generator-og.jpg">
+
+    <link rel="canonical" href="https://simpliconvert.com/url_redirect_generator/">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "URL Redirect Generator",
+      "url": "https://simpliconvert.com/url_redirect_generator/",
+      "description": "A free online tool to generate 301 and 302 redirect code for .htaccess (Apache) and Nginx configuration files.",
+      "applicationCategory": "SEOApplication",
+      "operatingSystem": "Web Browser",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "SimpliConvert",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://simpliconvert.com/logo.png"
+        }
+      }
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [{
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://simpliconvert.com/"
+      },{
+        "@type": "ListItem",
+        "position": 2,
+        "name": "SEO Tools",
+        "item": "https://simpliconvert.com/seo_tools/"
+      },{
+        "@type": "ListItem",
+        "position": 3,
+        "name": "URL Redirect Generator",
+        "item": "https://simpliconvert.com/url_redirect_generator/"
+      }]
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [{
+        "@type": "Question",
+        "name": "What is a 301 redirect?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "A 301 redirect is a permanent redirect from one URL to another. It signals to search engines that the page has moved permanently, transferring nearly all link equity (ranking power) to the new URL."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Where do I put the generated .htaccess code?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The .htaccess file is usually located in the root directory of your website on an Apache server. You should paste the generated code at the top of the file, or after 'RewriteEngine On' if you are using RewriteRules."
+        }
+      }, {
+        "@type": "Question",
+        "name": "What is the difference between 301 and 302 redirects?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "301 is a permanent redirect, best for SEO when a page is gone forever. 302 is a temporary redirect, used when you plan to bring the original URL back later. Search engines do not pass link equity through 302 redirects as effectively as 301s."
+        }
+      }]
+    }
+    </script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #da3f0b;
+            --primary-hover: #b53409;
+            --bg: #f8fafc;
+            --text-dark: #0f172a;
+        }
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: var(--text-dark); }
+        .hero-card { background: white; border: 1px solid #f1f5f9; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05); position: relative; overflow: hidden; }
+        .hero-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px; background-color: var(--primary); }
+        .code-output { font-family: 'Courier New', Courier, monospace; background-color: #1e293b; color: #e2e8f0; padding: 1.5rem; border-radius: 0.75rem; position: relative; min-height: 120px; }
+        .copy-btn { position: absolute; top: 0.75rem; right: 0.75rem; background: rgba(255,255,255,0.1); color: white; padding: 0.4rem 0.8rem; border-radius: 0.5rem; font-size: 0.75rem; transition: all 0.2s; }
+        .copy-btn:hover { background: var(--primary); }
+        .tool-card { transition: transform 0.2s ease, box-shadow 0.2s ease; }
+        .tool-card:hover { transform: translateY(-4px); box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
+        .animate-fade { animation: fadeIn 0.3s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+
+<body class="bg-gray-50 min-h-screen flex flex-col">
+    <div id="navbar" style="min-height: 70px;"></div>
+	
+	<section class="hero-white text-black py-2 md:py-10">
+        <div class="container mx-auto px-4">
+            <nav class="flex pb-4 text-sm text-slate-500 items-center space-x-2 justify-center">
+                <a href="https://simpliconvert.com/" class="hover:text-[#da3f0b] transition-colors">Home</a>
+                <i class="fas fa-chevron-right text-[10px]"></i>
+                <a href="https://simpliconvert.com/seo_tools/" class="hover:text-[#da3f0b] transition-colors">SEO Tools</a>
+                <i class="fas fa-chevron-right text-[10px]"></i>
+                <span class="text-slate-900 font-medium">URL Redirect Generator</span>
+            </nav>
+            <div class="text-center">
+                <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-2">generate htaccess redirect code</h1>
+                <p class="text-lg md:text-xl max-w-3xl mx-auto mb-2 text-slate-600">
+                Create SEO-friendly 301 and 302 redirect rules for Apache (.htaccess) and Nginx servers in seconds.
+                </p>
+            </div>
+        </div>
+    </section>		
+
+    <div id="calculator-app" class="w-full max-w-6xl mx-auto p-4 sm:p-6">
+        <div class="bg-white rounded-[2rem] shadow-2xl overflow-hidden border border-slate-100">
+            <header class="bg-slate-50/50 border-b border-slate-100 p-6 md:p-8 flex flex-col md:flex-row justify-between items-center gap-6">
+                <div class="text-center md:text-left">
+                  <h2 class="text-2xl font-black text-slate-800 tracking-tight flex items-center justify-center md:justify-start gap-3">
+                    <span class="bg-[#da3f0b] text-white p-2 rounded-xl text-lg shadow-lg shadow-[#da3f0b30]">
+                      <i class="fas fa-directions"></i>
+                    </span>
+                    Redirect Snippet Generator
+                  </h2>
+                </div>
+            </header>
+    
+            <main class="flex flex-col lg:flex-row">
+                <div class="lg:w-[45%] p-6 md:p-10 lg:p-12 border-r border-slate-100">
+                    <div class="space-y-6">
+                        <div>
+                            <label class="block text-xs font-black text-slate-500 uppercase tracking-widest mb-2">Server Type</label>
+                            <div class="grid grid-cols-2 gap-3">
+                                <button onclick="setServer('apache')" id="btn-apache" class="server-toggle py-3 px-4 rounded-xl border-2 border-[#da3f0b] bg-[#da3f0b08] text-[#da3f0b] font-bold text-sm transition-all">Apache (.htaccess)</button>
+                                <button onclick="setServer('nginx')" id="btn-nginx" class="server-toggle py-3 px-4 rounded-xl border-2 border-slate-100 bg-white text-slate-500 font-bold text-sm transition-all">Nginx</button>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-black text-slate-500 uppercase tracking-widest mb-2">Redirect Type</label>
+                            <select id="redirect-type" class="w-full bg-slate-50 border border-slate-200 text-slate-700 py-3 px-4 rounded-xl font-semibold focus:ring-4 focus:ring-[#da3f0b15] focus:border-[#da3f0b] outline-none transition-all">
+                                <option value="301">301 (Permanent)</option>
+                                <option value="302">302 (Temporary)</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-black text-slate-500 uppercase tracking-widest mb-2">Old URL Path (Source)</label>
+                            <input type="text" id="old-url" placeholder="/old-page-url" class="w-full bg-white border border-slate-200 text-slate-800 py-3 px-4 rounded-xl font-medium focus:ring-4 focus:ring-[#da3f0b15] focus:border-[#da3f0b] outline-none transition-all">
+                            <p class="text-[10px] text-slate-400 mt-1">Example: /blog/old-post or /old-category/</p>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-black text-slate-500 uppercase tracking-widest mb-2">New Destination URL</label>
+                            <input type="text" id="new-url" placeholder="https://example.com/new-page" class="w-full bg-white border border-slate-200 text-slate-800 py-3 px-4 rounded-xl font-medium focus:ring-4 focus:ring-[#da3f0b15] focus:border-[#da3f0b] outline-none transition-all">
+                            <p class="text-[10px] text-slate-400 mt-1">Full URL recommended for cross-domain or absolute paths.</p>
+                        </div>
+                    </div>
+                </div>
+    
+                <div class="lg:w-[55%] bg-slate-50/50 p-6 md:p-10 lg:p-12 flex flex-col">
+                   <div class="flex-grow">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest">Generated Code Snippet</h3>
+                            <span id="copy-status" class="text-[10px] font-bold text-[#16a34a] hidden animate-fade">Copied to clipboard!</span>
+                        </div>
+                        <div class="code-output">
+                            <button onclick="copyCode()" class="copy-btn"><i class="far fa-copy mr-1"></i> Copy</button>
+                            <pre id="output-code" class="whitespace-pre-wrap break-all text-sm leading-relaxed"># Select server and enter URLs to generate code</pre>
+                        </div>
+                        
+                        <div class="mt-8 p-6 bg-white rounded-2xl border border-slate-100 shadow-sm">
+                            <h4 class="text-sm font-bold text-slate-800 mb-3 flex items-center gap-2">
+                                <i class="fas fa-lightbulb text-yellow-500"></i> Implementation Tip
+                            </h4>
+                            <p id="tip-text" class="text-xs text-slate-500 leading-relaxed">
+                                For Apache, ensure <strong>mod_rewrite</strong> is enabled on your server. Place this code at the very top of your .htaccess file to ensure it triggers before other rules.
+                            </p>
+                        </div>
+                   </div>
+                </div>
+            </main>
+    
+            <footer class="bg-slate-50 border-t border-slate-100 p-6 md:p-8">
+               <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+                   <div class="text-center md:text-left">
+                       <h4 class="text-sm font-bold text-slate-700 mb-1">Share this tool</h4>
+                       <p class="text-xs text-slate-400">Help other webmasters with their migrations.</p>
+                   </div>
+                   
+                   <div class="flex flex-wrap justify-center gap-3">
+                       <button onclick="shareSocial('facebook')" class="w-10 h-10 rounded-full flex items-center justify-center text-white transition-transform hover:-translate-y-1 bg-[#1877F2]"><i class="fab fa-facebook-f"></i></button>
+                       <button onclick="shareSocial('twitter')" class="w-10 h-10 rounded-full flex items-center justify-center text-white transition-transform hover:-translate-y-1 bg-[#1DA1F2]"><i class="fab fa-twitter"></i></button>
+                       <button onclick="shareSocial('linkedin')" class="w-10 h-10 rounded-full flex items-center justify-center text-white transition-transform hover:-translate-y-1 bg-[#0A66C2]"><i class="fab fa-linkedin-in"></i></button>
+                       <button onclick="shareSocial('whatsapp')" class="w-10 h-10 rounded-full flex items-center justify-center text-white transition-transform hover:-translate-y-1 bg-[#25D366]"><i class="fab fa-whatsapp"></i></button>
+                   </div>
+    
+                   <div class="relative">
+                       <button onclick="handleBookmark()" class="flex items-center gap-2 bg-white border border-slate-200 hover:border-[#da3f0b] hover:text-[#da3f0b] text-slate-600 px-4 py-2 rounded-lg text-sm font-bold transition-all shadow-sm">
+                          <i class="fas fa-bookmark"></i> Bookmark
+                       </button>
+                       <div id="bookmark-toast" class="hidden absolute bottom-full mb-3 left-1/2 -translate-x-1/2 bg-slate-800 text-white text-xs py-2 px-4 rounded-lg shadow-lg whitespace-nowrap">
+                           Press <span class="font-bold text-[#da3f0b]">Ctrl + D</span> to bookmark
+                       </div>
+                   </div>
+               </div>
+            </footer>
+        </div>
+    </div>
+
+    <script>
+        let currentServer = 'apache';
+
+        function setServer(server) {
+            currentServer = server;
+            document.querySelectorAll('.server-toggle').forEach(btn => {
+                btn.classList.remove('border-[#da3f0b]', 'bg-[#da3f0b08]', 'text-[#da3f0b]');
+                btn.classList.add('border-slate-100', 'bg-white', 'text-slate-500');
+            });
+            const activeBtn = document.getElementById('btn-' + server);
+            activeBtn.classList.add('border-[#da3f0b]', 'bg-[#da3f0b08]', 'text-[#da3f0b]');
+            activeBtn.classList.remove('border-slate-100', 'bg-white', 'text-slate-500');
+            
+            const tip = document.getElementById('tip-text');
+            if(server === 'apache') {
+                tip.innerHTML = "For Apache, ensure <strong>mod_rewrite</strong> is enabled. Place this code at the top of your .htaccess file.";
+            } else {
+                tip.innerHTML = "For Nginx, you must place this code inside the <strong>server { ... }</strong> block of your configuration file and reload Nginx.";
+            }
+            generateCode();
+        }
+
+        function generateCode() {
+            const oldUrl = document.getElementById('old-url').value.trim() || '/old-path';
+            const newUrl = document.getElementById('new-url').value.trim() || 'https://example.com/new-path';
+            const type = document.getElementById('redirect-type').value;
+            const output = document.getElementById('output-code');
+
+            let code = "";
+            if (currentServer === 'apache') {
+                code = `Redirect ${type} ${oldUrl} ${newUrl}`;
+            } else {
+                const flag = (type === '301') ? 'permanent' : 'redirect';
+                code = `rewrite ^${oldUrl.replace(/\//g, '\\/')}$ ${newUrl} ${flag};`;
+            }
+
+            output.textContent = code;
+        }
+
+        function copyCode() {
+            const code = document.getElementById('output-code').textContent;
+            navigator.clipboard.writeText(code).then(() => {
+                const status = document.getElementById('copy-status');
+                status.classList.remove('hidden');
+                setTimeout(() => status.classList.add('hidden'), 2000);
+            });
+        }
+
+        function handleBookmark() {
+            const toast = document.getElementById('bookmark-toast');
+            toast.classList.remove('hidden');
+            setTimeout(() => toast.classList.add('hidden'), 3000);
+        }
+
+        function shareSocial(platform) {
+            const url = encodeURIComponent(window.location.href);
+            const title = encodeURIComponent("Check out this URL Redirect Generator!");
+            let shareUrl = '';
+            if(platform === 'facebook') shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${url}`;
+            if(platform === 'twitter') shareUrl = `https://twitter.com/intent/tweet?url=${url}&text=${title}`;
+            if(platform === 'linkedin') shareUrl = `https://www.linkedin.com/shareArticle?mini=true&url=${url}`;
+            if(platform === 'whatsapp') shareUrl = `https://api.whatsapp.com/send?text=${title}%20${url}`;
+            window.open(shareUrl, '_blank');
+        }
+
+        document.getElementById('old-url').addEventListener('input', generateCode);
+        document.getElementById('new-url').addEventListener('input', generateCode);
+        document.getElementById('redirect-type').addEventListener('change', generateCode);
+
+        window.onload = generateCode;
+    </script>
+
+    <section class="bg-white py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="prose prose-lg max-w-none prose-h2:text-gray-800 prose-p:text-gray-700">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">Why You Need to Generate htaccess Redirect Code</h2>
+                <p class="mb-6 leading-relaxed">
+                    Managing a website often involves changing URL structures, migrating content, or deleting old pages. Without a proper strategy, these changes can lead to "404 Not Found" errors, which frustrate users and hurt your search engine rankings. When you <strong>generate htaccess redirect code</strong>, you are essentially creating a roadmap for browsers and search bots, telling them exactly where the content has moved.
+                </p>
+                <p class="mb-6 leading-relaxed">
+                    A 301 redirect is the gold standard for SEO. It tells Google that a page has moved permanently, allowing you to pass nearly all the "link juice" from the old URL to the new one. This is critical for maintaining your authority in the SERPs. If you are also managing your site's technical SEO, you might find our <a href="https://simpliconvert.com/canonical_url_generator/">Canonical URL Generator</a> helpful for preventing duplicate content issues.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Apache vs. Nginx: Which Redirect Code Should You Use?</h2>
+                <p class="mb-6 leading-relaxed">
+                    The type of code you need depends entirely on your web server software. Apache servers use a file called <code>.htaccess</code> to handle configuration changes on a per-directory basis. It is highly flexible and common on shared hosting environments. Nginx, on the other hand, is known for its high performance and handles redirects within its main server block configuration.
+                </p>
+                <p class="mb-6 leading-relaxed">
+                    Our tool allows you to switch between both formats instantly. Whether you need a simple <code>Redirect 301</code> for Apache or a <code>rewrite</code> rule for Nginx, we provide the exact syntax required to ensure your server processes the request correctly without causing performance bottlenecks.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Common Redirect Mistakes to Avoid</h2>
+                <p class="mb-6 leading-relaxed">
+                    While redirects are powerful, they can be dangerous if implemented incorrectly. One of the most common issues is a "Redirect Loop," where URL A points to URL B, and URL B points back to URL A. This causes the browser to crash and prevents the page from loading. Always use a <a href="https://simpliconvert.com/redirect_checker/">Redirect Checker</a> after implementing your code to ensure the path is clean.
+                </p>
+                <ul class="list-disc pl-6 mb-6 space-y-2 text-gray-700">
+                    <li><strong>Avoid Redirect Chains:</strong> Don't redirect A to B, then B to C. Go straight from A to C.</li>
+                    <li><strong>Match the Protocol:</strong> Ensure you are redirecting to the correct HTTP or HTTPS version.</li>
+                    <li><strong>Test Before Deploying:</strong> A single typo in a .htaccess file can take your entire website offline (Internal Server Error 500).</li>
+                </ul>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">How Redirects Impact Your SEO Strategy</h2>
+                <p class="mb-6 leading-relaxed">
+                    Redirects are a core component of technical SEO. When you delete a page that has backlinks, that link equity is lost unless you redirect it to a relevant new page. By using our <strong>301 redirect generator</strong>, you ensure that your hard-earned backlinks continue to support your site's ranking. 
+                </p>
+                <p class="mb-6 leading-relaxed">
+                    Furthermore, if you are cleaning up your site's metadata, tools like our <a href="https://simpliconvert.com/meta_description_length_checker/">Meta Description Length Checker</a> can help ensure that your new destination pages are fully optimized for click-through rates once the redirect is in place.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-center text-gray-900 mb-8">Redirect Generator – Frequently Asked Questions</h2>
+            <div class="space-y-4">
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>Is a 301 redirect better than a 302?</span>
+                        <i class="fas fa-chevron-down faq-icon transition-transform duration-300"></i>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-300">
+                        <p class="p-5 pt-0 text-gray-600">For SEO purposes, yes. A 301 redirect passes the ranking power to the new page, whereas a 302 redirect is seen as temporary and does not transfer link equity.</p>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>Can I redirect an entire domain using this tool?</span>
+                        <i class="fas fa-chevron-down faq-icon transition-transform duration-300"></i>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-300">
+                        <p class="p-5 pt-0 text-gray-600">This tool is designed for individual page-to-page redirects. For entire domain migrations, you usually need a wildcard redirect rule in your server configuration.</p>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>Will redirects slow down my website?</span>
+                        <i class="fas fa-chevron-down faq-icon transition-transform duration-300"></i>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-300">
+                        <p class="p-5 pt-0 text-gray-600">A few redirects have a negligible impact. However, thousands of rules in a .htaccess file or long redirect chains can slightly increase server response time.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 pb-16">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-slate-200 pt-16">
+            <h2 class="text-2xl font-bold text-center text-slate-800 mb-10">Popular SEO Tools on SimpliConvert</h2>
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+                <a href="/canonical_url_generator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center shrink-0 group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-link text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Canonical Gen</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Prevent duplicate content issues.</p>
+                    </div>
+                </a>
+                <a href="/redirect_checker/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-green-50 text-green-600 flex items-center justify-center shrink-0 group-hover:bg-green-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-check-double text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Redirect Check</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Analyze redirect paths and status.</p>
+                    </div>
+                </a>
+                <a href="/meta_tag_generator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0 group-hover:bg-indigo-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-code text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Meta Tag Gen</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Create SEO meta tags easily.</p>
+                    </div>
+                </a>
+                <a href="/robots_txt_validator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-red-50 text-red-600 flex items-center justify-center shrink-0 group-hover:bg-red-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-robot text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Robots Validator</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Check your robots.txt for errors.</p>
+                    </div>
+                </a>
+                <a href="/title_length_checker/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-yellow-50 text-yellow-600 flex items-center justify-center shrink-0 group-hover:bg-yellow-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-heading text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Title Checker</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Optimize title lengths for SERPs.</p>
+                    </div>
+                </a>
+                <a href="/sitemap_validator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-purple-50 text-purple-600 flex items-center justify-center shrink-0 group-hover:bg-purple-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-sitemap text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Sitemap Check</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Validate your XML sitemap files.</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <div id="footer"></div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const faqToggles = document.querySelectorAll('[data-faq-toggle]');
+            faqToggles.forEach(button => {
+                button.addEventListener('click', () => {
+                    const answer = button.nextElementSibling;
+                    const icon = button.querySelector('.faq-icon');
+                    const isOpening = !answer.style.maxHeight;
+
+                    faqToggles.forEach(other => {
+                        other.nextElementSibling.style.maxHeight = null;
+                        other.querySelector('.faq-icon').style.transform = 'rotate(0deg)';
+                    });
+
+                    if (isOpening) {
+                        answer.style.maxHeight = answer.scrollHeight + "px";
+                        icon.style.transform = 'rotate(180deg)';
+                    }
+                });
+            });
+
+            async function loadComponent(url, elementId) {
+                try {
+                    const response = await fetch(url);
+                    if (response.ok) {
+                        const text = await response.text();
+                        document.getElementById(elementId).innerHTML = text;
+                    }
+                } catch (e) { console.log("Component load failed", e); }
+            }
+            loadComponent('/components/navbar.html', 'navbar');
+            loadComponent('/components/footer.html', 'footer');
+        });
+    </script>
+</body>
+</html>
