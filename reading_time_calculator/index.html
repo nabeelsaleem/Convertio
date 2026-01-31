@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Reading Time Calculator – Estimate Blog Post Read Time | SimpliConvert</title>
+    <meta name="description" content="Calculate the estimated reading time for your blog posts, articles, or scripts instantly. Adjust words per minute (WPM) for accurate reading and speaking time estimates.">
+    <meta name="keywords" content="calculate reading time for blog post, reading time calculator, estimated reading time, words per minute calculator, speech time estimator, blog SEO tools">
+    <meta name="author" content="SimpliConvert">
+    <meta property="og:site_name" content="SimpliConvert">
+    <meta name="robots" content="index, follow">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://simpliconvert.com/reading_time_calculator/">
+    <meta property="og:title" content="Reading Time Calculator – Estimate Read Time Instantly">
+    <meta property="og:description" content="Paste your text to calculate how long it takes to read. Perfect for bloggers, editors, and public speakers.">
+    <meta property="og:image" content="https://simpliconvert.com/images/reading-time-calculator-og.jpg">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://simpliconvert.com/reading_time_calculator/">
+    <meta name="twitter:title" content="Reading Time Calculator – Calculate Reading & Speaking Time">
+    <meta name="twitter:description" content="Free tool to estimate reading time for articles and scripts based on custom WPM settings.">
+    <meta name="twitter:image" content="https://simpliconvert.com/images/reading-time-calculator-og.jpg">
+
+    <link rel="canonical" href="https://simpliconvert.com/reading_time_calculator/">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Reading Time Calculator",
+      "url": "https://simpliconvert.com/reading_time_calculator/",
+      "description": "A free online tool to calculate the estimated reading and speaking time for any text, blog post, or script based on words per minute.",
+      "applicationCategory": "UtilitiesApplication",
+      "operatingSystem": "Web Browser",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "SimpliConvert",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://simpliconvert.com/logo.png"
+        }
+      }
+    }
+    </script>
+
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [{
+    "@type": "ListItem",
+    "position": 1,
+    "name": "Home",
+    "item": "https://simpliconvert.com/"
+  },{
+    "@type": "ListItem",
+    "position": 2,
+    "name": "Content Tools",
+    "item": "https://simpliconvert.com/content_tools/"
+  },{
+    "@type": "ListItem",
+    "position": 3,
+    "name": "Reading Time Calculator",
+    "item": "https://simpliconvert.com/reading_time_calculator/"
+  }]
+}
+</script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [{
+        "@type": "Question",
+        "name": "What is the average reading speed for adults?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The average adult reads at a speed of approximately 200 to 250 words per minute (WPM). For technical or complex content, this may drop to 150 WPM, while speed readers can exceed 500 WPM."
+        }
+      }, {
+        "@type": "Question",
+        "name": "How do you calculate reading time for a blog post?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "To calculate reading time, divide the total word count of the post by the average reading speed (usually 225 WPM). For example, a 900-word article takes about 4 minutes to read."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Is speaking time different from reading time?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. Most people speak slower than they read. The average speaking speed is roughly 130 to 150 words per minute. Our calculator provides both estimates to help you prepare for presentations or podcasts."
+        }
+      }]
+    }
+    </script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #da3f0b;
+            --primary-hover: #b53409;
+            --primary-light: #fff5f2;
+            --bg: #f8fafc;
+            --text-dark: #0f172a;
+        }
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: var(--text-dark); }
+        .hero-card { background: white; border: 1px solid #f1f5f9; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05); position: relative; overflow: hidden; }
+        .hero-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px; background-color: var(--primary); }
+        .tooltip-container { position: relative; display: inline-block; }
+        .tooltip-text {
+            visibility: hidden; width: 200px; background-color: #1e293b; color: #fff;
+            text-align: center; border-radius: 8px; padding: 8px; position: absolute;
+            z-index: 50; bottom: 125%; left: 50%; margin-left: -100px; opacity: 0;
+            transition: opacity 0.2s; font-size: 0.7rem; pointer-events: none;
+        }
+        .tooltip-container:hover .tooltip-text { visibility: visible; opacity: 1; }
+        .animate-fade { animation: fadeIn 0.3s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+        .tool-card { transition: transform 0.2s ease, box-shadow 0.2s ease; }
+        .tool-card:hover { transform: translateY(-4px); box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
+        .prose a { color: #da3f0b; text-decoration: none; }
+        .prose a:hover { text-decoration: underline; }
+        textarea::placeholder { color: #cbd5e1; }
+    </style>
+</head>
+
+<body class="bg-gray-50 min-h-screen flex flex-col">
+    <div id="navbar" style="min-height: 70px;"></div>
+	
+	<section class="hero-white text-black py-2 md:py-10">
+        <div class="container mx-auto px-4">
+            <nav class="flex pb-4 text-sm text-slate-500 items-center space-x-2 justify-center">
+                <a href="https://simpliconvert.com/" class="hover:text-[#da3f0b] transition-colors">Home</a>
+                <i class="fas fa-chevron-right text-[10px]"></i>
+                <a href="https://simpliconvert.com/content_tools/" class="hover:text-[#da3f0b] transition-colors">Content Tools</a>
+                <i class="fas fa-chevron-right text-[10px]"></i>
+                <span class="text-slate-900 font-medium">Reading Time Calculator</span>
+            </nav>
+            <div class="text-center">
+                <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-2">calculate reading time for blog post</h1>
+                <p class="text-lg md:text-xl max-w-3xl mx-auto mb-2 text-slate-600">
+                Instantly estimate how long it takes to read or speak your content. Improve user experience by adding "Estimated Read Time" to your articles.
+                </p>
+            </div>
+        </div>
+    </section>		
+
+    <div id="calculator-app" class="w-full max-w-6xl mx-auto p-4 sm:p-6">
+        <div class="bg-white rounded-[2rem] shadow-2xl overflow-hidden border border-slate-100">
+            <header class="bg-slate-50/50 border-b border-slate-100 p-6 md:p-8 flex flex-col md:flex-row justify-between items-center gap-6">
+                <div class="text-center md:text-left">
+                  <h2 class="text-2xl font-black text-slate-800 tracking-tight flex items-center justify-center md:justify-start gap-3">
+                    <span class="bg-[#da3f0b] text-white p-2 rounded-xl text-lg shadow-lg shadow-[#da3f0b30]">
+                      <i class="fas fa-clock"></i>
+                    </span>
+                    Content Time Estimator
+                  </h2>
+                </div>
+                
+                <div class="flex items-center gap-4">
+                    <button onclick="clearText()" class="text-xs font-bold text-slate-400 hover:text-red-500 transition-colors uppercase tracking-widest">
+                        <i class="fas fa-trash-alt mr-1"></i> Clear Text
+                    </button>
+                </div>
+            </header>
+    
+            <main class="flex flex-col lg:flex-row">
+                <div class="lg:w-[60%] p-6 md:p-10 border-r border-slate-100">
+                    <div class="space-y-6">
+                        <div>
+                            <label class="block text-xs font-black text-slate-400 uppercase tracking-widest mb-3">Paste your content here</label>
+                            <textarea id="input-text" class="w-full h-80 p-6 rounded-2xl border border-slate-200 focus:ring-4 focus:ring-[#da3f0b10] focus:border-[#da3f0b] outline-none resize-none text-slate-700 font-medium leading-relaxed transition-all" placeholder="Start typing or paste your article, script, or speech here..."></textarea>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="bg-slate-50 p-5 rounded-2xl border border-slate-100">
+                                <div class="flex justify-between items-center mb-4">
+                                    <label class="text-xs font-black text-slate-500 uppercase tracking-widest">Reading Speed (WPM)</label>
+                                    <span id="wpm-display" class="text-sm font-bold text-[#da3f0b]">225</span>
+                                </div>
+                                <input type="range" id="input-wpm" min="100" max="500" value="225" class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-[#da3f0b]">
+                                <div class="flex justify-between mt-2 text-[10px] font-bold text-slate-400 uppercase">
+                                    <span>Slow (100)</span>
+                                    <span>Fast (500)</span>
+                                </div>
+                            </div>
+
+                            <div class="bg-slate-50 p-5 rounded-2xl border border-slate-100">
+                                <div class="flex justify-between items-center mb-4">
+                                    <label class="text-xs font-black text-slate-500 uppercase tracking-widest">Speaking Speed (WPM)</label>
+                                    <span id="swpm-display" class="text-sm font-bold text-[#da3f0b]">140</span>
+                                </div>
+                                <input type="range" id="input-swpm" min="80" max="250" value="140" class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-[#da3f0b]">
+                                <div class="flex justify-between mt-2 text-[10px] font-bold text-slate-400 uppercase">
+                                    <span>Speech (80)</span>
+                                    <span>Rapid (250)</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+    
+                <div class="lg:w-[40%] bg-slate-50/50 p-6 md:p-10 flex flex-col justify-center">
+                   <div class="space-y-6">
+                     
+                     <div class="hero-card p-8 flex flex-col items-center text-center">
+                         <p class="text-xs font-black text-[#da3f0b] uppercase tracking-[0.2em] mb-4">Estimated Reading Time</p>
+                         <div class="flex items-center justify-center">
+                           <span id="display-read-time" class="text-5xl md:text-6xl font-black tracking-tighter leading-none text-slate-800">0m 0s</span>
+                         </div>
+                         <p class="text-sm text-slate-400 font-medium mt-4">Based on <span id="display-word-count">0</span> words</p>
+                     </div>
+    
+                     <div class="grid grid-cols-1 gap-4">
+                         <div class="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm flex items-center gap-5">
+                            <div class="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center shrink-0">
+                                <i class="fas fa-microphone-alt text-xl"></i>
+                            </div>
+                            <div>
+                                <div class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Estimated Speaking Time</div>
+                                <p id="display-speak-time" class="text-2xl font-black text-slate-800">0m 0s</p>
+                            </div>
+                         </div>
+
+                         <div class="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm flex items-center gap-5">
+                            <div class="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0">
+                                <i class="fas fa-align-left text-xl"></i>
+                            </div>
+                            <div>
+                                <div class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Character Count</div>
+                                <p id="display-char-count" class="text-2xl font-black text-slate-800">0</p>
+                            </div>
+                         </div>
+                     </div>
+    
+                     <div class="bg-[#da3f0b] rounded-2xl p-6 text-white shadow-lg shadow-[#da3f0b30]">
+                         <h4 class="font-bold text-sm mb-2 flex items-center gap-2">
+                             <i class="fas fa-lightbulb"></i> Pro Tip
+                         </h4>
+                         <p class="text-xs leading-relaxed opacity-90">
+                             Adding a "Reading Time" badge to your blog posts can increase user engagement by up to 13%. It sets expectations and reduces bounce rates.
+                         </p>
+                     </div>
+                   </div>
+                </div>
+            </main>
+    
+            <footer class="bg-slate-50 border-t border-slate-100 p-6 md:p-8">
+               <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+                   <div class="text-center md:text-left">
+                       <h4 class="text-sm font-bold text-slate-700 mb-1">Share this tool</h4>
+                       <p class="text-xs text-slate-400">Help your fellow writers and speakers.</p>
+                   </div>
+                   
+                   <div class="flex flex-wrap justify-center gap-3">
+                       <a href="#" onclick="shareSocial('facebook')" class="w-10 h-10 rounded-full flex items-center justify-center text-white transition-transform hover:-translate-y-1 hover:shadow-lg bg-[#1877F2]"><i class="fab fa-facebook-f"></i></a>
+                       <a href="#" onclick="shareSocial('twitter')" class="w-10 h-10 rounded-full flex items-center justify-center text-white transition-transform hover:-translate-y-1 hover:shadow-lg bg-[#1DA1F2]"><i class="fab fa-twitter"></i></a>
+                       <a href="#" onclick="shareSocial('linkedin')" class="w-10 h-10 rounded-full flex items-center justify-center text-white transition-transform hover:-translate-y-1 hover:shadow-lg bg-[#0A66C2]"><i class="fab fa-linkedin-in"></i></a>
+                       <a href="#" onclick="shareSocial('whatsapp')" class="w-10 h-10 rounded-full flex items-center justify-center text-white transition-transform hover:-translate-y-1 hover:shadow-lg bg-[#25D366]"><i class="fab fa-whatsapp"></i></a>
+                   </div>
+    
+                   <div class="relative">
+                       <button onclick="handleBookmark()" class="flex items-center gap-2 bg-white border border-slate-200 hover:border-[#da3f0b] hover:text-[#da3f0b] text-slate-600 px-4 py-2 rounded-lg text-sm font-bold transition-all shadow-sm active:scale-95">
+                          <i class="fas fa-bookmark"></i> Bookmark
+                       </button>
+                       <div id="bookmark-toast" class="hidden absolute bottom-full mb-3 left-1/2 -translate-x-1/2 bg-slate-800 text-white text-xs py-2 px-4 rounded-lg shadow-lg whitespace-nowrap animate-fade">
+                           Press <span class="font-bold text-[#da3f0b]">Ctrl + D</span> to bookmark
+                       </div>
+                   </div>
+               </div>
+            </footer>
+        </div>
+    </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const inputText = document.getElementById('input-text');
+        const inputWpm = document.getElementById('input-wpm');
+        const inputSwpm = document.getElementById('input-swpm');
+        const wpmDisplay = document.getElementById('wpm-display');
+        const swpmDisplay = document.getElementById('swpm-display');
+        
+        const displayReadTime = document.getElementById('display-read-time');
+        const displaySpeakTime = document.getElementById('display-speak-time');
+        const displayWordCount = document.getElementById('display-word-count');
+        const displayCharCount = document.getElementById('display-char-count');
+
+        function formatTime(seconds) {
+            if (seconds < 1) return "0m 0s";
+            const mins = Math.floor(seconds / 60);
+            const secs = Math.round(seconds % 60);
+            return `${mins}m ${secs}s`;
+        }
+
+        function calculate() {
+            const text = inputText.value.trim();
+            const words = text ? text.split(/\s+/).length : 0;
+            const chars = text.length;
+            
+            const rWpm = parseInt(inputWpm.value);
+            const sWpm = parseInt(inputSwpm.value);
+
+            wpmDisplay.textContent = rWpm;
+            swpmDisplay.textContent = sWpm;
+
+            const readSeconds = (words / rWpm) * 60;
+            const speakSeconds = (words / sWpm) * 60;
+
+            displayReadTime.textContent = formatTime(readSeconds);
+            displaySpeakTime.textContent = formatTime(speakSeconds);
+            displayWordCount.textContent = words.toLocaleString();
+            displayCharCount.textContent = chars.toLocaleString();
+        }
+
+        inputText.addEventListener('input', calculate);
+        inputWpm.addEventListener('input', calculate);
+        inputSwpm.addEventListener('input', calculate);
+
+        window.clearText = function() {
+            inputText.value = '';
+            calculate();
+        };
+
+        window.handleBookmark = function() {
+            const toast = document.getElementById('bookmark-toast');
+            toast.classList.remove('hidden');
+            setTimeout(() => toast.classList.add('hidden'), 3000);
+        };
+
+        window.shareSocial = function(platform) {
+             const url = encodeURIComponent(window.location.href);
+             const title = encodeURIComponent("Check out this Reading Time Calculator!");
+             let shareUrl = '';
+             switch(platform) {
+                case 'facebook': shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${url}`; break;
+                case 'twitter': shareUrl = `https://twitter.com/intent/tweet?url=${url}&text=${title}`; break;
+                case 'linkedin': shareUrl = `https://www.linkedin.com/shareArticle?mini=true&url=${url}`; break;
+                case 'whatsapp': shareUrl = `https://api.whatsapp.com/send?text=${title}%20${url}`; break;
+             }
+             if(shareUrl) window.open(shareUrl, '_blank');
+        };
+    });
+    </script>
+
+    <section class="bg-white py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="prose prose-lg max-w-none prose-h2:text-gray-800 prose-p:text-gray-700">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">Why You Should Calculate Reading Time for Blog Posts</h2>
+                <p class="mb-6 leading-relaxed">
+                    In the fast-paced digital world, attention is the most valuable currency. When a reader lands on your page, they subconsciously ask, "Is this worth my time?" By using our tool to <strong>calculate reading time for blog post</strong> content, you provide an immediate answer. Research shows that articles with a clear "Estimated Reading Time" badge have higher engagement rates and lower bounce rates because they set clear expectations for the user.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">How the Reading Time Calculation Works</h2>
+                <p class="mb-6 leading-relaxed">
+                    Our calculator uses a standard algorithm based on average human cognitive processing speeds. While the average adult reads at about 200–250 words per minute (WPM), we allow you to adjust this slider to match your specific audience. For example, if you are writing a technical guide, you might want to lower the WPM to 150. If you are writing a lighthearted listicle, 250 WPM is more appropriate. 
+                </p>
+                <p class="mb-6 leading-relaxed">
+                    To get the most accurate results, you can also use our <a href="https://simpliconvert.com/sentence_counter/" target="_blank">Sentence Counter</a> or <a href="https://simpliconvert.com/paragraph_counter/" target="_blank">Paragraph Counter</a> to analyze the structure of your text. A well-structured post with shorter sentences often feels faster to read than a dense wall of text.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Benefits for SEO and Content Strategy</h2>
+                <p class="mb-6 leading-relaxed">
+                    Search engines like Google prioritize user experience (UX). When users stay on your page longer (dwell time), it signals that your content is high-quality. By accurately estimating reading time, you encourage users to commit to the article rather than clicking away. This tool is an essential part of any modern content strategy, alongside tools like our <a href="https://simpliconvert.com/text_summary_tool/" target="_blank">Text Summary Tool</a>, which helps you create concise introductions.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Reading vs. Speaking Time: What’s the Difference?</h2>
+                <p class="mb-6 leading-relaxed">
+                    Are you preparing for a podcast, a YouTube video, or a public speech? Reading time and speaking time are vastly different. Most people read silently much faster than they can speak clearly. While reading averages 225 WPM, speaking averages around 130–150 WPM. Our calculator provides both metrics, making it a versatile <strong>speech time calculator</strong> for creators and professionals alike.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Pro Tips for Content Creators</h2>
+                <ul class="list-disc pl-6 mb-6 space-y-2 text-gray-700">
+                    <li><strong>The 7-Minute Rule:</strong> Data suggests that the optimal reading time for a blog post is around 7 minutes (approx. 1,600 words).</li>
+                    <li><strong>Visual Breaks:</strong> Images and videos don't count toward word count but they do add "perceived" time. Factor in an extra 10-15 seconds per image.</li>
+                    <li><strong>Audience Awareness:</strong> Adjust your WPM settings based on whether your audience is composed of experts (faster) or students (slower).</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-center text-gray-900 mb-8">Frequently Asked Questions</h2>
+            <div class="space-y-4">
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>How accurate is the reading time estimate?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">Our calculator is highly accurate based on the mathematical formula (Total Words / WPM). However, individual reading speeds vary based on literacy levels, interest in the topic, and the complexity of the vocabulary used.</p>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>Should I include the reading time at the top of my blog?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">Yes! It is a best practice for modern SEO and UX. It helps users decide if they have enough time to read the full article now or if they should bookmark it for later.</p>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>Does this tool work for languages other than English?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">Yes. The word count logic works for most space-delimited languages (Spanish, French, German, etc.). For character-based languages like Chinese or Japanese, reading speeds are measured differently, but the character count feature will still be useful.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 pb-16">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-slate-200 pt-16">
+            <h2 class="text-2xl font-bold text-center text-slate-800 mb-10">Popular Tools on SimpliConvert</h2>
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+                <a href="/sentence_counter/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center shrink-0 group-hover:bg-blue-600 group-hover:text-white transition-colors"><i class="fas fa-list-ol text-lg"></i></div>
+                    <div><h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Sentence Counter</h3><p class="text-xs text-slate-500 leading-snug">Count sentences in your text.</p></div>
+                </a>
+                <a href="/paragraph_counter/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0 group-hover:bg-emerald-600 group-hover:text-white transition-colors"><i class="fas fa-paragraph text-lg"></i></div>
+                    <div><h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Paragraph Counter</h3><p class="text-xs text-slate-500 leading-snug">Analyze text structure easily.</p></div>
+                </a>
+                <a href="/text_summary_tool/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-purple-50 text-purple-600 flex items-center justify-center shrink-0 group-hover:bg-purple-600 group-hover:text-white transition-colors"><i class="fas fa-compress-alt text-lg"></i></div>
+                    <div><h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Text Summarizer</h3><p class="text-xs text-slate-500 leading-snug">Condense long articles quickly.</p></div>
+                </a>
+                <a href="/word_frequency_analyzer/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-orange-50 text-orange-600 flex items-center justify-center shrink-0 group-hover:bg-orange-600 group-hover:text-white transition-colors"><i class="fas fa-chart-bar text-lg"></i></div>
+                    <div><h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Frequency Analyzer</h3><p class="text-xs text-slate-500 leading-snug">Find most used words.</p></div>
+                </a>
+                <a href="/case_converter_title/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-red-50 text-red-600 flex items-center justify-center shrink-0 group-hover:bg-red-600 group-hover:text-white transition-colors"><i class="fas fa-font text-lg"></i></div>
+                    <div><h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Title Case</h3><p class="text-xs text-slate-500 leading-snug">Format headlines perfectly.</p></div>
+                </a>
+                <a href="/keyword_density_checker/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0 group-hover:bg-indigo-600 group-hover:text-white transition-colors"><i class="fas fa-search text-lg"></i></div>
+                    <div><h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Density Checker</h3><p class="text-xs text-slate-500 leading-snug">Optimize your content for SEO.</p></div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <div id="footer"></div>
+
+    <script>
+    async function loadComponent(url, elementId, callback) {
+        try {
+            const response = await fetch(url);
+            if (!response.ok) throw new Error('Status: ' + response.status);
+            const text = await response.text();
+            const element = document.getElementById(elementId);
+            if (element) {
+                element.innerHTML = text;
+                if (callback) callback();
+            }
+        } catch (error) {
+            console.error('Error loading component:', error);
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        loadComponent('/components/navbar.html', 'navbar');
+        loadComponent('/components/footer.html', 'footer', () => {
+            const yearSpan = document.getElementById('current-year');
+            if(yearSpan) yearSpan.textContent = new Date().getFullYear();
+        });
+        
+        const faqToggles = document.querySelectorAll('[data-faq-toggle]');
+        faqToggles.forEach(button => {
+            button.addEventListener('click', () => {
+                const answer = button.nextElementSibling;
+                const icon = button.querySelector('.faq-icon');
+                const isOpening = !answer.style.maxHeight;
+                faqToggles.forEach(other => {
+                    if (other !== button) {
+                        other.nextElementSibling.style.maxHeight = null;
+                        other.querySelector('.faq-icon').classList.replace('rotate-90', '-rotate-90');
+                    }
+                });
+                if (isOpening) {
+                    answer.style.maxHeight = answer.scrollHeight + "px";
+                    icon.classList.replace('-rotate-90', 'rotate-90');
+                } else {
+                    answer.style.maxHeight = null;
+                    icon.classList.replace('rotate-90', '-rotate-90');
+                }
+            });
+        });
+    });
+    </script>
+</body>
+</html>

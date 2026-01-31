@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Markdown Previewer – Test Markdown Syntax Online in Real Time | SimpliConvert</title>
+    <meta name="description" content="Write and preview Markdown instantly. Our free online Markdown editor provides a real-time live view for GitHub READMEs, blog posts, and documentation.">
+    <meta name="keywords" content="markdown editor, live markdown view, readme editor, md viewer, markdown previewer online, test markdown syntax, github markdown preview">
+    <meta name="author" content="SimpliConvert">
+    <meta property="og:site_name" content="SimpliConvert">
+    <meta name="robots" content="index, follow">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://simpliconvert.com/markdown_previewer/">
+    <meta property="og:title" content="Markdown Previewer – Live Real-Time Editor">
+    <meta property="og:description" content="Type Markdown on one side and see the rendered result instantly. Perfect for GitHub READMEs and technical writing.">
+    <meta property="og:image" content="https://simpliconvert.com/images/markdown-previewer-og.jpg">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://simpliconvert.com/markdown_previewer/">
+    <meta name="twitter:title" content="Markdown Previewer – Test Markdown Syntax Online">
+    <meta name="twitter:description" content="Free tool to write and preview Markdown in real-time. Clean, fast, and easy to use.">
+    <meta name="twitter:image" content="https://simpliconvert.com/images/markdown-previewer-og.jpg">
+
+    <link rel="canonical" href="https://simpliconvert.com/markdown_previewer/">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Markdown Previewer",
+      "url": "https://simpliconvert.com/markdown_previewer/",
+      "description": "A real-time Markdown editor and previewer that allows users to write Markdown syntax and see the rendered HTML output instantly.",
+      "applicationCategory": "ProductivityApplication",
+      "operatingSystem": "Web Browser",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "SimpliConvert",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://simpliconvert.com/logo.png"
+        }
+      }
+    }
+    </script>
+
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [{
+    "@type": "ListItem",
+    "position": 1,
+    "name": "Home",
+    "item": "https://simpliconvert.com/"
+  },{
+    "@type": "ListItem",
+    "position": 2,
+    "name": "Content Tools",
+    "item": "https://simpliconvert.com/content_tools/"
+  },{
+    "@type": "ListItem",
+    "position": 3,
+    "name": "Markdown Previewer",
+    "item": "https://simpliconvert.com/markdown_previewer/"
+  }]
+}
+</script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [{
+        "@type": "Question",
+        "name": "What is Markdown?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Markdown is a lightweight markup language with plain-text formatting syntax. It is designed so that it can be converted to HTML and many other formats using a tool by the same name."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Does this previewer support GitHub Flavored Markdown (GFM)?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes, our previewer uses the Marked.js library which supports common GitHub extensions like tables, task lists, and auto-links."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Can I export my Markdown as HTML?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes, you can use the 'Copy HTML' button to copy the rendered code directly to your clipboard for use in websites or emails."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Is my data saved on your servers?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "No. All processing happens locally in your browser. Your text is never sent to our servers, ensuring your privacy and security."
+        }
+      }]
+    }
+    </script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" media="print" onload="this.media='all'" />
+    <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" /></noscript>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #da3f0b;
+            --primary-hover: #b53409;
+            --bg: #f8fafc;
+            --text-dark: #0f172a;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text-dark);
+        }
+
+        .markdown-editor {
+            font-family: 'Fira Code', monospace;
+            resize: none;
+        }
+
+        .markdown-body {
+            line-height: 1.6;
+            word-wrap: break-word;
+        }
+        .markdown-body h1 { font-size: 2em; font-weight: 800; border-bottom: 1px solid #eaecef; padding-bottom: .3em; margin-top: 24px; margin-bottom: 16px; }
+        .markdown-body h2 { font-size: 1.5em; font-weight: 700; border-bottom: 1px solid #eaecef; padding-bottom: .3em; margin-top: 24px; margin-bottom: 16px; }
+        .markdown-body h3 { font-size: 1.25em; font-weight: 600; margin-top: 24px; margin-bottom: 16px; }
+        .markdown-body p { margin-top: 0; margin-bottom: 16px; }
+        .markdown-body a { color: #da3f0b; text-decoration: none; }
+        .markdown-body a:hover { text-decoration: underline; }
+        .markdown-body ul, .markdown-body ol { padding-left: 2em; margin-bottom: 16px; }
+        .markdown-body ul { list-style-type: disc; }
+        .markdown-body ol { list-style-type: decimal; }
+        .markdown-body code { padding: .2em .4em; margin: 0; font-size: 85%; background-color: rgba(27,31,35,.05); border-radius: 3px; font-family: 'Fira Code', monospace; }
+        .markdown-body pre { padding: 16px; overflow: auto; font-size: 85%; line-height: 1.45; background-color: #f6f8fa; border-radius: 3px; margin-bottom: 16px; }
+        .markdown-body blockquote { padding: 0 1em; color: #6a737d; border-left: .25em solid #dfe2e5; margin-bottom: 16px; }
+        .markdown-body table { border-spacing: 0; border-collapse: collapse; margin-bottom: 16px; width: 100%; }
+        .markdown-body table th, .markdown-body table td { padding: 6px 13px; border: 1px solid #dfe2e5; }
+        .markdown-body table tr { background-color: #fff; border-top: 1px solid #c6cbd1; }
+        .markdown-body table tr:nth-child(2n) { background-color: #f6f8fa; }
+
+        .tool-card { transition: transform 0.2s ease, box-shadow 0.2s ease; }
+        .tool-card:hover { transform: translateY(-4px); box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
+        
+        .animate-fade { animation: fadeIn 0.3s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+
+<body class="bg-gray-50 min-h-screen flex flex-col">
+    <div id="navbar" style="min-height: 70px;"></div>
+	
+	<section class="hero-white text-black py-2 md:py-10">
+        <div class="container mx-auto px-4">
+            <nav class="flex pb-4 text-sm text-slate-500 items-center space-x-2 justify-center">
+                <a href="https://simpliconvert.com/" class="hover:text-[#da3f0b] transition-colors">Home</a>
+                <i class="fas fa-chevron-right text-[10px]"></i>
+                <a href="https://simpliconvert.com/content_tools/" class="hover:text-[#da3f0b] transition-colors">Content Tools</a>
+                <i class="fas fa-chevron-right text-[10px]"></i>
+                <span class="text-slate-900 font-medium">Markdown Previewer</span>
+            </nav>
+            <div class="text-center">
+                <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-2">test markdown syntax online real time</h1>
+                <p class="text-lg md:text-xl max-w-3xl mx-auto mb-2 text-slate-600">
+                A professional, distraction-free environment to write, edit, and preview Markdown. See your changes instantly as you type.
+                </p>
+            </div>
+        </div>
+    </section>		
+
+    <div id="calculator-app" class="w-full max-w-7xl mx-auto p-4 sm:p-6">
+        <div class="bg-white rounded-[2rem] shadow-2xl overflow-hidden border border-slate-100">
+            <header class="bg-slate-50/50 border-b border-slate-100 p-4 md:p-6 flex flex-wrap justify-between items-center gap-4">
+                <div class="flex items-center gap-3">
+                    <span class="bg-[#da3f0b] text-white p-2 rounded-xl text-lg shadow-lg shadow-[#da3f0b30]">
+                        <i class="fab fa-markdown"></i>
+                    </span>
+                    <h2 class="text-xl font-bold text-slate-800">Live MD Editor</h2>
+                </div>
+                
+                <div class="flex items-center gap-2">
+                    <button onclick="clearEditor()" class="px-4 py-2 text-xs font-bold text-slate-600 hover:text-red-600 transition-colors">
+                        <i class="fas fa-trash-alt mr-1"></i> Clear
+                    </button>
+                    <button onclick="copyHTML()" class="px-4 py-2 bg-slate-800 text-white rounded-lg text-xs font-bold hover:bg-slate-900 transition-all shadow-sm flex items-center gap-2">
+                        <i class="fas fa-code"></i> Copy HTML
+                    </button>
+                    <button onclick="downloadMarkdown()" class="px-4 py-2 bg-[#da3f0b] text-white rounded-lg text-xs font-bold hover:bg-[#b53409] transition-all shadow-sm flex items-center gap-2">
+                        <i class="fas fa-download"></i> Download .md
+                    </button>
+                </div>
+            </header>
+    
+            <main class="flex flex-col lg:flex-row min-h-[600px]">
+                <!-- Editor Pane -->
+                <div class="lg:w-1/2 p-0 border-r border-slate-100 flex flex-col">
+                    <div class="bg-slate-100/50 px-6 py-2 border-b border-slate-100 flex justify-between items-center">
+                        <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Markdown Input</span>
+                        <span id="char-count" class="text-[10px] font-bold text-slate-400">0 Characters</span>
+                    </div>
+                    <textarea id="markdown-input" class="markdown-editor flex-grow w-full p-6 text-slate-700 focus:outline-none text-sm leading-relaxed" placeholder="# Start writing your Markdown here...
+
+## Features:
+- Real-time preview
+- GitHub Flavored Markdown
+- Easy export to HTML
+
+**Try it out!**"></textarea>
+                </div>
+    
+                <!-- Preview Pane -->
+                <div class="lg:w-1/2 bg-white p-0 flex flex-col">
+                    <div class="bg-slate-100/50 px-6 py-2 border-b border-slate-100">
+                        <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Live Preview</span>
+                    </div>
+                    <div id="markdown-output" class="markdown-body flex-grow p-6 md:p-10 overflow-y-auto prose max-w-none">
+                        <!-- Rendered content goes here -->
+                    </div>
+                </div>
+            </main>
+    
+            <footer class="bg-slate-50 border-t border-slate-100 p-6">
+               <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+                   <div class="text-center md:text-left">
+                       <h4 class="text-sm font-bold text-slate-700 mb-1">Share this tool</h4>
+                       <p class="text-xs text-slate-400">Perfect for developers and writers.</p>
+                   </div>
+                   
+                   <div class="flex flex-wrap justify-center gap-3">
+                       <a href="#" onclick="shareSocial('facebook')" class="w-8 h-8 rounded-full flex items-center justify-center text-white transition-transform hover:-translate-y-1 bg-[#1877F2]"><i class="fab fa-facebook-f text-sm"></i></a>
+                       <a href="#" onclick="shareSocial('twitter')" class="w-8 h-8 rounded-full flex items-center justify-center text-white transition-transform hover:-translate-y-1 bg-[#1DA1F2]"><i class="fab fa-twitter text-sm"></i></a>
+                       <a href="#" onclick="shareSocial('linkedin')" class="w-8 h-8 rounded-full flex items-center justify-center text-white transition-transform hover:-translate-y-1 bg-[#0A66C2]"><i class="fab fa-linkedin-in text-sm"></i></a>
+                       <a href="#" onclick="shareSocial('whatsapp')" class="w-8 h-8 rounded-full flex items-center justify-center text-white transition-transform hover:-translate-y-1 bg-[#25D366]"><i class="fab fa-whatsapp text-sm"></i></a>
+                   </div>
+    
+                   <div class="relative">
+                       <button onclick="handleBookmark()" class="flex items-center gap-2 bg-white border border-slate-200 hover:border-[#da3f0b] hover:text-[#da3f0b] text-slate-600 px-4 py-2 rounded-lg text-sm font-bold transition-all shadow-sm">
+                          <i class="fas fa-bookmark"></i> Bookmark
+                       </button>
+                       <div id="bookmark-toast" class="hidden absolute bottom-full mb-3 left-1/2 -translate-x-1/2 bg-slate-800 text-white text-xs py-2 px-4 rounded-lg shadow-lg whitespace-nowrap animate-fade">
+                           Press <span class="font-bold text-[#da3f0b]">Ctrl + D</span> to bookmark
+                       </div>
+                   </div>
+               </div>
+            </footer>
+        </div>
+    </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const input = document.getElementById('markdown-input');
+        const output = document.getElementById('markdown-output');
+        const charCount = document.getElementById('char-count');
+
+        // Configure Marked
+        marked.setOptions({
+            breaks: true,
+            gfm: true,
+            headerIds: true,
+            mangle: false
+        });
+
+        function updatePreview() {
+            const rawValue = input.value;
+            output.innerHTML = marked.parse(rawValue);
+            charCount.textContent = `${rawValue.length} Characters`;
+            
+            // Save to localStorage for persistence
+            localStorage.setItem('sc_markdown_content', rawValue);
+        }
+
+        // Load saved content
+        const savedContent = localStorage.getItem('sc_markdown_content');
+        if (savedContent) {
+            input.value = savedContent;
+        } else {
+            // Default content
+            input.value = `# Welcome to the Markdown Previewer
+
+This is a real-time editor. You can use it to:
+
+1. **Test** your markdown syntax.
+2. Write documentation for [GitHub](https://github.com).
+3. Draft blog posts.
+
+### Code Example
+\`\`\`javascript
+function helloWorld() {
+  console.log("Hello, SimpliConvert!");
+}
+\`\`\`
+
+> "Markdown is intended to be as easy-to-read and easy-to-write as is feasible." - John Gruber`;
+        }
+
+        input.addEventListener('input', updatePreview);
+        updatePreview();
+
+        // Global functions
+        window.clearEditor = function() {
+            if (confirm('Are you sure you want to clear all content?')) {
+                input.value = '';
+                updatePreview();
+            }
+        };
+
+        window.copyHTML = function() {
+            const html = output.innerHTML;
+            navigator.clipboard.writeText(html).then(() => {
+                alert('HTML copied to clipboard!');
+            });
+        };
+
+        window.downloadMarkdown = function() {
+            const text = input.value;
+            const blob = new Blob([text], { type: 'text/markdown' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'document.md';
+            a.click();
+            window.URL.revokeObjectURL(url);
+        };
+
+        window.handleBookmark = function() {
+            const toast = document.getElementById('bookmark-toast');
+            toast.classList.remove('hidden');
+            setTimeout(() => toast.classList.add('hidden'), 3000);
+        };
+
+        window.shareSocial = function(platform) {
+             const url = encodeURIComponent(window.location.href);
+             const title = encodeURIComponent("Check out this Live Markdown Previewer!");
+             let shareUrl = '';
+             switch(platform) {
+                case 'facebook': shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${url}`; break;
+                case 'twitter': shareUrl = `https://twitter.com/intent/tweet?url=${url}&text=${title}`; break;
+                case 'linkedin': shareUrl = `https://www.linkedin.com/shareArticle?mini=true&url=${url}`; break;
+                case 'whatsapp': shareUrl = `https://api.whatsapp.com/send?text=${title}%20${url}`; break;
+             }
+             if(shareUrl) window.open(shareUrl, '_blank');
+        };
+    });
+    </script>
+
+    <section class="bg-white py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="prose prose-lg max-w-none prose-h2:text-gray-800 prose-p:text-gray-700">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">Why You Should Test Markdown Syntax Online in Real Time</h2>
+                <p class="mb-6 leading-relaxed">
+                    Markdown has become the standard for documentation, README files, and web content. However, writing it blindly can lead to formatting errors that only appear after you've pushed your code to a repository. Our tool allows you to <strong>test markdown syntax online real time</strong>, ensuring that every header, list, and code block looks exactly as intended before you finalize your work.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">The Ultimate Tool for Developers and Technical Writers</h2>
+                <p class="mb-6 leading-relaxed">
+                    Whether you are a software engineer drafting a GitHub README or a technical writer creating documentation, a live previewer is indispensable. By using this editor, you can catch broken links, misaligned tables, and nested list errors instantly. It bridges the gap between raw text and the final rendered HTML, making the writing process significantly faster and more intuitive.
+                </p>
+                <p class="mb-6 leading-relaxed">
+                    If you often find yourself converting between formats, you might also find our <a href="https://simpliconvert.com/markdown_to_html/" class="text-[#da3f0b] hover:underline">Markdown to HTML</a> and <a href="https://simpliconvert.com/html_to_markdown/" class="text-[#da3f0b] hover:underline">HTML to Markdown</a> tools helpful for managing your content workflow.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">How to Use the Markdown Previewer Effectively</h2>
+                <p class="mb-6 leading-relaxed">
+                    Using our previewer is straightforward. Simply type or paste your text into the left-hand editor. The right-hand pane will update instantly with the rendered output. You can use standard GitHub Flavored Markdown (GFM) features, including:
+                </p>
+                <ul class="list-disc pl-6 mb-6 space-y-2 text-gray-700">
+                    <li><strong>Headings:</strong> Use # for H1, ## for H2, and so on.</li>
+                    <li><strong>Emphasis:</strong> Use asterisks for *italics* or **bold**.</li>
+                    <li><strong>Lists:</strong> Create bulleted or numbered lists with ease.</li>
+                    <li><strong>Code Blocks:</strong> Use triple backticks for syntax-highlighted code.</li>
+                    <li><strong>Tables:</strong> Organize data into clean, readable grids.</li>
+                </ul>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Clean Your Content Before Publishing</h2>
+                <p class="mb-6 leading-relaxed">
+                    Sometimes, copying text from other sources introduces hidden characters or formatting artifacts. Before you start your Markdown project, it's often a good idea to use a <a href="https://simpliconvert.com/text_cleaner/" class="text-[#da3f0b] hover:underline">text cleaner</a> to strip away unwanted formatting. This ensures your Markdown remains "pure" and renders correctly across different platforms like GitHub, GitLab, or Bitbucket.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Benefits of Real-Time Editing</h2>
+                <p class="mb-6 leading-relaxed">
+                    The primary benefit of a real-time editor is the immediate feedback loop. You don't have to switch between "Edit" and "Preview" tabs. This "What You See Is What You Get" (WYSIWYG) approach for a markup language reduces cognitive load and allows you to focus on the quality of your writing. It is particularly useful for complex elements like tables and mathematical formulas where the syntax can be cumbersome.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-center text-gray-900 mb-8">Markdown Previewer – Frequently Asked Questions</h2>
+            <div class="space-y-4">
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>What is Markdown?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">Markdown is a lightweight markup language that you can use to add formatting elements to plaintext text documents. Created by John Gruber in 2004, Markdown is now one of the world’s most popular markup languages.</p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>Does this tool support GitHub Flavored Markdown (GFM)?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">Yes! Our previewer supports GFM, which includes features like tables, task lists, strikethrough, and automatic links that aren't part of the original Markdown specification.</p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>Can I export my work?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">Absolutely. You can download your content as a .md file or copy the rendered HTML code to use directly in your website or CMS.</p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>Is it free to use?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">Yes, the Markdown Previewer on SimpliConvert is 100% free and requires no registration or account to use.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 pb-16">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-slate-200 pt-16">
+            <h2 class="text-2xl font-bold text-center text-slate-800 mb-10">Popular Content Tools</h2>
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+                <a href="/markdown_to_html/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-slate-50 text-slate-700 flex items-center justify-center shrink-0 group-hover:bg-slate-800 group-hover:text-white transition-colors">
+                        <i class="fas fa-file-code text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">MD to HTML</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Convert Markdown to clean HTML.</p>
+                    </div>
+                </a>
+
+                <a href="/html_to_markdown/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center shrink-0 group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                        <i class="fab fa-markdown text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">HTML to MD</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Turn HTML code into Markdown.</p>
+                    </div>
+                </a>
+
+                <a href="/text_cleaner/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-red-50 text-red-600 flex items-center justify-center shrink-0 group-hover:bg-red-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-broom text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Text Cleaner</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Remove formatting and junk.</p>
+                    </div>
+                </a>
+
+                <a href="/word_frequency_analyzer/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-slate-50 text-slate-800 flex items-center justify-center shrink-0 group-hover:bg-slate-900 group-hover:text-white transition-colors">
+                        <i class="fas fa-chart-bar text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Word Freq</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Analyze word density in text.</p>
+                    </div>
+                </a>
+
+                <a href="/case_converter_sentence/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-green-50 text-green-600 flex items-center justify-center shrink-0 group-hover:bg-green-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-font text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Case Converter</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Change text case instantly.</p>
+                    </div>
+                </a>
+
+                <a href="/reading_time_calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-purple-50 text-purple-600 flex items-center justify-center shrink-0 group-hover:bg-purple-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-clock text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Reading Time</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Estimate content read time.</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <div id="footer"></div>
+
+    <script>
+    async function loadComponent(url, elementId, callback) {
+        try {
+            const response = await fetch(url);
+            if (!response.ok) throw new Error('Status: ' + response.status);
+            const text = await response.text();
+            const element = document.getElementById(elementId);
+            if (element) {
+                element.innerHTML = text;
+                if (callback) callback();
+            }
+        } catch (error) {
+            console.error('Error loading component:', error);
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        loadComponent('/components/navbar.html', 'navbar');
+        loadComponent('/components/footer.html', 'footer');
+        
+        // FAQ Toggle Logic
+        const faqToggles = document.querySelectorAll('[data-faq-toggle]');
+        faqToggles.forEach(button => {
+            button.addEventListener('click', () => {
+                const answer = button.nextElementSibling;
+                const icon = button.querySelector('.faq-icon');
+                const isOpening = !answer.style.maxHeight;
+
+                faqToggles.forEach(other => {
+                    if (other !== button) {
+                        other.nextElementSibling.style.maxHeight = null;
+                        other.querySelector('.faq-icon').classList.remove('rotate-90');
+                        other.querySelector('.faq-icon').classList.add('-rotate-90');
+                    }
+                });
+
+                if (isOpening) {
+                    answer.style.maxHeight = answer.scrollHeight + "px";
+                    icon.classList.remove('-rotate-90');
+                    icon.classList.add('rotate-90');
+                } else {
+                    answer.style.maxHeight = null;
+                    icon.classList.remove('rotate-90');
+                    icon.classList.add('-rotate-90');
+                }
+            });
+        });
+    });
+    </script>
+</body>
+</html>

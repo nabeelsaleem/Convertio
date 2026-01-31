@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Speech to Text – Convert Voice Recording to Text Online | SimpliConvert</title>
+    <meta name="description" content="Convert voice recording to text online instantly. Use our free dictation tool for real-time audio transcription, meeting notes, and hands-free typing.">
+    <meta name="keywords" content="convert voice recording to text online, dictation tool, audio to text, voice typer, transcribe audio, speech to text converter, voice to text online">
+    <meta name="author" content="SimpliConvert">
+    <meta property="og:site_name" content="SimpliConvert">
+    <meta name="robots" content="index, follow">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://simpliconvert.com/speech_to_text/">
+    <meta property="og:title" content="Speech to Text – Convert Voice Recording to Text Online">
+    <meta property="og:description" content="Transcribe your voice to text in real-time. A fast, free, and secure way to convert speech into written notes.">
+    <meta property="og:image" content="https://simpliconvert.com/images/speech-to-text-og.jpg">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://simpliconvert.com/speech_to_text/">
+    <meta name="twitter:title" content="Speech to Text – Free Online Dictation Tool">
+    <meta name="twitter:description" content="Speak and watch your words turn into text. Perfect for transcribing interviews, notes, and creative writing.">
+    <meta name="twitter:image" content="https://simpliconvert.com/images/speech-to-text-og.jpg">
+
+    <link rel="canonical" href="https://simpliconvert.com/speech_to_text/">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Speech to Text Converter",
+      "url": "https://simpliconvert.com/speech_to_text/",
+      "description": "A free online tool that uses the Web Speech API to convert live voice recordings into text instantly.",
+      "applicationCategory": "ProductivityApplication",
+      "operatingSystem": "Web Browser",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "SimpliConvert",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://simpliconvert.com/logo.png"
+        }
+      }
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [{
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://simpliconvert.com/"
+      },{
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Productivity Tools",
+        "item": "https://simpliconvert.com/productivity_tools/"
+      },{
+        "@type": "ListItem",
+        "position": 3,
+        "name": "Speech to Text",
+        "item": "https://simpliconvert.com/speech_to_text/"
+      }]
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [{
+        "@type": "Question",
+        "name": "How do I convert voice recording to text online?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Simply click the 'Start Recording' button, allow microphone access in your browser, and start speaking. The tool will transcribe your voice into the text area in real-time."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Is my audio data stored on your servers?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "No. Our Speech to Text tool uses the browser's built-in Web Speech API. Your audio is processed locally or by your browser's speech engine; we do not record, store, or upload your audio to our servers."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Which browsers support speech-to-text?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Most modern browsers like Google Chrome, Microsoft Edge, and Safari support the Web Speech API. Ensure your browser is updated to the latest version for the best experience."
+        }
+      }]
+    }
+    </script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #da3f0b;
+            --primary-hover: #b53409;
+            --primary-light: #fff5f2;
+            --bg: #f8fafc;
+            --text-dark: #0f172a;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text-dark);
+        }
+
+        .hero-card {
+            background: white;
+            border: 1px solid #f1f5f9;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background-color: var(--primary);
+        }
+
+        .recording-pulse {
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.7); }
+            70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(220, 38, 38, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(220, 38, 38, 0); }
+        }
+
+        .tool-card {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .tool-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+        }
+
+        .prose a { color: #da3f0b; text-decoration: none; }
+        .prose a:hover { text-decoration: underline; }
+    </style>
+</head>
+
+<body class="bg-gray-50 min-h-screen flex flex-col">
+    <div id="navbar" style="min-height: 70px;"></div>
+	
+	<section class="hero-white text-black py-2 md:py-10">
+        <div class="container mx-auto px-4">
+            <nav class="flex pb-4 text-sm text-slate-500 items-center space-x-2 justify-center">
+                <a href="https://simpliconvert.com/" class="hover:text-[#da3f0b] transition-colors">Home</a>
+                <i class="fas fa-chevron-right text-[10px]"></i>
+                <a href="https://simpliconvert.com/productivity_tools/" class="hover:text-[#da3f0b] transition-colors">Productivity Tools</a>
+                <i class="fas fa-chevron-right text-[10px]"></i>
+                <span class="text-slate-900 font-medium">Speech to Text</span>
+            </nav>
+            <div class="text-center">
+                <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-2">convert voice recording to text online</h1>
+                <p class="text-lg md:text-xl max-w-3xl mx-auto mb-2 text-slate-600">
+                Turn your spoken words into written text instantly. Perfect for dictation, transcribing notes, and hands-free writing.
+                </p>
+            </div>
+        </div>
+    </section>		
+
+    <div id="tool-app" class="w-full max-w-5xl mx-auto p-4 sm:p-6">
+        <div class="bg-white rounded-[2rem] shadow-2xl overflow-hidden border border-slate-100">
+            <header class="bg-slate-50/50 border-b border-slate-100 p-6 md:p-8 flex flex-col md:flex-row justify-between items-center gap-6">
+                <div class="text-center md:text-left">
+                  <h2 class="text-2xl font-black text-slate-800 tracking-tight flex items-center justify-center md:justify-start gap-3">
+                    <span class="bg-[#da3f0b] text-white p-2 rounded-xl text-lg shadow-lg shadow-[#da3f0b30]">
+                      <i class="fas fa-microphone"></i>
+                    </span>
+                    Live Voice Transcriber
+                  </h2>
+                </div>
+                
+                <div class="flex items-center gap-4">
+                    <div class="relative min-w-[160px]">
+                        <select id="language-select" class="appearance-none w-full bg-white border border-slate-200 text-slate-700 py-2.5 pl-4 pr-10 rounded-xl text-xs font-bold focus:outline-none focus:ring-4 focus:ring-[#da3f0b15] focus:border-[#da3f0b] shadow-sm cursor-pointer">
+                            <option value="en-US">English (US)</option>
+                            <option value="en-GB">English (UK)</option>
+                            <option value="es-ES">Spanish (Spain)</option>
+                            <option value="fr-FR">French (France)</option>
+                            <option value="de-DE">German</option>
+                            <option value="it-IT">Italian</option>
+                            <option value="hi-IN">Hindi</option>
+                            <option value="pt-BR">Portuguese (Brazil)</option>
+                            <option value="ja-JP">Japanese</option>
+                            <option value="zh-CN">Chinese (Simplified)</option>
+                        </select>
+                        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-slate-400">
+                            <i class="fas fa-chevron-down text-[10px]"></i>
+                        </div>
+                    </div>
+                </div>
+            </header>
+    
+            <main class="p-6 md:p-10">
+                <div class="flex flex-col gap-6">
+                    <!-- Status Indicator -->
+                    <div id="status-bar" class="flex items-center justify-center gap-3 py-2 px-4 rounded-full bg-slate-100 w-fit mx-auto text-xs font-bold text-slate-500 uppercase tracking-widest transition-all">
+                        <span id="status-dot" class="w-2 h-2 rounded-full bg-slate-400"></span>
+                        <span id="status-text">Ready to record</span>
+                    </div>
+
+                    <!-- Main Text Area -->
+                    <div class="relative">
+                        <textarea id="transcript-area" class="w-full h-64 md:h-80 p-6 md:p-8 rounded-2xl border-2 border-slate-100 focus:border-[#da3f0b] focus:ring-0 text-lg text-slate-700 leading-relaxed resize-none transition-all bg-slate-50/30" placeholder="Your transcription will appear here as you speak..."></textarea>
+                        <div id="interim-text" class="absolute bottom-6 left-6 right-6 text-slate-400 italic text-sm pointer-events-none"></div>
+                    </div>
+
+                    <!-- Controls -->
+                    <div class="flex flex-wrap items-center justify-center gap-4">
+                        <button id="start-btn" class="flex items-center gap-3 bg-[#da3f0b] hover:bg-[#b53409] text-white px-8 py-4 rounded-2xl font-bold text-lg shadow-xl shadow-[#da3f0b30] transition-all active:scale-95">
+                            <i class="fas fa-play"></i>
+                            <span>Start Recording</span>
+                        </button>
+                        
+                        <button id="stop-btn" class="hidden flex items-center gap-3 bg-red-600 hover:bg-red-700 text-white px-8 py-4 rounded-2xl font-bold text-lg shadow-xl shadow-red-200 transition-all active:scale-95 recording-pulse">
+                            <i class="fas fa-stop"></i>
+                            <span>Stop Recording</span>
+                        </button>
+
+                        <div class="flex gap-2">
+                            <button id="copy-btn" class="p-4 bg-white border border-slate-200 rounded-2xl text-slate-600 hover:text-[#da3f0b] hover:border-[#da3f0b] transition-all shadow-sm" title="Copy to Clipboard">
+                                <i class="fas fa-copy"></i>
+                            </button>
+                            <button id="download-btn" class="p-4 bg-white border border-slate-200 rounded-2xl text-slate-600 hover:text-[#da3f0b] hover:border-[#da3f0b] transition-all shadow-sm" title="Download as TXT">
+                                <i class="fas fa-download"></i>
+                            </button>
+                            <button id="clear-btn" class="p-4 bg-white border border-slate-200 rounded-2xl text-slate-600 hover:text-red-600 hover:border-red-200 transition-all shadow-sm" title="Clear Text">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Stats -->
+                    <div class="flex justify-center gap-8 text-xs font-bold text-slate-400 uppercase tracking-widest border-t border-slate-100 pt-6">
+                        <span>Words: <span id="word-count" class="text-slate-800">0</span></span>
+                        <span>Characters: <span id="char-count" class="text-slate-800">0</span></span>
+                    </div>
+                </div>
+            </main>
+    
+            <footer class="bg-slate-50 border-t border-slate-100 p-6 md:p-8">
+               <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+                   <div class="text-center md:text-left">
+                       <h4 class="text-sm font-bold text-slate-700 mb-1">Share this tool</h4>
+                       <p class="text-xs text-slate-400">Help others transcribe audio easily.</p>
+                   </div>
+                   
+                   <div class="flex flex-wrap justify-center gap-3">
+                       <a href="#" onclick="shareSocial('facebook')" class="w-10 h-10 rounded-full flex items-center justify-center text-white transition-transform hover:-translate-y-1 bg-[#1877F2]"><i class="fab fa-facebook-f"></i></a>
+                       <a href="#" onclick="shareSocial('twitter')" class="w-10 h-10 rounded-full flex items-center justify-center text-white transition-transform hover:-translate-y-1 bg-[#1DA1F2]"><i class="fab fa-twitter"></i></a>
+                       <a href="#" onclick="shareSocial('whatsapp')" class="w-10 h-10 rounded-full flex items-center justify-center text-white transition-transform hover:-translate-y-1 bg-[#25D366]"><i class="fab fa-whatsapp"></i></a>
+                       <a href="#" onclick="shareSocial('telegram')" class="w-10 h-10 rounded-full flex items-center justify-center text-white transition-transform hover:-translate-y-1 bg-[#0088cc]"><i class="fab fa-telegram-plane"></i></a>
+                   </div>
+    
+                   <button onclick="handleBookmark()" class="flex items-center gap-2 bg-white border border-slate-200 hover:border-[#da3f0b] hover:text-[#da3f0b] text-slate-600 px-4 py-2 rounded-lg text-sm font-bold transition-all shadow-sm">
+                      <i class="fas fa-bookmark"></i> Bookmark
+                   </button>
+               </div>
+            </footer>
+        </div>
+    </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const startBtn = document.getElementById('start-btn');
+        const stopBtn = document.getElementById('stop-btn');
+        const transcriptArea = document.getElementById('transcript-area');
+        const interimDisplay = document.getElementById('interim-text');
+        const langSelect = document.getElementById('language-select');
+        const statusText = document.getElementById('status-text');
+        const statusDot = document.getElementById('status-dot');
+        const wordCount = document.getElementById('word-count');
+        const charCount = document.getElementById('char-count');
+
+        let recognition;
+        let finalTranscript = '';
+
+        if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            recognition = new SpeechRecognition();
+            recognition.continuous = true;
+            recognition.interimResults = true;
+
+            recognition.onstart = () => {
+                statusText.textContent = "Listening...";
+                statusDot.classList.replace('bg-slate-400', 'bg-red-500');
+                startBtn.classList.add('hidden');
+                stopBtn.classList.remove('hidden');
+            };
+
+            recognition.onerror = (event) => {
+                console.error(event.error);
+                statusText.textContent = "Error: " + event.error;
+                stopRecording();
+            };
+
+            recognition.onend = () => {
+                statusText.textContent = "Ready to record";
+                statusDot.classList.replace('bg-red-500', 'bg-slate-400');
+                startBtn.classList.remove('hidden');
+                stopBtn.classList.add('hidden');
+            };
+
+            recognition.onresult = (event) => {
+                let interimTranscript = '';
+                for (let i = event.resultIndex; i < event.results.length; ++i) {
+                    if (event.results[i].isFinal) {
+                        finalTranscript += event.results[i][0].transcript + ' ';
+                    } else {
+                        interimTranscript += event.results[i][0].transcript;
+                    }
+                }
+                transcriptArea.value = finalTranscript;
+                interimDisplay.textContent = interimTranscript;
+                updateStats();
+                // Auto-scroll
+                transcriptArea.scrollTop = transcriptArea.scrollHeight;
+            };
+        } else {
+            startBtn.disabled = true;
+            statusText.textContent = "Speech API not supported in this browser.";
+            alert("Your browser does not support the Web Speech API. Please try Google Chrome or Microsoft Edge.");
+        }
+
+        function startRecording() {
+            recognition.lang = langSelect.value;
+            recognition.start();
+        }
+
+        function stopRecording() {
+            recognition.stop();
+        }
+
+        function updateStats() {
+            const text = transcriptArea.value.trim();
+            wordCount.textContent = text ? text.split(/\s+/).length : 0;
+            charCount.textContent = text.length;
+        }
+
+        startBtn.addEventListener('click', startRecording);
+        stopBtn.addEventListener('click', stopRecording);
+
+        document.getElementById('clear-btn').addEventListener('click', () => {
+            if (confirm("Clear all text?")) {
+                finalTranscript = '';
+                transcriptArea.value = '';
+                interimDisplay.textContent = '';
+                updateStats();
+            }
+        });
+
+        document.getElementById('copy-btn').addEventListener('click', () => {
+            transcriptArea.select();
+            document.execCommand('copy');
+            const originalText = statusText.textContent;
+            statusText.textContent = "Copied to clipboard!";
+            setTimeout(() => statusText.textContent = originalText, 2000);
+        });
+
+        document.getElementById('download-btn').addEventListener('click', () => {
+            const text = transcriptArea.value;
+            if (!text) return;
+            const blob = new Blob([text], { type: 'text/plain' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'transcription-' + new Date().getTime() + '.txt';
+            a.click();
+        });
+
+        transcriptArea.addEventListener('input', () => {
+            finalTranscript = transcriptArea.value;
+            updateStats();
+        });
+    });
+
+    function handleBookmark() {
+        alert("Press Ctrl + D (or Cmd + D) to bookmark this tool.");
+    }
+
+    function shareSocial(platform) {
+        const url = encodeURIComponent(window.location.href);
+        const title = encodeURIComponent("Convert Voice to Text Online for Free!");
+        let shareUrl = '';
+        switch(platform) {
+            case 'facebook': shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${url}`; break;
+            case 'twitter': shareUrl = `https://twitter.com/intent/tweet?url=${url}&text=${title}`; break;
+            case 'whatsapp': shareUrl = `https://api.whatsapp.com/send?text=${title}%20${url}`; break;
+            case 'telegram': shareUrl = `https://t.me/share/url?url=${url}&text=${title}`; break;
+        }
+        if(shareUrl) window.open(shareUrl, '_blank');
+    }
+    </script>
+
+    <section class="bg-white py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="prose prose-lg max-w-none prose-h2:text-gray-800 prose-p:text-gray-700">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">How to Convert Voice Recording to Text Online Effortlessly</h2>
+                <p class="mb-6 leading-relaxed">
+                    In today's fast-paced digital world, typing manually can be a bottleneck for productivity. Whether you are a student taking lecture notes, a journalist interviewing a subject, or a professional drafting an email, the ability to <strong>convert voice recording to text online</strong> is a game-changer. Our tool leverages advanced browser-based speech recognition to provide a seamless, real-time dictation experience.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">The Benefits of Using a Dictation Tool</h2>
+                <p class="mb-6 leading-relaxed">
+                    Using a voice-to-text converter offers several advantages over traditional typing. First and foremost is speed; most people speak significantly faster than they type. By using a <em>voice typer</em>, you can capture your thoughts at the speed of sound. Additionally, it reduces physical strain on your hands and wrists, making it an essential accessibility tool for those with repetitive strain injuries or motor impairments.
+                </p>
+                <p class="mb-6 leading-relaxed">
+                    Our tool is also perfect for creative writers who find that their ideas flow better when spoken aloud. You can easily pair this with our <a href="https://simpliconvert.com/reading_time_calculator/">Reading Time Calculator</a> to estimate how long it will take for your transcribed speech to be read by an audience.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Real-Time Transcription for Meetings and Interviews</h2>
+                <p class="mb-6 leading-relaxed">
+                    Transcribing audio manually is a tedious task that can take hours for just a few minutes of recording. With our <strong>audio to text</strong> converter, you can get a head start by transcribing live. Simply place your device near the audio source and watch the text appear. While no automated tool is 100% perfect, it provides a solid draft that you can later refine using our <a href="https://simpliconvert.com/word_frequency_analyzer/">Word Frequency Analyzer</a> to check for overused terms or key themes.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Privacy and Security: Your Voice Stays Yours</h2>
+                <p class="mb-6 leading-relaxed">
+                    We understand that privacy is paramount when dealing with personal notes or sensitive interviews. Unlike many other online services, our <em>speech to text</em> tool processes your audio directly within your browser. We do not store your audio files or transcripts on our servers. Once you close the tab or clear the text, the data is gone. This makes it one of the most secure ways to <strong>convert voice to text online</strong>.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Tips for Better Accuracy</h2>
+                <ul class="list-disc pl-6 mb-6 space-y-2 text-gray-700">
+                    <li><strong>Use a high-quality microphone:</strong> Built-in laptop mics are okay, but a dedicated headset or USB mic significantly improves clarity.</li>
+                    <li><strong>Speak clearly and at a steady pace:</strong> Avoid mumbling or speaking too quickly.</li>
+                    <li><strong>Minimize background noise:</strong> Find a quiet room to ensure the speech engine only picks up your voice.</li>
+                    <li><strong>Check your punctuation:</strong> While some engines support "period" or "comma" commands, it's often easier to add punctuation manually after the transcription.</li>
+                </ul>
+                <p class="mb-6 leading-relaxed">
+                    If you need to convert your written text back into audio for proofreading, don't forget to check out our <a href="https://simpliconvert.com/text_to_speech/">Text to Speech</a> tool.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-center text-gray-900 mb-8">Frequently Asked Questions</h2>
+            <div class="space-y-4">
+                <div class="bg-white rounded-lg shadow-sm border border-slate-200">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-50 rounded-lg">
+                        <span>Is this speech-to-text tool free to use?</span>
+                        <i class="fas fa-chevron-down faq-icon transition-transform"></i>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-300">
+                        <p class="p-5 pt-0 text-gray-600">Yes, our tool is 100% free with no hidden costs, subscriptions, or limits on how much you can dictate.</p>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg shadow-sm border border-slate-200">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-50 rounded-lg">
+                        <span>Does it support languages other than English?</span>
+                        <i class="fas fa-chevron-down faq-icon transition-transform"></i>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-300">
+                        <p class="p-5 pt-0 text-gray-600">Yes! You can select from various languages including Spanish, French, German, Hindi, and more using the language dropdown menu.</p>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg shadow-sm border border-slate-200">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-50 rounded-lg">
+                        <span>Can I use this on my mobile phone?</span>
+                        <i class="fas fa-chevron-down faq-icon transition-transform"></i>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-300">
+                        <p class="p-5 pt-0 text-gray-600">Yes, as long as your mobile browser (like Chrome on Android or Safari on iOS) supports the Web Speech API, you can use this tool on the go.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 pb-16">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-slate-200 pt-16">
+            <h2 class="text-2xl font-bold text-center text-slate-800 mb-10">Popular Productivity Tools</h2>
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+                <a href="/text_to_speech/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center shrink-0 group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-volume-up text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Text to Speech</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Convert text into natural audio.</p>
+                    </div>
+                </a>
+                <a href="/reading_time_calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-green-50 text-green-600 flex items-center justify-center shrink-0 group-hover:bg-green-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-clock text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Reading Time</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Estimate content reading time.</p>
+                    </div>
+                </a>
+                <a href="/word_frequency_analyzer/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-purple-50 text-purple-600 flex items-center justify-center shrink-0 group-hover:bg-purple-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-chart-bar text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Word Frequency</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Analyze word usage in text.</p>
+                    </div>
+                </a>
+                <a href="/case_converter_sentence/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-orange-50 text-orange-600 flex items-center justify-center shrink-0 group-hover:bg-orange-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-font text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Case Converter</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Change text case instantly.</p>
+                    </div>
+                </a>
+                <a href="/duplicate_word_remover/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-red-50 text-red-600 flex items-center justify-center shrink-0 group-hover:bg-red-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-eraser text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Duplicate Remover</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Clean up repetitive words.</p>
+                    </div>
+                </a>
+                <a href="/text_summary_tool/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0 group-hover:bg-indigo-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-compress-alt text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Text Summary</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Summarize long articles easily.</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <div id="footer"></div>
+
+    <script>
+    async function loadComponent(url, elementId, callback) {
+        try {
+            const response = await fetch(url);
+            if (!response.ok) throw new Error('Status: ' + response.status);
+            const text = await response.text();
+            const element = document.getElementById(elementId);
+            if (element) {
+                element.innerHTML = text;
+                if (callback) callback();
+            }
+        } catch (error) {
+            console.error('Error loading component:', error);
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        loadComponent('/components/navbar.html', 'navbar');
+        loadComponent('/components/footer.html', 'footer', () => {
+            const yearSpan = document.getElementById('current-year');
+            if(yearSpan) yearSpan.textContent = new Date().getFullYear();
+        });
+        
+        const faqToggles = document.querySelectorAll('[data-faq-toggle]');
+        faqToggles.forEach(button => {
+            button.addEventListener('click', () => {
+                const answer = button.nextElementSibling;
+                const icon = button.querySelector('.faq-icon');
+                const isOpening = !answer.style.maxHeight || answer.style.maxHeight === '0px';
+
+                faqToggles.forEach(other => {
+                    other.nextElementSibling.style.maxHeight = '0px';
+                    other.querySelector('.faq-icon').style.transform = 'rotate(0deg)';
+                });
+
+                if (isOpening) {
+                    answer.style.maxHeight = answer.scrollHeight + "px";
+                    icon.style.transform = 'rotate(180deg)';
+                }
+            });
+        });
+    });
+    </script>
+</body>
+</html>
