@@ -28,20 +28,15 @@ jobs:
           const IMAGES_DIR = 'images';
           const OUTPUT = 'image-sitemap.xml';
 
-          // Ensure directory exists to avoid crash
           if (!fs.existsSync(IMAGES_DIR)) {
-            console.log(`Directory "${IMAGES_DIR}" not found. Creating empty sitemap.`);
-            fs.writeFileSync(OUTPUT, '');
             process.exit(0);
           }
 
           function walk(dir) {
             let results = [];
-            const list = fs.readdirSync(dir);
-            list.forEach(file => {
+            fs.readdirSync(dir).forEach(file => {
               const fullPath = path.join(dir, file);
-              const stat = fs.statSync(fullPath);
-              if (stat.isDirectory()) {
+              if (fs.statSync(fullPath).isDirectory()) {
                 results = results.concat(walk(fullPath));
               } else if (/\.(png|jpe?g|gif|webp|svg)$/i.test(file)) {
                 results.push(fullPath);
@@ -52,7 +47,6 @@ jobs:
 
           const images = walk(IMAGES_DIR);
 
-          // Group all images under the homepage LOC to avoid duplicate URL entries
           let xml = `<?xml version="1.0" encoding="UTF-8"?>\n`;
           xml += `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"\n`;
           xml += `        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">\n`;
@@ -62,11 +56,18 @@ jobs:
             xml += `    <loc>${SITE_URL}/</loc>\n`;
             
             images.forEach(img => {
-              // Ensure forward slashes for URLs even on different OS
               const relativePath = img.split(path.sep).join('/');
               const imgUrl = `${SITE_URL}/${relativePath}`;
+              
+              // SEO Trick: Clean filename to create a Title
+              // "my-image-file.png" -> "My Image File"
+              const fileName = path.basename(img, path.extname(img));
+              const title = fileName.split(/[-_]/).map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+
               xml += `    <image:image>\n`;
               xml += `      <image:loc>${imgUrl}</image:loc>\n`;
+              xml += `      <image:title>${title}</image:title>\n`;
+              xml += `      <image:caption>${title} on SimpliConvert</image:caption>\n`;
               xml += `    </image:image>\n`;
             });
             
@@ -76,8 +77,9 @@ jobs:
           xml += `</urlset>`;
 
           fs.writeFileSync(OUTPUT, xml.trim());
-          console.log(`Generated ${OUTPUT} with ${images.length} images`);
+          console.log(`Generated ${OUTPUT} with ${images.length} images including SEO metadata.`);
           EOF
+    
 
       - name: Commit image sitemap
         run: |
