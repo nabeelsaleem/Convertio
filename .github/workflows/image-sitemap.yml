@@ -1,0 +1,68 @@
+name: Auto-generate image sitemap
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  generate-image-sitemap:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Generate image-sitemap.xml
+        run: |
+          node <<'EOF'
+          const fs = require('fs');
+          const path = require('path');
+
+          const SITE_URL = 'https://simpliconvert.com';
+          const IMAGES_DIR = 'images';
+          const OUTPUT = 'image-sitemap.xml';
+
+          function walk(dir) {
+            let results = [];
+            fs.readdirSync(dir).forEach(file => {
+              const fullPath = path.join(dir, file);
+              const stat = fs.statSync(fullPath);
+              if (stat.isDirectory()) {
+                results = results.concat(walk(fullPath));
+              } else if (/\.(png|jpe?g|gif|webp|svg)$/i.test(file)) {
+                results.push(fullPath);
+              }
+            });
+            return results;
+          }
+
+          const images = walk(IMAGES_DIR);
+
+          let xml = `<?xml version="1.0" encoding="UTF-8"?>\n`;
+          xml += `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"\n`;
+          xml += `        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">\n`;
+
+          images.forEach(img => {
+            const imgUrl = `${SITE_URL}/${img.replace(/\\/g, '/')}`;
+            xml += `
+  <url>
+    <loc>${SITE_URL}/</loc>
+    <image:image>
+      <image:loc>${imgUrl}</image:loc>
+    </image:image>
+  </url>`;
+          });
+
+          xml += `\n</urlset>`;
+
+          fs.writeFileSync(OUTPUT, xml.trim());
+          console.log(`Generated ${OUTPUT} with ${images.length} images`);
+          EOF
+
+      - name: Commit image sitemap
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git add image-sitemap.xml
+          git commit -m "Auto-generate image sitemap" || echo "No changes"
+          git push
