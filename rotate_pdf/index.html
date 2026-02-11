@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Rotate PDF – Fix Upside Down Pages Instantly | SimpliConvert</title>
+    <meta name="description" content="Rotate specific pages or the entire PDF document permanently. Fix upside-down scans and save the corrected file instantly with our free online tool.">
+    <meta name="keywords" content="turn pdf pages, rotate pdf file, fix upside down pdf, save rotated pdf">
+    <meta name="author" content="SimpliConvert">
+    <meta property="og:site_name" content="SimpliConvert">
+    <meta name="robots" content="index, follow">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://simpliconvert.com/rotate_pdf/">
+    <meta property="og:title" content="Rotate PDF – Fix Upside Down Pages Instantly">
+    <meta property="og:description" content="Rotate specific pages or the entire PDF document permanently. Fix upside-down scans and save the corrected file instantly.">
+    <meta property="og:image" content="https://simpliconvert.com/images/rotate-pdf-og.jpg">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://simpliconvert.com/rotate_pdf/">
+    <meta name="twitter:title" content="Rotate PDF – Turn and Fix PDF Pages Online">
+    <meta name="twitter:description" content="Free tool to rotate PDF pages permanently. Fix orientation issues for scanned documents in seconds.">
+    <meta name="twitter:image" content="https://simpliconvert.com/images/rotate-pdf-og.jpg">
+
+    <link rel="canonical" href="https://simpliconvert.com/rotate_pdf/">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Rotate PDF",
+      "url": "https://simpliconvert.com/rotate_pdf/",
+      "description": "A free online tool to rotate PDF pages permanently. Fix upside-down or sideways scans and save the corrected file instantly.",
+      "applicationCategory": "ProductivityApplication",
+      "operatingSystem": "Web Browser",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "SimpliConvert",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://simpliconvert.com/logo.png"
+        }
+      }
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [{
+        "@type": "Question",
+        "name": "How do I rotate a PDF permanently?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Upload your file to our Rotate PDF tool, select the rotation angle (90, 180, or 270 degrees), and click 'Rotate PDF'. The tool will process the file and provide a download link for the permanently rotated version."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Can I rotate only specific pages in a PDF?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. You can choose to rotate all pages or enter specific page numbers (e.g., 1, 3-5) to apply the rotation only to those parts of the document."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Is it safe to upload my PDF files here?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Absolutely. All processing happens locally in your browser or on secure temporary servers where files are deleted immediately after processing. We do not store or view your documents."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Why is my PDF upside down after scanning?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "This usually happens if the document was placed incorrectly in the scanner. Our tool allows you to fix this by rotating the pages 180 degrees to restore the correct orientation."
+        }
+      }]
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [{
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://simpliconvert.com/"
+      },{
+        "@type": "ListItem",
+        "position": 2,
+        "name": "PDF Tools",
+        "item": "https://simpliconvert.com/pdf_tools/"
+      },{
+        "@type": "ListItem",
+        "position": 3,
+        "name": "Rotate PDF",
+        "item": "https://simpliconvert.com/rotate_pdf/"
+      }]
+    }
+    </script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/pdf-lib/dist/pdf-lib.min.js"></script>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" media="print" onload="this.media='all'" />
+    <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" /></noscript>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #da3f0b;
+            --primary-hover: #b53409;
+            --primary-light: #fff5f2;
+            --bg: #f8fafc;
+            --text-dark: #0f172a;
+            --success: #16a34a;
+            --danger: #dc2626;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text-dark);
+        }
+
+        .hero-card {
+            background: white;
+            border: 1px solid #f1f5f9;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background-color: var(--primary);
+        }
+
+        .tooltip-container { position: relative; display: inline-block; }
+        .tooltip-text {
+            visibility: hidden; width: 220px; background-color: #1e293b; color: #fff;
+            text-align: center; border-radius: 8px; padding: 10px; position: absolute;
+            z-index: 50; bottom: 125%; left: 50%; margin-left: -110px; opacity: 0;
+            transition: opacity 0.2s; font-size: 0.75rem; font-weight: 400;
+            pointer-events: none; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+        .tooltip-container:hover .tooltip-text { visibility: visible; opacity: 1; }
+        .tooltip-text::after {
+            content: ""; position: absolute; top: 100%; left: 50%; margin-left: -5px;
+            border-width: 5px; border-style: solid; border-color: #1e293b transparent transparent transparent;
+        }
+
+        .animate-fade { animation: fadeIn 0.3s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+        .tool-card {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .tool-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+        }
+
+        .prose a {
+            color: #da3f0b;
+            text-decoration: none; 
+        }
+        .prose a:hover {
+            text-decoration: underline; 
+        }
+
+        #file-drop-area.drag-over {
+            border-color: var(--primary);
+            background-color: var(--primary-light);
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 min-h-screen flex flex-col">
+    <div id="navbar" style="min-height: 70px;"></div>
+
+    <section class="hero-white text-black py-2 md:py-10">
+        <div class="container mx-auto px-4">
+            <nav class="flex mb-4 text-sm justify-center" aria-label="Breadcrumb">
+                <ol class="inline-flex items-center space-x-1 md:space-x-3">
+                    <li class="inline-flex items-center">
+                        <a href="https://simpliconvert.com/" class="text-slate-500 hover:text-[#da3f0b] transition-colors">Home</a>
+                    </li>
+                    <li>
+                        <div class="flex items-center">
+                            <i class="fas fa-chevron-right text-slate-300 text-[10px] mx-2"></i>
+                            <a href="https://simpliconvert.com/pdf_tools/" class="text-slate-500 hover:text-[#da3f0b] transition-colors">PDF Tools</a>
+                        </div>
+                    </li>
+                    <li aria-current="page">
+                        <div class="flex items-center">
+                            <i class="fas fa-chevron-right text-slate-300 text-[10px] mx-2"></i>
+                            <span class="text-slate-900 font-bold">Rotate PDF</span>
+                        </div>
+                    </li>
+                </ol>
+            </nav>
+            <div class="text-center">
+                <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-2">Rotate PDF – Turn and Fix PDF Pages Online</h1>
+                <p class="text-lg md:text-xl max-w-3xl mx-auto mb-2">
+                    Easily rotate individual pages or your entire PDF document permanently. Perfect for fixing scanned documents that are upside down or sideways.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <div id="calculator-app" class="w-full max-w-6xl mx-auto p-4 sm:p-6">
+        <div class="bg-white rounded-[2rem] shadow-2xl overflow-hidden border border-slate-100">
+            <header class="bg-slate-50/50 border-b border-slate-100 p-6 md:p-8 flex flex-col md:flex-row justify-between items-center gap-6">
+                <div class="text-center md:text-left">
+                  <h2 class="text-2xl font-black text-slate-800 tracking-tight flex items-center justify-center md:justify-start gap-3">
+                    <span class="bg-[#da3f0b] text-white p-2 rounded-xl text-lg shadow-lg shadow-[#da3f0b30]">
+                      <i class="fas fa-sync-alt"></i>
+                    </span>
+                    PDF Page Rotator
+                  </h2>
+                </div>
+            </header>
+    
+            <main class="flex flex-col lg:flex-row">
+                <div class="lg:w-[50%] p-6 md:p-10 lg:p-12 border-r border-slate-100">
+                    <div class="space-y-6">
+                        
+                        <div id="file-drop-area" class="bg-slate-50 p-8 rounded-2xl border-2 border-dashed border-slate-200 text-center transition-all">
+                            <input type="file" id="pdf-upload" class="hidden" accept="application/pdf">
+                            <label for="pdf-upload" class="cursor-pointer">
+                                <div class="bg-white w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 shadow-sm border border-slate-100">
+                                    <i class="fas fa-cloud-upload-alt text-[#da3f0b] text-2xl"></i>
+                                </div>
+                                <p class="text-sm font-bold text-slate-700 mb-1">Click to upload or drag and drop</p>
+                                <p class="text-xs text-slate-400">Select the PDF file you want to rotate</p>
+                            </label>
+                            <div id="file-info" class="hidden mt-4 p-3 bg-white rounded-xl border border-slate-100 flex items-center justify-between">
+                                <div class="flex items-center gap-3 overflow-hidden">
+                                    <i class="fas fa-file-pdf text-red-500"></i>
+                                    <span id="file-name" class="text-xs font-bold text-slate-600 truncate">filename.pdf</span>
+                                </div>
+                                <button id="remove-file" class="text-slate-300 hover:text-red-500 transition-colors"><i class="fas fa-times-circle"></i></button>
+                            </div>
+                        </div>
+    
+                        <div class="bg-[#da3f0b08] p-6 rounded-2xl border border-[#da3f0b15]">
+                           <h3 class="text-xs font-black text-[#da3f0b] uppercase tracking-widest mb-6"><i class="fas fa-compass mr-2"></i>Rotation Settings</h3>
+                           
+                           <div class="grid grid-cols-3 gap-3 mb-6">
+                                <button data-angle="90" class="angle-btn bg-white border border-[#da3f0b20] text-slate-700 py-3 rounded-xl font-bold hover:border-[#da3f0b] hover:text-[#da3f0b] transition-all flex flex-col items-center gap-2">
+                                    <i class="fas fa-redo"></i>
+                                    <span class="text-[10px]">90° CW</span>
+                                </button>
+                                <button data-angle="180" class="angle-btn bg-white border border-[#da3f0b20] text-slate-700 py-3 rounded-xl font-bold hover:border-[#da3f0b] hover:text-[#da3f0b] transition-all flex flex-col items-center gap-2">
+                                    <i class="fas fa-undo-alt"></i>
+                                    <span class="text-[10px]">180°</span>
+                                </button>
+                                <button data-angle="270" class="angle-btn bg-white border border-[#da3f0b20] text-slate-700 py-3 rounded-xl font-bold hover:border-[#da3f0b] hover:text-[#da3f0b] transition-all flex flex-col items-center gap-2">
+                                    <i class="fas fa-undo"></i>
+                                    <span class="text-[10px]">90° CCW</span>
+                                </button>
+                           </div>
+
+                           <div class="mb-5">
+                                <div class="flex items-center text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">
+                                    <label>Page Range</label>
+                                    <span class="tooltip-container ml-2">
+                                        <i class="fas fa-info-circle text-slate-300 hover:text-[#da3f0b] cursor-help text-xs transition-colors"></i>
+                                        <span class="tooltip-text">Leave empty for all pages, or enter specific pages like "1, 3-5".</span>
+                                    </span>
+                                </div>
+                                <input type="text" id="page-range" class="block w-full rounded-xl border-slate-200 border py-3 px-4 focus:ring-4 focus:ring-[#da3f0b20] focus:border-[#da3f0b] sm:text-sm font-semibold text-slate-800 transition-all bg-white" placeholder="e.g. 1, 2, 5-10 (Optional)">
+                           </div>
+
+                           <button id="rotate-btn" class="w-full bg-[#da3f0b] text-white py-4 rounded-xl font-black uppercase tracking-widest hover:bg-[#b53409] transition-all shadow-lg shadow-[#da3f0b30] flex items-center justify-center gap-3">
+                               <i class="fas fa-sync-alt"></i> Rotate PDF
+                           </button>
+                        </div>
+                    </div>
+                </div>
+    
+                <div class="lg:w-[50%] bg-slate-50/50 p-6 md:p-10 lg:p-12 flex flex-col justify-center">
+                   <div id="result-placeholder" class="text-center space-y-4">
+                        <div class="w-20 h-20 bg-slate-100 rounded-full flex items-center justify-center mx-auto text-slate-300">
+                            <i class="fas fa-file-export text-3xl"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-slate-400">Ready to Process</h3>
+                        <p class="text-sm text-slate-400 max-w-xs mx-auto">Upload a file and select your rotation angle to generate the corrected PDF.</p>
+                   </div>
+
+                   <div id="processing-state" class="hidden text-center space-y-6 animate-fade">
+                        <div class="relative w-24 h-24 mx-auto">
+                            <div class="absolute inset-0 border-4 border-slate-200 rounded-full"></div>
+                            <div class="absolute inset-0 border-4 border-[#da3f0b] rounded-full border-t-transparent animate-spin"></div>
+                            <div class="absolute inset-0 flex items-center justify-center text-[#da3f0b]">
+                                <i class="fas fa-cog fa-spin text-2xl"></i>
+                            </div>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-black text-slate-800">Processing PDF...</h3>
+                            <p class="text-sm text-slate-500 mt-2">Applying rotation and rebuilding document.</p>
+                        </div>
+                   </div>
+
+                   <div id="result-state" class="hidden space-y-6 animate-fade">
+                     <div class="hero-card p-8 flex flex-col items-center text-center">
+                         <div class="w-16 h-16 bg-green-100 text-green-600 rounded-full flex items-center justify-center mb-4">
+                            <i class="fas fa-check text-2xl"></i>
+                         </div>
+                         <p class="text-xs font-black text-[#da3f0b] uppercase tracking-[0.2em] mb-2">Success!</p>
+                         <h3 class="text-2xl font-black text-slate-800 mb-4">PDF Rotated Successfully</h3>
+                         
+                         <a id="download-btn" href="#" download class="w-full bg-[#16a34a] text-white py-4 rounded-xl font-black uppercase tracking-widest hover:bg-[#15803d] transition-all shadow-lg shadow-[#16a34a30] flex items-center justify-center gap-3">
+                            <i class="fas fa-download"></i> Download PDF
+                         </a>
+                         <button id="start-over" class="text-xs font-bold text-slate-400 mt-6 hover:text-[#da3f0b] transition-colors">
+                             <i class="fas fa-redo mr-1"></i> Rotate Another File
+                         </button>
+                     </div>
+                   </div>
+                </div>
+            </main>
+    
+            <footer class="bg-slate-50 border-t border-slate-100 p-6 md:p-8">
+               <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+                   <div class="text-center md:text-left">
+                       <h4 class="text-sm font-bold text-slate-700 mb-1">Share this tool</h4>
+                       <p class="text-xs text-slate-400">Help others fix their PDF documents.</p>
+                   </div>
+                   
+                   <div class="flex flex-wrap justify-center gap-3">
+                       <a href="#" onclick="shareSocial('facebook')" class="w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center text-white transition-transform hover:-translate-y-1 hover:shadow-lg bg-[#1877F2]"><i class="fab fa-facebook-f"></i></a>
+                       <a href="#" onclick="shareSocial('twitter')" class="w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center text-white transition-transform hover:-translate-y-1 hover:shadow-lg bg-[#1DA1F2]"><i class="fab fa-twitter"></i></a>
+                       <a href="#" onclick="shareSocial('linkedin')" class="w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center text-white transition-transform hover:-translate-y-1 hover:shadow-lg bg-[#0A66C2]"><i class="fab fa-linkedin-in"></i></a>
+                       <a href="#" onclick="shareSocial('whatsapp')" class="w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center text-white transition-transform hover:-translate-y-1 hover:shadow-lg bg-[#25D366]"><i class="fab fa-whatsapp"></i></a>
+                   </div>
+    
+                   <div class="relative">
+                       <button onclick="handleBookmark()" class="flex items-center gap-2 bg-white border border-slate-200 hover:border-[#da3f0b] hover:text-[#da3f0b] text-slate-600 px-4 py-2 rounded-lg text-sm font-bold transition-all shadow-sm active:scale-95">
+                          <i class="fas fa-bookmark"></i> Bookmark
+                       </button>
+                       <div id="bookmark-toast" class="hidden absolute bottom-full mb-3 left-1/2 -translate-x-1/2 bg-slate-800 text-white text-xs py-2 px-4 rounded-lg shadow-lg whitespace-nowrap animate-fade">
+                           Press <span class="font-bold text-[#da3f0b]">Ctrl + D</span> to bookmark
+                       </div>
+                   </div>
+               </div>
+            </footer>
+        </div>
+    </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const { PDFDocument, degrees } = PDFLib;
+        
+        let selectedFile = null;
+        let selectedAngle = 90;
+
+        const els = {
+            upload: document.getElementById('pdf-upload'),
+            dropArea: document.getElementById('file-drop-area'),
+            fileInfo: document.getElementById('file-info'),
+            fileName: document.getElementById('file-name'),
+            removeFile: document.getElementById('remove-file'),
+            angleBtns: document.querySelectorAll('.angle-btn'),
+            pageRange: document.getElementById('page-range'),
+            rotateBtn: document.getElementById('rotate-btn'),
+            placeholder: document.getElementById('result-placeholder'),
+            processing: document.getElementById('processing-state'),
+            result: document.getElementById('result-state'),
+            downloadBtn: document.getElementById('download-btn'),
+            startOver: document.getElementById('start-over')
+        };
+
+        // File Handling
+        els.upload.addEventListener('change', handleFileSelect);
+        els.dropArea.addEventListener('dragover', (e) => { e.preventDefault(); els.dropArea.classList.add('drag-over'); });
+        els.dropArea.addEventListener('dragleave', () => els.dropArea.classList.remove('drag-over'));
+        els.dropArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            els.dropArea.classList.remove('drag-over');
+            if (e.dataTransfer.files.length) handleFileSelect({ target: { files: e.dataTransfer.files } });
+        });
+
+        function handleFileSelect(e) {
+            const file = e.target.files[0];
+            if (file && file.type === 'application/pdf') {
+                selectedFile = file;
+                els.fileName.textContent = file.name;
+                els.fileInfo.classList.remove('hidden');
+                els.dropArea.querySelector('label').classList.add('hidden');
+            }
+        }
+
+        els.removeFile.addEventListener('click', () => {
+            selectedFile = null;
+            els.upload.value = '';
+            els.fileInfo.classList.add('hidden');
+            els.dropArea.querySelector('label').classList.remove('hidden');
+        });
+
+        // Angle Selection
+        els.angleBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                els.angleBtns.forEach(b => b.classList.remove('border-[#da3f0b]', 'text-[#da3f0b]', 'bg-[#da3f0b08]'));
+                btn.classList.add('border-[#da3f0b]', 'text-[#da3f0b]', 'bg-[#da3f0b08]');
+                selectedAngle = parseInt(btn.dataset.angle);
+            });
+        });
+        // Set default
+        els.angleBtns[0].click();
+
+        // Main Logic
+        els.rotateBtn.addEventListener('click', async () => {
+            if (!selectedFile) {
+                alert('Please select a PDF file first.');
+                return;
+            }
+
+            els.placeholder.classList.add('hidden');
+            els.result.classList.add('hidden');
+            els.processing.classList.remove('hidden');
+
+            try {
+                const arrayBuffer = await selectedFile.arrayBuffer();
+                const pdfDoc = await PDFDocument.load(arrayBuffer);
+                const pages = pdfDoc.getPages();
+                const pageCount = pages.length;
+
+                let targetPages = [];
+                const rangeInput = els.pageRange.value.trim();
+
+                if (rangeInput === '') {
+                    targetPages = Array.from({ length: pageCount }, (_, i) => i);
+                } else {
+                    const parts = rangeInput.split(',');
+                    parts.forEach(part => {
+                        if (part.includes('-')) {
+                            const [start, end] = part.split('-').map(n => parseInt(n.trim()) - 1);
+                            for (let i = start; i <= end; i++) {
+                                if (i >= 0 && i < pageCount) targetPages.push(i);
+                            }
+                        } else {
+                            const idx = parseInt(part.trim()) - 1;
+                            if (idx >= 0 && idx < pageCount) targetPages.push(idx);
+                        }
+                    });
+                }
+
+                // Remove duplicates and sort
+                targetPages = [...new Set(targetPages)];
+
+                targetPages.forEach(idx => {
+                    const page = pages[idx];
+                    const currentRotation = page.getRotation().angle;
+                    page.setRotation(degrees(currentRotation + selectedAngle));
+                });
+
+                const pdfBytes = await pdfDoc.save();
+                const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+                const url = URL.createObjectURL(blob);
+
+                els.downloadBtn.href = url;
+                els.downloadBtn.download = `rotated_${selectedFile.name}`;
+                
+                els.processing.classList.add('hidden');
+                els.result.classList.remove('hidden');
+
+            } catch (err) {
+                console.error(err);
+                alert('An error occurred while processing the PDF.');
+                els.processing.classList.add('hidden');
+                els.placeholder.classList.remove('hidden');
+            }
+        });
+
+        els.startOver.addEventListener('click', () => {
+            els.result.classList.add('hidden');
+            els.placeholder.classList.remove('hidden');
+            els.removeFile.click();
+            els.pageRange.value = '';
+        });
+
+        window.handleBookmark = function() {
+            const toast = document.getElementById('bookmark-toast');
+            toast.classList.remove('hidden');
+            setTimeout(() => toast.classList.add('hidden'), 3000);
+        };
+        
+        window.shareSocial = function(platform) {
+             const url = encodeURIComponent(window.location.href);
+             const title = encodeURIComponent("Rotate PDF – Turn and Fix PDF Pages Online");
+             let shareUrl = '';
+             switch(platform) {
+                case 'facebook': shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${url}`; break;
+                case 'twitter': shareUrl = `https://twitter.com/intent/tweet?url=${url}&text=${title}`; break;
+                case 'linkedin': shareUrl = `https://www.linkedin.com/shareArticle?mini=true&url=${url}`; break;
+                case 'whatsapp': shareUrl = `https://api.whatsapp.com/send?text=${title}%20${url}`; break;
+             }
+             if(shareUrl) window.open(shareUrl, '_blank');
+        };
+    });
+    </script>
+
+    <section class="bg-white py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="prose prose-lg max-w-none prose-h2:text-gray-800 prose-p:text-gray-700">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">How to Rotate PDF Pages Online</h2>
+                <p class="mb-6 leading-relaxed">
+                    Rotating a PDF document shouldn't require expensive software or complex installations. Our <strong>Rotate PDF</strong> tool provides a seamless, browser-based solution to fix orientation issues in seconds. Whether you have a single page that was scanned sideways or an entire document that is upside down, you can adjust the rotation by 90, 180, or 270 degrees with just a few clicks.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Fixing Upside-Down Scanned Documents</h2>
+                <p class="mb-6 leading-relaxed">
+                    It is common for physical documents to be placed incorrectly in a scanner, resulting in a PDF that is difficult to read. Manually turning your head or rotating your monitor isn't a solution. By using our tool, you can permanently <em>fix upside down PDF</em> files. This ensures that when you share the document with colleagues or clients, it appears correctly on every device. After fixing the orientation, you may want to use our <a href="https://simpliconvert.com/pdf_page_counter/">PDF Page Counter</a> to verify the total number of pages in your corrected file.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Rotate Specific Pages vs. Entire Document</h2>
+                <p class="mb-6 leading-relaxed">
+                    Flexibility is key when managing digital assets. Our tool allows you to choose between rotating every page in the file or targeting specific ones. If only page 5 of your report is landscape while the rest are portrait, simply enter "5" in the page range field. If you need to reorganize the document further after rotating, our <a href="https://simpliconvert.com/reorder_pdf_pages/">Reorder PDF Pages</a> tool is the perfect companion to get your document exactly how you want it.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Why Use SimpliConvert for PDF Rotation?</h2>
+                <p class="mb-6 leading-relaxed">
+                    Security and speed are our top priorities. Unlike many online converters, our <strong>Rotate PDF</strong> tool processes your files with high efficiency, ensuring that the quality of your text and images remains untouched. Furthermore, if you find that your document contains unnecessary pages after rotation, you can easily <a href="https://simpliconvert.com/extract_pdf_pages/">Extract PDF Pages</a> to keep only what is relevant. We provide a suite of tools designed to make PDF management effortless for students, professionals, and casual users alike.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Key Features of Our PDF Rotator</h2>
+                <ul class="list-disc pl-6 mb-6 space-y-2 text-gray-700">
+                    <li><strong>Permanent Rotation:</strong> Changes are saved directly into the file metadata.</li>
+                    <li><strong>Batch Rotation:</strong> Rotate all pages at once to save time.</li>
+                    <li><strong>Custom Ranges:</strong> Specify exactly which pages need a fix.</li>
+                    <li><strong>No Quality Loss:</strong> Your PDF remains as sharp as the original.</li>
+                    <li><strong>Privacy First:</strong> Files are processed securely and never stored.</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-center text-gray-900 mb-8">Rotate PDF – Frequently Asked Questions</h2>
+            <div class="space-y-4">
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>How do I rotate a PDF permanently?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">
+                            Upload your file to our Rotate PDF tool, select the rotation angle (90, 180, or 270 degrees), and click 'Rotate PDF'. The tool will process the file and provide a download link for the permanently rotated version.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>Can I rotate only specific pages in a PDF?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">
+                            Yes. You can choose to rotate all pages or enter specific page numbers (e.g., 1, 3-5) to apply the rotation only to those parts of the document.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>Is it safe to upload my PDF files here?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">
+                            Absolutely. All processing happens locally in your browser or on secure temporary servers where files are deleted immediately after processing. We do not store or view your documents.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 pb-16">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-slate-200 pt-16">
+            <h2 class="text-2xl font-bold text-center text-slate-800 mb-10">Popular Tools on SimpliConvert</h2>
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+                <a href="/password_generator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-slate-50 text-slate-700 flex items-center justify-center shrink-0 group-hover:bg-slate-800 group-hover:text-white transition-colors">
+                        <i class="fas fa-key text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Password Gen</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Create secure, random passwords.</p>
+                    </div>
+                </a>
+                <a href="/image_resizer/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center shrink-0 group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-image text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Image Resizer</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Resize images without quality loss.</p>
+                    </div>
+                </a>
+                <a href="/split_pdf/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-red-50 text-red-600 flex items-center justify-center shrink-0 group-hover:bg-red-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-cut text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Split PDF</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Extract pages from PDF documents.</p>
+                    </div>
+                </a>
+                <a href="/qr_code_generator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-slate-50 text-slate-800 flex items-center justify-center shrink-0 group-hover:bg-slate-900 group-hover:text-white transition-colors">
+                        <i class="fas fa-qrcode text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">QR Creator</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Generate custom QR codes instantly.</p>
+                    </div>
+                </a>
+                <a href="/to_do_list/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-green-50 text-green-600 flex items-center justify-center shrink-0 group-hover:bg-green-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-check-square text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">To-Do List</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Manage tasks and stay organized.</p>
+                    </div>
+                </a>
+                <a href="/merge_pdf_online/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-red-50 text-red-600 flex items-center justify-center shrink-0 group-hover:bg-red-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-object-group text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Merge PDF</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Combine multiple PDFs into one.</p>
+                    </div>
+                </a>
+                <a href="/compress_pdf/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-orange-50 text-orange-600 flex items-center justify-center shrink-0 group-hover:bg-orange-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-compress-arrows-alt text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Compress PDF</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Reduce PDF file size online.</p>
+                    </div>
+                </a>
+                <a href="/jpg_to_pdf/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-purple-50 text-purple-600 flex items-center justify-center shrink-0 group-hover:bg-purple-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-file-pdf text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">JPG to PDF</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Convert images to PDF documents.</p>
+                    </div>
+                </a>
+                <a href="/roblox_devex_calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-gray-50 text-gray-800 flex items-center justify-center shrink-0 group-hover:bg-gray-900 group-hover:text-white transition-colors">
+                        <i class="fas fa-gamepad text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">DevEx Calc</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Calculate Roblox Robux to USD.</p>
+                    </div>
+                </a>
+                <a href="/meta_tag_generator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0 group-hover:bg-indigo-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-search text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Meta Tag Gen</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Optimize SEO with custom tags.</p>
+                    </div>
+                </a>
+                <a href="/freelance_hourly_rate_calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0 group-hover:bg-emerald-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-calculator text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Rate Calc</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Calculate freelance hourly rates.</p>
+                    </div>
+                </a>
+                <a href="/youtube_thumbnail_downloader/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-red-50 text-red-600 flex items-center justify-center shrink-0 group-hover:bg-red-600 group-hover:text-white transition-colors">
+                        <i class="fab fa-youtube text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Thumb Grabber</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Download YouTube video covers.</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <div id="footer"></div>
+
+    <script>
+    async function loadComponent(url, elementId, callback) {
+        try {
+            const response = await fetch(url);
+            if (!response.ok) throw new Error('Status: ' + response.status);
+            const text = await response.text();
+            const element = document.getElementById(elementId);
+            if (element) {
+                element.innerHTML = text;
+                if (callback) callback();
+            }
+        } catch (error) {
+            console.error('Error loading component:', error);
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        loadComponent('/components/navbar.html', 'navbar');
+        loadComponent('/components/footer.html', 'footer', () => {
+            const yearSpan = document.getElementById('current-year');
+            if(yearSpan) yearSpan.textContent = new Date().getFullYear();
+        });
+        
+        const faqToggles = document.querySelectorAll('[data-faq-toggle]');
+        faqToggles.forEach(button => {
+            button.addEventListener('click', () => {
+                const answer = button.nextElementSibling;
+                const icon = button.querySelector('.faq-icon');
+                const isOpening = !answer.style.maxHeight;
+
+                faqToggles.forEach(other => {
+                    if (other !== button) {
+                        other.nextElementSibling.style.maxHeight = null;
+                        other.querySelector('.faq-icon').classList.remove('rotate-90');
+                        other.querySelector('.faq-icon').classList.add('-rotate-90');
+                    }
+                });
+
+                if (isOpening) {
+                    answer.style.maxHeight = answer.scrollHeight + "px";
+                    icon.classList.remove('-rotate-90');
+                    icon.classList.add('rotate-90');
+                } else {
+                    answer.style.maxHeight = null;
+                    icon.classList.remove('rotate-90');
+                    icon.classList.add('-rotate-90');
+                }
+            });
+        });
+    });
+    </script>
+</body>
+</html>

@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Extract PDF Pages – Select and Save Specific Pages | SimpliConvert</title>
+    <meta name="description" content="Extract specific pages from your PDF documents easily. Select page ranges or individual pages to create a new PDF. Fast, free, and secure online tool.">
+    <meta name="keywords" content="extract pages, split pdf pages, download single page pdf, pdf page extractor, extract pdf pages online, pdf split tool">
+    <meta name="author" content="SimpliConvert">
+    <meta property="og:site_name" content="SimpliConvert">
+    <meta name="robots" content="index, follow">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://simpliconvert.com/extract_pdf_pages/">
+    <meta property="og:title" content="Extract PDF Pages – Select and Save Specific Pages">
+    <meta property="og:description" content="Extract specific pages from your PDF documents easily. Select page ranges or individual pages to create a new PDF. Fast, free, and secure online tool.">
+    <meta property="og:image" content="https://simpliconvert.com/images/extract-pdf-pages-og.jpg">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://simpliconvert.com/extract_pdf_pages/">
+    <meta name="twitter:title" content="Extract PDF Pages – Select and Save Specific Pages">
+    <meta name="twitter:description" content="Extract specific pages from your PDF documents easily. Select page ranges or individual pages to create a new PDF. Fast, free, and secure online tool.">
+    <meta name="twitter:image" content="https://simpliconvert.com/images/extract-pdf-pages-og.jpg">
+
+    <link rel="canonical" href="https://simpliconvert.com/extract_pdf_pages/">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Extract PDF Pages",
+      "url": "https://simpliconvert.com/extract_pdf_pages/",
+      "description": "Select and save only the specific pages you need from a large PDF. Create a new document containing just the relevant information.",
+      "applicationCategory": "ProductivityApplication",
+      "operatingSystem": "Web Browser",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "SimpliConvert",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://simpliconvert.com/logo.png"
+        }
+      }
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [{
+        "@type": "Question",
+        "name": "How do I extract a single page from a PDF?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Simply upload your PDF, enter the specific page number in the 'Page Range' field (e.g., '5'), and click 'Extract Pages'. A new PDF containing only that page will be generated."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Can I extract multiple non-consecutive pages?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. You can use commas to separate individual pages or ranges. For example, entering '1, 3, 5-10' will extract pages 1, 3, and every page from 5 to 10 into a single new document."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Is my data safe when using this tool?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Absolutely. Our tool processes your PDF directly in your web browser. Your files are never uploaded to our servers, ensuring 100% privacy and security for your sensitive documents."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Is there a limit to the file size I can upload?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The tool is limited only by your browser's memory. Most standard PDFs (up to 100MB) work perfectly. For extremely large files, ensure you have enough RAM available on your device."
+        }
+      }]
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [{
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://simpliconvert.com/"
+      },{
+        "@type": "ListItem",
+        "position": 2,
+        "name": "PDF Tools",
+        "item": "https://simpliconvert.com/pdf_tools/"
+      },{
+        "@type": "ListItem",
+        "position": 3,
+        "name": "Extract PDF Pages",
+        "item": "https://simpliconvert.com/extract_pdf_pages/"
+      }]
+    }
+    </script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/pdf-lib/dist/pdf-lib.min.js"></script>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" media="print" onload="this.media='all'" />
+    <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" /></noscript>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #da3f0b;
+            --primary-hover: #b53409;
+            --primary-light: #fff5f2;
+            --bg: #f8fafc;
+            --text-dark: #0f172a;
+            --success: #16a34a;
+            --danger: #dc2626;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text-dark);
+        }
+
+        .hero-card {
+            background: white;
+            border: 1px solid #f1f5f9;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background-color: var(--primary);
+        }
+
+        .tooltip-container { position: relative; display: inline-block; }
+        .tooltip-text {
+            visibility: hidden; width: 220px; background-color: #1e293b; color: #fff;
+            text-align: center; border-radius: 8px; padding: 10px; position: absolute;
+            z-index: 50; bottom: 125%; left: 50%; margin-left: -110px; opacity: 0;
+            transition: opacity 0.2s; font-size: 0.75rem; font-weight: 400;
+            pointer-events: none; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+        .tooltip-container:hover .tooltip-text { visibility: visible; opacity: 1; }
+        .tooltip-text::after {
+            content: ""; position: absolute; top: 100%; left: 50%; margin-left: -5px;
+            border-width: 5px; border-style: solid; border-color: #1e293b transparent transparent transparent;
+        }
+
+        .animate-fade { animation: fadeIn 0.3s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+        .tool-card {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .tool-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+        }
+
+        .prose a {
+            color: #da3f0b;
+            text-decoration: none; 
+        }
+        .prose a:hover {
+            text-decoration: underline; 
+        }
+
+        .drop-zone {
+            border: 2px dashed #e2e8f0;
+            transition: all 0.3s ease;
+        }
+        .drop-zone.active {
+            border-color: var(--primary);
+            background-color: var(--primary-light);
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 min-h-screen flex flex-col">
+    <div id="navbar" style="min-height: 70px;"></div>
+
+    <section class="hero-white text-black py-2 md:py-10">
+        <div class="container mx-auto px-4">
+            <nav class="flex mb-6 text-sm font-medium justify-center" aria-label="Breadcrumb">
+                <ol class="flex items-center space-x-2">
+                    <li><a href="https://simpliconvert.com/" class="text-slate-500 hover:text-[#da3f0b]">Home</a></li>
+                    <li class="flex items-center space-x-2">
+                        <i class="fas fa-chevron-right text-[10px] text-slate-400"></i>
+                        <a href="https://simpliconvert.com/pdf_tools/" class="text-slate-500 hover:text-[#da3f0b]">PDF Tools</a>
+                    </li>
+                    <li class="flex items-center space-x-2">
+                        <i class="fas fa-chevron-right text-[10px] text-slate-400"></i>
+                        <span class="text-slate-800">Extract PDF Pages</span>
+                    </li>
+                </ol>
+            </nav>
+            <div class="text-center">
+                <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-2">Extract PDF Pages Online</h1>
+                <p class="text-lg md:text-xl max-w-3xl mx-auto mb-2 text-slate-600">
+                    Select and save only the specific pages you need from any PDF document. Create a new file containing just the relevant information instantly.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <div id="calculator-app" class="w-full max-w-6xl mx-auto p-4 sm:p-6">
+        <div class="bg-white rounded-[2rem] shadow-2xl overflow-hidden border border-slate-100">
+            <header class="bg-slate-50/50 border-b border-slate-100 p-6 md:p-8 flex flex-col md:flex-row justify-between items-center gap-6">
+                <div class="text-center md:text-left">
+                  <h2 class="text-2xl font-black text-slate-800 tracking-tight flex items-center justify-center md:justify-start gap-3">
+                    <span class="bg-[#da3f0b] text-white p-2 rounded-xl text-lg shadow-lg shadow-[#da3f0b30]">
+                      <i class="fas fa-file-pdf"></i>
+                    </span>
+                    PDF Page Extractor
+                  </h2>
+                </div>
+                
+                <div class="relative group min-w-[180px]">
+                  <div class="flex items-center gap-2 text-xs font-bold text-slate-500 uppercase tracking-widest">
+                    <i class="fas fa-shield-alt text-[#da3f0b]"></i>
+                    <span>100% Local Processing</span>
+                  </div>
+                </div>
+            </header>
+    
+            <main class="flex flex-col lg:flex-row">
+                <div class="lg:w-[50%] p-6 md:p-10 lg:p-12 border-r border-slate-100">
+                    <div class="space-y-6">
+                        
+                        <div class="bg-slate-50 p-6 rounded-2xl border border-slate-100">
+                            <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-6"><i class="fas fa-upload mr-2"></i>Upload Document</h3>
+                            
+                            <div id="drop-zone" class="drop-zone rounded-2xl p-8 text-center cursor-pointer hover:bg-white transition-all">
+                                <input type="file" id="pdf-upload" class="hidden" accept=".pdf">
+                                <div class="flex flex-col items-center">
+                                    <div class="w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-sm mb-4">
+                                        <i class="fas fa-cloud-upload-alt text-2xl text-[#da3f0b]"></i>
+                                    </div>
+                                    <p class="text-sm font-bold text-slate-700 mb-1">Click to upload or drag and drop</p>
+                                    <p class="text-xs text-slate-400">PDF files only (Max 100MB recommended)</p>
+                                </div>
+                            </div>
+                        </div>
+    
+                        <div class="bg-[#da3f0b08] p-6 rounded-2xl border border-[#da3f0b15]">
+                           <h3 class="text-xs font-black text-[#da3f0b] uppercase tracking-widest mb-6"><i class="fas fa-list-ol mr-2"></i>Selection Criteria</h3>
+                           
+                           <div class="mb-5">
+                                <div class="flex items-center text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">
+                                    <label for="page-range">Page Range</label>
+                                    <span class="tooltip-container ml-2">
+                                        <i class="fas fa-info-circle text-slate-300 hover:text-[#da3f0b] cursor-help text-xs transition-colors"></i>
+                                        <span class="tooltip-text">Example: '1, 3, 5-10' to extract pages 1, 3, and 5 through 10.</span>
+                                    </span>
+                                </div>
+                                <div class="relative rounded-xl shadow-sm">
+                                    <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                        <i class="fas fa-hashtag text-slate-400"></i>
+                                    </div>
+                                    <input type="text" id="page-range" class="block w-full rounded-xl border-slate-200 border py-3 pl-10 pr-4 focus:ring-4 focus:ring-[#da3f0b20] focus:border-[#da3f0b] sm:text-sm font-semibold text-slate-800 transition-all bg-white" placeholder="e.g. 1, 3, 5-10">
+                                </div>
+                                <p class="text-[10px] text-slate-400 mt-2 font-medium">Use commas for separate pages and hyphens for ranges.</p>
+                           </div>
+                        </div>
+
+                        <button id="extract-btn" class="w-full bg-[#da3f0b] hover:bg-[#b53409] text-white font-bold py-4 px-6 rounded-xl shadow-lg shadow-[#da3f0b30] transition-all flex items-center justify-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed">
+                            <i class="fas fa-scissors"></i>
+                            Extract & Download PDF
+                        </button>
+                    </div>
+                </div>
+    
+                <div class="lg:w-[50%] bg-slate-50/50 p-6 md:p-10 lg:p-12 flex flex-col justify-center">
+                   <div class="space-y-6">
+                     
+                     <div class="hero-card p-8 flex flex-col items-center text-center">
+                         <p class="text-xs font-black text-[#da3f0b] uppercase tracking-[0.2em] mb-4">File Status</p>
+                         <div id="file-info" class="hidden animate-fade">
+                            <div class="flex items-center justify-center mb-4">
+                                <i class="fas fa-file-pdf text-6xl text-[#da3f0b]"></i>
+                            </div>
+                            <h4 id="display-filename" class="text-lg font-black text-slate-800 truncate max-w-[250px] mb-1">document.pdf</h4>
+                            <p id="display-filesize" class="text-sm text-slate-400 font-medium">0.00 MB</p>
+                         </div>
+                         <div id="no-file" class="flex flex-col items-center">
+                            <i class="fas fa-file-import text-5xl text-slate-200 mb-4"></i>
+                            <p class="text-sm text-slate-400 font-medium">No file selected yet</p>
+                         </div>
+                     </div>
+    
+                     <div class="grid grid-cols-2 gap-4">
+                         <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex flex-col items-center text-center">
+                            <div class="text-[10px] font-black text-slate-400 uppercase tracking-widest flex items-center justify-center mb-1">Total Pages</div>
+                            <p id="display-total-pages" class="text-xl font-extrabold text-slate-900">-</p>
+                            <p class="text-[10px] text-slate-400 font-medium mt-1 uppercase tracking-tight">In Original</p>
+                         </div>
+                         <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex flex-col items-center text-center">
+                            <div class="text-[10px] font-black text-slate-400 uppercase tracking-widest flex items-center justify-center mb-1">Selected</div>
+                            <p id="display-selected-count" class="text-xl font-extrabold text-slate-900">0</p>
+                            <p class="text-[10px] text-slate-400 font-medium mt-1 uppercase tracking-tight">To Extract</p>
+                         </div>
+                     </div>
+    
+                     <div id="status-box" class="bg-white rounded-xl p-6 border border-slate-100 shadow-sm mt-4 hidden animate-fade">
+                         <div class="flex items-center gap-4">
+                            <div id="status-icon" class="w-10 h-10 rounded-full bg-green-50 text-green-600 flex items-center justify-center shrink-0">
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <div>
+                                <p id="status-text" class="text-sm font-bold text-slate-700">Ready to process</p>
+                                <p id="status-subtext" class="text-[10px] text-slate-400">Your file is loaded and range is valid.</p>
+                            </div>
+                         </div>
+                     </div>
+    
+                   </div>
+                </div>
+            </main>
+    
+            <footer class="bg-slate-50 border-t border-slate-100 p-6 md:p-8">
+               <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+                   <div class="text-center md:text-left">
+                       <h4 class="text-sm font-bold text-slate-700 mb-1">Share this tool</h4>
+                       <p class="text-xs text-slate-400">Help others manage PDFs faster.</p>
+                   </div>
+                   
+                   <div class="flex flex-wrap justify-center gap-3">
+                       <a href="#" onclick="shareSocial('facebook')" class="w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center text-white transition-transform hover:-translate-y-1 hover:shadow-lg bg-[#1877F2]"><i class="fab fa-facebook-f"></i></a>
+                       <a href="#" onclick="shareSocial('twitter')" class="w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center text-white transition-transform hover:-translate-y-1 hover:shadow-lg bg-[#1DA1F2]"><i class="fab fa-twitter"></i></a>
+                       <a href="#" onclick="shareSocial('linkedin')" class="w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center text-white transition-transform hover:-translate-y-1 hover:shadow-lg bg-[#0A66C2]"><i class="fab fa-linkedin-in"></i></a>
+                       <a href="#" onclick="shareSocial('whatsapp')" class="w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center text-white transition-transform hover:-translate-y-1 hover:shadow-lg bg-[#25D366]"><i class="fab fa-whatsapp"></i></a>
+                       <a href="#" onclick="shareSocial('reddit')" class="w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center text-white transition-transform hover:-translate-y-1 hover:shadow-lg bg-[#FF4500]"><i class="fab fa-reddit-alien"></i></a>
+                       <a href="#" onclick="shareSocial('telegram')" class="w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center text-white transition-transform hover:-translate-y-1 hover:shadow-lg bg-[#0088cc]"><i class="fab fa-telegram-plane"></i></a>
+                   </div>
+    
+                   <div class="relative">
+                       <button onclick="handleBookmark()" class="flex items-center gap-2 bg-white border border-slate-200 hover:border-[#da3f0b] hover:text-[#da3f0b] text-slate-600 px-4 py-2 rounded-lg text-sm font-bold transition-all shadow-sm active:scale-95">
+                          <i class="fas fa-bookmark"></i> Bookmark
+                       </button>
+                       <div id="bookmark-toast" class="hidden absolute bottom-full mb-3 left-1/2 -translate-x-1/2 bg-slate-800 text-white text-xs py-2 px-4 rounded-lg shadow-lg whitespace-nowrap animate-fade">
+                           Press <span class="font-bold text-[#da3f0b]">Ctrl + D</span> to bookmark
+                       </div>
+                   </div>
+               </div>
+            </footer>
+        </div>
+    </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const dropZone = document.getElementById('drop-zone');
+        const fileInput = document.getElementById('pdf-upload');
+        const rangeInput = document.getElementById('page-range');
+        const extractBtn = document.getElementById('extract-btn');
+        
+        const displayFileName = document.getElementById('display-filename');
+        const displayFileSize = document.getElementById('display-filesize');
+        const displayTotalPages = document.getElementById('display-total-pages');
+        const displaySelectedCount = document.getElementById('display-selected-count');
+        
+        const fileInfo = document.getElementById('file-info');
+        const noFile = document.getElementById('no-file');
+        const statusBox = document.getElementById('status-box');
+        const statusText = document.getElementById('status-text');
+        const statusSubtext = document.getElementById('status-subtext');
+
+        let currentFile = null;
+        let pdfDoc = null;
+
+        // Trigger file input
+        dropZone.addEventListener('click', () => fileInput.click());
+
+        // Drag and drop
+        dropZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropZone.classList.add('active');
+        });
+
+        dropZone.addEventListener('dragleave', () => {
+            dropZone.classList.remove('active');
+        });
+
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZone.classList.remove('active');
+            const files = e.dataTransfer.files;
+            if (files.length) handleFile(files[0]);
+        });
+
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files.length) handleFile(e.target.files[0]);
+        });
+
+        async function handleFile(file) {
+            if (file.type !== 'application/pdf') {
+                alert('Please upload a valid PDF file.');
+                return;
+            }
+
+            currentFile = file;
+            displayFileName.textContent = file.name;
+            displayFileSize.textContent = (file.size / (1024 * 1024)).toFixed(2) + ' MB';
+            
+            fileInfo.classList.remove('hidden');
+            noFile.classList.add('hidden');
+            statusBox.classList.remove('hidden');
+
+            try {
+                const arrayBuffer = await file.arrayBuffer();
+                pdfDoc = await PDFLib.PDFDocument.load(arrayBuffer);
+                displayTotalPages.textContent = pdfDoc.getPageCount();
+                updateSelectionCount();
+            } catch (err) {
+                console.error(err);
+                alert('Error loading PDF. It might be encrypted or corrupted.');
+            }
+        }
+
+        rangeInput.addEventListener('input', updateSelectionCount);
+
+        function parseRange(text, max) {
+            const pages = new Set();
+            const parts = text.split(',');
+            
+            parts.forEach(part => {
+                const range = part.trim().split('-');
+                if (range.length === 1) {
+                    const p = parseInt(range[0]);
+                    if (!isNaN(p) && p > 0 && p <= max) pages.add(p - 1);
+                } else if (range.length === 2) {
+                    const start = parseInt(range[0]);
+                    const end = parseInt(range[1]);
+                    if (!isNaN(start) && !isNaN(end) && start > 0 && end <= max) {
+                        for (let i = Math.min(start, end); i <= Math.max(start, end); i++) {
+                            pages.add(i - 1);
+                        }
+                    }
+                }
+            });
+            return Array.from(pages).sort((a, b) => a - b);
+        }
+
+        function updateSelectionCount() {
+            if (!pdfDoc) return;
+            const max = pdfDoc.getPageCount();
+            const selected = parseRange(rangeInput.value, max);
+            displaySelectedCount.textContent = selected.length;
+            
+            if (selected.length > 0) {
+                statusText.textContent = "Ready to extract";
+                statusSubtext.textContent = `${selected.length} pages selected for the new document.`;
+                extractBtn.disabled = false;
+            } else {
+                statusText.textContent = "Invalid range";
+                statusSubtext.textContent = "Please enter valid page numbers.";
+                extractBtn.disabled = true;
+            }
+        }
+
+        extractBtn.addEventListener('click', async () => {
+            if (!pdfDoc || !currentFile) return;
+
+            extractBtn.disabled = true;
+            extractBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+
+            try {
+                const max = pdfDoc.getPageCount();
+                const selectedIndices = parseRange(rangeInput.value, max);
+                
+                const newPdf = await PDFLib.PDFDocument.create();
+                const copiedPages = await newPdf.copyPages(pdfDoc, selectedIndices);
+                copiedPages.forEach(page => newPdf.addPage(page));
+                
+                const pdfBytes = await newPdf.save();
+                const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+                const url = URL.createObjectURL(blob);
+                
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `extracted_${currentFile.name}`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+
+                statusText.textContent = "Success!";
+                statusSubtext.textContent = "Your extracted PDF has been downloaded.";
+            } catch (err) {
+                console.error(err);
+                alert('An error occurred during extraction.');
+            } finally {
+                extractBtn.disabled = false;
+                extractBtn.innerHTML = '<i class="fas fa-scissors"></i> Extract & Download PDF';
+            }
+        });
+
+        window.shareSocial = function(platform) {
+             const url = encodeURIComponent(window.location.href);
+             const title = encodeURIComponent("Extract specific pages from any PDF instantly with this free tool!");
+             let shareUrl = '';
+             switch(platform) {
+                case 'facebook': shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${url}`; break;
+                case 'twitter': shareUrl = `https://twitter.com/intent/tweet?url=${url}&text=${title}`; break;
+                case 'linkedin': shareUrl = `https://www.linkedin.com/shareArticle?mini=true&url=${url}`; break;
+                case 'whatsapp': shareUrl = `https://api.whatsapp.com/send?text=${title}%20${url}`; break;
+                case 'reddit': shareUrl = `https://www.reddit.com/submit?url=${url}&title=${title}`; break;
+                case 'telegram': shareUrl = `https://t.me/share/url?url=${url}&text=${title}`; break;
+             }
+             if(shareUrl) window.open(shareUrl, '_blank');
+        };
+
+        window.handleBookmark = function() {
+            const toast = document.getElementById('bookmark-toast');
+            toast.classList.remove('hidden');
+            setTimeout(() => toast.classList.add('hidden'), 3000);
+        };
+    });
+    </script>
+
+    <section class="bg-white py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="prose prose-lg max-w-none prose-h2:text-gray-800 prose-p:text-gray-700">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">How to Extract PDF Pages Online</h2>
+                <p class="mb-6 leading-relaxed">
+                    Managing large documents can be a hassle, especially when you only need a small portion of the information. Our <strong>Extract PDF Pages</strong> tool allows you to isolate specific content without needing expensive software. Whether you are looking to <em>download single page pdf</em> files or create a custom document from multiple sections, our interface makes it simple.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Key Features of Our PDF Page Extractor</h2>
+                <p class="mb-6 leading-relaxed">
+                    This utility is built for speed and privacy. Unlike other online converters, your file is processed entirely within your browser. This means your sensitive data never leaves your computer. Before extracting, you might want to use our <a href="https://simpliconvert.com/pdf_page_counter/">PDF Page Counter</a> to identify the exact page numbers you need.
+                </p>
+                <ul class="list-disc pl-6 mb-6 space-y-2 text-gray-700">
+                    <li><strong>Flexible Selection:</strong> Extract individual pages, ranges, or a mix of both.</li>
+                    <li><strong>Privacy First:</strong> No server uploads; everything stays on your device.</li>
+                    <li><strong>Instant Results:</strong> Download your new PDF in seconds.</li>
+                    <li><strong>Free to Use:</strong> No subscriptions or hidden limits.</li>
+                </ul>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Why Use a PDF Split Tool?</h2>
+                <p class="mb-6 leading-relaxed">
+                    There are many scenarios where you might need to <strong>split pdf pages</strong>. Students often need to submit only one chapter of a textbook, while professionals may need to send a single invoice from a large monthly report. By using this tool, you reduce file sizes and ensure that your recipients only see the relevant information.
+                </p>
+                <p class="mb-6 leading-relaxed">
+                    If you find that your document is still too large after extraction, you can use our <a href="https://simpliconvert.com/split_pdf_by_pages/">Split PDF by Pages</a> tool for more automated bulk splitting. Conversely, if you need to clean up a document by deleting unwanted sections, our <a href="https://simpliconvert.com/remove_pdf_pages/">Remove PDF Pages</a> utility is the perfect companion.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Understanding Range Syntax</h2>
+                <p class="mb-6 leading-relaxed">
+                    To get the most out of this tool, it is helpful to understand how to input your selection. Our <em>pdf page extractor</em> supports standard range notation:
+                </p>
+                <ul class="list-disc pl-6 mb-6 space-y-2 text-gray-700">
+                    <li><strong>Single Pages:</strong> Enter "1, 4, 9" to get just those three pages.</li>
+                    <li><strong>Consecutive Ranges:</strong> Enter "5-12" to get everything from page 5 to 12.</li>
+                    <li><strong>Mixed Selection:</strong> Enter "1, 3, 10-15" to combine both methods.</li>
+                </ul>
+                <p class="mb-6 leading-relaxed">
+                    This flexibility ensures you can build exactly the document you need without any manual reordering or complex editing.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-center text-gray-900 mb-8">Extract PDF Pages – Frequently Asked Questions</h2>
+            <div class="space-y-4">
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>How do I extract a single page from a PDF?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">Simply upload your PDF, enter the specific page number in the 'Page Range' field (e.g., '5'), and click 'Extract Pages'. A new PDF containing only that page will be generated.</p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>Can I extract multiple non-consecutive pages?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">Yes. You can use commas to separate individual pages or ranges. For example, entering '1, 3, 5-10' will extract pages 1, 3, and every page from 5 to 10 into a single new document.</p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>Is my data safe when using this tool?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">Absolutely. Our tool processes your PDF directly in your web browser. Your files are never uploaded to our servers, ensuring 100% privacy and security for your sensitive documents.</p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>Is there a limit to the file size I can upload?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">The tool is limited only by your browser's memory. Most standard PDFs (up to 100MB) work perfectly. For extremely large files, ensure you have enough RAM available on your device.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 pb-16">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-slate-200 pt-16">
+            <h2 class="text-2xl font-bold text-center text-slate-800 mb-10">Popular Tools on SimpliConvert</h2>
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+                <a href="/password_generator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-slate-50 text-slate-700 flex items-center justify-center shrink-0 group-hover:bg-slate-800 group-hover:text-white transition-colors">
+                        <i class="fas fa-key text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Password Gen</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Create secure, random passwords.</p>
+                    </div>
+                </a>
+
+                <a href="/image_resizer/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center shrink-0 group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-image text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Image Resizer</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Resize images without quality loss.</p>
+                    </div>
+                </a>
+
+                <a href="/split_pdf/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-red-50 text-red-600 flex items-center justify-center shrink-0 group-hover:bg-red-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-cut text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Split PDF</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Extract pages from PDF documents.</p>
+                    </div>
+                </a>
+
+                <a href="/qr_code_generator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-slate-50 text-slate-800 flex items-center justify-center shrink-0 group-hover:bg-slate-900 group-hover:text-white transition-colors">
+                        <i class="fas fa-qrcode text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">QR Creator</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Generate custom QR codes instantly.</p>
+                    </div>
+                </a>
+
+                <a href="/to_do_list/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-green-50 text-green-600 flex items-center justify-center shrink-0 group-hover:bg-green-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-check-square text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">To-Do List</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Manage tasks and stay organized.</p>
+                    </div>
+                </a>
+
+                <a href="/merge_pdf_online/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-red-50 text-red-600 flex items-center justify-center shrink-0 group-hover:bg-red-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-object-group text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Merge PDF</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Combine multiple PDFs into one.</p>
+                    </div>
+                </a>
+
+                <a href="/compress_pdf/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-orange-50 text-orange-600 flex items-center justify-center shrink-0 group-hover:bg-orange-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-compress-arrows-alt text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Compress PDF</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Reduce PDF file size online.</p>
+                    </div>
+                </a>
+
+                <a href="/jpg_to_pdf/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-purple-50 text-purple-600 flex items-center justify-center shrink-0 group-hover:bg-purple-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-file-pdf text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">JPG to PDF</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Convert images to PDF documents.</p>
+                    </div>
+                </a>
+
+                <a href="/roblox_devex_calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-gray-50 text-gray-800 flex items-center justify-center shrink-0 group-hover:bg-gray-900 group-hover:text-white transition-colors">
+                        <i class="fas fa-gamepad text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">DevEx Calc</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Calculate Roblox Robux to USD.</p>
+                    </div>
+                </a>
+
+                <a href="/meta_tag_generator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0 group-hover:bg-indigo-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-search text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Meta Tag Gen</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Optimize SEO with custom tags.</p>
+                    </div>
+                </a>
+
+                <a href="/freelance_hourly_rate_calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0 group-hover:bg-emerald-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-calculator text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Rate Calc</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Calculate freelance hourly rates.</p>
+                    </div>
+                </a>
+
+                <a href="/youtube_thumbnail_downloader/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-red-50 text-red-600 flex items-center justify-center shrink-0 group-hover:bg-red-600 group-hover:text-white transition-colors">
+                        <i class="fab fa-youtube text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Thumb Grabber</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Download YouTube video covers.</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <div id="footer"></div>
+
+    <script>
+    async function loadComponent(url, elementId, callback) {
+        try {
+            const response = await fetch(url);
+            if (!response.ok) throw new Error('Status: ' + response.status);
+            const text = await response.text();
+            const element = document.getElementById(elementId);
+            if (element) {
+                element.innerHTML = text;
+                if (callback) callback();
+            }
+        } catch (error) {
+            console.error('Error loading component:', error);
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        loadComponent('/components/navbar.html', 'navbar');
+        loadComponent('/components/footer.html', 'footer', () => {
+            const yearSpan = document.getElementById('current-year');
+            if(yearSpan) yearSpan.textContent = new Date().getFullYear();
+        });
+        
+        const faqToggles = document.querySelectorAll('[data-faq-toggle]');
+        faqToggles.forEach(button => {
+            button.addEventListener('click', () => {
+                const answer = button.nextElementSibling;
+                const icon = button.querySelector('.faq-icon');
+                const isOpening = !answer.style.maxHeight;
+
+                faqToggles.forEach(other => {
+                    if (other !== button) {
+                        other.nextElementSibling.style.maxHeight = null;
+                        other.querySelector('.faq-icon').classList.remove('rotate-90');
+                        other.querySelector('.faq-icon').classList.add('-rotate-90');
+                    }
+                });
+
+                if (isOpening) {
+                    answer.style.maxHeight = answer.scrollHeight + "px";
+                    icon.classList.remove('-rotate-90');
+                    icon.classList.add('rotate-90');
+                } else {
+                    answer.style.maxHeight = null;
+                    icon.classList.remove('rotate-90');
+                    icon.classList.add('-rotate-90');
+                }
+            });
+        });
+    });
+    </script>
+</body>
+</html>
