@@ -262,476 +262,262 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
+   
     <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        primary: '#da3f0b',
-                    },
-                    fontFamily: {
-                        mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', '"Liberation Mono"', '"Courier New"', 'monospace'],
-                    }
-                }
-            }
-        }
-    </script>
-    <style>
-        body {
-            font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-        }
-        /* Custom scrollbars for a cleaner look */
-        #editor, #preview-wrapper {
-            scrollbar-width: thin;
-            scrollbar-color: #d1d5db #f3f4f6;
-        }
-        #editor::-webkit-scrollbar, #preview-wrapper::-webkit-scrollbar {
-            width: 8px;
-        }
-        #editor::-webkit-scrollbar-track, #preview-wrapper::-webkit-scrollbar-track {
-            background: #f3f4f6;
-            border-radius: 4px;
-        }
-        #editor::-webkit-scrollbar-thumb, #preview-wrapper::-webkit-scrollbar-thumb {
-            background-color: #d1d5db;
-            border-radius: 4px;
-            border: 2px solid #f3f4f6;
-        }
-        /* Style for the prose content in preview */
-        .prose {
-             max-width: none;
-        }
-        .prose pre {
-            background-color: #f3f4f6 !important;
-            color: #1f2937 !important;
-        }
-        .prose code {
-          font-size: 0.9em;
-        }
-        .prose code::before, .prose code::after {
-          content: "" !important;
-        }
-        .prose .mermaid {
-            display: flex;
-            justify-content: center;
-            background-color: white !important;
-            padding: 1rem 0;
-        }
-        .active-tab {
-            border-bottom-color: #da3f0b !important;
-            color: #da3f0b !important;
-            font-weight: 600;
-        }
-        .toolbar-btn {
-            color: #4b5563;
-        }
-    </style>
-</head>
-<body class="bg-slate-100 text-slate-800 antialiased overflow-hidden">
-    
-    <div class="h-screen flex flex-col p-2 sm:p-4 gap-4">
-        
-        <!-- Toolbar -->
-        <header id="toolbar" class="bg-white rounded-xl shadow-md p-2 flex items-center flex-wrap gap-1">
-            <button id="import-btn" title="Import File" class="toolbar-btn p-2 rounded-lg hover:bg-slate-100 transition-colors"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" x2="12" y1="3" y2="15"></line></svg></button>
-             <div class="h-6 w-px bg-slate-200 mx-1"></div>
-            <button data-action="bold" title="Bold (Ctrl+B)" class="toolbar-btn p-2 rounded-lg hover:bg-slate-100 transition-colors"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5"><path d="M14 12a4 4 0 0 0 0-8H6v8"></path><path d="M15 20a4 4 0 0 0 0-8H6v8Z"></path></svg></button>
-            <button data-action="italic" title="Italic (Ctrl+I)" class="toolbar-btn p-2 rounded-lg hover:bg-slate-100 transition-colors"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5"><line x1="19" x2="10" y1="4" y2="4"></line><line x1="14" x2="5" y1="20" y2="20"></line><line x1="15" x2="9" y1="4" y2="20"></line></svg></button>
-            <div class="h-6 w-px bg-slate-200 mx-1"></div>
-            <button data-action="h1" title="Heading 1" class="toolbar-btn p-2 rounded-lg hover:bg-slate-100 transition-colors text-sm font-bold">H1</button>
-            <button data-action="h2" title="Heading 2" class="toolbar-btn p-2 rounded-lg hover:bg-slate-100 transition-colors text-sm font-bold">H2</button>
-            <button data-action="h3" title="Heading 3" class="toolbar-btn p-2 rounded-lg hover:bg-slate-100 transition-colors text-sm font-bold">H3</button>
-            <div class="h-6 w-px bg-slate-200 mx-1"></div>
-            <button data-action="link" title="Link" class="toolbar-btn p-2 rounded-lg hover:bg-slate-100 transition-colors"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.72"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.72-1.72"></path></svg></button>
-            <button data-action="blockquote" title="Blockquote" class="toolbar-btn p-2 rounded-lg hover:bg-slate-100 transition-colors"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5"><path d="M17 6H3"></path><path d="M21 12H8"></path><path d="M21 18H8"></path><path d="M3 12v6"></path></svg></button>
-            <button data-action="code" title="Code Block" class="toolbar-btn p-2 rounded-lg hover:bg-slate-100 transition-colors"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg></button>
-        </header>
-
-        <!-- Mobile View Tabs -->
-        <div id="tabs" class="sm:hidden flex bg-white rounded-t-lg shadow-md -mb-4 z-10">
-            <button id="editor-tab" class="flex-1 p-3 text-center border-b-2 border-transparent text-slate-500 active-tab">Editor</button>
-            <button id="preview-tab" class="flex-1 p-3 text-center border-b-2 border-transparent text-slate-500">Preview</button>
-        </div>
-
-        <!-- Editor and Preview Panes -->
-        <main class="flex-grow grid grid-cols-1 sm:grid-cols-2 gap-4 overflow-hidden rounded-xl bg-white shadow-md">
-            <textarea id="editor" class="w-full h-full p-6 bg-transparent resize-none focus:outline-none font-mono text-base leading-relaxed tracking-wide" placeholder="Start typing your markdown here..."></textarea>
-            <div id="preview-wrapper" class="w-full h-full overflow-y-auto bg-white hidden sm:block">
-                 <article id="preview" class="prose p-6"></article>
-            </div>
-        </main>
-        
-        <!-- Footer with Status and Export -->
-        <footer class="bg-white rounded-xl shadow-md p-2 flex justify-between items-center flex-wrap gap-2">
-            <p id="status" class="text-sm text-slate-500 px-2">Ready</p>
-            <div class="flex items-center gap-2">
-                <button id="export-md" class="text-sm font-semibold text-primary hover:bg-primary/10 px-4 py-2 rounded-lg transition-colors">Export .md</button>
-                <button id="export-html" class="text-sm font-semibold text-primary hover:bg-primary/10 px-4 py-2 rounded-lg transition-colors">Export .html</button>
-                <button id="export-pdf" class="text-sm font-semibold bg-primary text-white hover:bg-opacity-90 px-4 py-2 rounded-lg transition-colors">Export .pdf</button>
-            </div>
-        </footer>
-    </div>
-    
-    <!-- Drag and Drop Overlay -->
-    <div id="drop-zone" class="hidden fixed inset-0 bg-primary/20 backdrop-blur-sm z-50 flex items-center justify-center p-8 transition-opacity duration-300">
-        <div class="border-4 border-dashed border-white rounded-2xl w-full h-full flex flex-col items-center justify-center">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-24 w-24 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M12 15l-3-3m0 0l3-3m-3 3h12" />
-            </svg>
-            <p class="text-2xl font-bold text-white mt-4">Drop a Markdown file here</p>
-        </div>
-    </div>
-    
-    <!-- Hidden file input -->
-    <input type="file" id="file-input" class="hidden" accept=".md,.markdown,text/markdown,text/plain">
-
-    <script type="module">
         const dom = {
             editor: document.getElementById('editor'),
             preview: document.getElementById('preview'),
             previewWrapper: document.getElementById('preview-wrapper'),
+            lineNumbers: document.getElementById('line-numbers'),
             toolbar: document.getElementById('toolbar'),
             status: document.getElementById('status'),
-            exportMdBtn: document.getElementById('export-md'),
-            exportHtmlBtn: document.getElementById('export-html'),
-            exportPdfBtn: document.getElementById('export-pdf'),
-            dropZone: document.getElementById('drop-zone'),
-            importBtn: document.getElementById('import-btn'),
+            wordCount: document.getElementById('word-count'),
+            editorPane: document.getElementById('editor-pane'),
+            previewPane: document.getElementById('preview-pane'),
+            resizer: document.getElementById('resizer'),
+            tabs: { editor: document.getElementById('editor-tab'), preview: document.getElementById('preview-tab') },
+            btns: {
+                import: document.getElementById('import-btn'),
+                exportMd: document.getElementById('export-md'),
+                exportHtml: document.getElementById('export-html'),
+                exportPdf: document.getElementById('export-pdf'),
+                sync: document.getElementById('sync-toggle'),
+                theme: document.getElementById('theme-toggle'),
+                copy: document.getElementById('copy-btn'),
+                paste: document.getElementById('paste-btn')
+            },
             fileInput: document.getElementById('file-input'),
-            tabs: {
-                container: document.getElementById('tabs'),
-                editor: document.getElementById('editor-tab'),
-                preview: document.getElementById('preview-tab'),
-            }
+            dropZone: document.getElementById('drop-zone')
         };
 
-        const STORAGE_KEY = 'markdown-editor-content';
-        let debounceTimer;
-        let syncScrollTimeout;
+        const STORAGE_KEY = 'markdown-content';
+        let isSyncEnabled = true;
+        let isResizing = false;
 
         // --- CORE FUNCTIONS ---
 
+        const updateLineNumbers = () => {
+            const lines = dom.editor.value.split('\n').length;
+            dom.lineNumbers.innerHTML = Array(lines).fill(0).map((_, i) => `<div>${i + 1}</div>`).join('');
+        };
+
         const updatePreview = async () => {
-            const markdownText = dom.editor.value;
-            const dirtyHtml = marked.parse(markdownText);
-            const cleanHtml = DOMPurify.sanitize(dirtyHtml, {
-                ADD_TAGS: ['svg', 'path', 'g', 'rect', 'line', 'text', 'circle', 'polygon', 'ellipse', 'style', 'defs', 'marker', 'use', 'foreignObject'],
-                ADD_ATTR: ['d', 'transform', 'style', 'viewBox', 'x', 'y', 'width', 'height', 'fill', 'stroke', 'stroke-width', 'stroke-linecap', 'stroke-linejoin', 'marker-end', 'font-size', 'text-anchor', 'class', 'id', 'cy', 'cx', 'r', 'rx', 'ry', 'points']
-            });
-            dom.preview.innerHTML = cleanHtml;
-            
-            // Handle Mermaid diagrams
-            const mermaidDiagrams = dom.preview.querySelectorAll('code.language-mermaid');
-            if (mermaidDiagrams.length > 0) {
-                 // Ensure Mermaid SVGs are rendered before proceeding
-                const renderPromises = Array.from(mermaidDiagrams).map((block, index) => {
-                    return new Promise(async (resolve) => {
-                        const preElement = block.parentElement;
-                        const mermaidContainer = document.createElement('div');
-                        mermaidContainer.classList.add('mermaid');
-                        mermaidContainer.setAttribute('id', `mermaid-${Date.now()}-${index}`);
-                        mermaidContainer.textContent = block.textContent;
-                        preElement.parentNode.replaceChild(mermaidContainer, preElement);
-                        
-                        try {
-                            await mermaid.run({ nodes: [mermaidContainer] });
-                        } catch(e) {
-                             mermaidContainer.innerHTML = `<pre>Mermaid Error: ${e.message}</pre>`;
-                             console.error("Mermaid rendering error:", e);
-                        }
-                        resolve();
-                    });
-                });
-                await Promise.all(renderPromises);
-            }
-
-            // Re-apply syntax highlighting after content update, excluding mermaid blocks
-            dom.preview.querySelectorAll('pre code:not(.language-mermaid)').forEach((block) => {
-                hljs.highlightElement(block);
-            });
-        };
-
-        const updateStatus = (message = '', duration = 0) => {
             const text = dom.editor.value;
-            const wordCount = text.trim() === '' ? 0 : text.trim().split(/\s+/).length;
-            const charCount = text.length;
-            let baseStatus = `${wordCount} words | ${charCount} characters`;
             
-            dom.status.textContent = message ? `${baseStatus} | ${message}` : baseStatus;
-            
-            if (duration > 0) {
-                 setTimeout(() => {
-                    dom.status.textContent = baseStatus;
-                }, duration);
+            // Stats
+            const words = text.trim() ? text.trim().split(/\s+/).length : 0;
+            dom.wordCount.textContent = `${words} words | ${text.length} chars`;
+
+            // Render
+            const cleanHtml = DOMPurify.sanitize(marked.parse(text));
+            dom.preview.innerHTML = cleanHtml;
+
+            // Highlight Code
+            dom.preview.querySelectorAll('pre code:not(.language-mermaid)').forEach(block => hljs.highlightElement(block));
+
+            // Render Mermaid
+            const mermaidBlocks = dom.preview.querySelectorAll('.language-mermaid');
+            if (mermaidBlocks.length > 0) {
+                 mermaid.run({ nodes: mermaidBlocks });
             }
+
+            updateLineNumbers();
+            localStorage.setItem(STORAGE_KEY, text);
+            dom.status.textContent = 'Saved';
+            setTimeout(() => dom.status.textContent = 'Ready', 1000);
         };
 
-        const debouncedSave = () => {
-            clearTimeout(debounceTimer);
-            updateStatus('Saving...');
-            debounceTimer = setTimeout(() => {
-                localStorage.setItem(STORAGE_KEY, dom.editor.value);
-                updateStatus('Saved!', 1500);
-            }, 500);
+        // --- SCROLL SYNC ---
+        const syncScroll = (source, target) => {
+            if (!isSyncEnabled) return;
+            const percentage = source.scrollTop / (source.scrollHeight - source.clientHeight);
+            target.scrollTop = percentage * (target.scrollHeight - target.clientHeight);
         };
-        
-        // --- TEXT FORMATTING ---
+
+        // --- EVENT LISTENERS ---
+
+        const setupEvents = () => {
+            // Typing
+            dom.editor.addEventListener('input', updatePreview);
+            
+            // Scroll Sync
+            dom.editor.addEventListener('scroll', () => {
+                dom.lineNumbers.scrollTop = dom.editor.scrollTop;
+                syncScroll(dom.editor, dom.previewWrapper);
+            });
+            dom.previewWrapper.addEventListener('scroll', () => {
+                if(dom.previewPane.matches(':hover')) syncScroll(dom.previewWrapper, dom.editor);
+            });
+
+            // Toggle Sync
+            dom.btns.sync.addEventListener('click', () => {
+                isSyncEnabled = !isSyncEnabled;
+                dom.btns.sync.classList.toggle('bg-primary/10');
+                dom.btns.sync.classList.toggle('text-primary');
+                dom.btns.sync.classList.toggle('text-gray-400');
+                dom.status.textContent = isSyncEnabled ? 'Sync: ON' : 'Sync: OFF';
+            });
+
+            // Theme Toggle
+            dom.btns.theme.addEventListener('click', () => {
+                document.documentElement.classList.toggle('dark');
+                const isDark = document.documentElement.classList.contains('dark');
+                localStorage.setItem('theme', isDark ? 'dark' : 'light');
+                // Re-init mermaid for theme change
+                mermaid.initialize({ startOnLoad: false, theme: isDark ? 'dark' : 'default' });
+                updatePreview();
+            });
+
+            // Toolbar Formatting
+            dom.toolbar.addEventListener('click', (e) => {
+                const btn = e.target.closest('button[data-action]');
+                if (btn) formatText(btn.dataset.action);
+            });
+
+            // Copy/Paste
+            dom.btns.copy.addEventListener('click', () => {
+                navigator.clipboard.writeText(dom.preview.innerHTML).then(() => {
+                    const originalText = dom.btns.copy.innerHTML;
+                    dom.btns.copy.innerHTML = 'Copied!';
+                    setTimeout(() => dom.btns.copy.innerHTML = originalText, 1500);
+                });
+            });
+
+            dom.btns.paste.addEventListener('click', async () => {
+                try {
+                    const text = await navigator.clipboard.readText();
+                    const start = dom.editor.selectionStart;
+                    const end = dom.editor.selectionEnd;
+                    dom.editor.setRangeText(text, start, end, 'end');
+                    updatePreview();
+                } catch (err) {
+                    alert('Clipboard permission denied or empty');
+                }
+            });
+
+            // Exports
+            dom.btns.exportMd.addEventListener('click', () => downloadFile('document.md', dom.editor.value, 'text/markdown'));
+            dom.btns.exportHtml.addEventListener('click', () => {
+                const html = `<!DOCTYPE html><html><head><title>Export</title></head><body style="max-width:800px;margin:20px auto;font-family:sans-serif">${dom.preview.innerHTML}</body></html>`;
+                downloadFile('document.html', html, 'text/html');
+            });
+            dom.btns.exportPdf.addEventListener('click', generatePDF);
+
+            // Import
+            dom.btns.import.addEventListener('click', () => dom.fileInput.click());
+            dom.fileInput.addEventListener('change', (e) => {
+                if(e.target.files[0]) loadFile(e.target.files[0]);
+            });
+
+            // Resizer
+            dom.resizer.addEventListener('mousedown', (e) => {
+                isResizing = true;
+                dom.resizer.classList.add('resizing');
+                document.body.style.cursor = 'col-resize';
+                e.preventDefault();
+            });
+            document.addEventListener('mousemove', (e) => {
+                if (!isResizing) return;
+                const containerWidth = dom.editorPane.parentElement.clientWidth;
+                const newFlex = (e.clientX / containerWidth) * 100;
+                if (newFlex > 15 && newFlex < 85) {
+                    dom.editorPane.style.width = `${newFlex}%`;
+                    dom.previewPane.style.width = `${100 - newFlex}%`;
+                }
+            });
+            document.addEventListener('mouseup', () => {
+                isResizing = false;
+                dom.resizer.classList.remove('resizing');
+                document.body.style.cursor = 'default';
+            });
+
+            // Mobile Tabs
+            dom.tabs.editor.addEventListener('click', () => switchTab('editor'));
+            dom.tabs.preview.addEventListener('click', () => switchTab('preview'));
+        };
+
+        // --- HELPER FUNCTIONS ---
+
+        const switchTab = (tab) => {
+            if (tab === 'editor') {
+                dom.editorPane.classList.remove('hidden');
+                dom.previewPane.classList.add('hidden');
+                dom.tabs.editor.classList.add('active-tab');
+                dom.tabs.preview.classList.remove('active-tab');
+            } else {
+                dom.editorPane.classList.add('hidden');
+                dom.previewPane.classList.remove('hidden');
+                dom.previewPane.classList.add('flex'); // Restore flex
+                dom.tabs.preview.classList.add('active-tab');
+                dom.tabs.editor.classList.remove('active-tab');
+            }
+        };
 
         const formatText = (action) => {
             const start = dom.editor.selectionStart;
             const end = dom.editor.selectionEnd;
-            const text = dom.editor.value;
-            const selectedText = text.substring(start, end);
-            let replacement = '';
-            let cursorOffset = 0;
-
-            switch (action) {
-                case 'bold':
-                    replacement = `**${selectedText || 'bold text'}**`;
-                    cursorOffset = 2;
-                    break;
-                case 'italic':
-                    replacement = `*${selectedText || 'italic text'}*`;
-                    cursorOffset = 1;
-                    break;
-                case 'h1': case 'h2': case 'h3':
-                    const prefix = { h1: '#', h2: '##', h3: '###' }[action];
-                    replacement = `${prefix} ${selectedText || 'Heading'}`;
-                    break;
-                case 'link':
-                    replacement = `[${selectedText || 'link text'}](url)`;
-                    cursorOffset = replacement.length - 4;
-                    break;
-                case 'blockquote':
-                    replacement = `> ${selectedText || 'quote'}`;
-                    break;
-                case 'code':
-                     replacement = "\n```\n" + (selectedText || "code") + "\n```\n";
-                    break;
-            }
+            const sel = dom.editor.value.substring(start, end);
+            let insert = '';
             
-            dom.editor.setRangeText(replacement, start, end, 'end');
-            if (selectedText.length === 0 && cursorOffset > 0) {
-                 if (action === 'link') {
-                    dom.editor.setSelectionRange(start + replacement.length - 4, start + replacement.length -1);
-                 } else {
-                    dom.editor.setSelectionRange(start + cursorOffset, start + replacement.length - cursorOffset);
-                 }
+            switch(action) {
+                case 'bold': insert = `**${sel || 'bold'}**`; break;
+                case 'italic': insert = `*${sel || 'italic'}*`; break;
+                case 'strikethrough': insert = `~~${sel || 'strike'}~~`; break;
+                case 'h1': insert = `# ${sel || 'Header'}`; break;
+                case 'h2': insert = `## ${sel || 'Header'}`; break;
+                case 'code': insert = `\`\`\`\n${sel || 'code'}\n\`\`\``; break;
+                case 'link': insert = `[${sel || 'text'}](url)`; break;
+                case 'image': insert = `![alt](url)`; break;
+                case 'table': insert = `\n| Col 1 | Col 2 |\n|---|---|\n| Val 1 | Val 2 |`; break;
             }
-
+            dom.editor.setRangeText(insert, start, end, 'select');
             dom.editor.focus();
             updatePreview();
-            debouncedSave();
         };
 
-        // --- FILE HANDLING ---
-        
-        const downloadFile = (filename, content, mimeType) => {
-            const blob = new Blob([content], { type: mimeType });
-            const url = URL.createObjectURL(blob);
+        const downloadFile = (name, content, type) => {
             const a = document.createElement('a');
-            a.href = url;
-            a.download = filename;
-            document.body.appendChild(a);
+            a.href = URL.createObjectURL(new Blob([content], {type}));
+            a.download = name;
             a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
         };
 
         const loadFile = (file) => {
-            if (file && (file.type === 'text/markdown' || file.name.endsWith('.md') || file.type === 'text/plain' || file.name.endsWith('.txt'))) {
-                const reader = new FileReader();
-                reader.onload = (event) => {
-                    dom.editor.value = event.target.result;
-                    updatePreview();
-                    debouncedSave();
-                    updateStatus();
-                };
-                reader.readAsText(file);
-            } else {
-                alert('Please select a valid Markdown (.md) or Text (.txt) file.');
-            }
-        };
-        
-        // --- EVENT HANDLERS ---
-        
-        const setupEventListeners = () => {
-            dom.editor.addEventListener('input', () => {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                dom.editor.value = e.target.result;
                 updatePreview();
-                debouncedSave();
-            });
-
-            dom.toolbar.addEventListener('click', (e) => {
-                const button = e.target.closest('button');
-                if (button && button.dataset.action) {
-                    formatText(button.dataset.action);
-                }
-            });
-
-            dom.editor.addEventListener('keydown', (e) => {
-                 if (e.ctrlKey || e.metaKey) {
-                    if (e.key === 'b') {
-                        e.preventDefault();
-                        formatText('bold');
-                    } else if (e.key === 'i') {
-                        e.preventDefault();
-                        formatText('italic');
-                    }
-                }
-            });
-
-            dom.exportMdBtn.addEventListener('click', () => {
-                downloadFile('document.md', dom.editor.value, 'text/markdown;charset=utf-8');
-            });
-            
-            dom.exportHtmlBtn.addEventListener('click', () => {
-                 const css = `<style>body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji";line-height:1.6;color:#24292f;padding:30px;max-width:800px;margin:0 auto;}h1,h2,h3{font-weight:600}code{font-family:monospace;background-color:rgba(27,31,35,.05);padding:.2em .4em;margin:0;font-size:85%;border-radius:6px}pre{font-family:monospace;padding:16px;overflow:auto;font-size:85%;line-height:1.45;background-color:#f6f8fa;border-radius:6px}blockquote{padding:0 1em;color:#6a737d;border-left:.25em solid #dfe2e5} .mermaid{display:flex;justify-content:center;background-color:white;}</style>`;
-                 const htmlContent = `<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><title>Document</title>${css}</head><body>${dom.preview.innerHTML}</body></html>`;
-                downloadFile('document.html', htmlContent, 'text/html;charset=utf-8');
-            });
-
-            dom.exportPdfBtn.addEventListener('click', async () => {
-                updateStatus('Generating PDF...', 0);
-                const { jsPDF } = window.jspdf;
-                const pdf = new jsPDF('p', 'pt', 'a4');
-                const pdfWidth = pdf.internal.pageSize.getWidth();
-                const pdfHeight = pdf.internal.pageSize.getHeight();
-                const margin = 20;
-                
-                // Use html2canvas to render the preview pane
-                const canvas = await html2canvas(dom.preview, {
-                    scale: 2, // Higher scale for better quality
-                    useCORS: true,
-                    onclone: (clonedDoc) => {
-                        // Ensure mermaid SVGs are fully rendered in the clone
-                        Array.from(clonedDoc.querySelectorAll('.mermaid svg')).forEach(svg => {
-                           svg.style.width = svg.getBoundingClientRect().width + 'px';
-                           svg.style.height = svg.getBoundingClientRect().height + 'px';
-                        });
-                    }
-                });
-
-                const imgData = canvas.toDataURL('image/png');
-                const imgWidth = canvas.width;
-                const imgHeight = canvas.height;
-                
-                const ratio = imgWidth / (pdfWidth - margin * 2);
-                const scaledHeight = imgHeight / ratio;
-                let position = 0;
-                let heightLeft = scaledHeight;
-
-                pdf.addImage(imgData, 'PNG', margin, position, pdfWidth - margin * 2, scaledHeight);
-                heightLeft -= pdfHeight;
-
-                while (heightLeft > 0) {
-                    position = position - pdfHeight + margin; // Add top margin to new pages
-                    pdf.addPage();
-                    pdf.addImage(imgData, 'PNG', margin, position, pdfWidth - margin * 2, scaledHeight);
-                    heightLeft -= (pdfHeight - margin);
-                }
-
-                pdf.save('document.pdf');
-                updateStatus('PDF Exported!', 2000);
-            });
-
-
-            // Mobile Tabs
-            dom.tabs.container.addEventListener('click', (e) => {
-                if (e.target.id === 'editor-tab') {
-                    dom.tabs.editor.classList.add('active-tab');
-                    dom.tabs.preview.classList.remove('active-tab');
-                    dom.editor.classList.remove('hidden');
-                    dom.previewWrapper.classList.add('hidden', 'sm:block');
-                } else if (e.target.id === 'preview-tab') {
-                    dom.tabs.preview.classList.add('active-tab');
-                    dom.tabs.editor.classList.remove('active-tab');
-                    dom.editor.classList.add('hidden');
-                    dom.previewWrapper.classList.remove('hidden', 'sm:block');
-                }
-            });
-            
-            // File Import
-            dom.importBtn.addEventListener('click', () => dom.fileInput.click());
-            dom.fileInput.addEventListener('change', (e) => {
-                if (e.target.files.length > 0) {
-                    loadFile(e.target.files[0]);
-                }
-                e.target.value = null; // Allow re-uploading the same file
-            });
-
-            // Drag and Drop
-            window.addEventListener('dragover', (e) => {
-                e.preventDefault();
-                dom.dropZone.classList.remove('hidden');
-            });
-             window.addEventListener('dragleave', (e) => {
-                if(e.relatedTarget === null) {
-                    dom.dropZone.classList.add('hidden');
-                }
-            });
-            window.addEventListener('drop', (e) => {
-                e.preventDefault();
-                dom.dropZone.classList.add('hidden');
-                loadFile(e.dataTransfer.files[0]);
-            });
-
-            // Synchronized Scrolling
-            const syncScroll = (source, target) => {
-                clearTimeout(syncScrollTimeout);
-                const sourceScrollable = source.scrollHeight - source.clientHeight;
-                const targetScrollable = target.scrollHeight - target.clientHeight;
-                if (sourceScrollable <= 0) return;
-                
-                const ratio = source.scrollTop / sourceScrollable;
-                target.scrollTop = ratio * targetScrollable;
-                
-                syncScrollTimeout = setTimeout(() => { syncScrollTimeout = null; }, 50);
             };
-
-            dom.editor.addEventListener('scroll', () => {
-                if (!syncScrollTimeout) syncScroll(dom.editor, dom.previewWrapper);
-            });
-            dom.previewWrapper.addEventListener('scroll', () => {
-                if (!syncScrollTimeout) syncScroll(dom.previewWrapper, dom.editor);
-            });
+            reader.readAsText(file);
         };
 
-        // --- INITIALIZATION ---
+        const generatePDF = async () => {
+            dom.status.textContent = 'Generating PDF...';
+            const { jsPDF } = window.jspdf;
+            const pdf = new jsPDF('p', 'pt', 'a4');
+            const canvas = await html2canvas(dom.preview, { scale: 2 });
+            const imgData = canvas.toDataURL('image/png');
+            const imgWidth = 550;
+            const imgHeight = (canvas.height * imgWidth) / canvas.width;
+            pdf.addImage(imgData, 'PNG', 20, 20, imgWidth, imgHeight);
+            pdf.save('document.pdf');
+            dom.status.textContent = 'PDF Exported!';
+        };
+
+        // --- INIT ---
         const init = () => {
+            // Theme Check
+            if (localStorage.getItem('theme') === 'dark') document.documentElement.classList.add('dark');
+            
+            // Mermaid
             mermaid.initialize({ startOnLoad: false, theme: 'default' });
             
-            // Configure Marked.js
-            marked.setOptions({
-                gfm: true,
-                breaks: true,
-                highlight: (code, lang) => {
-                    if (lang === 'mermaid') {
-                        // Let our custom mermaid logic handle this
-                        return `<code class="language-mermaid">${code}</code>`;
-                    }
-                    const language = hljs.getLanguage(lang) ? lang : 'plaintext';
-                    try {
-                        return hljs.highlight(code, { language, ignoreIllegals: true }).value;
-                    } catch (e) {
-                        return hljs.highlightAuto(code).value;
-                    }
-                },
-            });
-
-            // Load from local storage
-            const savedContent = localStorage.getItem(STORAGE_KEY);
-            if (savedContent) {
-                dom.editor.value = savedContent;
-            } else {
-                dom.editor.value = `# Welcome to your Markdown Editor!\n\nThis is a real-time editor. Your work is **saved automatically**.\n\n- Use the toolbar or shortcuts like \`Ctrl+B\`\n- Drag & drop a \`.md\` file or use the import button\n- Render diagrams using Mermaid.js\n\n\`\`\`mermaid\ngraph TD\n    A[Start] --> B{Is it working?};\n    B -- Yes --> C[Great!];\n    B -- No --> D[Check console];\n    C --> E[Enjoy!];\n    D --> E;\n\`\`\``;
-            }
+            // Load Content
+            const saved = localStorage.getItem(STORAGE_KEY);
+            dom.editor.value = saved || "# Welcome to SimpliConvert Editor\n\nStart typing here...";
             
-            setupEventListeners();
+            setupEvents();
             updatePreview();
-            updateStatus();
-            dom.editor.focus();
         };
 
         init();
@@ -1391,6 +1177,7 @@
     
 </body>
 </html>
+
 
 
 
