@@ -146,52 +146,65 @@
     <div id="footer"></div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            
-            // 1. Fetch and inject the Navbar
-            fetch('/navbar.html')
-                .then(response => {
-                    if (!response.ok) throw new Error('Navbar fetch failed');
-                    return response.text();
-                })
-                .then(data => {
-                    document.getElementById('navbar').innerHTML = data;
-                    initializeMobileMenu(); // Re-bind mobile menu events after injecting HTML
-                })
-                .catch(error => console.error('Error loading navbar:', error));
-
-            // 2. Fetch and inject the Footer
-            fetch('/footer.html')
-                .then(response => {
-                    if (!response.ok) throw new Error('Footer fetch failed');
-                    return response.text();
-                })
-                .then(data => {
-                    document.getElementById('footer').innerHTML = data;
-                })
-                .catch(error => console.error('Error loading footer:', error));
-
-            // Function to handle mobile menu logic once the navbar is loaded
-            function initializeMobileMenu() {
-                const mobileMenuButton = document.getElementById('mobile-menu-button');
-                const mobileMenu = document.getElementById('mobile-menu');
-                
-                if (mobileMenuButton && mobileMenu) {
-                    const menuIconBars = document.getElementById('menu-icon-bars');
-                    const menuIconTimes = document.getElementById('menu-icon-times');
-                    
-                    mobileMenuButton.addEventListener('click', function() {
-                        mobileMenu.classList.toggle('open');
-                        
-                        if (menuIconBars && menuIconTimes) {
-                            menuIconBars.classList.toggle('hidden');
-                            menuIconTimes.classList.toggle('hidden');
-                        }
-                    });
-                }
+        function initializeHeaderScripts() {
+            // Header Scroll Effect
+            const header = document.getElementById('header');
+            if (header) {
+                window.addEventListener('scroll', () => {
+                    if (window.scrollY > 10) {
+                        header.classList.add('scrolled-effect');
+                    } else {
+                        header.classList.remove('scrolled-effect');
+                    }
+                });
             }
+
+            // Mobile Menu Toggle
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            const mobileMenuIconOpen = document.getElementById('mobile-menu-icon-open');
+            const mobileMenuIconClose = document.getElementById('mobile-menu-icon-close');
             
-            // 3. Smooth scrolling for anchor links
+            if (mobileMenuButton && mobileMenu && mobileMenuIconOpen && mobileMenuIconClose) {
+                mobileMenuButton.addEventListener('click', () => {
+                    mobileMenu.classList.toggle('open');
+                    mobileMenuIconOpen.classList.toggle('hidden');
+                    mobileMenuIconClose.classList.toggle('hidden');
+                });
+            }
+        }
+        
+        function initializeFooterScripts() {
+            const yearSpan = document.getElementById('current-year');
+            if(yearSpan) {
+                yearSpan.textContent = new Date().getFullYear();
+            }
+        }
+
+        async function loadComponent(url, elementId, callback) {
+            try {
+                const response = await fetch(url);
+                if (!response.ok) {
+                    throw new Error(`Failed to load component from ${url}. Status: ${response.status}`);
+                }
+                const text = await response.text();
+                const element = document.getElementById(elementId);
+                if (element) {
+                    element.innerHTML = text;
+                    if (callback) {
+                        callback();
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading component:', error);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            loadComponent('/components/navbar.html', 'navbar', initializeHeaderScripts);
+            loadComponent('/components/footer.html', 'footer', initializeFooterScripts);
+
+            // Smooth scrolling for anchor links
             document.querySelectorAll('a[href^="#"]').forEach(anchor => {
                 anchor.addEventListener('click', function (e) {
                     const targetId = this.getAttribute('href');
