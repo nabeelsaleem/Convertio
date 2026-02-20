@@ -218,6 +218,24 @@
         
         // Mobile search
         setupSearch('mobile-search-input', 'mobile-search-results', null);
+        // ────────────────────────────────────────────
+    // ADD YOUR AD SCRIPT HERE (dynamic injection)
+    // This loads reliably even if navbar injection had issues
+    // ────────────────────────────────────────────
+    const adScript = document.createElement('script');
+    adScript.src = 'https://cdn.apitiny.net/scripts/v2.0/main.js';
+    adScript.setAttribute('data-site-id', '6997817017105b330f4c8302');
+    adScript.setAttribute('data-test-mode', 'false');
+    adScript.async = true;
+    
+    // Append to head (preferred for ad loaders) or body
+    document.head.appendChild(adScript);
+    
+    // Optional: Log for debugging (remove later)
+    console.log('Ad script injection attempted');
+
+
+        
     }
 
     // Run initialization
