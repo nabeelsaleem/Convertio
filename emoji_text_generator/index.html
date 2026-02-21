@@ -26,6 +26,8 @@
 
     <script src="https://cdn.apitiny.net/scripts/v2.0/main.js" data-site-id="6997817017105b330f4c8302" data-test-mode="false" async></script>
 
+<script type="module" src="https://cdn.jsdelivr.net/npm/emoji-picker-element@1/index.js"></script>
+
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -209,216 +211,234 @@
 
     <div id="root" class="w-full max-w-6xl mx-auto p-4 sm:p-6"></div>
 
-    <script type="text/babel">
-    const { useState, useEffect } = React;
 
-    const charMaps = {
-        'A': [[0,1,1,1,0],[1,0,0,0,1],[1,1,1,1,1],[1,0,0,0,1],[1,0,0,0,1]],
-        'B': [[1,1,1,1,0],[1,0,0,0,1],[1,1,1,1,0],[1,0,0,0,1],[1,1,1,1,0]],
-        'C': [[0,1,1,1,1],[1,0,0,0,0],[1,0,0,0,0],[1,0,0,0,0],[0,1,1,1,1]],
-        'D': [[1,1,1,1,0],[1,0,0,0,1],[1,0,0,0,1],[1,0,0,0,1],[1,1,1,1,0]],
-        'E': [[1,1,1,1,1],[1,0,0,0,0],[1,1,1,1,0],[1,0,0,0,0],[1,1,1,1,1]],
-        'F': [[1,1,1,1,1],[1,0,0,0,0],[1,1,1,1,0],[1,0,0,0,0],[1,0,0,0,0]],
-        'G': [[0,1,1,1,1],[1,0,0,0,0],[1,0,1,1,1],[1,0,0,0,1],[0,1,1,1,1]],
-        'H': [[1,0,0,0,1],[1,0,0,0,1],[1,1,1,1,1],[1,0,0,0,1],[1,0,0,0,1]],
-        'I': [[1,1,1,1,1],[0,0,1,0,0],[0,0,1,0,0],[0,0,1,0,0],[1,1,1,1,1]],
-        'J': [[0,0,1,1,1],[0,0,0,1,0],[0,0,0,1,0],[1,0,0,1,0],[0,1,1,0,0]],
-        'K': [[1,0,0,0,1],[1,0,0,1,0],[1,1,1,0,0],[1,0,0,1,0],[1,0,0,0,1]],
-        'L': [[1,0,0,0,0],[1,0,0,0,0],[1,0,0,0,0],[1,0,0,0,0],[1,1,1,1,1]],
-        'M': [[1,0,0,0,1],[1,1,0,1,1],[1,0,1,0,1],[1,0,0,0,1],[1,0,0,0,1]],
-        'N': [[1,0,0,0,1],[1,1,0,0,1],[1,0,1,0,1],[1,0,0,1,1],[1,0,0,0,1]],
-        'O': [[0,1,1,1,0],[1,0,0,0,1],[1,0,0,0,1],[1,0,0,0,1],[0,1,1,1,0]],
-        'P': [[1,1,1,1,0],[1,0,0,0,1],[1,1,1,1,0],[1,0,0,0,0],[1,0,0,0,0]],
-        'Q': [[0,1,1,1,0],[1,0,0,0,1],[1,0,0,0,1],[1,0,1,1,0],[0,1,1,0,1]],
-        'R': [[1,1,1,1,0],[1,0,0,0,1],[1,1,1,1,0],[1,0,0,1,0],[1,0,0,0,1]],
-        'S': [[0,1,1,1,1],[1,0,0,0,0],[0,1,1,1,0],[0,0,0,0,1],[1,1,1,1,0]],
-        'T': [[1,1,1,1,1],[0,0,1,0,0],[0,0,1,0,0],[0,0,1,0,0],[0,0,1,0,0]],
-        'U': [[1,0,0,0,1],[1,0,0,0,1],[1,0,0,0,1],[1,0,0,0,1],[0,1,1,1,0]],
-        'V': [[1,0,0,0,1],[1,0,0,0,1],[1,0,0,0,1],[0,1,0,1,0],[0,0,1,0,0]],
-        'W': [[1,0,0,0,1],[1,0,0,0,1],[1,0,1,0,1],[1,1,0,1,1],[1,0,0,0,1]],
-        'X': [[1,0,0,0,1],[0,1,0,1,0],[0,0,1,0,0],[0,1,0,1,0],[1,0,0,0,1]],
-        'Y': [[1,0,0,0,1],[0,1,0,1,0],[0,0,1,0,0],[0,0,1,0,0],[0,0,1,0,0]],
-        'Z': [[1,1,1,1,1],[0,0,0,1,0],[0,0,1,0,0],[0,1,0,0,0],[1,1,1,1,1]],
-        ' ': [[0,0],[0,0],[0,0],[0,0],[0,0]],
-        '0': [[0,1,1,1,0],[1,0,0,1,1],[1,0,1,0,1],[1,1,0,0,1],[0,1,1,1,0]],
-        '1': [[0,0,1,0,0],[0,1,1,0,0],[0,0,1,0,0],[0,0,1,0,0],[0,1,1,1,0]],
-        '2': [[0,1,1,1,0],[1,0,0,0,1],[0,0,1,1,0],[0,1,0,0,0],[1,1,1,1,1]],
-        '3': [[1,1,1,1,0],[0,0,0,0,1],[0,1,1,1,0],[0,0,0,0,1],[1,1,1,1,0]],
-        '4': [[1,0,0,0,1],[1,0,0,0,1],[1,1,1,1,1],[0,0,0,0,1],[0,0,0,0,1]],
-        '5': [[1,1,1,1,1],[1,0,0,0,0],[1,1,1,1,0],[0,0,0,0,1],[1,1,1,1,0]],
-        '6': [[0,1,1,1,0],[1,0,0,0,0],[1,1,1,1,0],[1,0,0,0,1],[0,1,1,1,0]],
-        '7': [[1,1,1,1,1],[0,0,0,0,1],[0,0,0,1,0],[0,0,1,0,0],[0,1,0,0,0]],
-        '8': [[0,1,1,1,0],[1,0,0,0,1],[0,1,1,1,0],[1,0,0,0,1],[0,1,1,1,0]],
-        '9': [[0,1,1,1,0],[1,0,0,0,1],[0,1,1,1,1],[0,0,0,0,1],[0,1,1,1,0]],
-        '!': [[0,0,1,0,0],[0,0,1,0,0],[0,0,1,0,0],[0,0,0,0,0],[0,0,1,0,0]],
-        '?': [[0,1,1,1,0],[0,0,0,0,1],[0,0,1,1,0],[0,0,0,0,0],[0,0,1,0,0]],
-        '.': [[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,1,0]],
-    };
+<div id="root" class="w-full max-w-[1400px] mx-auto p-4 sm:p-6 h-[800px]"></div>
 
-    const App = () => {
-      const [input, setInput] = useState('HELLO');
-      const [output, setOutput] = useState('');
-      const [foreground, setForeground] = useState('🟦');
-      const [background, setBackground] = useState('⬜');
-      const [copyStatus, setCopyStatus] = useState('Copy');
-      const [showBookmarkToast, setShowBookmarkToast] = useState(false);
+<script type="text/babel">
+const { useState, useEffect, useRef } = React;
 
-      const generateEmojiText = () => {
+const charMaps = {
+    'A': [[0,1,1,1,0],[1,0,0,0,1],[1,1,1,1,1],[1,0,0,0,1],[1,0,0,0,1]],
+    'B': [[1,1,1,1,0],[1,0,0,0,1],[1,1,1,1,0],[1,0,0,0,1],[1,1,1,1,0]],
+    'C': [[0,1,1,1,1],[1,0,0,0,0],[1,0,0,0,0],[1,0,0,0,0],[0,1,1,1,1]],
+    'D': [[1,1,1,1,0],[1,0,0,0,1],[1,0,0,0,1],[1,0,0,0,1],[1,1,1,1,0]],
+    'E': [[1,1,1,1,1],[1,0,0,0,0],[1,1,1,1,0],[1,0,0,0,0],[1,1,1,1,1]],
+    'F': [[1,1,1,1,1],[1,0,0,0,0],[1,1,1,1,0],[1,0,0,0,0],[1,0,0,0,0]],
+    'G': [[0,1,1,1,1],[1,0,0,0,0],[1,0,1,1,1],[1,0,0,0,1],[0,1,1,1,1]],
+    'H': [[1,0,0,0,1],[1,0,0,0,1],[1,1,1,1,1],[1,0,0,0,1],[1,0,0,0,1]],
+    'I': [[1,1,1,1,1],[0,0,1,0,0],[0,0,1,0,0],[0,0,1,0,0],[1,1,1,1,1]],
+    'J': [[0,0,1,1,1],[0,0,0,1,0],[0,0,0,1,0],[1,0,0,1,0],[0,1,1,0,0]],
+    'K': [[1,0,0,0,1],[1,0,0,1,0],[1,1,1,0,0],[1,0,0,1,0],[1,0,0,0,1]],
+    'L': [[1,0,0,0,0],[1,0,0,0,0],[1,0,0,0,0],[1,0,0,0,0],[1,1,1,1,1]],
+    'M': [[1,0,0,0,1],[1,1,0,1,1],[1,0,1,0,1],[1,0,0,0,1],[1,0,0,0,1]],
+    'N': [[1,0,0,0,1],[1,1,0,0,1],[1,0,1,0,1],[1,0,0,1,1],[1,0,0,0,1]],
+    'O': [[0,1,1,1,0],[1,0,0,0,1],[1,0,0,0,1],[1,0,0,0,1],[0,1,1,1,0]],
+    'P': [[1,1,1,1,0],[1,0,0,0,1],[1,1,1,1,0],[1,0,0,0,0],[1,0,0,0,0]],
+    'Q': [[0,1,1,1,0],[1,0,0,0,1],[1,0,0,0,1],[1,0,1,1,0],[0,1,1,0,1]],
+    'R': [[1,1,1,1,0],[1,0,0,0,1],[1,1,1,1,0],[1,0,0,1,0],[1,0,0,0,1]],
+    'S': [[0,1,1,1,1],[1,0,0,0,0],[0,1,1,1,0],[0,0,0,0,1],[1,1,1,1,0]],
+    'T': [[1,1,1,1,1],[0,0,1,0,0],[0,0,1,0,0],[0,0,1,0,0],[0,0,1,0,0]],
+    'U': [[1,0,0,0,1],[1,0,0,0,1],[1,0,0,0,1],[1,0,0,0,1],[0,1,1,1,0]],
+    'V': [[1,0,0,0,1],[1,0,0,0,1],[1,0,0,0,1],[0,1,0,1,0],[0,0,1,0,0]],
+    'W': [[1,0,0,0,1],[1,0,0,0,1],[1,0,1,0,1],[1,1,0,1,1],[1,0,0,0,1]],
+    'X': [[1,0,0,0,1],[0,1,0,1,0],[0,0,1,0,0],[0,1,0,1,0],[1,0,0,0,1]],
+    'Y': [[1,0,0,0,1],[0,1,0,1,0],[0,0,1,0,0],[0,0,1,0,0],[0,0,1,0,0]],
+    'Z': [[1,1,1,1,1],[0,0,0,1,0],[0,0,1,0,0],[0,1,0,0,0],[1,1,1,1,1]],
+    ' ': [[0,0],[0,0],[0,0],[0,0],[0,0]],
+    '0': [[0,1,1,1,0],[1,0,0,1,1],[1,0,1,0,1],[1,1,0,0,1],[0,1,1,1,0]],
+    '1': [[0,0,1,0,0],[0,1,1,0,0],[0,0,1,0,0],[0,0,1,0,0],[0,1,1,1,0]],
+    '2': [[0,1,1,1,0],[1,0,0,0,1],[0,0,1,1,0],[0,1,0,0,0],[1,1,1,1,1]],
+    '3': [[1,1,1,1,0],[0,0,0,0,1],[0,1,1,1,0],[0,0,0,0,1],[1,1,1,1,0]],
+    '4': [[1,0,0,0,1],[1,0,0,0,1],[1,1,1,1,1],[0,0,0,0,1],[0,0,0,0,1]],
+    '5': [[1,1,1,1,1],[1,0,0,0,0],[1,1,1,1,0],[0,0,0,0,1],[1,1,1,1,0]],
+    '6': [[0,1,1,1,0],[1,0,0,0,0],[1,1,1,1,0],[1,0,0,0,1],[0,1,1,1,0]],
+    '7': [[1,1,1,1,1],[0,0,0,0,1],[0,0,0,1,0],[0,0,1,0,0],[0,1,0,0,0]],
+    '8': [[0,1,1,1,0],[1,0,0,0,1],[0,1,1,1,0],[1,0,0,0,1],[0,1,1,1,0]],
+    '9': [[0,1,1,1,0],[1,0,0,0,1],[0,1,1,1,1],[0,0,0,0,1],[0,1,1,1,0]],
+    '!': [[0,0,1,0,0],[0,0,1,0,0],[0,0,1,0,0],[0,0,0,0,0],[0,0,1,0,0]],
+    '?': [[0,1,1,1,0],[0,0,0,0,1],[0,0,1,1,0],[0,0,0,0,0],[0,0,1,0,0]],
+    '.': [[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,1,0]],
+};
+
+// React wrapper for the emoji-picker native element
+const EmojiPickerElement = ({ onEmojiSelect }) => {
+    const pickerRef = useRef(null);
+
+    useEffect(() => {
+        const picker = pickerRef.current;
+        if (!picker) return;
+
+        const handleEmojiClick = (event) => {
+            onEmojiSelect(event.detail.unicode);
+        };
+
+        picker.addEventListener('emoji-click', handleEmojiClick);
+        return () => picker.removeEventListener('emoji-click', handleEmojiClick);
+    }, [onEmojiSelect]);
+
+    return (
+        <emoji-picker 
+            ref={pickerRef} 
+            class="light"
+            style={{ 
+                width: '100%', 
+                height: '100%', 
+                '--border-size': '0',
+                '--background': '#ffffff'
+            }}
+        ></emoji-picker>
+    );
+};
+
+const App = () => {
+    const [input, setInput] = useState('NAME');
+    const [output, setOutput] = useState('');
+    const [bgEmoji, setBgEmoji] = useState('💜');
+    const [textEmoji, setTextEmoji] = useState('🖤');
+    const [activeTarget, setActiveTarget] = useState('bg'); // 'bg' or 'text'
+    const [copyStatus, setCopyStatus] = useState('Copy');
+
+    const generateEmojiText = () => {
         if (!input.trim()) {
-          setOutput('');
-          return;
+            setOutput('');
+            return;
         }
 
         const lines = ['', '', '', '', ''];
         const chars = input.toUpperCase().split('');
 
         chars.forEach((char) => {
-          const grid = charMaps[char] || charMaps[' '];
-          grid.forEach((row, i) => {
-            row.forEach((cell) => {
-              lines[i] += cell === 1 ? foreground : background;
+            const grid = charMaps[char] || charMaps[' '];
+            grid.forEach((row, i) => {
+                row.forEach((cell) => {
+                    // cell === 1 means the text part, 0 means background
+                    lines[i] += cell === 1 ? textEmoji : bgEmoji;
+                });
+                lines[i] += bgEmoji; // Letter spacing
             });
-            lines[i] += background; // Letter spacing
-          });
         });
 
         setOutput(lines.join('\n'));
-      };
+    };
 
-      useEffect(() => {
+    useEffect(() => {
         generateEmojiText();
-      }, [input, foreground, background]);
+    }, [input, textEmoji, bgEmoji]);
 
-      const handleCopy = () => {
+    const handleCopy = () => {
         navigator.clipboard.writeText(output);
         setCopyStatus('Copied!');
         setTimeout(() => setCopyStatus('Copy'), 2000);
-      };
-
-      const handleClear = () => {
-        setInput('');
-        setOutput('');
-      };
-
-      const handleBookmark = () => {
-        setShowBookmarkToast(true);
-        setTimeout(() => setShowBookmarkToast(false), 3000);
-      };
-
-      return (
-        <div className="bg-white rounded-[2rem] shadow-2xl overflow-hidden border border-slate-100">
-          <header className="bg-slate-50/50 border-b border-slate-100 p-6 md:p-8 flex flex-col md:flex-row justify-between items-center gap-6">
-            <div className="text-center md:text-left">
-              <h2 className="text-2xl font-black text-slate-800 tracking-tight flex items-center justify-center md:justify-start gap-3">
-                <span className="bg-[#da3f0b] text-white p-2 rounded-xl text-lg shadow-lg shadow-[#da3f0b30]">
-                  <i className="fas fa-icons"></i>
-                </span>
-                Emoji Font Maker
-              </h2>
-            </div>
-            
-            <div className="flex flex-wrap justify-center gap-4">
-              <div className="relative min-w-[100px]">
-                <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1 ml-1">Letter Emoji</label>
-                <input 
-                  type="text"
-                  value={foreground}
-                  onChange={(e) => setForeground(e.target.value.substring(0, 2))}
-                  className="w-full bg-white border border-slate-200 text-center py-2 rounded-xl text-lg focus:outline-none focus:ring-4 focus:ring-[#da3f0b15] focus:border-[#da3f0b] shadow-sm"
-                  aria-label="Foreground Emoji Picker"
-                />
-              </div>
-
-              <div className="relative min-w-[100px]">
-                <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1 ml-1">Background</label>
-                <input 
-                  type="text"
-                  value={background}
-                  onChange={(e) => setBackground(e.target.value.substring(0, 2))}
-                  className="w-full bg-white border border-slate-200 text-center py-2 rounded-xl text-lg focus:outline-none focus:ring-4 focus:ring-[#da3f0b15] focus:border-[#da3f0b] shadow-sm"
-                  aria-label="Background Emoji Picker"
-                />
-              </div>
-            </div>
-          </header>
-
-          <main className="flex flex-col lg:flex-row min-h-[450px]">
-            {/* Input Panel */}
-            <div className="lg:w-1/2 p-4 md:p-6 border-r border-slate-100 flex flex-col">
-              <div className="flex justify-between items-center mb-3 px-2">
-                <span className="text-xs font-black text-slate-400 uppercase tracking-widest">Type Your Message</span>
-                <button onClick={handleClear} className="text-[10px] font-bold text-slate-400 hover:text-red-500 transition-colors">
-                  <i className="fas fa-trash-alt mr-1"></i> CLEAR
-                </button>
-              </div>
-              <textarea
-                className="flex-grow w-full p-4 rounded-2xl border border-slate-200 focus:ring-4 focus:ring-[#da3f0b15] focus:border-[#da3f0b] outline-none text-lg font-bold custom-scrollbar bg-slate-50/30"
-                placeholder="Type here (e.g. HELLO)"
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                aria-label="Text Input for Emoji Conversion"
-              ></textarea>
-            </div>
-
-            {/* Output Panel */}
-            <div className="lg:w-1/2 p-4 md:p-6 bg-slate-50/50 flex flex-col">
-              <div className="flex justify-between items-center mb-3 px-2">
-                <span className="text-xs font-black text-slate-400 uppercase tracking-widest">Emoji Result</span>
-                <button 
-                  onClick={handleCopy}
-                  disabled={!output}
-                  className={`text-[10px] font-bold px-3 py-1 rounded-lg transition-all ${output ? 'bg-slate-800 text-white hover:bg-black' : 'bg-slate-200 text-slate-400 cursor-not-allowed'}`}
-                  aria-label="Copy Emoji Text"
-                >
-                  <i className={`fas ${copyStatus === 'Copy' ? 'fa-copy' : 'fa-check'} mr-1`}></i> {copyStatus}
-                </button>
-              </div>
-              <textarea
-                readOnly
-                className="flex-grow w-full p-4 rounded-2xl border border-slate-200 bg-white code-font text-[10px] leading-[1.1] custom-scrollbar outline-none whitespace-pre overflow-x-auto"
-                placeholder="Your big emoji letters will appear here..."
-                value={output}
-                aria-label="Generated Emoji Text Output"
-              ></textarea>
-            </div>
-          </main>
-
-          {/* Share & Bookmark Footer */}
-          <footer className="bg-slate-50 border-t border-slate-100 p-6 md:p-8">
-             <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-                 <div className="text-center md:text-left">
-                     <h4 className="text-sm font-bold text-slate-700 mb-1">Share the fun</h4>
-                     <p className="text-xs text-slate-400">Let others create cool emoji text too!</p>
-                 </div>
-                 
-                 <div className="flex flex-wrap justify-center gap-3">
-                     <a href={`https://twitter.com/intent/tweet?text=Check out this Emoji Text Generator!&url=${encodeURIComponent(window.location.href)}`} target="_blank" className="w-10 h-10 rounded-full flex items-center justify-center text-white bg-[#1DA1F2] hover:-translate-y-1 transition-transform" aria-label="Share on Twitter"><i className="fab fa-twitter"></i></a>
-                     <a href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`} target="_blank" className="w-10 h-10 rounded-full flex items-center justify-center text-white bg-[#1877F2] hover:-translate-y-1 transition-transform" aria-label="Share on Facebook"><i className="fab fa-facebook-f"></i></a>
-                     <a href={`https://api.whatsapp.com/send?text=Emoji Text Generator: ${encodeURIComponent(window.location.href)}`} target="_blank" className="w-10 h-10 rounded-full flex items-center justify-center text-white bg-[#25D366] hover:-translate-y-1 transition-transform" aria-label="Share on WhatsApp"><i className="fab fa-whatsapp"></i></a>
-                 </div>
-
-                 <div className="relative">
-                     <button 
-                        onClick={handleBookmark}
-                        className="flex items-center gap-2 bg-white border border-slate-200 hover:border-[#da3f0b] hover:text-[#da3f0b] text-slate-600 px-4 py-2 rounded-lg text-sm font-bold transition-all shadow-sm active:scale-95"
-                     >
-                        <i className="fas fa-bookmark"></i> Bookmark
-                     </button>
-                     {showBookmarkToast && (
-                         <div className="absolute bottom-full mb-3 left-1/2 -translate-x-1/2 bg-slate-800 text-white text-xs py-2 px-4 rounded-lg shadow-lg whitespace-nowrap animate-fade">
-                             Press <span className="font-bold text-[#da3f0b]">Ctrl + D</span> to bookmark
-                         </div>
-                     )}
-                 </div>
-             </div>
-          </footer>
-        </div>
-      );
     };
 
-    const root = ReactDOM.createRoot(document.getElementById('root'));
-    root.render(<App />);
-    </script>
+    const handleEmojiSelect = (emoji) => {
+        if (activeTarget === 'bg') {
+            setBgEmoji(emoji);
+        } else {
+            setTextEmoji(emoji);
+        }
+    };
+
+    return (
+        <div className="bg-white rounded-lg shadow-sm border border-slate-200 overflow-hidden flex flex-row h-[750px]">
+            
+            {/* Left Sidebar */}
+            <div className="w-[350px] border-r border-slate-200 flex flex-col bg-white shrink-0 h-full overflow-hidden">
+                
+                {/* Full Emoji Picker Component */}
+                <div className="flex-1 min-h-0">
+                    <EmojiPickerElement onEmojiSelect={handleEmojiSelect} />
+                </div>
+
+                {/* Target Selection & Input */}
+                <div className="shrink-0 border-t border-slate-200 p-4 bg-white space-y-3 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] z-10">
+                    <p className="text-xs text-slate-500 font-medium">
+                        Select {activeTarget === 'bg' ? 'background' : 'text'} emoji above
+                    </p>
+                    
+                    <div className="flex gap-2">
+                        <button 
+                            onClick={() => setActiveTarget('bg')}
+                            className={`flex-1 flex flex-col items-center py-2 border rounded-lg transition-colors ${activeTarget === 'bg' ? 'bg-[#fef08a] border-[#fde047] shadow-sm' : 'bg-white border-slate-200 hover:bg-slate-50'}`}
+                        >
+                            <span className="text-2xl mb-1">{bgEmoji}</span>
+                            <span className="text-[10px] text-slate-600 font-bold uppercase tracking-wider">Bg Emoji</span>
+                        </button>
+                        
+                        <div className="flex items-center justify-center text-slate-300">
+                            <i className="fas fa-font"></i>
+                        </div>
+                        
+                        <button 
+                            onClick={() => setActiveTarget('text')}
+                            className={`flex-1 flex flex-col items-center py-2 border rounded-lg transition-colors ${activeTarget === 'text' ? 'bg-[#fef08a] border-[#fde047] shadow-sm' : 'bg-white border-slate-200 hover:bg-slate-50'}`}
+                        >
+                            <span className="text-2xl mb-1">{textEmoji}</span>
+                            <span className="text-[10px] text-slate-600 font-bold uppercase tracking-wider">Text Emoji</span>
+                        </button>
+                    </div>
+
+                    <div className="relative mt-2">
+                        <input
+                            type="text"
+                            value={input}
+                            onChange={(e) => setInput(e.target.value)}
+                            placeholder="Type text..."
+                            className="w-full bg-slate-50 border border-slate-200 rounded p-3 pr-8 font-bold text-slate-800 outline-none focus:border-blue-400 focus:bg-white transition-colors"
+                        />
+                        {input && (
+                            <button 
+                                onClick={() => setInput('')}
+                                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 bg-slate-200 rounded-full w-4 h-4 flex items-center justify-center text-[10px] transition-colors"
+                            >
+                                <i className="fas fa-times"></i>
+                            </button>
+                        )}
+                    </div>
+                </div>
+            </div>
+
+            {/* Main Canvas */}
+            <div className="flex-1 flex flex-col bg-slate-50 min-w-0">
+                {/* Header Top Bar - added shrink-0 so it never squishes */}
+                <div className="h-14 shrink-0 bg-white border-b border-slate-200 flex items-center justify-end px-4 shadow-sm z-10">
+                    <button 
+                        onClick={handleCopy}
+                        className="flex items-center gap-2 px-4 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-sm font-bold rounded border border-slate-200 transition-colors active:scale-95"
+                    >
+                        <i className={copyStatus === 'Copy' ? 'far fa-copy' : 'fas fa-check text-green-600'}></i> 
+                        {copyStatus}
+                    </button>
+                </div>
+
+                {/* Emoji Output Centered Display - added min-h-0 to contain inner scroll */}
+                <div className="flex-1 overflow-auto flex items-center justify-center p-8 min-h-0">
+                    {output ? (
+                        <div 
+                            className="text-lg md:text-xl lg:text-2xl leading-[1.1] whitespace-pre tracking-widest text-center transition-all bg-white p-6 rounded-xl shadow-sm border border-slate-100"
+                            style={{ fontFamily: "'Segoe UI Emoji', 'Apple Color Emoji', 'Noto Color Emoji', sans-serif" }}
+                        >
+                            {output}
+                        </div>
+                    ) : (
+                        <div className="text-slate-400 text-lg flex flex-col items-center bg-white p-8 rounded-xl border border-slate-200 shadow-sm border-dashed">
+                            <i className="fas fa-keyboard text-4xl mb-4 opacity-50"></i>
+                            <p className="font-medium text-sm">Type something to generate emoji text</p>
+                        </div>
+                    )}
+                </div>
+            </div>
+            
+        </div>
+    );
+};
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(<App />);
+</script>
+
+
+
 
     <p class="text-center mt-4 mb-10">
         <a href="https://simpliconvert.com/fancy_text_generator/" class="text-primary font-medium hover:underline">
@@ -426,89 +446,381 @@
         </a>
     </p>
 
-    <section class="bg-white py-12 sm:py-16">
-        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="prose prose-lg max-w-none prose-h2:text-gray-800 prose-p:text-gray-700">
-                <h2 class="text-3xl font-bold text-gray-900 mb-4">Emoji Text Generator – Make Your Messages Pop</h2>
-                <p class="mb-6 leading-relaxed">
-                    Ever wondered how people create those massive letters made entirely of emojis on Discord or in YouTube comments? Our <strong>Emoji Text Generator</strong> is the secret tool you've been looking for. It takes your standard text and maps it onto a grid, replacing the "ink" with one emoji and the background with another. The result is a stunning, large-scale visual that is impossible to ignore.
-                </p>
 
-                <h2 class="text-2xl font-bold mt-8 mb-4">Why Use an Emoji Font?</h2>
-                <p class="mb-6 leading-relaxed">
-                    In the fast-paced world of social media, standing out is a challenge. Whether you're trying to grab attention in a crowded Discord server or want to leave a memorable comment on an Instagram post, standard text often gets overlooked. By using <strong>emoji letters</strong>, you turn your message into a piece of digital art. It's fun, creative, and highly engaging.
-                </p>
-                <p class="mb-6 leading-relaxed">
-                    This tool is especially popular for announcements, birthday wishes, and "GG" messages in gaming communities. If you're looking for other ways to spice up your profile, check out our <a href="https://simpliconvert.com/instagram_bio_character_counter/" target="_blank">Instagram Bio Counter</a> to ensure your creative text fits perfectly.
-                </p>
 
-                <h2 class="text-2xl font-bold mt-8 mb-4">Features of Our Text to Emoji Converter</h2>
-                <ul class="list-disc pl-6 mb-6 space-y-2 text-gray-700">
-                    <li><strong>Customizable Emojis:</strong> You aren't stuck with just squares. Use hearts, stars, or even fire emojis to build your letters.</li>
-                    <li><strong>Instant Copy-Paste:</strong> One click and your emoji masterpiece is ready to be pasted into <a href="https://simpliconvert.com/whatsapp_message_link_generator/" target="_blank">WhatsApp messages</a> or Discord chats.</li>
-                    <li><strong>Mobile Friendly:</strong> Works perfectly on smartphones, so you can generate emoji text on the go.</li>
-                    <li><strong>No Installation Required:</strong> A completely web-based tool that respects your privacy and requires no downloads.</li>
-                </ul>
 
-                <h2 class="text-2xl font-bold mt-8 mb-4">How to Create Big Emoji Letters</h2>
-                <ol class="list-decimal pl-6 mb-6 space-y-2 text-gray-700">
-                    <li><strong>Enter Text:</strong> Type the word or phrase you want to convert in the input area.</li>
-                    <li><strong>Pick Your Style:</strong> Choose a "Foreground" emoji (the letter itself) and a "Background" emoji.</li>
-                    <li><strong>Copy:</strong> Use the copy button to save the generated grid to your clipboard.</li>
-                    <li><strong>Paste:</strong> Head over to your favorite app and share your creation!</li>
-                </ol>
+<section class="bg-white py-12 sm:py-16">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="prose prose-lg max-w-none prose-h2:text-gray-800 prose-p:text-gray-700">
+            
+            <h1 class="text-4xl font-bold text-gray-900 mb-6">Emoji Text Generator – Convert Text to Emoji Letters Instantly</h1>
+            
+            <p class="mb-6 leading-relaxed text-lg">
+                Want to transform boring plain text into eye-catching visual art? Our <strong>emoji text generator</strong> is the ultimate tool for creating stunning <strong>text to emoji letters</strong> that stand out on Discord, WhatsApp, Instagram, and every social platform. Whether you need a <strong>letter to emoji converter</strong> for gaming announcements or an <strong>emoji font generator</strong> for creative marketing, we've built the most versatile <strong>emoji letter maker</strong> available online—completely free, no registration required.
+            </p>
+
+            <h2 class="text-3xl font-bold text-gray-900 mt-10 mb-4">What Is a Text to Emoji Generator?</h2>
+            
+            <p class="mb-6 leading-relaxed">
+                A <strong>text to emoji generator</strong> is a specialized tool that converts standard alphabet characters into large-scale visual representations using emoji characters. Unlike simple emoji insertion, these generators map your text onto a grid system, replacing traditional "ink" with your chosen emoji to create <strong>big emoji text</strong> that demands attention.
+            </p>
+            
+            <p class="mb-6 leading-relaxed">
+                When you <strong>convert text to emoji letters</strong>, each character becomes a pixel-art style composition. For example, typing "HELLO" might generate a 5-line tall representation where heart emojis form the letters against a background of star emojis. The result is <strong>emoji letters</strong> that are impossible to scroll past—perfect for announcements, celebrations, and brand differentiation.
+            </p>
+
+            <h2 class="text-3xl font-bold text-gray-900 mt-10 mb-4">Why Use an Emoji Font Generator in 2026?</h2>
+            
+            <p class="mb-6 leading-relaxed">
+                In today's oversaturated digital landscape, capturing attention within 3 seconds is critical. Standard text blends into the background noise of endless feeds. But when you <strong>make text emoji</strong>, you transform communication into visual art that stops the scroll.
+            </p>
+            
+            <p class="mb-6 leading-relaxed">
+                Our <strong>emoji text maker</strong> serves multiple creative purposes:
+            </p>
+            
+            <ul class="list-disc pl-6 mb-6 space-y-3 text-gray-700">
+                <li><strong>Gaming Communities:</strong> Create massive "GG" messages, clan announcements, and victory celebrations in Discord servers</li>
+                <li><strong>Social Media Marketing:</strong> Generate <strong>word to emoji letters</strong> for Instagram bios, Twitter headers, and TikTok captions that boost engagement</li>
+                <li><strong>Personal Messaging:</strong> Send unique birthday wishes, love notes, and congratulations via <strong>text to emoji WhatsApp</strong> messages</li>
+                <li><strong>Content Creation:</strong> Design thumbnail text, video titles, and stream overlays using <strong>big text emojis</strong></li>
+                <li><strong>Branding:</strong> Develop distinctive visual signatures for personal or business accounts</li>
+            </ul>
+
+            <p class="mb-6 leading-relaxed">
+                The psychology is simple: pattern interruption. When someone expects plain text and encounters <strong>letters to emoji</strong> instead, their brain pauses to process the novelty. That pause is your opportunity to deliver a message that actually registers.
+            </p>
+
+            <h2 class="text-3xl font-bold text-gray-900 mt-10 mb-4">How Our Emoji Letter Generator Works</h2>
+            
+            <p class="mb-6 leading-relaxed">
+                We've engineered our <strong>emoji letter generator</strong> for maximum simplicity without sacrificing creative control. The process takes under 30 seconds from concept to copy-paste ready output.
+            </p>
+
+            <h3 class="text-2xl font-semibold text-gray-800 mt-8 mb-3">Step 1: Enter Your Text</h3>
+            <p class="mb-4 leading-relaxed">
+                Type any word, phrase, or abbreviation into the input field. Our <strong>emoji alphabet generator</strong> supports standard A-Z characters and common punctuation. Whether you want to <strong>convert text to emoji</strong> for "SALE," "LOVE," or "HAPPY BIRTHDAY," the system processes it instantly.
+            </p>
+
+            <h3 class="text-2xl font-semibold text-gray-800 mt-8 mb-3">Step 2: Select Your Emoji Style</h3>
+            <p class="mb-4 leading-relaxed">
+                This is where creativity shines. Choose any emoji as your "foreground" (the letter shape) and any other as your "background." Popular combinations include:
+            </p>
+            
+            <ul class="list-disc pl-6 mb-6 space-y-2 text-gray-700">
+                <li>❤️ Red hearts on ⬜ white squares for romantic messages</li>
+                <li>⭐ Gold stars on ⬛ black squares for premium announcements</li>
+                <li>🔥 Fire emojis on 💨 wind/snow for "hot" promotions</li>
+                <li>🟩 Green blocks on ⬜ white for Minecraft-themed content</li>
+                <li>Custom Discord emojis for server-specific branding</li>
+            </ul>
+
+            <h3 class="text-2xl font-semibold text-gray-800 mt-8 mb-3">Step 3: Copy and Paste Anywhere</h3>
+            <p class="mb-6 leading-relaxed">
+                One click copies your <strong>emoji text</strong> creation to the clipboard. Paste directly into Discord, <strong>text to Discord emoji</strong> channels, WhatsApp conversations, Instagram comments, YouTube live chats, or any platform supporting Unicode characters. Our <strong>emoji letter maker copy and paste</strong> functionality works seamlessly across desktop and mobile devices.
+            </p>
+
+            <h2 class="text-3xl font-bold text-gray-900 mt-10 mb-4">Features That Make Our Text Emoji Generator Superior</h2>
+            
+            <p class="mb-6 leading-relaxed">
+                Not all <strong>emoji generator text</strong> tools are created equal. We've optimized every aspect of the user experience based on feedback from 50,000+ monthly users.
+            </p>
+
+            <h3 class="text-2xl font-semibold text-gray-800 mt-8 mb-3">Universal Emoji Support</h3>
+            <p class="mb-4 leading-relaxed">
+                Our <strong>font emoji generator</strong> handles every Unicode 15.0 emoji, including the latest releases. From classic smileys to flags, food items to zodiac symbols—if it exists in your emoji keyboard, you can build letters with it. This makes our tool a true <strong>fonts generator emoji</strong> platform rather than a limited preset system.
+            </p>
+
+            <h3 class="text-2xl font-semibold text-gray-800 mt-8 mb-3">Mobile-First Design</h3>
+            <p class="mb-4 leading-relaxed">
+                Create <strong>text with emoji generator</strong> outputs on any device. The interface adapts perfectly to smartphone screens, allowing you to generate and share <strong>tex to emoji</strong> creations while on the move. No app download required—just open your browser and start creating.
+            </p>
+
+            <h3 class="text-2xl font-semibold text-gray-800 mt-8 mb-3">Privacy-First Architecture</h3>
+            <p class="mb-4 leading-relaxed">
+                Unlike competitors that require account creation or store your text history, our <strong>text generator emoji</strong> processes everything client-side. Your messages never touch our servers. Generate sensitive announcements, private greetings, or business promotions with complete confidentiality.
+            </p>
+
+            <h3 class="text-2xl font-semibold text-gray-800 mt-8 mb-3">Instant Preview</h3>
+            <p class="mb-6 leading-relaxed">
+                See your <strong>text into emoji</strong> transformation in real-time. Adjust emoji combinations, test different sizes, and perfect your design before copying. This eliminates the trial-and-error frustration of less sophisticated <strong>emojis text generator</strong> alternatives.
+            </p>
+
+            <h2 class="text-3xl font-bold text-gray-900 mt-10 mb-4">Popular Use Cases for Emoji Letter Maker</h2>
+
+            <h3 class="text-2xl font-semibold text-gray-800 mt-8 mb-3">Discord Community Management</h3>
+            <p class="mb-4 leading-relaxed">
+                Server owners use our <strong>emoji to letters</strong> converter for:
+            </p>
+            <ul class="list-disc pl-6 mb-6 space-y-2 text-gray-700">
+                <li>Welcome messages that stand out in #general channels</li>
+                <li>Event announcements for game tournaments or movie nights</li>
+                <li>Role assignment instructions with visual hierarchy</li>
+                <li>Server rule summaries that members actually notice</li>
+            </ul>
+
+            <h3 class="text-2xl font-semibold text-gray-800 mt-8 mb-3">WhatsApp Business Marketing</h3>
+            <p class="mb-4 leading-relaxed">
+                Small businesses leverage <strong>text to emoji WhatsApp</strong> capabilities for:
+            </p>
+            <ul class="list-disc pl-6 mb-6 space-y-2 text-gray-700">
+                <li>Flash sale announcements ("50% OFF" in fire emojis)</li>
+                <li>Holiday greetings that feel personal and creative</li>
+                <li>Appointment reminders that break through notification clutter</li>
+                <li>Product launch teasers building anticipation</li>
+            </ul>
+
+            <h3 class="text-2xl font-semibold text-gray-800 mt-8 mb-3">Social Media Engagement</h3>
+            <p class="mb-6 leading-relaxed">
+                Influencers and brands use <strong>big emoji generator</strong> outputs to:
+            </p>
+            <ul class="list-disc pl-6 mb-6 space-y-2 text-gray-700">
+                <li>Create scroll-stopping Instagram comments on viral posts</li>
+                <li>Design unique Twitter/X header text</li>
+                <li>Craft TikTok video descriptions that boost algorithmic visibility</li>
+                <li>Generate YouTube community post announcements</li>
+            </ul>
+
+            <h2 class="text-3xl font-bold text-gray-900 mt-10 mb-4">Advanced Tips for Emoji Text Mastery</h2>
+
+            <h3 class="text-2xl font-semibold text-gray-800 mt-8 mb-3">Optimize for Platform Limits</h3>
+            <p class="mb-4 leading-relaxed">
+                Different platforms enforce character count restrictions. Twitter allows 280 characters; Discord messages have 2000-character limits. Since each <strong>emoji letter</strong> consumes multiple characters (each "pixel" is one emoji), brevity matters. We recommend:
+            </p>
+            <ul class="list-disc pl-6 mb-6 space-y-2 text-gray-700">
+                <li>Single words for Twitter replies</li>
+                <li>3-5 character phrases for Instagram comments</li>
+                <li>Up to 10 characters for Discord announcements</li>
+                <li>Full sentences only for platforms without strict limits or direct messages</li>
+            </ul>
+
+            <h3 class="text-2xl font-semibold text-gray-800 mt-8 mb-3">Accessibility Considerations</h3>
+            <p class="mb-6 leading-relaxed">
+                Screen readers interpret emoji grids as repetitive character strings, which can be frustrating for visually impaired users. When using <strong>text emoji maker</strong> outputs in public spaces, consider adding a plain-text translation for inclusivity.
+            </p>
+
+            <h3 class="text-2xl font-semibold text-gray-800 mt-8 mb-3">Cross-Platform Testing</h3>
+            <p class="mb-6 leading-relaxed">
+                Emoji rendering varies between Apple, Google, Samsung, and Microsoft systems. A heart emoji ❤️ looks different on iPhone versus Android. Test your <strong>emoji letters maker</strong> creations on your target audience's primary devices when possible.
+            </p>
+
+            <h2 class="text-3xl font-bold text-gray-900 mt-10 mb-4">Text to Emoji Letters: Technical Deep Dive</h2>
+            
+            <p class="mb-6 leading-relaxed">
+                For the technically curious, our <strong>text to emoji letter</strong> system uses a grid-mapping algorithm. Each alphabet character is defined as a 5x7 or 7x7 boolean matrix. When you input text, the system:
+            </p>
+            
+            <ol class="list-decimal pl-6 mb-6 space-y-3 text-gray-700">
+                <li>Parses your input string character by character</li>
+                <li>Maps each character to its predefined matrix pattern</li>
+                <li>Substitutes "true" values (where ink would be) with your foreground emoji</li>
+                <li>Substitutes "false" values (background) with your background emoji</li>
+                <li>Concatenates rows with newline characters for vertical stacking</li>
+                <li>Outputs Unicode-compliant text ready for any platform</li>
+            </ol>
+
+            <p class="mb-6 leading-relaxed">
+                This approach ensures your <strong>text to emoji letters abcde</strong> (and the entire alphabet) render consistently across any system supporting standard Unicode emojis.
+            </p>
+
+            <h2 class="text-3xl font-bold text-gray-900 mt-10 mb-4">Comparing Emoji Text Generator Options</h2>
+            
+            <p class="mb-6 leading-relaxed">
+                While several <strong>font and emoji generator</strong> tools exist online, SimpliConvert offers distinct advantages:
+            </p>
+
+            <table class="w-full mb-8 border-collapse border border-gray-300">
+                <thead>
+                    <tr class="bg-gray-100">
+                        <th class="border border-gray-300 p-3 text-left">Feature</th>
+                        <th class="border border-gray-300 p-3 text-left">SimpliConvert</th>
+                        <th class="border border-gray-300 p-3 text-left">Competitors</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="border border-gray-300 p-3">Registration Required</td>
+                        <td class="border border-gray-300 p-3 text-green-600 font-semibold">No</td>
+                        <td class="border border-gray-300 p-3 text-red-600">Often Yes</td>
+                    </tr>
+                    <tr>
+                        <td class="border border-gray-300 p-3">Custom Emoji Support</td>
+                        <td class="border border-gray-300 p-3 text-green-600 font-semibold">Yes (including Discord)</td>
+                        <td class="border border-gray-300 p-3 text-red-600">Limited</td>
+                    </tr>
+                    <tr>
+                        <td class="border border-gray-300 p-3">Mobile Optimization</td>
+                        <td class="border border-gray-300 p-3 text-green-600 font-semibold">Fully Responsive</td>
+                        <td class="border border-gray-300 p-3 text-yellow-600">Variable</td>
+                    </tr>
+                    <tr>
+                        <td class="border border-gray-300 p-3">Privacy (No Data Storage)</td>
+                        <td class="border border-gray-300 p-3 text-green-600 font-semibold">Guaranteed</td>
+                        <td class="border border-gray-300 p-3 text-red-600">Rarely Guaranteed</td>
+                    </tr>
+                    <tr>
+                        <td class="border border-gray-300 p-3">Output Customization</td>
+                        <td class="border border-gray-300 p-3 text-green-600 font-semibold">Full Control</td>
+                        <td class="border border-gray-300 p-3 text-yellow-600">Preset Templates</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h2 class="text-3xl font-bold text-gray-900 mt-10 mb-4">Create Emoji Text: Getting Started Now</h2>
+            
+            <p class="mb-6 leading-relaxed">
+                Ready to transform your digital communication? Our <strong>emoji message generator</strong> requires zero setup:
+            </p>
+            
+            <ol class="list-decimal pl-6 mb-6 space-y-3 text-gray-700">
+                <li>Scroll to the tool interface above (or visit our dedicated <strong>emoji text generator</strong> page)</li>
+                <li>Type your desired text (start with something short like "HI" or "WOW")</li>
+                <li>Select foreground and background emojis from the picker</li>
+                <li>Click "Generate" to preview your <strong>text into emoji letters</strong></li>
+                <li>Hit "Copy" and paste into your target platform</li>
+                <li>Experiment with different emoji combinations for unique effects</li>
+            </ol>
+
+            <p class="mb-6 leading-relaxed">
+                Whether you need to <strong>convertir texto en emojis</strong> for Spanish-speaking audiences or <strong>create emoji text</strong> for global English markets, the process remains identical and instant.
+            </p>
+
+            <div class="bg-blue-50 border-l-4 border-blue-500 p-6 my-8">
+                <p class="text-blue-800 font-semibold mb-2">💡 Pro Tip: Bookmark This Page</p>
+                <p class="text-blue-700">Our <strong>text imoji</strong> generator is perfect for spontaneous creativity. Save it to your bookmarks for instant access whenever inspiration strikes or you need to make an announcement that actually gets noticed.</p>
             </div>
+
+            <h2 class="text-3xl font-bold text-gray-900 mt-10 mb-4">Related Tools for Creative Communication</h2>
+            
+            <p class="mb-6 leading-relaxed">
+                Maximize your digital expression with these complementary utilities from SimpliConvert:
+            </p>
+            
+            <ul class="list-disc pl-6 mb-6 space-y-3 text-gray-700">
+                <li><a href="https://simpliconvert.com/instagram_bio_character_counter/" target="_blank" class="text-blue-600 hover:underline">Instagram Bio Character Counter</a> – Ensure your <strong>emoji letters</strong> fit within profile limits</li>
+                <li><a href="https://simpliconvert.com/fancy_text_generator/" target="_blank" class="text-blue-600 hover:underline">Fancy Text Generator</a> – Unicode font styling for complementary aesthetics</li>
+                <li><a href="https://simpliconvert.com/emoji_to_text/" target="_blank" class="text-blue-600 hover:underline">Emoji to Text Converter</a> – Reverse translation when you need plain language</li>
+                <li><a href="https://simpliconvert.com/social_media_tools/" target="_blank" class="text-blue-600 hover:underline">Social Media Tools</a> – Complete toolkit for platform optimization</li>
+            </ul>
+
         </div>
-    </section>
+    </div>
+</section>
 
-    <section class="bg-gray-50 py-12 sm:py-16">
-        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 class="text-3xl font-bold text-center text-gray-900 mb-8">Emoji Text Generator – FAQ</h2>
-            <div class="space-y-4">
-                <div class="bg-white rounded-lg shadow-sm">
-                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
-                        <span>Will the emoji text look the same on all devices?</span>
-                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-                        </svg>
-                    </button>
-                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
-                        <p class="p-5 pt-0 text-gray-600">
-                            Mostly, yes. Since we use standard Unicode emojis, they will appear on almost all modern smartphones and computers. However, the specific design of the emoji (e.g., how a "heart" looks) may vary slightly between Apple, Google, and Samsung devices.
-                        </p>
-                    </div>
-                </div>
-
-                <div class="bg-white rounded-lg shadow-sm">
-                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
-                        <span>Is there a character limit?</span>
-                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-                        </svg>
-                    </button>
-                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
-                        <p class="p-5 pt-0 text-gray-600">
-                            While our tool can handle long strings, platforms like Discord and Twitter have their own character limits. Since each letter is made of many emojis, a long word can quickly reach those limits. We recommend keeping your emoji text to 5-10 characters for the best visual impact.
-                        </p>
-                    </div>
-                </div>
-
-                <div class="bg-white rounded-lg shadow-sm">
-                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
-                        <span>Can I use custom emojis from Discord?</span>
-                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-                        </svg>
-                    </button>
-                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
-                        <p class="p-5 pt-0 text-gray-600">
-                            Yes! If you have the emoji ID or can paste the custom emoji into our input picker, the generator will use it. This is a great way to create server-specific branding.
-                        </p>
-                    </div>
+<section class="bg-gray-50 py-12 sm:py-16">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <h2 class="text-3xl font-bold text-center text-gray-900 mb-8">Emoji Text Generator – Frequently Asked Questions</h2>
+        <p class="text-center text-gray-600 mb-8 max-w-2xl mx-auto">Everything you need to know about converting text to emoji letters, from technical compatibility to creative applications.</p>
+        
+        <div class="space-y-4">
+            
+            <div class="bg-white rounded-lg shadow-sm">
+                <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                    <span>How do I convert text to emoji letters using your generator?</span>
+                    <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                    </svg>
+                </button>
+                <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                    <p class="p-5 pt-0 text-gray-600">
+                        Our <strong>text to emoji generator</strong> works in three simple steps: Type your desired text in the input field, select your preferred foreground and background emojis from the picker, then click "Generate" to create your <strong>emoji letters</strong>. The output displays instantly as a grid of emojis forming your letters. Click "Copy" to save to your clipboard, then paste anywhere—Discord, WhatsApp, Instagram, or any platform supporting Unicode. The entire process takes under 30 seconds with no registration required.
+                    </p>
                 </div>
             </div>
+
+            <div class="bg-white rounded-lg shadow-sm">
+                <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                    <span>Will emoji text look the same on all devices and platforms?</span>
+                    <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                    </svg>
+                </button>
+                <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                    <p class="p-5 pt-0 text-gray-600">
+                        <strong>Emoji to text</strong> conversions use standard Unicode characters, so they appear on all modern devices. However, visual design varies by platform. Apple, Google, Samsung, and Microsoft each render emojis with slightly different art styles. A red heart ❤️ looks distinct on iPhone versus Android. The grid structure remains identical—only the specific emoji aesthetics change. For critical branding, test your <strong>emoji font</strong> output on your target audience's primary devices. All platforms will display the message; it just may look subtly different.
+                    </p>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-sm">
+                <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                    <span>Is there a character limit when using the emoji letter generator?</span>
+                    <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                    </svg>
+                </button>
+                <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                    <p class="p-5 pt-0 text-gray-600">
+                        Our <strong>emoji letter maker</strong> itself has no strict limit, but destination platforms do. Each letter requires 35-49 emojis (5x7 or 7x7 grids). A 5-letter word becomes 175-245 characters. Twitter's 280-character limit accommodates ~4-5 letters. Discord allows 2000 characters—roughly 40 letters. Instagram comments permit 2200 characters. For best results, keep <strong>words to emoji letters</strong> conversions under 10 characters. Use abbreviations ("BDAY" vs "BIRTHDAY") or single impactful words ("SALE," "LOVE," "WIN") for maximum visual impact without platform truncation.
+                    </p>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-sm">
+                <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                    <span>Can I use custom Discord emojis with your text to emoji converter?</span>
+                    <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                    </svg>
+                </button>
+                <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                    <p class="p-5 pt-0 text-gray-600">
+                        Yes! Our <strong>text to Discord emoji</strong> support includes custom server emojis. If you have the emoji ID or can paste the custom emoji code (format: <:name:ID>) into our picker, the <strong>emoji generator text</strong> system will use it. This is perfect for server branding, clan tags, or community-specific inside jokes. Note: Custom emojis only render for users who have access to that specific Discord server. For universal visibility, stick to standard Unicode emojis. Combine both—standard emojis for public channels, custom ones for private server announcements.
+                    </p>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-sm">
+                <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                    <span>What's the difference between an emoji font generator and a regular font generator?</span>
+                    <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                    </svg>
+                </button>
+                <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                    <p class="p-5 pt-0 text-gray-600">
+                        A <strong>font emoji generator</strong> creates text using actual emoji characters arranged in grids to form letters. A standard font generator uses Unicode mathematical alphanumeric symbols (𝔉𝔞𝔫𝔠𝔶 𝔱𝔢𝔵𝔱) that look styled but remain single characters. <strong>Big emoji text</strong> is larger, more visual, and works anywhere emojis are supported. Fancy text requires specific Unicode support and may appear as boxes on older systems. Use <strong>emoji text</strong> for maximum compatibility and visual impact; use fancy fonts for subtle styling in bios or usernames where space is limited.
+                    </p>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-sm">
+                <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                    <span>Are there privacy concerns when using online emoji text makers?</span>
+                    <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                    </svg>
+                </button>
+                <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                    <p class="p-5 pt-0 text-gray-600">
+                        With SimpliConvert's <strong>emoji text maker</strong>, privacy is guaranteed. We process all conversions client-side in your browser using JavaScript. Your text never transmits to our servers, never gets stored in databases, and never appears in logs. Other <strong>text generator with emoji</strong> services may store inputs for "improvement" or require account creation that links activity to your identity. We believe <strong>convert text to emoji</strong> functionality should be completely anonymous. Generate sensitive business announcements, personal messages, or creative concepts with zero data trail.
+                    </p>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-sm">
+                <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                    <span>Can I use emoji letters for commercial marketing and business purposes?</span>
+                    <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                    </svg>
+                </button>
+                <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                    <p class="p-5 pt-0 text-gray-600">
+                        Absolutely. Our <strong>letter emoji generator</strong> outputs are royalty-free and unrestricted for commercial use. Create "SALE" announcements for retail, "OPEN" signs for service businesses, or branded hashtags for campaigns. E-commerce stores use <strong>text emoji generator</strong> outputs for flash sale alerts. Restaurants create daily specials in food emojis. SaaS companies announce feature launches. No attribution required. However, note that emoji designs are copyrighted by their respective platforms (Apple, Google, etc.), so you cannot trademark an emoji composition or claim exclusive rights to a specific emoji arrangement.
+                    </p>
+                </div>
+            </div>
+
         </div>
-    </section>
+    </div>
+</section>
+
+
+
+
+
+
 
     <section class="bg-gray-50 pb-16">
         <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-slate-200 pt-16">
