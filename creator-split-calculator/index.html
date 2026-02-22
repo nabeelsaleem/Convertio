@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Creator Revenue Split Calculator – Fair Collaboration Rev Share | SimpliConvert</title>
+    <meta name="description" content="Calculate fair revenue splits for creative collaborations. Factor in platform fees (YouTube, Twitch, TikTok) and divide earnings accurately between partners with our free tool.">
+    <meta name="keywords" content="collaboration revenue split calculator, rev share calculator, creator partnership split, YouTube collab calculator, Twitch revenue share, influencer payment split">
+    <meta name="author" content="SimpliConvert">
+    <meta property="og:site_name" content="SimpliConvert">
+    <meta name="robots" content="index, follow">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://simpliconvert.com/creator-split-calculator/">
+    <meta property="og:title" content="Creator Revenue Split Calculator – Plan Your Collaborations">
+    <meta property="og:description" content="Stop arguing over money. Accurately calculate revenue splits for YouTube, Twitch, and brand deals after platform fees.">
+    <meta property="og:image" content="https://simpliconvert.com/images/creator-split-calculator-og.jpg">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://simpliconvert.com/creator-split-calculator/">
+    <meta name="twitter:title" content="Creator Revenue Split Calculator – Fair Rev Share Tool">
+    <meta name="twitter:description" content="Free tool to calculate creator collaboration splits, including platform fees. Perfect for YouTubers, streamers, and artists.">
+    <meta name="twitter:image" content="https://simpliconvert.com/images/creator-split-calculator-og.jpg">
+
+    <link rel="canonical" href="https://simpliconvert.com/creator-split-calculator/">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Creator Revenue Split Calculator",
+      "url": "https://simpliconvert.com/creator-split-calculator/",
+      "description": "A free online tool for content creators and collaborators to calculate revenue splits, factoring in platform fees and individual percentage shares.",
+      "applicationCategory": "FinanceApplication",
+      "operatingSystem": "Web Browser",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "SimpliConvert",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://simpliconvert.com/logo.png"
+        }
+      }
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [{
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://simpliconvert.com/"
+      },{
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Calculator Tools",
+        "item": "https://simpliconvert.com/calculator_tools/"
+      },{
+        "@type": "ListItem",
+        "position": 3,
+        "name": "Creator Revenue Split Calculator",
+        "item": "https://simpliconvert.com/creator-split-calculator/"
+      }]
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [{
+        "@type": "Question",
+        "name": "What is a standard revenue split for a collaboration?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Standard splits vary. A 50/50 split is common for equal partners, while a 70/30 or 60/40 split might be used if one creator provides the platform and the other provides specific talent or editing. Always agree on the split before starting the project."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Should I split gross or net revenue?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "It is usually fairer to split 'Net Revenue'—the amount left after platform fees (like YouTube's 45% or Twitch's 50%) and production costs. This ensures both parties share the burden of expenses."
+        }
+      }, {
+        "@type": "Question",
+        "name": "How do platform fees affect my payout?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Platforms like YouTube, Twitch, and Patreon take a percentage of your earnings. If you earn $1,000 but the platform takes 30%, you only have $700 to split. Our calculator factors this in automatically."
+        }
+      }]
+    }
+    </script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #da3f0b;
+            --primary-hover: #b53409;
+            --primary-light: #fff5f2;
+            --bg: #f8fafc;
+            --text-dark: #0f172a;
+            --success: #16a34a;
+            --danger: #dc2626;
+        }
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: var(--text-dark); }
+        .hero-card { background: white; border: 1px solid #f1f5f9; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05); position: relative; overflow: hidden; }
+        .hero-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px; background-color: var(--primary); }
+        .tooltip-container { position: relative; display: inline-block; }
+        .tooltip-text { visibility: hidden; width: 220px; background-color: #1e293b; color: #fff; text-align: center; border-radius: 8px; padding: 10px; position: absolute; z-index: 50; bottom: 125%; left: 50%; margin-left: -110px; opacity: 0; transition: opacity 0.2s; font-size: 0.75rem; font-weight: 400; pointer-events: none; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); }
+        .tooltip-container:hover .tooltip-text { visibility: visible; opacity: 1; }
+        .animate-fade { animation: fadeIn 0.3s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+        .tool-card { transition: transform 0.2s ease, box-shadow 0.2s ease; }
+        .tool-card:hover { transform: translateY(-4px); box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
+        .prose a { color: #da3f0b; text-decoration: none; }
+        .prose a:hover { text-decoration: underline; }
+        .collaborator-row { transition: all 0.2s ease; }
+    </style>
+</head>
+
+<body class="bg-gray-50 min-h-screen flex flex-col">
+    <div id="navbar" style="min-height: 70px;"></div>
+	
+	<section class="hero-white text-black py-2 md:py-10">
+        <div class="container mx-auto px-4">
+            <nav class="flex pb-4 text-sm text-slate-500 items-center space-x-2 justify-center">
+                <a href="https://simpliconvert.com/" class="hover:text-[#da3f0b] transition-colors">Home</a>
+                <i class="fas fa-chevron-right text-[10px]"></i>
+                <a href="https://simpliconvert.com/calculator_tools/" class="hover:text-[#da3f0b] transition-colors">Calculators</a>
+                <i class="fas fa-chevron-right text-[10px]"></i>
+                <span class="text-slate-900 font-medium">Creator Revenue Split Calculator</span>
+            </nav>
+            <div class="text-center">
+                <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-2">collaboration revenue split calculator</h1>
+                <p class="text-lg md:text-xl max-w-3xl mx-auto mb-2 text-slate-600">
+                Fairly divide revenue between collaborators. Account for platform fees and ensure everyone gets their fair share of the project earnings.
+                </p>
+            </div>
+        </div>
+    </section>		
+
+    <div id="calculator-app" class="w-full max-w-6xl mx-auto p-4 sm:p-6">
+        <div class="bg-white rounded-[2rem] shadow-2xl overflow-hidden border border-slate-100">
+            <header class="bg-slate-50/50 border-b border-slate-100 p-6 md:p-8 flex flex-col md:flex-row justify-between items-center gap-6">
+                <div class="text-center md:text-left">
+                  <h2 class="text-2xl font-black text-slate-800 tracking-tight flex items-center justify-center md:justify-start gap-3">
+                    <span class="bg-[#da3f0b] text-white p-2 rounded-xl text-lg shadow-lg shadow-[#da3f0b30]">
+                      <i class="fas fa-handshake"></i>
+                    </span>
+                    Revenue Share Calculator
+                  </h2>
+                </div>
+                
+                <div class="relative group min-w-[140px]">
+                  <select id="currency-select" class="appearance-none w-full bg-white border border-slate-200 text-slate-700 py-2.5 pl-4 pr-10 rounded-xl text-xs font-bold focus:outline-none focus:ring-4 focus:ring-[#da3f0b15] focus:border-[#da3f0b] shadow-sm cursor-pointer">
+                    <option value="USD">USD ($)</option>
+                    <option value="EUR">EUR (€)</option>
+                    <option value="GBP">GBP (£)</option>
+                    <option value="INR">INR (₹)</option>
+                    <option value="CAD">CAD (C$)</option>
+                    <option value="AUD">AUD (A$)</option>
+                  </select>
+                  <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-slate-400">
+                    <i class="fas fa-chevron-down text-[10px]"></i>
+                  </div>
+                </div>
+            </header>
+    
+            <main class="flex flex-col lg:flex-row">
+                <div class="lg:w-[55%] p-6 md:p-10 lg:p-12 border-r border-slate-100">
+                    <div class="space-y-6">
+                        
+                        <div class="bg-slate-50 p-6 rounded-2xl border border-slate-100">
+                            <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-6"><i class="fas fa-file-invoice-dollar mr-2"></i>Project Earnings</h3>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="mb-5">
+                                    <div class="flex items-center text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">
+                                        <label>Gross Revenue</label>
+                                        <span class="tooltip-container ml-2">
+                                            <i class="fas fa-info-circle text-slate-300 hover:text-[#da3f0b] cursor-help text-xs transition-colors"></i>
+                                            <span class="tooltip-text">Total money earned before any fees or splits.</span>
+                                        </span>
+                                    </div>
+                                    <div class="relative rounded-xl shadow-sm">
+                                        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                            <span class="text-slate-400 font-semibold currency-symbol">$</span>
+                                        </div>
+                                        <input type="number" id="input-gross" value="1000" class="block w-full rounded-xl border-slate-200 border py-3 pl-9 pr-4 focus:ring-4 focus:ring-[#da3f0b20] focus:border-[#da3f0b] sm:text-sm font-semibold text-slate-800 transition-all bg-white" placeholder="0.00">
+                                    </div>
+                                </div>
+    
+                                <div class="mb-5">
+                                    <div class="flex items-center text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">
+                                        <label>Platform Fee (%)</label>
+                                        <span class="tooltip-container ml-2">
+                                            <i class="fas fa-info-circle text-slate-300 hover:text-[#da3f0b] cursor-help text-xs transition-colors"></i>
+                                            <span class="tooltip-text">Percentage taken by YouTube (45%), Twitch (50%), or Patreon.</span>
+                                        </span>
+                                    </div>
+                                    <div class="relative rounded-xl shadow-sm">
+                                        <input type="number" id="input-platform-fee" value="30" class="block w-full rounded-xl border-slate-200 border py-3 pl-4 pr-10 focus:ring-4 focus:ring-[#da3f0b20] focus:border-[#da3f0b] sm:text-sm font-semibold text-slate-800 transition-all bg-white" placeholder="0">
+                                        <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none">
+                                            <span class="text-slate-400 font-semibold">%</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+    
+                        <div class="bg-[#da3f0b08] p-6 rounded-2xl border border-[#da3f0b15]">
+                           <div class="flex justify-between items-center mb-6">
+                              <h3 class="text-xs font-black text-[#da3f0b] uppercase tracking-widest"><i class="fas fa-users mr-2"></i>Collaborators</h3>
+                              <button id="add-collaborator" class="text-[10px] bg-white border border-[#da3f0b20] text-[#da3f0b] px-3 py-1.5 rounded-md font-bold hover:bg-[#da3f0b] hover:text-white transition-all">
+                                <i class="fas fa-plus mr-1"></i> Add Partner
+                              </button>
+                           </div>
+                           
+                           <div id="collaborators-list" class="space-y-4">
+                               <!-- Collaborator rows injected here -->
+                           </div>
+
+                           <div id="percentage-warning" class="hidden mt-4 p-3 bg-red-50 text-red-600 text-xs font-bold rounded-xl border border-red-100 flex items-center gap-2">
+                               <i class="fas fa-exclamation-triangle"></i> Total split must equal 100% (Current: <span id="current-total-pct">0</span>%)
+                           </div>
+                        </div>
+                    </div>
+                </div>
+    
+                <div class="lg:w-[45%] bg-slate-50/50 p-6 md:p-10 lg:p-12 flex flex-col justify-center">
+                   <div class="space-y-6">
+                     
+                     <div class="hero-card p-8 flex flex-col items-center text-center">
+                         <p class="text-xs font-black text-[#da3f0b] uppercase tracking-[0.2em] mb-4">Total Net Revenue</p>
+                         <div class="flex items-center justify-center">
+                           <span id="display-net-total" class="text-5xl md:text-6xl font-black tracking-tighter leading-none text-[#16a34a]">$700.00</span>
+                         </div>
+                         <p class="text-sm text-slate-400 font-medium mt-4">After <span id="display-fee-amount">$300.00</span> platform fees</p>
+                     </div>
+    
+                     <div id="results-list" class="space-y-3">
+                         <!-- Individual payouts injected here -->
+                     </div>
+    
+                     <div class="bg-white rounded-xl p-6 border border-slate-100 shadow-sm mt-4">
+                         <div class="flex justify-between items-center mb-2">
+                            <span class="text-xs font-bold text-slate-400 uppercase tracking-widest">Platform Cut</span>
+                            <span id="display-platform-cut-pct" class="text-lg font-black text-slate-700">30%</span>
+                         </div>
+                         <div class="w-full bg-slate-100 rounded-full h-2 mb-2 overflow-hidden">
+                            <div id="fee-bar" class="bg-[#da3f0b] h-2 rounded-full transition-all duration-500" style="width: 30%"></div>
+                         </div>
+                         <p class="text-[10px] text-slate-400">
+                           The platform takes <strong id="display-platform-cut-val">$300.00</strong> from the gross earnings.
+                         </p>
+                     </div>
+                   </div>
+                </div>
+            </main>
+    
+            <footer class="bg-slate-50 border-t border-slate-100 p-6 md:p-8">
+               <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+                   <div class="text-center md:text-left">
+                       <h4 class="text-sm font-bold text-slate-700 mb-1">Share this calculator</h4>
+                       <p class="text-xs text-slate-400">Help other creators split earnings fairly.</p>
+                   </div>
+                   
+                   <div class="flex flex-wrap justify-center gap-3">
+                       <a href="#" onclick="shareSocial('facebook')" class="w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center text-white transition-transform hover:-translate-y-1 hover:shadow-lg bg-[#1877F2]"><i class="fab fa-facebook-f"></i></a>
+                       <a href="#" onclick="shareSocial('twitter')" class="w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center text-white transition-transform hover:-translate-y-1 hover:shadow-lg bg-[#1DA1F2]"><i class="fab fa-twitter"></i></a>
+                       <a href="#" onclick="shareSocial('whatsapp')" class="w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center text-white transition-transform hover:-translate-y-1 hover:shadow-lg bg-[#25D366]"><i class="fab fa-whatsapp"></i></a>
+                       <a href="#" onclick="shareSocial('telegram')" class="w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center text-white transition-transform hover:-translate-y-1 hover:shadow-lg bg-[#0088cc]"><i class="fab fa-telegram-plane"></i></a>
+                   </div>
+    
+                   <div class="relative">
+                       <button onclick="handleBookmark()" class="flex items-center gap-2 bg-white border border-slate-200 hover:border-[#da3f0b] hover:text-[#da3f0b] text-slate-600 px-4 py-2 rounded-lg text-sm font-bold transition-all shadow-sm active:scale-95">
+                          <i class="fas fa-bookmark"></i> Bookmark
+                       </button>
+                       <div id="bookmark-toast" class="hidden absolute bottom-full mb-3 left-1/2 -translate-x-1/2 bg-slate-800 text-white text-xs py-2 px-4 rounded-lg shadow-lg whitespace-nowrap animate-fade">
+                           Press <span class="font-bold text-[#da3f0b]">Ctrl + D</span> to bookmark
+                       </div>
+                   </div>
+               </div>
+            </footer>
+        </div>
+    </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        let collaborators = [
+            { id: 1, name: 'Creator A', percent: 50 },
+            { id: 2, name: 'Creator B', percent: 50 }
+        ];
+        let currency = { code: 'USD', symbol: '$', locale: 'en-US' };
+
+        const grossInput = document.getElementById('input-gross');
+        const platformFeeInput = document.getElementById('input-platform-fee');
+        const collabListEl = document.getElementById('collaborators-list');
+        const resultsListEl = document.getElementById('results-list');
+        const addBtn = document.getElementById('add-collaborator');
+        const currencySelect = document.getElementById('currency-select');
+
+        function renderCollaborators() {
+            collabListEl.innerHTML = '';
+            collaborators.forEach((c, index) => {
+                const div = document.createElement('div');
+                div.className = 'collaborator-row flex items-center gap-3 animate-fade';
+                div.innerHTML = `
+                    <div class="flex-grow">
+                        <input type="text" value="${c.name}" onchange="updateCollab(${c.id}, 'name', this.value)" class="w-full bg-white border border-slate-200 rounded-xl px-4 py-2 text-sm font-semibold text-slate-700 focus:ring-2 focus:ring-[#da3f0b20] focus:border-[#da3f0b] outline-none" placeholder="Name">
+                    </div>
+                    <div class="w-24 relative">
+                        <input type="number" value="${c.percent}" oninput="updateCollab(${c.id}, 'percent', this.value)" class="w-full bg-white border border-slate-200 rounded-xl pl-4 pr-8 py-2 text-sm font-bold text-slate-800 focus:ring-2 focus:ring-[#da3f0b20] focus:border-[#da3f0b] outline-none" placeholder="0">
+                        <span class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs font-bold">%</span>
+                    </div>
+                    ${collaborators.length > 1 ? `
+                    <button onclick="removeCollab(${c.id})" class="text-slate-300 hover:text-red-500 transition-colors p-2">
+                        <i class="fas fa-times"></i>
+                    </button>` : ''}
+                `;
+                collabListEl.appendChild(div);
+            });
+            calculate();
+        }
+
+        window.updateCollab = (id, key, val) => {
+            const collab = collaborators.find(c => c.id === id);
+            if (key === 'percent') collab.percent = parseFloat(val) || 0;
+            else collab.name = val;
+            calculate();
+        };
+
+        window.removeCollab = (id) => {
+            collaborators = collaborators.filter(c => c.id !== id);
+            renderCollaborators();
+        };
+
+        addBtn.addEventListener('click', () => {
+            const newId = collaborators.length ? Math.max(...collaborators.map(c => c.id)) + 1 : 1;
+            collaborators.push({ id: newId, name: `Partner ${newId}`, percent: 0 });
+            renderCollaborators();
+        });
+
+        function calculate() {
+            const gross = parseFloat(grossInput.value) || 0;
+            const platformFeePct = parseFloat(platformFeeInput.value) || 0;
+            const totalPct = collaborators.reduce((sum, c) => sum + c.percent, 0);
+            
+            const feeAmount = gross * (platformFeePct / 100);
+            const netTotal = gross - feeAmount;
+
+            // UI Updates
+            document.getElementById('display-net-total').textContent = formatMoney(netTotal);
+            document.getElementById('display-fee-amount').textContent = formatMoney(feeAmount);
+            document.getElementById('display-platform-cut-pct').textContent = platformFeePct + '%';
+            document.getElementById('display-platform-cut-val').textContent = formatMoney(feeAmount);
+            document.getElementById('fee-bar').style.width = platformFeePct + '%';
+
+            // Warning
+            const warning = document.getElementById('percentage-warning');
+            document.getElementById('current-total-pct').textContent = totalPct;
+            if (Math.abs(totalPct - 100) > 0.01) {
+                warning.classList.remove('hidden');
+            } else {
+                warning.classList.add('hidden');
+            }
+
+            // Results
+            resultsListEl.innerHTML = '';
+            collaborators.forEach(c => {
+                const payout = netTotal * (c.percent / 100);
+                const div = document.createElement('div');
+                div.className = 'bg-white p-4 rounded-2xl border border-slate-100 shadow-sm flex justify-between items-center';
+                div.innerHTML = `
+                    <div>
+                        <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">${c.name || 'Unnamed'}</p>
+                        <p class="text-lg font-extrabold text-slate-900">${formatMoney(payout)}</p>
+                    </div>
+                    <div class="text-right">
+                        <span class="text-xs font-bold text-[#da3f0b] bg-[#da3f0b10] px-2 py-1 rounded-lg">${c.percent}% Share</span>
+                    </div>
+                `;
+                resultsListEl.appendChild(div);
+            });
+        }
+
+        function formatMoney(amount) {
+            return new Intl.NumberFormat(currency.locale, {
+                style: 'currency',
+                currency: currency.code,
+            }).format(amount);
+        }
+
+        grossInput.addEventListener('input', calculate);
+        platformFeeInput.addEventListener('input', calculate);
+        currencySelect.addEventListener('change', (e) => {
+            const codes = {
+                USD: { code: 'USD', symbol: '$', locale: 'en-US' },
+                EUR: { code: 'EUR', symbol: '€', locale: 'de-DE' },
+                GBP: { code: 'GBP', symbol: '£', locale: 'en-GB' },
+                INR: { code: 'INR', symbol: '₹', locale: 'en-IN' },
+                CAD: { code: 'CAD', symbol: 'C$', locale: 'en-CA' },
+                AUD: { code: 'AUD', symbol: 'A$', locale: 'en-AU' }
+            };
+            currency = codes[e.target.value];
+            document.querySelectorAll('.currency-symbol').forEach(el => el.textContent = currency.symbol);
+            calculate();
+        });
+
+        renderCollaborators();
+    });
+
+    window.handleBookmark = function() {
+        const toast = document.getElementById('bookmark-toast');
+        toast.classList.remove('hidden');
+        setTimeout(() => toast.classList.add('hidden'), 3000);
+    };
+
+    window.shareSocial = function(platform) {
+        const url = encodeURIComponent(window.location.href);
+        const title = encodeURIComponent("Check out this Creator Revenue Split Calculator!");
+        let shareUrl = '';
+        switch(platform) {
+            case 'facebook': shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${url}`; break;
+            case 'twitter': shareUrl = `https://twitter.com/intent/tweet?url=${url}&text=${title}`; break;
+            case 'whatsapp': shareUrl = `https://api.whatsapp.com/send?text=${title}%20${url}`; break;
+            case 'telegram': shareUrl = `https://t.me/share/url?url=${url}&text=${title}`; break;
+        }
+        if(shareUrl) window.open(shareUrl, '_blank');
+    };
+    </script>
+
+    <section class="bg-white py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="prose prose-lg max-w-none prose-h2:text-gray-800 prose-p:text-gray-700">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">Why Use a Collaboration Revenue Split Calculator?</h2>
+                <p class="mb-6 leading-relaxed">
+                    In the modern creator economy, collaborations are the engine of growth. Whether it's a YouTube guest appearance, a co-hosted Twitch stream, or a joint digital product launch, working together often leads to better content and higher earnings. However, money is the most common cause of friction in creative partnerships. Our <strong>collaboration revenue split calculator</strong> is designed to remove the guesswork and provide a transparent, data-driven way to divide earnings.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Understanding Gross vs. Net Revenue in Collaborations</h2>
+                <p class="mb-6 leading-relaxed">
+                    One of the biggest mistakes creators make is splitting the "Gross Revenue." If a video earns $1,000 in AdSense, you don't actually have $1,000 to split. Platforms like YouTube take a 45% cut of long-form video revenue, and Twitch often takes 50% of sub revenue. If you agree to a 50/50 split of the gross, but one person is receiving the payout after platform fees, they might end up paying their partner more than they actually kept! 
+                </p>
+                <p class="mb-6 leading-relaxed">
+                    Our tool acts as a <em>rev share calculator</em> that prioritizes "Net Revenue." By entering the platform fee first, you ensure that the split happens only on the money that actually hits your bank account. This is essential for maintaining fair and sustainable partnerships.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">How to Determine a Fair Revenue Share</h2>
+                <p class="mb-6 leading-relaxed">
+                    There is no one-size-fits-all percentage for creative work. However, here are some common industry standards:
+                </p>
+                <ul class="list-disc pl-6 mb-6 space-y-2 text-gray-700">
+                    <li><strong>50/50 Split:</strong> Best for equal partners who both contributed significantly to the idea, production, and promotion.</li>
+                    <li><strong>70/30 Split:</strong> Common when one creator provides the "platform" (the audience and channel) while the other provides a specific service like editing or a guest appearance.</li>
+                    <li><strong>Variable Splits:</strong> Sometimes creators use a tiered system based on performance milestones.</li>
+                </ul>
+                <p class="mb-6 leading-relaxed">
+                    Just as our <a href="https://simpliconvert.com/freelance-hourly_rate_calculator/" target="_blank">Freelance Hourly Rate Calculator</a> helps you value your time, this tool helps you value your collaborative contributions.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Factoring in Platform Fees (YouTube, Twitch, and More)</h2>
+                <p class="mb-6 leading-relaxed">
+                    Different platforms have vastly different fee structures. When using the <strong>creator partnership split</strong> tool, keep these common fees in mind:
+                </p>
+                <ul class="list-disc pl-6 mb-6 space-y-2 text-gray-700">
+                    <li><strong>YouTube AdSense:</strong> 45% (Platform keeps 45%, you keep 55%).</li>
+                    <li><strong>Twitch Subs:</strong> Usually 50% (though some top creators have 70/30 deals).</li>
+                    <li><strong>Patreon:</strong> 5% to 12% depending on the plan.</li>
+                    <li><strong>Brand Deals:</strong> Usually 0% platform fee, but you may need to account for agency commissions (often 10-20%).</li>
+                </ul>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Final Thoughts on Creative Partnerships</h2>
+                <p class="mb-6 leading-relaxed">
+                    Transparency is the key to long-term success. Using a <strong>collaboration revenue split calculator</strong> before you even hit "record" sets clear expectations. It transforms a potentially awkward conversation into a professional business agreement. Whether you're calculating <a href="https://simpliconvert.com/youtube-earnings-calculator/" target="_blank">YouTube earnings</a> or splitting a <a href="https://simpliconvert.com/tiktok-creator-fund-calculator/" target="_blank">TikTok Creator Fund</a> payout, always put the numbers first to keep the creativity flowing.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-center text-gray-900 mb-8">Frequently Asked Questions</h2>
+            <div class="space-y-4">
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>What is a standard revenue split for a collaboration?</span>
+                        <i class="fas fa-chevron-down faq-icon transition-transform duration-300"></i>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500">
+                        <p class="p-5 pt-0 text-gray-600">Standard splits vary. A 50/50 split is common for equal partners, while a 70/30 or 60/40 split might be used if one creator provides the platform and the other provides specific talent or editing. Always agree on the split before starting the project.</p>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>Should I split gross or net revenue?</span>
+                        <i class="fas fa-chevron-down faq-icon transition-transform duration-300"></i>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500">
+                        <p class="p-5 pt-0 text-gray-600">It is usually fairer to split 'Net Revenue'—the amount left after platform fees (like YouTube's 45% or Twitch's 50%) and production costs. This ensures both parties share the burden of expenses.</p>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>How do platform fees affect my payout?</span>
+                        <i class="fas fa-chevron-down faq-icon transition-transform duration-300"></i>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500">
+                        <p class="p-5 pt-0 text-gray-600">Platforms like YouTube, Twitch, and Patreon take a percentage of your earnings. If you earn $1,000 but the platform takes 30%, you only have $700 to split. Our calculator factors this in automatically.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 pb-16">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-slate-200 pt-16">
+            <h2 class="text-2xl font-bold text-center text-slate-800 mb-10">Popular Tools on SimpliConvert</h2>
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+                <a href="/youtube-earnings-calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-red-50 text-red-600 flex items-center justify-center shrink-0 group-hover:bg-red-600 group-hover:text-white transition-colors">
+                        <i class="fab fa-youtube text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">YouTube Calc</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Estimate video ad revenue.</p>
+                    </div>
+                </a>
+                <a href="/tiktok-creator-fund-calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-slate-50 text-slate-800 flex items-center justify-center shrink-0 group-hover:bg-black group-hover:text-white transition-colors">
+                        <i class="fab fa-tiktok text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">TikTok Calc</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Calculate fund earnings.</p>
+                    </div>
+                </a>
+                <a href="/twitch-earnings-calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-purple-50 text-purple-600 flex items-center justify-center shrink-0 group-hover:bg-purple-600 group-hover:text-white transition-colors">
+                        <i class="fab fa-twitch text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Twitch Calc</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Estimate sub & bit revenue.</p>
+                    </div>
+                </a>
+                <a href="/freelance-hourly-rate-calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0 group-hover:bg-emerald-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-calculator text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Rate Calc</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Find your ideal hourly rate.</p>
+                    </div>
+                </a>
+                <a href="/fiverr-fee-calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-green-50 text-green-600 flex items-center justify-center shrink-0 group-hover:bg-green-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-hand-holding-usd text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Fiverr Fee</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Calculate net gig profit.</p>
+                    </div>
+                </a>
+                <a href="/upwork-fee-calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-green-50 text-green-700 flex items-center justify-center shrink-0 group-hover:bg-green-700 group-hover:text-white transition-colors">
+                        <i class="fas fa-briefcase text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Upwork Fee</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Calculate service fee cuts.</p>
+                    </div>
+                </a>
+                <a href="/roi-calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center shrink-0 group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-chart-pie text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">ROI Calc</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Measure project returns.</p>
+                    </div>
+                </a>
+                <a href="/profit-margin-calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-orange-50 text-orange-600 flex items-center justify-center shrink-0 group-hover:bg-orange-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-percent text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Margin Calc</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Calculate gross & net margins.</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <div id="footer"></div>
+
+    <script>
+    async function loadComponent(url, elementId, callback) {
+        try {
+            const response = await fetch(url);
+            const text = await response.text();
+            const element = document.getElementById(elementId);
+            if (element) {
+                element.innerHTML = text;
+                if (callback) callback();
+            }
+        } catch (error) { console.error('Error loading component:', error); }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        loadComponent('/components/navbar.html', 'navbar');
+        loadComponent('/components/footer.html', 'footer', () => {
+            const yearSpan = document.getElementById('current-year');
+            if(yearSpan) yearSpan.textContent = new Date().getFullYear();
+        });
+        
+        const faqToggles = document.querySelectorAll('[data-faq-toggle]');
+        faqToggles.forEach(button => {
+            button.addEventListener('click', () => {
+                const answer = button.nextElementSibling;
+                const icon = button.querySelector('.faq-icon');
+                const isOpening = !answer.style.maxHeight;
+                faqToggles.forEach(other => {
+                    if (other !== button) {
+                        other.nextElementSibling.style.maxHeight = null;
+                        other.querySelector('.faq-icon').style.transform = 'rotate(0deg)';
+                    }
+                });
+                if (isOpening) {
+                    answer.style.maxHeight = answer.scrollHeight + "px";
+                    icon.style.transform = 'rotate(180deg)';
+                } else {
+                    answer.style.maxHeight = null;
+                    icon.style.transform = 'rotate(0deg)';
+                }
+            });
+        });
+    });
+    </script>
+</body>
+</html>

@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Twitch Sub Split Calculator – Partner vs Affiliate Revenue | SimpliConvert</title>
+    <meta name="description" content="Calculate your Twitch subscription revenue instantly. Compare the 50/50 Affiliate split with the 70/30 Partner split and estimate your monthly take-home pay.">
+    <meta name="keywords" content="twitch partner vs affiliate split, twitch 70/30 split, sub revenue calculator, twitch earnings, streamer revenue tool, twitch partner plus program">
+    <meta name="author" content="SimpliConvert">
+    <meta property="og:site_name" content="SimpliConvert">
+    <meta name="robots" content="index, follow">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://simpliconvert.com/twitch-split-calculator/">
+    <meta property="og:title" content="Twitch Sub Split Calculator – Partner vs Affiliate">
+    <meta property="og:description" content="Compare Twitch revenue splits. See how much you earn as an Affiliate vs a Partner with the 70/30 split.">
+    <meta property="og:image" content="https://simpliconvert.com/images/twitch-split-calculator-og.jpg">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://simpliconvert.com/twitch-split-calculator/">
+    <meta name="twitter:title" content="Twitch Sub Split Calculator – Calculate Streamer Revenue">
+    <meta name="twitter:description" content="Free tool to calculate Twitch sub earnings, including Tier 1, 2, and 3 subscriptions.">
+    <meta name="twitter:image" content="https://simpliconvert.com/images/twitch-split-calculator-og.jpg">
+
+    <link rel="canonical" href="https://simpliconvert.com/twitch-split-calculator/">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Twitch Sub Split Calculator",
+      "url": "https://simpliconvert.com/twitch-split-calculator/",
+      "description": "An online tool for Twitch streamers to calculate their subscription revenue based on Affiliate (50/50) or Partner (70/30) splits.",
+      "applicationCategory": "FinanceApplication",
+      "operatingSystem": "Web Browser",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "SimpliConvert",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://simpliconvert.com/logo.png"
+        }
+      }
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [{
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://simpliconvert.com/"
+      },{
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Calculator Tools",
+        "item": "https://simpliconvert.com/calculator_tools/"
+      },{
+        "@type": "ListItem",
+        "position": 3,
+        "name": "Twitch Sub Split Calculator",
+        "item": "https://simpliconvert.com/twitch-split-calculator/"
+      }]
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [{
+        "@type": "Question",
+        "name": "What is the standard Twitch sub split?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The standard split for Twitch Affiliates and most Partners is 50/50. This means Twitch takes 50% of the subscription cost, and the streamer receives the remaining 50% after taxes and fees."
+        }
+      }, {
+        "@type": "Question",
+        "name": "How do I get the 70/30 Twitch split?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Streamers can access the 70/30 split through the Partner Plus program. To qualify, you typically need to maintain a certain number of recurring sub points (usually 350 points) for three consecutive months."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Does regional pricing affect my sub revenue?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. Twitch uses Local Sub Pricing, meaning a Tier 1 sub costs less in certain countries to match local purchasing power. This calculator uses the standard $4.99 USD base, but your actual revenue will vary based on where your subscribers are located."
+        }
+      }]
+    }
+    </script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #9146FF; /* Twitch Purple */
+            --primary-hover: #772ce8;
+            --primary-light: #f5f0ff;
+            --bg: #f8fafc;
+            --text-dark: #0f172a;
+            --success: #16a34a;
+            --danger: #dc2626;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text-dark);
+        }
+
+        .hero-card {
+            background: white;
+            border: 1px solid #f1f5f9;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background-color: var(--primary);
+        }
+
+        .tooltip-container { position: relative; display: inline-block; }
+        .tooltip-text {
+            visibility: hidden; width: 220px; background-color: #1e293b; color: #fff;
+            text-align: center; border-radius: 8px; padding: 10px; position: absolute;
+            z-index: 50; bottom: 125%; left: 50%; margin-left: -110px; opacity: 0;
+            transition: opacity 0.2s; font-size: 0.75rem; font-weight: 400;
+            pointer-events: none; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+        .tooltip-container:hover .tooltip-text { visibility: visible; opacity: 1; }
+
+        .animate-fade { animation: fadeIn 0.3s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+        .tool-card { transition: transform 0.2s ease, box-shadow 0.2s ease; }
+        .tool-card:hover { transform: translateY(-4px); box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
+
+        .prose a { color: var(--primary); text-decoration: none; }
+        .prose a:hover { text-decoration: underline; }
+    </style>
+</head>
+
+<body class="bg-gray-50 min-h-screen flex flex-col">
+    <div id="navbar" style="min-height: 70px;"></div>
+	
+	<section class="hero-white text-black py-2 md:py-10">
+        <div class="container mx-auto px-4">
+            <nav class="flex pb-4 text-sm text-slate-500 items-center space-x-2 justify-center">
+                <a href="https://simpliconvert.com/" class="hover:text-[#9146FF] transition-colors">Home</a>
+                <i class="fas fa-chevron-right text-[10px]"></i>
+                <a href="https://simpliconvert.com/calculator_tools/" class="hover:text-[#9146FF] transition-colors">Calculators</a>
+                <i class="fas fa-chevron-right text-[10px]"></i>
+                <span class="text-slate-900 font-medium">Twitch Sub Split Calculator</span>
+            </nav>
+            <div class="text-center">
+                <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-2">twitch partner vs affiliate split</h1>
+                <p class="text-lg md:text-xl max-w-3xl mx-auto mb-2 text-slate-600">
+                Compare your earnings as a Twitch Affiliate or Partner. Calculate Tier 1, 2, and 3 sub revenue with 50/50 and 70/30 split options.
+                </p>
+            </div>
+        </div>
+    </section>		
+
+    <div id="calculator-app" class="w-full max-w-6xl mx-auto p-4 sm:p-6">
+        <div class="bg-white rounded-[2rem] shadow-2xl overflow-hidden border border-slate-100">
+            <header class="bg-slate-50/50 border-b border-slate-100 p-6 md:p-8 flex flex-col md:flex-row justify-between items-center gap-6">
+                <div class="text-center md:text-left">
+                  <h2 class="text-2xl font-black text-slate-800 tracking-tight flex items-center justify-center md:justify-start gap-3">
+                    <span class="bg-[#9146FF] text-white p-2 rounded-xl text-lg shadow-lg shadow-[#9146FF30]">
+                      <i class="fab fa-twitch"></i>
+                    </span>
+                    Twitch Revenue Estimator
+                  </h2>
+                </div>
+                
+                <div class="relative group min-w-[140px]">
+                  <select id="currency-select" class="appearance-none w-full bg-white border border-slate-200 text-slate-700 py-2.5 pl-4 pr-10 rounded-xl text-xs font-bold focus:outline-none focus:ring-4 focus:ring-[#9146FF15] focus:border-[#9146FF] shadow-sm cursor-pointer">
+                    <option value="USD">USD ($)</option>
+                    <option value="EUR">EUR (€)</option>
+                    <option value="GBP">GBP (£)</option>
+                    <option value="CAD">CAD (C$)</option>
+                    <option value="AUD">AUD (A$)</option>
+                  </select>
+                  <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-slate-400">
+                    <i class="fas fa-chevron-down text-[10px]"></i>
+                  </div>
+                </div>
+            </header>
+    
+            <main class="flex flex-col lg:flex-row">
+                <div class="lg:w-[50%] p-6 md:p-10 lg:p-12 border-r border-slate-100">
+                    <div class="space-y-6">
+                        
+                        <div class="bg-slate-50 p-6 rounded-2xl border border-slate-100">
+                            <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-6"><i class="fas fa-users mr-2"></i>Subscriber Count</h3>
+                            <div class="space-y-4">
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Tier 1 Subs ($4.99)</label>
+                                    <input type="number" id="t1-subs" value="100" class="block w-full rounded-xl border-slate-200 border py-3 px-4 focus:ring-4 focus:ring-[#9146FF20] focus:border-[#9146FF] sm:text-sm font-semibold text-slate-800 transition-all">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Tier 2 Subs ($9.99)</label>
+                                    <input type="number" id="t2-subs" value="5" class="block w-full rounded-xl border-slate-200 border py-3 px-4 focus:ring-4 focus:ring-[#9146FF20] focus:border-[#9146FF] sm:text-sm font-semibold text-slate-800 transition-all">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Tier 3 Subs ($24.99)</label>
+                                    <input type="number" id="t3-subs" value="2" class="block w-full rounded-xl border-slate-200 border py-3 px-4 focus:ring-4 focus:ring-[#9146FF20] focus:border-[#9146FF] sm:text-sm font-semibold text-slate-800 transition-all">
+                                </div>
+                            </div>
+                        </div>
+    
+                        <div class="bg-[#9146FF08] p-6 rounded-2xl border border-[#9146FF15]">
+                           <h3 class="text-xs font-black text-[#9146FF] uppercase tracking-widest mb-6"><i class="fas fa-percentage mr-2"></i>Revenue Split</h3>
+                           <div class="grid grid-cols-2 gap-4">
+                               <button onclick="setSplit(50)" id="btn-50" class="py-3 px-4 rounded-xl border-2 border-[#9146FF] bg-[#9146FF] text-white font-bold text-sm transition-all">50/50 (Affiliate)</button>
+                               <button onclick="setSplit(70)" id="btn-70" class="py-3 px-4 rounded-xl border-2 border-slate-200 bg-white text-slate-600 font-bold text-sm hover:border-[#9146FF] transition-all">70/30 (Partner Plus)</button>
+                           </div>
+                        </div>
+
+                        <div class="p-2">
+                           <button onclick="toggleAdvanced()" class="text-xs font-bold text-slate-400 flex items-center gap-2 hover:text-[#9146FF] transition-colors">
+                             <i class="fas fa-cog"></i> Advanced Settings (Fees & Taxes)
+                           </button>
+                           <div id="advanced-section" class="hidden mt-4 space-y-4 animate-fade">
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Estimated Fees & Taxes (%)</label>
+                                    <input type="number" id="fees-percent" value="5" class="block w-full rounded-xl border-slate-200 border py-3 px-4 focus:ring-4 focus:ring-[#9146FF20] focus:border-[#9146FF] sm:text-sm font-semibold text-slate-800 transition-all">
+                                    <p class="text-[10px] text-slate-400 mt-1 italic">Twitch deducts processing fees and taxes before the split.</p>
+                                </div>
+                           </div>
+                        </div>
+                    </div>
+                </div>
+    
+                <div class="lg:w-[50%] bg-slate-50/50 p-6 md:p-10 lg:p-12 flex flex-col justify-center">
+                   <div class="space-y-6">
+                     <div class="hero-card p-8 flex flex-col items-center text-center">
+                         <p class="text-xs font-black text-[#9146FF] uppercase tracking-[0.2em] mb-4">Your Monthly Take-Home</p>
+                         <div class="flex items-center justify-center">
+                           <span id="display-take-home" class="text-5xl md:text-6xl font-black tracking-tighter leading-none text-[#16a34a]">$0.00</span>
+                         </div>
+                         <p class="text-sm text-slate-400 font-medium mt-4">Total Gross Revenue: <span id="display-gross">$0.00</span></p>
+                     </div>
+    
+                     <div class="grid grid-cols-2 gap-4">
+                         <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex flex-col items-center text-center">
+                            <div class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Twitch's Cut</div>
+                            <p id="display-twitch-cut" class="text-xl font-extrabold text-slate-900">$0.00</p>
+                         </div>
+                         <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex flex-col items-center text-center">
+                            <div class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Sub Points</div>
+                            <p id="display-points" class="text-xl font-extrabold text-slate-900">0</p>
+                         </div>
+                     </div>
+    
+                     <div class="bg-white rounded-xl p-6 border border-slate-100 shadow-sm mt-4">
+                         <div class="flex justify-between items-center mb-2">
+                            <span class="text-xs font-bold text-slate-400 uppercase tracking-widest">Partner Plus Progress</span>
+                            <span id="points-status" class="text-xs font-bold text-[#9146FF]">0 / 350 Points</span>
+                         </div>
+                         <div class="w-full bg-slate-100 rounded-full h-3 mb-2 overflow-hidden">
+                            <div id="points-bar" class="bg-[#9146FF] h-3 rounded-full transition-all duration-700" style="width: 0%"></div>
+                         </div>
+                         <p class="text-[10px] text-slate-400">
+                           You need 350 points from recurring subs to qualify for the 70/30 split.
+                         </p>
+                     </div>
+                   </div>
+                </div>
+            </main>
+    
+            <footer class="bg-slate-50 border-t border-slate-100 p-6 md:p-8">
+               <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+                   <div class="text-center md:text-left">
+                       <h4 class="text-sm font-bold text-slate-700 mb-1">Share your goals</h4>
+                       <p class="text-xs text-slate-400">Help other streamers understand their revenue.</p>
+                   </div>
+                   <div class="flex flex-wrap justify-center gap-3">
+                       <a href="#" onclick="shareSocial('twitter')" class="w-10 h-10 rounded-full flex items-center justify-center text-white transition-transform hover:-translate-y-1 bg-[#1DA1F2]"><i class="fab fa-twitter"></i></a>
+                       <a href="#" onclick="shareSocial('whatsapp')" class="w-10 h-10 rounded-full flex items-center justify-center text-white transition-transform hover:-translate-y-1 bg-[#25D366]"><i class="fab fa-whatsapp"></i></a>
+                       <a href="#" onclick="shareSocial('reddit')" class="w-10 h-10 rounded-full flex items-center justify-center text-white transition-transform hover:-translate-y-1 bg-[#FF4500]"><i class="fab fa-reddit-alien"></i></a>
+                   </div>
+                   <button onclick="handleBookmark()" class="flex items-center gap-2 bg-white border border-slate-200 hover:border-[#9146FF] hover:text-[#9146FF] text-slate-600 px-4 py-2 rounded-lg text-sm font-bold transition-all shadow-sm">
+                      <i class="fas fa-bookmark"></i> Bookmark
+                   </button>
+               </div>
+            </footer>
+        </div>
+    </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const state = {
+            currency: { code: 'USD', symbol: '$', locale: 'en-US' },
+            t1: 100, t2: 5, t3: 2,
+            split: 50,
+            fees: 5
+        };
+
+        const els = {
+            t1: document.getElementById('t1-subs'),
+            t2: document.getElementById('t2-subs'),
+            t3: document.getElementById('t3-subs'),
+            fees: document.getElementById('fees-percent'),
+            currency: document.getElementById('currency-select'),
+            btn50: document.getElementById('btn-50'),
+            btn70: document.getElementById('btn-70'),
+            displayTakeHome: document.getElementById('display-take-home'),
+            displayGross: document.getElementById('display-gross'),
+            displayTwitchCut: document.getElementById('display-twitch-cut'),
+            displayPoints: document.getElementById('display-points'),
+            pointsStatus: document.getElementById('points-status'),
+            pointsBar: document.getElementById('points-bar')
+        };
+
+        function calculate() {
+            const t1Count = parseInt(els.t1.value) || 0;
+            const t2Count = parseInt(els.t2.value) || 0;
+            const t3Count = parseInt(els.t3.value) || 0;
+            const feePercent = parseFloat(els.fees.value) || 0;
+
+            // Gross Revenue (Standard USD prices)
+            const gross = (t1Count * 4.99) + (t2Count * 9.99) + (t3Count * 24.99);
+            
+            // Sub Points (T1=1, T2=2, T3=6)
+            const points = (t1Count * 1) + (t2Count * 2) + (t3Count * 6);
+
+            // Net after fees/taxes (Twitch takes their cut from the net)
+            const netAfterFees = gross * (1 - (feePercent / 100));
+            
+            const streamerTakeHome = netAfterFees * (state.split / 100);
+            const twitchCut = gross - streamerTakeHome;
+
+            updateUI(gross, streamerTakeHome, twitchCut, points);
+        }
+
+        function updateUI(gross, takeHome, cut, points) {
+            const formatter = new Intl.NumberFormat(state.currency.locale, {
+                style: 'currency', currency: state.currency.code
+            });
+
+            els.displayTakeHome.textContent = formatter.format(takeHome);
+            els.displayGross.textContent = formatter.format(gross);
+            els.displayTwitchCut.textContent = formatter.format(cut);
+            els.displayPoints.textContent = points;
+
+            const progress = Math.min((points / 350) * 100, 100);
+            els.pointsBar.style.width = progress + '%';
+            els.pointsStatus.textContent = `${points} / 350 Points`;
+        }
+
+        window.setSplit = function(val) {
+            state.split = val;
+            els.btn50.className = val === 50 ? 'py-3 px-4 rounded-xl border-2 border-[#9146FF] bg-[#9146FF] text-white font-bold text-sm transition-all' : 'py-3 px-4 rounded-xl border-2 border-slate-200 bg-white text-slate-600 font-bold text-sm hover:border-[#9146FF] transition-all';
+            els.btn70.className = val === 70 ? 'py-3 px-4 rounded-xl border-2 border-[#9146FF] bg-[#9146FF] text-white font-bold text-sm transition-all' : 'py-3 px-4 rounded-xl border-2 border-slate-200 bg-white text-slate-600 font-bold text-sm hover:border-[#9146FF] transition-all';
+            calculate();
+        };
+
+        window.toggleAdvanced = function() {
+            document.getElementById('advanced-section').classList.toggle('hidden');
+        };
+
+        [els.t1, els.t2, els.t3, els.fees].forEach(el => el.addEventListener('input', calculate));
+        els.currency.addEventListener('change', (e) => {
+            const map = { USD: '$', EUR: '€', GBP: '£', CAD: 'C$', AUD: 'A$' };
+            state.currency.code = e.target.value;
+            state.currency.symbol = map[e.target.value];
+            calculate();
+        });
+
+        calculate();
+    });
+
+    window.shareSocial = function(platform) {
+        const url = encodeURIComponent(window.location.href);
+        const text = encodeURIComponent("Check out this Twitch Sub Split Calculator!");
+        const shareUrls = {
+            twitter: `https://twitter.com/intent/tweet?url=${url}&text=${text}`,
+            whatsapp: `https://api.whatsapp.com/send?text=${text}%20${url}`,
+            reddit: `https://www.reddit.com/submit?url=${url}&title=${text}`
+        };
+        window.open(shareUrls[platform], '_blank');
+    };
+
+    window.handleBookmark = function() {
+        alert("Press Ctrl+D (or Cmd+D) to bookmark this calculator!");
+    };
+    </script>
+
+    <section class="bg-white py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="prose prose-lg max-w-none">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">Understanding the Twitch Partner vs Affiliate Split</h2>
+                <p>
+                    For many content creators, the dream is to turn streaming into a full-time career. However, understanding the <strong>twitch partner vs affiliate split</strong> is essential for financial planning. Twitch operates on a subscription model where viewers pay a monthly fee to support their favorite streamers. The revenue from these subscriptions is shared between Twitch and the creator, but the percentage you keep depends heavily on your status and contract.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">The Standard 50/50 Split for Affiliates</h2>
+                <p>
+                    When you first reach Twitch Affiliate status, you are placed on a standard 50/50 revenue split. This means if a viewer buys a Tier 1 subscription for $4.99, Twitch takes approximately $2.50, and you receive $2.50. It is important to note that Twitch deducts payment processing fees and local taxes <em>before</em> the split is calculated, which is why our <strong>Twitch sub revenue calculator</strong> includes an advanced setting for estimated fees.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">How the 70/30 Partner Plus Split Works</h2>
+                <p>
+                    In 2023, Twitch introduced the "Partner Plus" program (now expanded), allowing eligible creators to access a <strong>70/30 Twitch split</strong>. This is a significant boost in income. To qualify, streamers must maintain a specific number of "Sub Points" from recurring paid subscriptions. 
+                </p>
+                <ul>
+                    <li><strong>Tier 1 Sub:</strong> 1 Point</li>
+                    <li><strong>Tier 2 Sub:</strong> 2 Points</li>
+                    <li><strong>Tier 3 Sub:</strong> 6 Points</li>
+                </ul>
+                <p>
+                    By using our calculator, you can see exactly how many Tier 3 subs you need to reach the 350-point threshold faster. Reaching this level can increase your take-home pay by 40% compared to the standard Affiliate split.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Hidden Factors: Regional Pricing and Taxes</h2>
+                <p>
+                    One common point of confusion is "Local Sub Pricing." Twitch adjusted sub costs globally to make them more affordable in different regions. While a sub in the US is $4.99, it might be significantly less in other countries. This means your <strong>streamer revenue</strong> isn't just a flat calculation of sub count; it depends on <em>where</em> your audience lives. 
+                </p>
+                <p>
+                    If you are comparing platforms, you might also want to check our <a href="https://simpliconvert.com/kick-earnings-calculator/">Kick Earnings Calculator</a>, as Kick offers a 95/5 split, which is currently the most aggressive in the industry.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Maximizing Your Twitch Earnings</h2>
+                <p>
+                    To maximize your revenue, focus on converting "Prime" subs into recurring paid subs, as Prime subs do not count toward the Partner Plus point threshold. Additionally, encouraging Tier 2 and Tier 3 subs can help you reach revenue goals with a smaller, more dedicated audience. For those managing multiple income streams, tools like our <a href="https://simpliconvert.com/freelance-hourly_rate_calculator/">Freelance Hourly Rate Calculator</a> can help you balance your streaming time with other professional work.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 py-12">
+        <div class="max-w-4xl mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-8">Frequently Asked Questions</h2>
+            <div class="space-y-4">
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center p-5 font-semibold text-left">
+                        <span>Do Twitch Prime subs count toward the 70/30 split?</span>
+                        <i class="fas fa-chevron-down faq-icon transition-transform"></i>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-300">
+                        <p class="p-5 pt-0 text-gray-600">No. Twitch Prime subscriptions do not count toward the Sub Points required for the Partner Plus (70/30) program. Only recurring paid subscriptions (Tier 1, 2, and 3) and gifted subscriptions count toward the threshold.</p>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center p-5 font-semibold text-left">
+                        <span>When does Twitch pay out my earnings?</span>
+                        <i class="fas fa-chevron-down faq-icon transition-transform"></i>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-300">
+                        <p class="p-5 pt-0 text-gray-600">Twitch typically pays out 15 days after the end of the month in which the revenue was earned (Net-15), provided you have reached the minimum payout threshold of $50 (for most regions/methods) or $100.</p>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center p-5 font-semibold text-left">
+                        <span>Is the 70/30 split permanent once achieved?</span>
+                        <i class="fas fa-chevron-down faq-icon transition-transform"></i>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-300">
+                        <p class="p-5 pt-0 text-gray-600">It is usually granted for a 12-month period once you qualify. However, you must maintain the required sub points to renew your eligibility for the following year.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 pb-16">
+        <div class="max-w-6xl mx-auto px-4 border-t border-slate-200 pt-16">
+            <h2 class="text-2xl font-bold text-center text-slate-800 mb-10">Popular Creator Tools</h2>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+                <a href="https://simpliconvert.com/twitch-earnings-calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-purple-50 text-purple-600 flex items-center justify-center shrink-0"><i class="fab fa-twitch"></i></div>
+                    <div><h3 class="font-bold text-sm">Twitch Earnings</h3><p class="text-xs text-slate-500">Full revenue breakdown.</p></div>
+                </a>
+                <a href="https://simpliconvert.com/kick-earnings-calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-green-50 text-green-600 flex items-center justify-center shrink-0"><i class="fas fa-bolt"></i></div>
+                    <div><h3 class="font-bold text-sm">Kick Calculator</h3><p class="text-xs text-slate-500">95/5 split estimation.</p></div>
+                </a>
+                <a href="https://simpliconvert.com/youtube-earnings-calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-red-50 text-red-600 flex items-center justify-center shrink-0"><i class="fab fa-youtube"></i></div>
+                    <div><h3 class="font-bold text-sm">YouTube Calc</h3><p class="text-xs text-slate-500">AdSense & sub revenue.</p></div>
+                </a>
+                <a href="https://simpliconvert.com/adsense-revenue-calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center shrink-0"><i class="fas fa-ad"></i></div>
+                    <div><h3 class="font-bold text-sm">AdSense Calc</h3><p class="text-xs text-slate-500">Website & video ads.</p></div>
+                </a>
+                <a href="https://simpliconvert.com/salary-to-hourly-calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-slate-50 text-slate-600 flex items-center justify-center shrink-0"><i class="fas fa-clock"></i></div>
+                    <div><h3 class="font-bold text-sm">Salary to Hourly</h3><p class="text-xs text-slate-500">Calculate your rate.</p></div>
+                </a>
+                <a href="https://simpliconvert.com/roi-calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0"><i class="fas fa-chart-pie"></i></div>
+                    <div><h3 class="font-bold text-sm">ROI Calculator</h3><p class="text-xs text-slate-500">Investment returns.</p></div>
+                </a>
+                <a href="https://simpliconvert.com/profit-margin-calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0"><i class="fas fa-percentage"></i></div>
+                    <div><h3 class="font-bold text-sm">Profit Margin</h3><p class="text-xs text-slate-500">Business margins.</p></div>
+                </a>
+                <a href="https://simpliconvert.com/freelance-hourly-rate-calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-orange-50 text-orange-600 flex items-center justify-center shrink-0"><i class="fas fa-calculator"></i></div>
+                    <div><h3 class="font-bold text-sm">Rate Calc</h3><p class="text-xs text-slate-500">Freelance pricing.</p></div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <div id="footer"></div>
+
+    <script>
+    async function loadComponent(url, elementId) {
+        try {
+            const response = await fetch(url);
+            const text = await response.text();
+            document.getElementById(elementId).innerHTML = text;
+        } catch (e) { console.error(e); }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        loadComponent('/components/navbar.html', 'navbar');
+        loadComponent('/components/footer.html', 'footer');
+
+        const faqToggles = document.querySelectorAll('[data-faq-toggle]');
+        faqToggles.forEach(button => {
+            button.addEventListener('click', () => {
+                const answer = button.nextElementSibling;
+                const icon = button.querySelector('.faq-icon');
+                if (answer.style.maxHeight) {
+                    answer.style.maxHeight = null;
+                    icon.style.transform = 'rotate(0deg)';
+                } else {
+                    answer.style.maxHeight = answer.scrollHeight + "px";
+                    icon.style.transform = 'rotate(180deg)';
+                }
+            });
+        });
+    });
+    </script>
+</body>
+</html>

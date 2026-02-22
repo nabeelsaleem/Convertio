@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Churn Rate Calculator – SaaS Churn Rate Formula & Retention Tool | SimpliConvert</title>
+    <meta name="description" content="Calculate your SaaS churn rate instantly. Use our free churn rate formula tool to track customer attrition, retention, and business growth metrics accurately.">
+    <meta name="keywords" content="saas churn rate formula, customer attrition calculator, retention rate tool, calculate churn rate, subscription business metrics, customer loss percentage">
+    <meta name="author" content="SimpliConvert">
+    <meta property="og:site_name" content="SimpliConvert">
+    <meta name="robots" content="index, follow">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://simpliconvert.com/churn-rate-calculator/">
+    <meta property="og:title" content="Churn Rate Calculator – Calculate Customer Attrition">
+    <meta property="og:description" content="Stop losing revenue. Accurately calculate your SaaS churn rate and retention metrics to optimize your subscription business.">
+    <meta property="og:image" content="https://simpliconvert.com/images/churn-rate-calculator-og.jpg">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://simpliconvert.com/churn-rate-calculator/">
+    <meta name="twitter:title" content="Churn Rate Calculator – SaaS Retention Tool">
+    <meta name="twitter:description" content="Free tool to calculate customer churn rate and retention. Essential for SaaS founders and growth marketers.">
+    <meta name="twitter:image" content="https://simpliconvert.com/images/churn-rate-calculator-og.jpg">
+
+    <link rel="canonical" href="https://simpliconvert.com/churn-rate-calculator/">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Churn Rate Calculator",
+      "url": "https://simpliconvert.com/churn-rate-calculator/",
+      "description": "A professional tool for SaaS businesses to calculate customer churn rate, retention rate, and revenue attrition metrics.",
+      "applicationCategory": "BusinessApplication",
+      "operatingSystem": "Web Browser",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "SimpliConvert",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://simpliconvert.com/logo.png"
+        }
+      }
+    }
+    </script>
+
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [{
+    "@type": "ListItem",
+    "position": 1,
+    "name": "Home",
+    "item": "https://simpliconvert.com/"
+  },{
+    "@type": "ListItem",
+    "position": 2,
+    "name": "Calculator Tools",
+    "item": "https://simpliconvert.com/calculator_tools/"
+  },{
+    "@type": "ListItem",
+    "position": 3,
+    "name": "Churn Rate Calculator",
+    "item": "https://simpliconvert.com/churn-rate-calculator/"
+  }]
+}
+</script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [{
+        "@type": "Question",
+        "name": "What is the SaaS churn rate formula?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The basic churn rate formula is: (Customers Lost during Period / Customers at Start of Period) * 100. This gives you the percentage of your customer base that cancelled their subscription."
+        }
+      }, {
+        "@type": "Question",
+        "name": "What is a good churn rate for a SaaS company?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "For established B2B SaaS companies, a monthly churn rate of 1% to 2% is considered very healthy. For early-stage startups or B2C SaaS, 3% to 5% is common, but the goal is always to minimize this through better retention strategies."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Does churn include new customers acquired?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Standard customer churn calculations only look at the customers you had at the very beginning of the period. New customers acquired during that same period are typically excluded from the denominator to avoid masking the attrition rate of your existing base."
+        }
+      }]
+    }
+    </script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #da3f0b;
+            --primary-hover: #b53409;
+            --primary-light: #fff5f2;
+            --bg: #f8fafc;
+            --text-dark: #0f172a;
+            --success: #16a34a;
+            --danger: #dc2626;
+        }
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: var(--text-dark); }
+        .hero-card { background: white; border: 1px solid #f1f5f9; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05); position: relative; overflow: hidden; }
+        .hero-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px; background-color: var(--primary); }
+        .tooltip-container { position: relative; display: inline-block; }
+        .tooltip-text { visibility: hidden; width: 220px; background-color: #1e293b; color: #fff; text-align: center; border-radius: 8px; padding: 10px; position: absolute; z-index: 50; bottom: 125%; left: 50%; margin-left: -110px; opacity: 0; transition: opacity 0.2s; font-size: 0.75rem; font-weight: 400; pointer-events: none; }
+        .tooltip-container:hover .tooltip-text { visibility: visible; opacity: 1; }
+        .animate-fade { animation: fadeIn 0.3s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+        .tool-card { transition: transform 0.2s ease, box-shadow 0.2s ease; }
+        .tool-card:hover { transform: translateY(-4px); box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
+        .prose a { color: #da3f0b; text-decoration: none; }
+        .prose a:hover { text-decoration: underline; }
+    </style>
+</head>
+
+<body class="bg-gray-50 min-h-screen flex flex-col">
+    <div id="navbar" style="min-height: 70px;"></div>
+	
+	<section class="hero-white text-black py-2 md:py-10">
+        <div class="container mx-auto px-4">
+            <nav class="flex pb-4 text-sm text-slate-500 items-center space-x-2 justify-center">
+                <a href="https://simpliconvert.com/" class="hover:text-[#da3f0b] transition-colors">Home</a>
+                <i class="fas fa-chevron-right text-[10px]"></i>
+                <a href="https://simpliconvert.com/calculator_tools/" class="hover:text-[#da3f0b] transition-colors">Calculators</a>
+                <i class="fas fa-chevron-right text-[10px]"></i>
+                <span class="text-slate-900 font-medium">Churn Rate Calculator</span>
+            </nav>
+            <div class="text-center">
+                <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-2">saas churn rate formula</h1>
+                <p class="text-lg md:text-xl max-w-3xl mx-auto mb-2 text-slate-600">
+                Measure customer attrition and retention instantly. Understand your subscription business health with our professional churn rate calculator.
+                </p>
+            </div>
+        </div>
+    </section>		
+
+    <div id="calculator-app" class="w-full max-w-6xl mx-auto p-4 sm:p-6">
+        <div class="bg-white rounded-[2rem] shadow-2xl overflow-hidden border border-slate-100">
+            <header class="bg-slate-50/50 border-b border-slate-100 p-6 md:p-8 flex flex-col md:flex-row justify-between items-center gap-6">
+                <div class="text-center md:text-left">
+                  <h2 class="text-2xl font-black text-slate-800 tracking-tight flex items-center justify-center md:justify-start gap-3">
+                    <span class="bg-[#da3f0b] text-white p-2 rounded-xl text-lg shadow-lg shadow-[#da3f0b30]">
+                      <i class="fas fa-users-slash"></i>
+                    </span>
+                    Customer Retention Analytics
+                  </h2>
+                </div>
+                <div class="text-xs font-bold text-slate-400 uppercase tracking-widest">
+                    Metric Period: <span class="text-slate-800">Monthly / Annual</span>
+                </div>
+            </header>
+    
+            <main class="flex flex-col lg:flex-row">
+                <div class="lg:w-[50%] p-6 md:p-10 lg:p-12 border-r border-slate-100">
+                    <div class="space-y-6">
+                        <div class="bg-slate-50 p-6 rounded-2xl border border-slate-100">
+                            <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-6"><i class="fas fa-database mr-2"></i>Customer Data</h3>
+                            <div class="space-y-5">
+                                <div>
+                                    <div class="flex items-center text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">
+                                        <label>Customers at Start</label>
+                                        <span class="tooltip-container ml-2">
+                                            <i class="fas fa-info-circle text-slate-300 hover:text-[#da3f0b] cursor-help text-xs transition-colors"></i>
+                                            <span class="tooltip-text">Total active subscribers at the beginning of the period.</span>
+                                        </span>
+                                    </div>
+                                    <input type="number" id="input-start-customers" value="1000" class="block w-full rounded-xl border-slate-200 border py-3 px-4 focus:ring-4 focus:ring-[#da3f0b20] focus:border-[#da3f0b] sm:text-sm font-semibold text-slate-800 transition-all bg-white" placeholder="e.g. 1000">
+                                </div>
+    
+                                <div>
+                                    <div class="flex items-center text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">
+                                        <label>Customers Lost</label>
+                                        <span class="tooltip-container ml-2">
+                                            <i class="fas fa-info-circle text-slate-300 hover:text-[#da3f0b] cursor-help text-xs transition-colors"></i>
+                                            <span class="tooltip-text">Number of customers who cancelled or didn't renew during this period.</span>
+                                        </span>
+                                    </div>
+                                    <input type="number" id="input-lost-customers" value="50" class="block w-full rounded-xl border-slate-200 border py-3 px-4 focus:ring-4 focus:ring-[#da3f0b20] focus:border-[#da3f0b] sm:text-sm font-semibold text-slate-800 transition-all bg-white" placeholder="e.g. 50">
+                                </div>
+                            </div>
+                        </div>
+    
+                        <div class="p-2">
+                           <button onclick="toggleAdvanced()" class="text-xs font-bold text-slate-400 flex items-center gap-2 hover:text-[#da3f0b] transition-colors">
+                             <i class="fas fa-chart-pie"></i> Revenue Churn (Optional)
+                           </button>
+                           <div id="advanced-section" class="hidden mt-4 animate-fade">
+                                <div class="bg-[#da3f0b08] p-6 rounded-2xl border border-[#da3f0b15]">
+                                    <div class="flex items-center text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">
+                                        <label>Avg. Revenue Per User (ARPU)</label>
+                                    </div>
+                                    <div class="relative rounded-xl shadow-sm">
+                                        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                            <span class="text-slate-400 font-semibold">$</span>
+                                        </div>
+                                        <input type="number" id="input-arpu" value="50" class="block w-full rounded-xl border-slate-200 border py-3 pl-9 pr-4 focus:ring-4 focus:ring-[#da3f0b20] focus:border-[#da3f0b] sm:text-sm font-semibold text-slate-800 transition-all bg-white" placeholder="0.00">
+                                    </div>
+                                </div>
+                           </div>
+                        </div>
+                    </div>
+                </div>
+    
+                <div class="lg:w-[50%] bg-slate-50/50 p-6 md:p-10 lg:p-12 flex flex-col justify-center">
+                   <div class="space-y-6">
+                     <div class="hero-card p-8 flex flex-col items-center text-center">
+                         <p class="text-xs font-black text-[#da3f0b] uppercase tracking-[0.2em] mb-4">Customer Churn Rate</p>
+                         <div class="flex items-center justify-center">
+                           <span id="display-churn" class="text-5xl md:text-6xl font-black tracking-tighter leading-none text-[#dc2626]">5.00%</span>
+                         </div>
+                         <p class="text-sm text-slate-400 font-medium mt-4">Retention Rate: <span id="display-retention" class="text-slate-700 font-bold">95.00%</span></p>
+                     </div>
+    
+                     <div class="grid grid-cols-2 gap-4">
+                         <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex flex-col items-center text-center">
+                            <div class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Avg. Lifespan</div>
+                            <p id="display-lifespan" class="text-xl font-extrabold text-slate-900">20 Months</p>
+                            <p class="text-[10px] text-slate-400 font-medium mt-1 uppercase tracking-tight">Customer Duration</p>
+                         </div>
+                         <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex flex-col items-center text-center">
+                            <div class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Revenue Lost</div>
+                            <p id="display-rev-lost" class="text-xl font-extrabold text-slate-900">$2,500</p>
+                            <p class="text-[10px] text-slate-400 font-medium mt-1 uppercase tracking-tight">Monthly Attrition</p>
+                         </div>
+                     </div>
+    
+                     <div class="bg-white rounded-xl p-6 border border-slate-100 shadow-sm mt-4">
+                         <div class="flex justify-between items-center mb-2">
+                            <span class="text-xs font-bold text-slate-400 uppercase tracking-widest">Growth Health</span>
+                            <span id="health-label" class="text-xs font-black px-2 py-1 rounded bg-green-100 text-green-700">HEALTHY</span>
+                         </div>
+                         <div class="w-full bg-slate-100 rounded-full h-2 mb-2 overflow-hidden">
+                            <div id="health-bar" class="bg-[#da3f0b] h-2 rounded-full transition-all duration-500" style="width: 5%"></div>
+                         </div>
+                         <p class="text-[10px] text-slate-400" id="health-desc">
+                           Your churn rate is within the acceptable range for a growing SaaS.
+                         </p>
+                     </div>
+                   </div>
+                </div>
+            </main>
+    
+            <footer class="bg-slate-50 border-t border-slate-100 p-6 md:p-8">
+               <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+                   <div class="text-center md:text-left">
+                       <h4 class="text-sm font-bold text-slate-700 mb-1">Share this calculator</h4>
+                       <p class="text-xs text-slate-400">Help other founders track their metrics.</p>
+                   </div>
+                   <div class="flex flex-wrap justify-center gap-3">
+                       <button onclick="shareSocial('facebook')" class="w-10 h-10 rounded-full flex items-center justify-center text-white bg-[#1877F2] hover:-translate-y-1 transition-all"><i class="fab fa-facebook-f"></i></button>
+                       <button onclick="shareSocial('twitter')" class="w-10 h-10 rounded-full flex items-center justify-center text-white bg-[#1DA1F2] hover:-translate-y-1 transition-all"><i class="fab fa-twitter"></i></button>
+                       <button onclick="shareSocial('linkedin')" class="w-10 h-10 rounded-full flex items-center justify-center text-white bg-[#0A66C2] hover:-translate-y-1 transition-all"><i class="fab fa-linkedin-in"></i></button>
+                       <button onclick="shareSocial('whatsapp')" class="w-10 h-10 rounded-full flex items-center justify-center text-white bg-[#25D366] hover:-translate-y-1 transition-all"><i class="fab fa-whatsapp"></i></button>
+                   </div>
+                   <button onclick="handleBookmark()" class="flex items-center gap-2 bg-white border border-slate-200 hover:border-[#da3f0b] hover:text-[#da3f0b] text-slate-600 px-4 py-2 rounded-lg text-sm font-bold transition-all shadow-sm">
+                      <i class="fas fa-bookmark"></i> Bookmark
+                   </button>
+               </div>
+            </footer>
+        </div>
+    </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const inputs = {
+            start: document.getElementById('input-start-customers'),
+            lost: document.getElementById('input-lost-customers'),
+            arpu: document.getElementById('input-arpu')
+        };
+        const displays = {
+            churn: document.getElementById('display-churn'),
+            retention: document.getElementById('display-retention'),
+            lifespan: document.getElementById('display-lifespan'),
+            revLost: document.getElementById('display-rev-lost'),
+            healthLabel: document.getElementById('health-label'),
+            healthBar: document.getElementById('health-bar'),
+            healthDesc: document.getElementById('health-desc')
+        };
+
+        function calculate() {
+            const start = parseFloat(inputs.start.value) || 0;
+            const lost = parseFloat(inputs.lost.value) || 0;
+            const arpu = parseFloat(inputs.arpu.value) || 0;
+
+            if (start <= 0) {
+                displays.churn.textContent = "0.00%";
+                return;
+            }
+
+            const churnRate = (lost / start) * 100;
+            const retentionRate = 100 - churnRate;
+            const lifespan = churnRate > 0 ? (1 / (churnRate / 100)) : 0;
+            const revenueLost = lost * arpu;
+
+            displays.churn.textContent = churnRate.toFixed(2) + "%";
+            displays.retention.textContent = retentionRate.toFixed(2) + "%";
+            displays.lifespan.textContent = lifespan > 0 ? lifespan.toFixed(1) + " Months" : "∞";
+            displays.revLost.textContent = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(revenueLost);
+
+            // Health Logic
+            let health = "HEALTHY";
+            let color = "bg-green-100 text-green-700";
+            let desc = "Your churn rate is within the acceptable range for a growing SaaS.";
+            
+            if (churnRate > 5 && churnRate <= 10) {
+                health = "WARNING";
+                color = "bg-yellow-100 text-yellow-700";
+                desc = "Churn is slightly high. Consider reviewing your onboarding process.";
+            } else if (churnRate > 10) {
+                health = "CRITICAL";
+                color = "bg-red-100 text-red-700";
+                desc = "High attrition detected. Focus on customer success immediately.";
+            }
+
+            displays.healthLabel.textContent = health;
+            displays.healthLabel.className = `text-xs font-black px-2 py-1 rounded ${color}`;
+            displays.healthBar.style.width = Math.min(churnRate * 5, 100) + "%";
+            displays.healthDesc.textContent = desc;
+        }
+
+        [inputs.start, inputs.lost, inputs.arpu].forEach(input => {
+            input.addEventListener('input', calculate);
+        });
+
+        window.toggleAdvanced = () => document.getElementById('advanced-section').classList.toggle('hidden');
+        
+        window.handleBookmark = () => alert("Press Ctrl+D (or Cmd+D) to bookmark this tool.");
+
+        window.shareSocial = (platform) => {
+            const url = encodeURIComponent(window.location.href);
+            const text = encodeURIComponent("Check out this SaaS Churn Rate Calculator!");
+            const shares = {
+                facebook: `https://www.facebook.com/sharer/sharer.php?u=${url}`,
+                twitter: `https://twitter.com/intent/tweet?url=${url}&text=${text}`,
+                linkedin: `https://www.linkedin.com/shareArticle?mini=true&url=${url}`,
+                whatsapp: `https://api.whatsapp.com/send?text=${text}%20${url}`
+            };
+            window.open(shares[platform], '_blank');
+        };
+
+        calculate();
+    });
+    </script>
+
+    <section class="bg-white py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="prose prose-lg max-w-none prose-h2:text-gray-800 prose-p:text-gray-700">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">Mastering the SaaS Churn Rate Formula</h2>
+                <p class="mb-6 leading-relaxed">
+                    In the world of subscription-based businesses, growth isn't just about how many new customers you acquire; it's about how many you keep. The <strong>saas churn rate formula</strong> is the most critical metric for measuring the sustainability of your business model. If you are losing customers faster than you can replace them, your business is essentially a "leaky bucket." Our Churn Rate Calculator helps you identify these leaks before they become catastrophic.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Why Customer Attrition Matters</h2>
+                <p class="mb-6 leading-relaxed">
+                    Customer attrition, or churn, directly impacts your bottom line and your company's valuation. High churn rates indicate that your product might not be meeting market needs or that your customer success efforts are failing. By using a <strong>churn rate calculator</strong>, founders and product managers can track monthly trends and correlate spikes in churn with product updates or market shifts.
+                </p>
+                <p class="mb-6 leading-relaxed">
+                    Understanding your churn is also essential for calculating your <a href="https://simpliconvert.com/roi-calculator/">ROI</a> on marketing spend. If your customer acquisition cost (CAC) is high but your churn rate is also high, you will never achieve profitability.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">How to Calculate Churn Rate Manually</h2>
+                <p class="mb-6 leading-relaxed">
+                    While our tool automates the process, understanding the math behind the <strong>saas churn rate formula</strong> is vital for any data-driven professional. The standard calculation is:
+                </p>
+                <div class="bg-slate-50 p-6 rounded-xl border border-slate-200 mb-6 italic text-center">
+                    Churn Rate = (Number of Customers Lost / Total Customers at Start of Period) x 100
+                </div>
+                <p class="mb-6 leading-relaxed">
+                    For example, if you started the month with 500 subscribers and 25 of them cancelled by the end of the month, your churn rate is 5%. This simple percentage tells you exactly what portion of your revenue base is disappearing each month.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Churn Rate vs. Retention Rate</h2>
+                <p class="mb-6 leading-relaxed">
+                    These two metrics are two sides of the same coin. While churn measures loss, the retention rate measures loyalty. If your churn rate is 5%, your retention rate is 95%. High-performing SaaS companies often focus on "Net Negative Churn," where the expansion revenue from existing customers outweighs the revenue lost from cancellations. To see how this affects your overall business sustainability, you can also use our <a href="https://simpliconvert.com/break-even-calculator/">Break-Even Calculator</a> to see when your retained customers finally cover your initial costs.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Strategies to Reduce SaaS Churn</h2>
+                <ul class="list-disc pl-6 mb-6 space-y-2 text-gray-700">
+                    <li><strong>Improve Onboarding:</strong> Most churn happens in the first 30 days. Ensure users find value immediately.</li>
+                    <li><strong>Gather Exit Feedback:</strong> Always ask why a customer is leaving. Use this data to fix product gaps.</li>
+                    <li><strong>Monitor Usage Patterns:</strong> Identify "at-risk" customers who haven't logged in recently and reach out proactively.</li>
+                    <li><strong>Offer Annual Plans:</strong> Customers on annual plans typically have much lower churn rates than those on monthly plans.</li>
+                </ul>
+                <p class="mb-6 leading-relaxed">
+                    By combining these strategies with regular monitoring via our <strong>customer attrition tool</strong>, you can build a more resilient and profitable subscription business. For those looking to optimize their pricing alongside retention, checking your <a href="https://simpliconvert.com/profit-margin-calculator/">Profit Margin Calculator</a> can help ensure your subscription tiers are sustainable.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-center text-gray-900 mb-8">Frequently Asked Questions</h2>
+            <div class="space-y-4">
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>What is a "good" churn rate?</span>
+                        <i class="fas fa-chevron-down faq-icon transition-transform"></i>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-300">
+                        <p class="p-5 pt-0 text-gray-600">For B2B SaaS, 1-2% monthly is excellent. For B2C, 3-5% is average. Anything above 10% monthly is usually a sign of a significant product-market fit issue.</p>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>Should I include trial users in churn?</span>
+                        <i class="fas fa-chevron-down faq-icon transition-transform"></i>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-300">
+                        <p class="p-5 pt-0 text-gray-600">No. Churn should only be calculated for paying customers. Trial-to-paid conversion is a separate metric entirely.</p>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>What is Revenue Churn?</span>
+                        <i class="fas fa-chevron-down faq-icon transition-transform"></i>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-300">
+                        <p class="p-5 pt-0 text-gray-600">Revenue churn (or MRR churn) measures the percentage of Monthly Recurring Revenue lost. It's often more accurate than customer churn if you have multiple pricing tiers.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 pb-16">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-slate-200 pt-16">
+            <h2 class="text-2xl font-bold text-center text-slate-800 mb-10">Popular Tools on SimpliConvert</h2>
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+                <a href="/roi-calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center shrink-0 group-hover:bg-blue-600 group-hover:text-white transition-colors"><i class="fas fa-chart-line"></i></div>
+                    <div><h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">ROI Calc</h3><p class="text-xs text-slate-500 leading-snug">Calculate investment returns.</p></div>
+                </a>
+                <a href="/profit-margin-calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-green-50 text-green-600 flex items-center justify-center shrink-0 group-hover:bg-green-600 group-hover:text-white transition-colors"><i class="fas fa-hand-holding-usd"></i></div>
+                    <div><h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Profit Margin</h3><p class="text-xs text-slate-500 leading-snug">Analyze your business margins.</p></div>
+                </a>
+                <a href="/break-even-calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-red-50 text-red-600 flex items-center justify-center shrink-0 group-hover:bg-red-600 group-hover:text-white transition-colors"><i class="fas fa-balance-scale"></i></div>
+                    <div><h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Break-Even</h3><p class="text-xs text-slate-500 leading-snug">Find your profitability point.</p></div>
+                </a>
+                <a href="/adsense-revenue-calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-yellow-50 text-yellow-600 flex items-center justify-center shrink-0 group-hover:bg-yellow-600 group-hover:text-white transition-colors"><i class="fab fa-google"></i></div>
+                    <div><h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">AdSense Calc</h3><p class="text-xs text-slate-500 leading-snug">Estimate website earnings.</p></div>
+                </a>
+                <a href="/freelance-hourly-rate-calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0 group-hover:bg-indigo-600 group-hover:text-white transition-colors"><i class="fas fa-clock"></i></div>
+                    <div><h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Hourly Rate</h3><p class="text-xs text-slate-500 leading-snug">Set your freelance prices.</p></div>
+                </a>
+                <a href="/salary-to-hourly-calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-purple-50 text-purple-600 flex items-center justify-center shrink-0 group-hover:bg-purple-600 group-hover:text-white transition-colors"><i class="fas fa-money-bill-wave"></i></div>
+                    <div><h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Salary Conv.</h3><p class="text-xs text-slate-500 leading-snug">Convert annual to hourly.</p></div>
+                </a>
+                <a href="/stripe-fee-calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-blue-50 text-blue-500 flex items-center justify-center shrink-0 group-hover:bg-blue-500 group-hover:text-white transition-colors"><i class="fab fa-stripe-s"></i></div>
+                    <div><h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Stripe Fees</h3><p class="text-xs text-slate-500 leading-snug">Calculate payment processing.</p></div>
+                </a>
+                <a href="/paypal-fee-calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-blue-100 text-blue-700 flex items-center justify-center shrink-0 group-hover:bg-blue-700 group-hover:text-white transition-colors"><i class="fab fa-paypal"></i></div>
+                    <div><h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">PayPal Fees</h3><p class="text-xs text-slate-500 leading-snug">Estimate transaction costs.</p></div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <div id="footer"></div>
+
+    <script>
+    async function loadComponent(url, elementId) {
+        try {
+            const response = await fetch(url);
+            const text = await response.text();
+            document.getElementById(elementId).innerHTML = text;
+        } catch (error) { console.error('Error loading component:', error); }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        loadComponent('/components/navbar.html', 'navbar');
+        loadComponent('/components/footer.html', 'footer');
+        
+        const faqToggles = document.querySelectorAll('[data-faq-toggle]');
+        faqToggles.forEach(button => {
+            button.addEventListener('click', () => {
+                const answer = button.nextElementSibling;
+                const icon = button.querySelector('.faq-icon');
+                const isOpen = answer.style.maxHeight !== '0px' && answer.style.maxHeight !== '';
+                
+                faqToggles.forEach(b => {
+                    b.nextElementSibling.style.maxHeight = '0px';
+                    b.querySelector('.faq-icon').style.transform = 'rotate(0deg)';
+                });
+
+                if (!isOpen) {
+                    answer.style.maxHeight = answer.scrollHeight + "px";
+                    icon.style.transform = 'rotate(180deg)';
+                }
+            });
+        });
+    });
+    </script>
+</body>
+</html>

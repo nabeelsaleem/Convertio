@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Platform Payout After Tax Calculator – Creator Net Income | SimpliConvert</title>
+    <meta name="description" content="Calculate your net creator payout after platform fees and income taxes. Use our free tool to estimate take-home pay for YouTube, Twitch, and influencer earnings.">
+    <meta name="keywords" content="creator payout after taxes, influencer tax calculator, youtube net earnings, twitch payout after tax, creator income estimator, net payout calculator, social media earnings tax">
+    <meta name="author" content="SimpliConvert">
+    <meta property="og:site_name" content="SimpliConvert">
+    <meta name="robots" content="index, follow">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://simpliconvert.com/platform-payout-tax-calculator/">
+    <meta property="og:title" content="Platform Payout After Tax Calculator – Calculate Net Income">
+    <meta property="og:description" content="Stop guessing your take-home pay. Calculate net creator payouts after platform fees and taxes for any social media or content platform.">
+    <meta property="og:image" content="https://simpliconvert.com/images/platform-payout-tax-calculator-og.jpg">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://simpliconvert.com/platform-payout-tax-calculator/">
+    <meta name="twitter:title" content="Platform Payout After Tax Calculator – Creator Net Income">
+    <meta name="twitter:description" content="Free tool to calculate creator net payout, including platform fees and income tax estimations.">
+    <meta name="twitter:image" content="https://simpliconvert.com/images/platform-payout-tax-calculator-og.jpg">
+
+    <link rel="canonical" href="https://simpliconvert.com/platform-payout-tax-calculator/">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Platform Payout After Tax Calculator",
+      "url": "https://simpliconvert.com/platform-payout-tax-calculator/",
+      "description": "An online tool for content creators and influencers to calculate their net payout after platform fees and estimated income taxes.",
+      "applicationCategory": "FinanceApplication",
+      "operatingSystem": "Web Browser",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "SimpliConvert",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://simpliconvert.com/logo.png"
+        }
+      }
+    }
+    </script>
+
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [{
+    "@type": "ListItem",
+    "position": 1,
+    "name": "Home",
+    "item": "https://simpliconvert.com/"
+  },{
+    "@type": "ListItem",
+    "position": 2,
+    "name": "Calculator Tools",
+    "item": "https://simpliconvert.com/calculator_tools/"
+  },{
+    "@type": "ListItem",
+    "position": 3,
+    "name": "Platform Payout After Tax Calculator",
+    "item": "https://simpliconvert.com/platform-payout-tax-calculator/"
+  }]
+}
+</script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [{
+        "@type": "Question",
+        "name": "How do I calculate my creator payout after taxes?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "To calculate your net payout, subtract the platform's commission (e.g., 30% for YouTube or Twitch) from your gross earnings. Then, subtract your estimated income tax based on your local tax bracket. Our calculator automates this by applying: Net = (Gross - Fees - Expenses) * (1 - Tax Rate) + Expenses."
+        }
+      }, {
+        "@type": "Question",
+        "name": "What are common platform fees for creators?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Common fees include YouTube (30-45% on ads), Twitch (50% for most affiliates), OnlyFans (20%), and Patreon (5-12%). Always check your specific platform agreement for the most accurate percentage."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Can I deduct business expenses from my creator income?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes, in many jurisdictions, you can deduct legitimate business expenses like equipment, software, and marketing costs from your gross income before calculating taxes. This reduces your taxable income and increases your net take-home pay."
+        }
+      }]
+    }
+    </script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #da3f0b;
+            --primary-hover: #b53409;
+            --primary-light: #fff5f2;
+            --bg: #f8fafc;
+            --text-dark: #0f172a;
+            --success: #16a34a;
+            --danger: #dc2626;
+        }
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: var(--text-dark); }
+        .hero-card { background: white; border: 1px solid #f1f5f9; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05); position: relative; overflow: hidden; }
+        .hero-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px; background-color: var(--primary); }
+        .tooltip-container { position: relative; display: inline-block; }
+        .tooltip-text {
+            visibility: hidden; width: 220px; background-color: #1e293b; color: #fff;
+            text-align: center; border-radius: 8px; padding: 10px; position: absolute;
+            z-index: 50; bottom: 125%; left: 50%; margin-left: -110px; opacity: 0;
+            transition: opacity 0.2s; font-size: 0.75rem; font-weight: 400;
+            pointer-events: none; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+        .tooltip-container:hover .tooltip-text { visibility: visible; opacity: 1; }
+        .tooltip-text::after {
+            content: ""; position: absolute; top: 100%; left: 50%; margin-left: -5px;
+            border-width: 5px; border-style: solid; border-color: #1e293b transparent transparent transparent;
+        }
+        .animate-fade { animation: fadeIn 0.3s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+        .tool-card { transition: transform 0.2s ease, box-shadow 0.2s ease; }
+        .tool-card:hover { transform: translateY(-4px); box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
+        .prose a { color: #da3f0b; text-decoration: none; }
+        .prose a:hover { text-decoration: underline; }
+    </style>
+</head>
+
+<body class="bg-gray-50 min-h-screen flex flex-col">
+    <div id="navbar" style="min-height: 70px;"></div>
+	
+	<section class="hero-white text-black py-2 md:py-10">
+        <div class="container mx-auto px-4">
+            <nav class="flex pb-4 text-sm text-slate-500 items-center space-x-2 justify-center">
+                <a href="https://simpliconvert.com/" class="hover:text-[#da3f0b] transition-colors">Home</a>
+                <i class="fas fa-chevron-right text-[10px]"></i>
+                <a href="https://simpliconvert.com/calculator_tools/" class="hover:text-[#da3f0b] transition-colors">Calculators</a>
+                <i class="fas fa-chevron-right text-[10px]"></i>
+                <span class="text-slate-900 font-medium">Platform Payout Tax Calculator</span>
+            </nav>
+            <div class="text-center">
+                <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-2">creator payout after taxes</h1>
+                <p class="text-lg md:text-xl max-w-3xl mx-auto mb-2 text-slate-600">
+                Calculate your actual take-home pay after platform commissions, business expenses, and income taxes.
+                </p>
+            </div>
+        </div>
+    </section>		
+
+    <div id="calculator-app" class="w-full max-w-6xl mx-auto p-4 sm:p-6">
+        <div class="bg-white rounded-[2rem] shadow-2xl overflow-hidden border border-slate-100">
+            <header class="bg-slate-50/50 border-b border-slate-100 p-6 md:p-8 flex flex-col md:flex-row justify-between items-center gap-6">
+                <div class="text-center md:text-left">
+                  <h2 class="text-2xl font-black text-slate-800 tracking-tight flex items-center justify-center md:justify-start gap-3">
+                    <span class="bg-[#da3f0b] text-white p-2 rounded-xl text-lg shadow-lg shadow-[#da3f0b30]">
+                      <i class="fas fa-money-bill-trend-up"></i>
+                    </span>
+                    Creator Net Income Calculator
+                  </h2>
+                </div>
+                
+                <div class="relative group min-w-[140px]">
+                  <select id="currency-select" class="appearance-none w-full bg-white border border-slate-200 text-slate-700 py-2.5 pl-4 pr-10 rounded-xl text-xs font-bold focus:outline-none focus:ring-4 focus:ring-[#da3f0b15] focus:border-[#da3f0b] shadow-sm cursor-pointer hover:border-[#da3f0b40]">
+                    <option value="USD">USD ($)</option>
+                    <option value="EUR">EUR (€)</option>
+                    <option value="GBP">GBP (£)</option>
+                    <option value="JPY">JPY (¥)</option>
+                    <option value="AUD">AUD (A$)</option>
+                    <option value="CAD">CAD (C$)</option>
+                    <option value="INR">INR (₹)</option>
+                  </select>
+                  <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-slate-400">
+                    <i class="fas fa-chevron-down text-[10px]"></i>
+                  </div>
+                </div>
+            </header>
+    
+            <main class="flex flex-col lg:flex-row">
+                <div class="lg:w-[50%] p-6 md:p-10 lg:p-12 border-r border-slate-100">
+                    <div class="space-y-6">
+                        
+                        <div class="bg-slate-50 p-6 rounded-2xl border border-slate-100">
+                            <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-6"><i class="fas fa-coins mr-2"></i>Earnings Details</h3>
+                            <div class="space-y-5">
+                                <div>
+                                    <div class="flex items-center text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">
+                                        <label>Gross Payout Amount</label>
+                                        <span class="tooltip-container ml-2">
+                                            <i class="fas fa-info-circle text-slate-300 hover:text-[#da3f0b] cursor-help text-xs transition-colors"></i>
+                                            <span class="tooltip-text">The total amount before any fees or taxes are removed.</span>
+                                        </span>
+                                    </div>
+                                    <div class="relative rounded-xl shadow-sm">
+                                        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                            <span class="text-slate-400 font-semibold currency-symbol">$</span>
+                                        </div>
+                                        <input type="number" id="input-gross" value="5000" class="block w-full rounded-xl border-slate-200 border py-3 pl-9 pr-4 focus:ring-4 focus:ring-[#da3f0b20] focus:border-[#da3f0b] sm:text-sm font-semibold text-slate-800 transition-all bg-white" placeholder="0.00">
+                                    </div>
+                                </div>
+    
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div>
+                                        <div class="flex items-center text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">
+                                            <label>Platform Fee (%)</label>
+                                        </div>
+                                        <div class="relative rounded-xl shadow-sm">
+                                            <input type="number" id="input-platform-fee" value="20" class="block w-full rounded-xl border-slate-200 border py-3 pl-4 pr-12 focus:ring-4 focus:ring-[#da3f0b20] focus:border-[#da3f0b] sm:text-sm font-semibold text-slate-800 transition-all bg-white" placeholder="0">
+                                            <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none"><span class="text-slate-400 font-semibold">%</span></div>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div class="flex items-center text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">
+                                            <label>Income Tax Rate (%)</label>
+                                        </div>
+                                        <div class="relative rounded-xl shadow-sm">
+                                            <input type="number" id="input-tax-rate" value="25" class="block w-full rounded-xl border-slate-200 border py-3 pl-4 pr-12 focus:ring-4 focus:ring-[#da3f0b20] focus:border-[#da3f0b] sm:text-sm font-semibold text-slate-800 transition-all bg-white" placeholder="0">
+                                            <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none"><span class="text-slate-400 font-semibold">%</span></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+    
+                        <div class="bg-[#da3f0b08] p-6 rounded-2xl border border-[#da3f0b15]">
+                           <h3 class="text-xs font-black text-[#da3f0b] uppercase tracking-widest mb-6"><i class="fas fa-file-invoice-dollar mr-2"></i>Deductions</h3>
+                           <div class="mb-5">
+                                <div class="flex items-center text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">
+                                    <label>Business Expenses</label>
+                                    <span class="tooltip-container ml-2">
+                                        <i class="fas fa-info-circle text-slate-300 hover:text-[#da3f0b] cursor-help text-xs transition-colors"></i>
+                                        <span class="tooltip-text">Costs like equipment or software that reduce your taxable income.</span>
+                                    </span>
+                                </div>
+                                <div class="relative rounded-xl shadow-sm">
+                                    <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                        <span class="text-slate-400 font-semibold currency-symbol">$</span>
+                                    </div>
+                                    <input type="number" id="input-expenses" value="200" class="block w-full rounded-xl border-slate-200 border py-3 pl-9 pr-4 focus:ring-4 focus:ring-[#da3f0b20] focus:border-[#da3f0b] sm:text-sm font-semibold text-slate-800 transition-all bg-white" placeholder="0.00">
+                                </div>
+                           </div>
+                           <div class="flex flex-wrap gap-2">
+                               <button onclick="setPlatform(30)" class="text-[10px] bg-white border border-[#da3f0b20] text-[#da3f0b] px-2 py-1 rounded-md font-bold hover:bg-[#da3f0b] hover:text-white transition-all">YouTube (30%)</button>
+                               <button onclick="setPlatform(50)" class="text-[10px] bg-white border border-[#da3f0b20] text-[#da3f0b] px-2 py-1 rounded-md font-bold hover:bg-[#da3f0b] hover:text-white transition-all">Twitch (50%)</button>
+                               <button onclick="setPlatform(20)" class="text-[10px] bg-white border border-[#da3f0b20] text-[#da3f0b] px-2 py-1 rounded-md font-bold hover:bg-[#da3f0b] hover:text-white transition-all">OnlyFans (20%)</button>
+                               <button onclick="setPlatform(12)" class="text-[10px] bg-white border border-[#da3f0b20] text-[#da3f0b] px-2 py-1 rounded-md font-bold hover:bg-[#da3f0b] hover:text-white transition-all">Patreon (12%)</button>
+                           </div>
+                        </div>
+                    </div>
+                </div>
+    
+                <div class="lg:w-[50%] bg-slate-50/50 p-6 md:p-10 lg:p-12 flex flex-col justify-center">
+                   <div class="space-y-6">
+                     
+                     <div class="hero-card p-8 flex flex-col items-center text-center">
+                         <p class="text-xs font-black text-[#da3f0b] uppercase tracking-[0.2em] mb-4">Final Net Payout</p>
+                         <div class="flex items-center justify-center">
+                           <span id="display-net" class="text-5xl md:text-6xl font-black tracking-tighter leading-none text-[#16a34a]">$0.00</span>
+                         </div>
+                         <p class="text-sm text-slate-400 font-medium mt-4">Effective Take-Home: <span id="display-effective">0.00</span>%</p>
+                     </div>
+    
+                     <div class="grid grid-cols-2 gap-4">
+                         <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex flex-col items-center text-center">
+                            <div class="text-[10px] font-black text-slate-400 uppercase tracking-widest flex items-center justify-center mb-1">Platform Fees</div>
+                            <p id="display-platform-fee-amt" class="text-xl font-extrabold text-slate-900">$0.00</p>
+                            <p class="text-[10px] text-slate-400 font-medium mt-1 uppercase tracking-tight">Commission Paid</p>
+                         </div>
+                         <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex flex-col items-center text-center">
+                            <div class="text-[10px] font-black text-slate-400 uppercase tracking-widest flex items-center justify-center mb-1">Estimated Tax</div>
+                            <p id="display-tax-amt" class="text-xl font-extrabold text-slate-900">$0.00</p>
+                            <p class="text-[10px] text-slate-400 font-medium mt-1 uppercase tracking-tight">To Government</p>
+                         </div>
+                     </div>
+    
+                     <div class="bg-white rounded-xl p-6 border border-slate-100 shadow-sm mt-4">
+                         <div class="flex justify-between items-center mb-2">
+                            <span class="text-xs font-bold text-slate-400 uppercase tracking-widest">Taxable Income</span>
+                            <span id="display-taxable" class="text-lg font-black text-slate-700">$0.00</span>
+                         </div>
+                         <div class="w-full bg-slate-100 rounded-full h-2 mb-2 overflow-hidden">
+                            <div id="progress-bar" class="bg-[#da3f0b] h-2 rounded-full transition-all duration-500" style="width: 0%"></div>
+                         </div>
+                         <p class="text-[10px] text-slate-400">
+                           Your taxable income is calculated after platform fees and expenses.
+                         </p>
+                     </div>
+                   </div>
+                </div>
+            </main>
+    
+            <footer class="bg-slate-50 border-t border-slate-100 p-6 md:p-8">
+               <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+                   <div class="text-center md:text-left">
+                       <h4 class="text-sm font-bold text-slate-700 mb-1">Share this calculator</h4>
+                       <p class="text-xs text-slate-400">Help other creators manage their finances.</p>
+                   </div>
+                   
+                   <div class="flex flex-wrap justify-center gap-3">
+                       <a href="#" onclick="shareSocial('facebook')" class="w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center text-white transition-transform hover:-translate-y-1 hover:shadow-lg bg-[#1877F2]"><i class="fab fa-facebook-f"></i></a>
+                       <a href="#" onclick="shareSocial('twitter')" class="w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center text-white transition-transform hover:-translate-y-1 hover:shadow-lg bg-[#1DA1F2]"><i class="fab fa-twitter"></i></a>
+                       <a href="#" onclick="shareSocial('linkedin')" class="w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center text-white transition-transform hover:-translate-y-1 hover:shadow-lg bg-[#0A66C2]"><i class="fab fa-linkedin-in"></i></a>
+                       <a href="#" onclick="shareSocial('whatsapp')" class="w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center text-white transition-transform hover:-translate-y-1 hover:shadow-lg bg-[#25D366]"><i class="fab fa-whatsapp"></i></a>
+                   </div>
+    
+                   <div class="relative">
+                       <button onclick="handleBookmark()" class="flex items-center gap-2 bg-white border border-slate-200 hover:border-[#da3f0b] hover:text-[#da3f0b] text-slate-600 px-4 py-2 rounded-lg text-sm font-bold transition-all shadow-sm active:scale-95">
+                          <i class="fas fa-bookmark"></i> Bookmark
+                       </button>
+                       <div id="bookmark-toast" class="hidden absolute bottom-full mb-3 left-1/2 -translate-x-1/2 bg-slate-800 text-white text-xs py-2 px-4 rounded-lg shadow-lg whitespace-nowrap animate-fade">
+                           Press <span class="font-bold text-[#da3f0b]">Ctrl + D</span> to bookmark
+                       </div>
+                   </div>
+               </div>
+            </footer>
+        </div>
+    </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const state = {
+            currency: { code: 'USD', symbol: '$', locale: 'en-US' },
+            gross: 5000,
+            platformFee: 20,
+            taxRate: 25,
+            expenses: 200
+        };
+
+        const currencies = [
+            { code: 'USD', symbol: '$', locale: 'en-US' },
+            { code: 'EUR', symbol: '€', locale: 'de-DE' },
+            { code: 'GBP', symbol: '£', locale: 'en-GB' },
+            { code: 'JPY', symbol: '¥', locale: 'ja-JP' },
+            { code: 'AUD', symbol: 'A$', locale: 'en-AU' },
+            { code: 'CAD', symbol: 'C$', locale: 'en-CA' },
+            { code: 'INR', symbol: '₹', locale: 'en-IN' }
+        ];
+
+        const els = {
+            inputs: {
+                gross: document.getElementById('input-gross'),
+                platformFee: document.getElementById('input-platform-fee'),
+                taxRate: document.getElementById('input-tax-rate'),
+                expenses: document.getElementById('input-expenses'),
+                currency: document.getElementById('currency-select')
+            },
+            displays: {
+                net: document.getElementById('display-net'),
+                effective: document.getElementById('display-effective'),
+                platformFeeAmt: document.getElementById('display-platform-fee-amt'),
+                taxAmt: document.getElementById('display-tax-amt'),
+                taxable: document.getElementById('display-taxable'),
+                progressBar: document.getElementById('progress-bar'),
+                symbols: document.querySelectorAll('.currency-symbol')
+            }
+        };
+
+        function calculate() {
+            const gross = parseFloat(state.gross) || 0;
+            const pFeePercent = parseFloat(state.platformFee) || 0;
+            const taxPercent = parseFloat(state.taxRate) || 0;
+            const expenses = parseFloat(state.expenses) || 0;
+
+            const pFeeAmt = gross * (pFeePercent / 100);
+            const taxableIncome = Math.max(0, gross - pFeeAmt - expenses);
+            const taxAmt = taxableIncome * (taxPercent / 100);
+            const netPayout = gross - pFeeAmt - taxAmt;
+            const effectiveRate = gross > 0 ? (netPayout / gross) * 100 : 0;
+
+            updateUI({ pFeeAmt, taxableIncome, taxAmt, netPayout, effectiveRate });
+        }
+
+        function formatMoney(amount) {
+            return new Intl.NumberFormat(state.currency.locale, {
+                style: 'currency',
+                currency: state.currency.code,
+                maximumFractionDigits: 2
+            }).format(amount);
+        }
+
+        function updateUI(data) {
+            els.displays.net.textContent = formatMoney(data.netPayout);
+            els.displays.effective.textContent = data.effectiveRate.toFixed(1);
+            els.displays.platformFeeAmt.textContent = formatMoney(data.pFeeAmt);
+            els.displays.taxAmt.textContent = formatMoney(data.taxAmt);
+            els.displays.taxable.textContent = formatMoney(data.taxableIncome);
+            
+            const progress = state.gross > 0 ? (data.taxableIncome / state.gross) * 100 : 0;
+            els.displays.progressBar.style.width = `${progress}%`;
+
+            els.displays.symbols.forEach(el => el.textContent = state.currency.symbol);
+        }
+
+        function addInputListener(key, element) {
+            element.addEventListener('input', (e) => {
+                state[key] = e.target.value;
+                calculate();
+            });
+        }
+
+        addInputListener('gross', els.inputs.gross);
+        addInputListener('platformFee', els.inputs.platformFee);
+        addInputListener('taxRate', els.inputs.taxRate);
+        addInputListener('expenses', els.inputs.expenses);
+
+        els.inputs.currency.addEventListener('change', (e) => {
+            state.currency = currencies.find(c => c.code === e.target.value);
+            calculate();
+        });
+
+        window.setPlatform = function(val) {
+            state.platformFee = val;
+            els.inputs.platformFee.value = val;
+            calculate();
+        };
+
+        window.handleBookmark = function() {
+            const toast = document.getElementById('bookmark-toast');
+            toast.classList.remove('hidden');
+            setTimeout(() => toast.classList.add('hidden'), 3000);
+        };
+
+        window.shareSocial = function(platform) {
+             const url = encodeURIComponent(window.location.href);
+             const title = encodeURIComponent("Check out this Creator Payout Tax Calculator!");
+             let shareUrl = '';
+             switch(platform) {
+                case 'facebook': shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${url}`; break;
+                case 'twitter': shareUrl = `https://twitter.com/intent/tweet?url=${url}&text=${title}`; break;
+                case 'linkedin': shareUrl = `https://www.linkedin.com/shareArticle?mini=true&url=${url}`; break;
+                case 'whatsapp': shareUrl = `https://api.whatsapp.com/send?text=${title}%20${url}`; break;
+             }
+             if(shareUrl) window.open(shareUrl, '_blank');
+        };
+
+        calculate();
+    });
+    </script>
+
+    <section class="bg-white py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="prose prose-lg max-w-none prose-h2:text-gray-800 prose-p:text-gray-700">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">Understanding Your Creator Payout After Taxes</h2>
+                <p class="mb-6 leading-relaxed">
+                    As a digital creator, seeing a large gross revenue figure in your dashboard is exciting, but it rarely reflects the amount that actually hits your bank account. Between platform commissions, transaction fees, and the inevitable visit from the tax man, your "take-home" pay can be significantly lower than expected. Our <strong>Platform Payout After Tax Calculator</strong> is designed to provide clarity, helping you estimate your <em>creator payout after taxes</em> with just a few clicks.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Why Platform Fees Are Your First Hurdle</h2>
+                <p class="mb-6 leading-relaxed">
+                    Most content platforms operate on a revenue-share model. For instance, YouTube typically takes a 30% to 45% cut of ad revenue, while Twitch affiliates often see a 50/50 split on subscriptions. Other platforms like OnlyFans or Patreon take smaller percentages (20% and 5-12% respectively), but these still represent a major deduction. Using a <a href="https://simpliconvert.com/youtube-earnings-calculator/">YouTube earnings calculator</a> alongside this tool can help you map out your gross potential before applying tax logic.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">The Importance of Estimating Income Tax</h2>
+                <p class="mb-6 leading-relaxed">
+                    Unlike traditional employees, most creators are considered self-employed or independent contractors. This means taxes aren't automatically withheld from your payouts. You are responsible for setting aside a portion of every dollar earned for quarterly or annual tax filings. Depending on your country and income bracket, this could range from 15% to over 40%. Our tool allows you to input your estimated tax rate to see a realistic net figure.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Maximizing Net Income with Business Deductions</h2>
+                <p class="mb-6 leading-relaxed">
+                    One of the few advantages of being a creator is the ability to deduct business expenses. Costs for cameras, lighting, editing software, and even a portion of your home office can often be subtracted from your gross income before taxes are calculated. This reduces your "taxable income," meaning you keep more of your hard-earned money. If you're transitioning from a job, you might find our <a href="https://simpliconvert.com/salary-to-hourly-calculator/">salary to hourly calculator</a> useful for comparing your creator earnings to a traditional wage.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">How to Use This Calculator Effectively</h2>
+                <p class="mb-6 leading-relaxed">
+                    To get the most accurate result, follow these steps:
+                </p>
+                <ul class="list-disc pl-6 mb-6 space-y-2 text-gray-700">
+                    <li><strong>Enter Gross Payout:</strong> Use the total amount shown in your platform's "Earnings" tab.</li>
+                    <li><strong>Select Platform Fee:</strong> Use our presets for YouTube, Twitch, or OnlyFans, or enter a custom percentage.</li>
+                    <li><strong>Input Tax Rate:</strong> Check your local tax brackets for the current year.</li>
+                    <li><strong>Add Expenses:</strong> Include any monthly costs associated with your content creation.</li>
+                </ul>
+                <p class="mb-6 leading-relaxed">
+                    By staying on top of these numbers, you can avoid "tax season shock" and ensure your creative business remains profitable in the long run. For those managing multiple clients or gigs, our <a href="https://simpliconvert.com/freelance-hourly-rate-calculator/">freelance hourly rate calculator</a> is another essential tool for your financial toolkit.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-center text-gray-900 mb-8">Frequently Asked Questions</h2>
+            <div class="space-y-4">
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>How do I calculate my creator payout after taxes?</span>
+                        <i class="fas fa-chevron-down faq-icon transition-transform duration-300"></i>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500">
+                        <p class="p-5 pt-0 text-gray-600">Subtract the platform commission from your gross earnings, then subtract your estimated income tax from the remaining amount. Our calculator automates this process for you.</p>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>What is a safe percentage to set aside for taxes?</span>
+                        <i class="fas fa-chevron-down faq-icon transition-transform duration-300"></i>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500">
+                        <p class="p-5 pt-0 text-gray-600">While it depends on your location and total income, many experts recommend setting aside 25% to 30% of your net income (after platform fees) for taxes.</p>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>Does this calculator include VAT or Sales Tax?</span>
+                        <i class="fas fa-chevron-down faq-icon transition-transform duration-300"></i>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500">
+                        <p class="p-5 pt-0 text-gray-600">This tool focuses on Income Tax. If you are required to collect VAT or GST, you should subtract that from your gross revenue before using this calculator.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 pb-16">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-slate-200 pt-16">
+            <h2 class="text-2xl font-bold text-center text-slate-800 mb-10">Popular Tools on SimpliConvert</h2>
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+                <a href="/youtube-earnings-calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-red-50 text-red-600 flex items-center justify-center shrink-0 group-hover:bg-red-600 group-hover:text-white transition-colors">
+                        <i class="fab fa-youtube text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">YouTube Calc</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Estimate your channel revenue.</p>
+                    </div>
+                </a>
+                <a href="/twitch-earnings-calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-purple-50 text-purple-600 flex items-center justify-center shrink-0 group-hover:bg-purple-600 group-hover:text-white transition-colors">
+                        <i class="fab fa-twitch text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Twitch Calc</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Calculate sub and bit revenue.</p>
+                    </div>
+                </a>
+                <a href="/freelance-hourly-rate-calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0 group-hover:bg-emerald-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-calculator text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Rate Calc</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Find your ideal hourly rate.</p>
+                    </div>
+                </a>
+                <a href="/fiverr-fee-calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-green-50 text-green-600 flex items-center justify-center shrink-0 group-hover:bg-green-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-briefcase text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Fiverr Fee</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Calculate net Fiverr earnings.</p>
+                    </div>
+                </a>
+                <a href="/salary-to-hourly-calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center shrink-0 group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-clock text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Salary to Hourly</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Convert annual pay to hourly.</p>
+                    </div>
+                </a>
+                <a href="/roi-calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-orange-50 text-orange-600 flex items-center justify-center shrink-0 group-hover:bg-orange-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-chart-pie text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">ROI Calc</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Measure your investment return.</p>
+                    </div>
+                </a>
+                <a href="/paypal-fee-calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0 group-hover:bg-indigo-600 group-hover:text-white transition-colors">
+                        <i class="fab fa-paypal text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">PayPal Fee</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Calculate transaction costs.</p>
+                    </div>
+                </a>
+                <a href="/adsense-revenue-calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-yellow-50 text-yellow-600 flex items-center justify-center shrink-0 group-hover:bg-yellow-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-ad text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">AdSense Calc</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Estimate website ad revenue.</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <div id="footer"></div>
+
+    <script>
+    async function loadComponent(url, elementId, callback) {
+        try {
+            const response = await fetch(url);
+            const text = await response.text();
+            const element = document.getElementById(elementId);
+            if (element) {
+                element.innerHTML = text;
+                if (callback) callback();
+            }
+        } catch (e) { console.error(e); }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        loadComponent('/components/navbar.html', 'navbar');
+        loadComponent('/components/footer.html', 'footer', () => {
+            const year = document.getElementById('current-year');
+            if(year) year.textContent = new Date().getFullYear();
+        });
+
+        const faqToggles = document.querySelectorAll('[data-faq-toggle]');
+        faqToggles.forEach(button => {
+            button.addEventListener('click', () => {
+                const answer = button.nextElementSibling;
+                const icon = button.querySelector('.faq-icon');
+                if (answer.style.maxHeight) {
+                    answer.style.maxHeight = null;
+                    icon.style.transform = 'rotate(0deg)';
+                } else {
+                    answer.style.maxHeight = answer.scrollHeight + "px";
+                    icon.style.transform = 'rotate(180deg)';
+                }
+            });
+        });
+    });
+    </script>
+</body>
+</html>

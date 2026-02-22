@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Unity Asset Store Earnings Calculator – Developer Payout Tool | SimpliConvert</title>
+    <meta name="description" content="Calculate your net earnings from the Unity Asset Store. Estimate your developer payout after Unity's 30% commission and plan your game dev income accurately.">
+    <meta name="keywords" content="unity developer payout calculator, unity asset store earnings, unity royalties, asset store fee, game dev income, unity commission calculator">
+    <meta name="author" content="SimpliConvert">
+    <meta property="og:site_name" content="SimpliConvert">
+    <meta name="robots" content="index, follow">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://simpliconvert.com/unity-asset-store-calculator/">
+    <meta property="og:title" content="Unity Asset Store Earnings Calculator – Calculate Your Payout">
+    <meta property="og:description" content="Stop guessing your game dev revenue. Accurately calculate Unity Asset Store payouts, fees, and net profit.">
+    <meta property="og:image" content="https://simpliconvert.com/images/unity-asset-store-calculator-og.jpg">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://simpliconvert.com/unity-asset-store-calculator/">
+    <meta name="twitter:title" content="Unity Asset Store Earnings Calculator – Developer Payout Tool">
+    <meta name="twitter:description" content="Free tool to calculate Unity Asset Store net earnings, including the 30% platform fee. Perfect for asset creators.">
+    <meta name="twitter:image" content="https://simpliconvert.com/images/unity-asset-store-calculator-og.jpg">
+
+    <link rel="canonical" href="https://simpliconvert.com/unity-asset-store-calculator/">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Unity Asset Store Earnings Calculator",
+      "url": "https://simpliconvert.com/unity-asset-store-calculator/",
+      "description": "A free online tool for Unity developers to calculate net earnings, platform fees, and total payouts from selling assets on the Unity Asset Store.",
+      "applicationCategory": "FinanceApplication",
+      "operatingSystem": "Web Browser",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "SimpliConvert",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://simpliconvert.com/logo.png"
+        }
+      }
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [{
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://simpliconvert.com/"
+      },{
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Calculator Tools",
+        "item": "https://simpliconvert.com/calculator_tools/"
+      },{
+        "@type": "ListItem",
+        "position": 3,
+        "name": "Unity Asset Store Earnings Calculator",
+        "item": "https://simpliconvert.com/unity-asset-store-calculator/"
+      }]
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [{
+        "@type": "Question",
+        "name": "What is the Unity Asset Store commission fee?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Unity typically takes a 30% commission on all sales made through the Asset Store. This means the developer receives 70% of the gross sale price."
+        }
+      }, {
+        "@type": "Question",
+        "name": "When does Unity pay out asset store earnings?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Unity pays out earnings on a monthly basis, usually around the 15th of the following month, provided you have met the minimum payout threshold (typically $100 for wire transfers)."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Does this calculator account for VAT or taxes?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes, our advanced settings allow you to input an estimated tax or VAT percentage to see a more realistic 'take-home' figure after all deductions."
+        }
+      }]
+    }
+    </script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #da3f0b;
+            --primary-hover: #b53409;
+            --primary-light: #fff5f2;
+            --bg: #f8fafc;
+            --text-dark: #0f172a;
+            --success: #16a34a;
+            --danger: #dc2626;
+        }
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: var(--text-dark); }
+        .hero-card { background: white; border: 1px solid #f1f5f9; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05); position: relative; overflow: hidden; }
+        .hero-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px; background-color: var(--primary); }
+        .tooltip-container { position: relative; display: inline-block; }
+        .tooltip-text {
+            visibility: hidden; width: 220px; background-color: #1e293b; color: #fff;
+            text-align: center; border-radius: 8px; padding: 10px; position: absolute;
+            z-index: 50; bottom: 125%; left: 50%; margin-left: -110px; opacity: 0;
+            transition: opacity 0.2s; font-size: 0.75rem; font-weight: 400;
+            pointer-events: none; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+        .tooltip-container:hover .tooltip-text { visibility: visible; opacity: 1; }
+        .animate-fade { animation: fadeIn 0.3s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+        .tool-card { transition: transform 0.2s ease, box-shadow 0.2s ease; }
+        .tool-card:hover { transform: translateY(-4px); box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
+        .prose a { color: #da3f0b; text-decoration: none; }
+        .prose a:hover { text-decoration: underline; }
+    </style>
+</head>
+
+<body class="bg-gray-50 min-h-screen flex flex-col">
+    <div id="navbar" style="min-height: 70px;"></div>
+	
+	<section class="hero-white text-black py-2 md:py-10">
+        <div class="container mx-auto px-4">
+            <nav class="flex pb-4 text-sm text-slate-500 items-center space-x-2 justify-center">
+                <a href="https://simpliconvert.com/" class="hover:text-[#da3f0b] transition-colors">Home</a>
+                <i class="fas fa-chevron-right text-[10px]"></i>
+                <a href="https://simpliconvert.com/calculator_tools/" class="hover:text-[#da3f0b] transition-colors">Calculators</a>
+                <i class="fas fa-chevron-right text-[10px]"></i>
+                <span class="text-slate-900 font-medium">Unity Asset Store Calculator</span>
+            </nav>
+            <div class="text-center">
+                <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-2 uppercase tracking-tight">unity developer payout calculator</h1>
+                <p class="text-lg md:text-xl max-w-3xl mx-auto mb-2 text-slate-600">
+                Estimate your net revenue from the Unity Asset Store. Calculate platform fees, taxes, and final developer payouts instantly.
+                </p>
+            </div>
+        </div>
+    </section>		
+
+    <div id="calculator-app" class="w-full max-w-6xl mx-auto p-4 sm:p-6">
+        <div class="bg-white rounded-[2rem] shadow-2xl overflow-hidden border border-slate-100">
+            <header class="bg-slate-50/50 border-b border-slate-100 p-6 md:p-8 flex flex-col md:flex-row justify-between items-center gap-6">
+                <div class="text-center md:text-left">
+                  <h2 class="text-2xl font-black text-slate-800 tracking-tight flex items-center justify-center md:justify-start gap-3">
+                    <span class="bg-[#da3f0b] text-white p-2 rounded-xl text-lg shadow-lg shadow-[#da3f0b30]">
+                      <i class="fas fa-gamepad"></i>
+                    </span>
+                    Asset Revenue Estimator
+                  </h2>
+                </div>
+                
+                <div class="relative group min-w-[140px]">
+                  <select id="currency-select" class="appearance-none w-full bg-white border border-slate-200 text-slate-700 py-2.5 pl-4 pr-10 rounded-xl text-xs font-bold focus:outline-none focus:ring-4 focus:ring-[#da3f0b15] focus:border-[#da3f0b] shadow-sm cursor-pointer hover:border-[#da3f0b40]">
+                    <option value="USD">USD ($)</option>
+                    <option value="EUR">EUR (€)</option>
+                    <option value="GBP">GBP (£)</option>
+                    <option value="JPY">JPY (¥)</option>
+                    <option value="AUD">AUD (A$)</option>
+                    <option value="CAD">CAD (C$)</option>
+                    <option value="INR">INR (₹)</option>
+                  </select>
+                  <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-slate-400">
+                    <i class="fas fa-chevron-down text-[10px]"></i>
+                  </div>
+                </div>
+            </header>
+    
+            <main class="flex flex-col lg:flex-row">
+                <div class="lg:w-[50%] p-6 md:p-10 lg:p-12 border-r border-slate-100">
+                    <div class="space-y-6">
+                        <div class="bg-slate-50 p-6 rounded-2xl border border-slate-100">
+                            <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-6"><i class="fas fa-tag mr-2"></i>Sales Data</h3>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="mb-5">
+                                    <div class="flex items-center text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">
+                                        <label>Asset Price</label>
+                                        <span class="tooltip-container ml-2">
+                                            <i class="fas fa-info-circle text-slate-300 hover:text-[#da3f0b] cursor-help text-xs transition-colors"></i>
+                                            <span class="tooltip-text">The listing price of your asset on the store.</span>
+                                        </span>
+                                    </div>
+                                    <div class="relative rounded-xl shadow-sm">
+                                        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                            <span class="text-slate-400 font-semibold currency-symbol">$</span>
+                                        </div>
+                                        <input type="number" id="input-price" value="45" class="block w-full rounded-xl border-slate-200 border py-3 pl-9 pr-4 focus:ring-4 focus:ring-[#da3f0b20] focus:border-[#da3f0b] sm:text-sm font-semibold text-slate-800 transition-all bg-white" placeholder="0.00">
+                                    </div>
+                                </div>
+    
+                                <div class="mb-5">
+                                    <div class="flex items-center text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">
+                                        <label>Units Sold</label>
+                                        <span class="tooltip-container ml-2">
+                                            <i class="fas fa-info-circle text-slate-300 hover:text-[#da3f0b] cursor-help text-xs transition-colors"></i>
+                                            <span class="tooltip-text">Total number of sales for this period.</span>
+                                        </span>
+                                    </div>
+                                    <div class="relative rounded-xl shadow-sm">
+                                        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                            <i class="fas fa-shopping-cart text-slate-300 text-xs"></i>
+                                        </div>
+                                        <input type="number" id="input-sales" value="100" class="block w-full rounded-xl border-slate-200 border py-3 pl-9 pr-4 focus:ring-4 focus:ring-[#da3f0b20] focus:border-[#da3f0b] sm:text-sm font-semibold text-slate-800 transition-all bg-white" placeholder="0">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+    
+                        <div class="bg-[#da3f0b08] p-6 rounded-2xl border border-[#da3f0b15]">
+                           <h3 class="text-xs font-black text-[#da3f0b] uppercase tracking-widest mb-6"><i class="fas fa-percent mr-2"></i>Platform Fee</h3>
+                           <div class="mb-5">
+                                <div class="flex items-center text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">
+                                    <label>Unity Commission</label>
+                                </div>
+                                <div class="relative rounded-xl shadow-sm">
+                                    <input type="number" id="input-fee" value="30" class="block w-full rounded-xl border-slate-200 border py-3 pl-4 pr-12 focus:ring-4 focus:ring-[#da3f0b20] focus:border-[#da3f0b] sm:text-sm font-semibold text-slate-800 transition-all bg-white">
+                                    <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none"><span class="text-slate-400 font-semibold">%</span></div>
+                                </div>
+                                <p class="text-[10px] text-slate-400 mt-2">Standard Unity Asset Store fee is 30%.</p>
+                           </div>
+                        </div>
+    
+                        <div class="p-2">
+                           <button onclick="toggleAdvanced()" class="text-xs font-bold text-slate-400 flex items-center gap-2 hover:text-[#da3f0b] transition-colors">
+                             <i class="fas fa-cog"></i> Advanced Deductions (Tax/VAT)
+                           </button>
+                           <div id="advanced-section" class="hidden grid grid-cols-1 gap-4 mt-4 animate-fade">
+                                <div class="mb-5">
+                                    <div class="flex items-center text-xs font-bold text-slate-500 uppercase tracking-widest mb-2"><label>Estimated Tax / VAT</label></div>
+                                    <div class="relative rounded-xl shadow-sm">
+                                        <input type="number" id="input-tax" value="0" class="block w-full rounded-xl border-slate-200 border py-3 pl-4 pr-12 focus:ring-4 focus:ring-[#da3f0b20] focus:border-[#da3f0b] sm:text-sm font-semibold text-slate-800 transition-all bg-white" placeholder="0.00">
+                                        <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none"><span class="text-slate-400 font-semibold">%</span></div>
+                                    </div>
+                                    <p class="text-[10px] text-slate-400 mt-2">Deducted from your net payout (e.g., income tax or withholding).</p>
+                                </div>
+                           </div>
+                        </div>
+                    </div>
+                </div>
+    
+                <div class="lg:w-[50%] bg-slate-50/50 p-6 md:p-10 lg:p-12 flex flex-col justify-center">
+                   <div class="space-y-6">
+                     <div class="hero-card p-8 flex flex-col items-center text-center">
+                         <p class="text-xs font-black text-[#da3f0b] uppercase tracking-[0.2em] mb-4">Estimated Net Payout</p>
+                         <div class="flex items-center justify-center">
+                           <span id="display-net-payout" class="text-5xl md:text-6xl font-black tracking-tighter leading-none text-[#16a34a]">$0.00</span>
+                         </div>
+                         <p class="text-sm text-slate-400 font-medium mt-4">Your share: <span id="display-share-percent">70</span>% of gross</p>
+                     </div>
+    
+                     <div class="grid grid-cols-2 gap-4">
+                         <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex flex-col items-center text-center">
+                            <div class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Gross Revenue</div>
+                            <p id="display-gross" class="text-xl font-extrabold text-slate-900">$0.00</p>
+                         </div>
+                         <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex flex-col items-center text-center">
+                            <div class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Unity Fee</div>
+                            <p id="display-unity-cut" class="text-xl font-extrabold text-slate-500">$0.00</p>
+                         </div>
+                     </div>
+    
+                     <div id="tax-display-card" class="hidden bg-white rounded-xl p-6 border border-slate-100 shadow-sm">
+                         <div class="flex justify-between items-center">
+                            <span class="text-xs font-bold text-slate-400 uppercase tracking-widest">Tax Deduction</span>
+                            <span id="display-tax-amount" class="text-lg font-black text-red-500">$0.00</span>
+                         </div>
+                     </div>
+
+                     <div class="bg-white rounded-xl p-6 border border-slate-100 shadow-sm">
+                        <div class="flex justify-between items-center mb-2">
+                           <span class="text-xs font-bold text-slate-400 uppercase tracking-widest">Earnings Per Unit</span>
+                           <span id="display-per-unit" class="text-lg font-black text-slate-700">$0.00</span>
+                        </div>
+                        <p class="text-[10px] text-slate-400">This is what you earn for every single sale after platform fees.</p>
+                    </div>
+                   </div>
+                </div>
+            </main>
+    
+            <footer class="bg-slate-50 border-t border-slate-100 p-6 md:p-8">
+               <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+                   <div class="text-center md:text-left">
+                       <h4 class="text-sm font-bold text-slate-700 mb-1">Share this developer tool</h4>
+                       <p class="text-xs text-slate-400">Help other creators calculate their royalties.</p>
+                   </div>
+                   
+                   <div class="flex flex-wrap justify-center gap-3">
+                       <a href="#" onclick="shareSocial('facebook')" class="w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center text-white transition-transform hover:-translate-y-1 hover:shadow-lg bg-[#1877F2]"><i class="fab fa-facebook-f"></i></a>
+                       <a href="#" onclick="shareSocial('twitter')" class="w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center text-white transition-transform hover:-translate-y-1 hover:shadow-lg bg-[#1DA1F2]"><i class="fab fa-twitter"></i></a>
+                       <a href="#" onclick="shareSocial('linkedin')" class="w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center text-white transition-transform hover:-translate-y-1 hover:shadow-lg bg-[#0A66C2]"><i class="fab fa-linkedin-in"></i></a>
+                       <a href="#" onclick="shareSocial('whatsapp')" class="w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center text-white transition-transform hover:-translate-y-1 hover:shadow-lg bg-[#25D366]"><i class="fab fa-whatsapp"></i></a>
+                   </div>
+    
+                   <div class="relative">
+                       <button onclick="handleBookmark()" class="flex items-center gap-2 bg-white border border-slate-200 hover:border-[#da3f0b] hover:text-[#da3f0b] text-slate-600 px-4 py-2 rounded-lg text-sm font-bold transition-all shadow-sm active:scale-95">
+                          <i class="fas fa-bookmark"></i> Bookmark
+                       </button>
+                       <div id="bookmark-toast" class="hidden absolute bottom-full mb-3 left-1/2 -translate-x-1/2 bg-slate-800 text-white text-xs py-2 px-4 rounded-lg shadow-lg whitespace-nowrap animate-fade">
+                           Press <span class="font-bold text-[#da3f0b]">Ctrl + D</span> to bookmark
+                       </div>
+                   </div>
+               </div>
+            </footer>
+        </div>
+    </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const state = {
+            currency: { code: 'USD', symbol: '$', locale: 'en-US' },
+            price: 45,
+            sales: 100,
+            fee: 30,
+            tax: 0
+        };
+
+        const currencies = [
+            { code: 'USD', symbol: '$', locale: 'en-US' },
+            { code: 'EUR', symbol: '€', locale: 'de-DE' },
+            { code: 'GBP', symbol: '£', locale: 'en-GB' },
+            { code: 'JPY', symbol: '¥', locale: 'ja-JP' },
+            { code: 'AUD', symbol: 'A$', locale: 'en-AU' },
+            { code: 'CAD', symbol: 'C$', locale: 'en-CA' },
+            { code: 'INR', symbol: '₹', locale: 'en-IN' }
+        ];
+
+        const els = {
+            inputs: {
+                price: document.getElementById('input-price'),
+                sales: document.getElementById('input-sales'),
+                fee: document.getElementById('input-fee'),
+                tax: document.getElementById('input-tax'),
+                currency: document.getElementById('currency-select')
+            },
+            displays: {
+                netPayout: document.getElementById('display-net-payout'),
+                gross: document.getElementById('display-gross'),
+                unityCut: document.getElementById('display-unity-cut'),
+                sharePercent: document.getElementById('display-share-percent'),
+                perUnit: document.getElementById('display-per-unit'),
+                taxAmount: document.getElementById('display-tax-amount'),
+                taxCard: document.getElementById('tax-display-card'),
+                symbols: document.querySelectorAll('.currency-symbol')
+            }
+        };
+
+        function calculate() {
+            const price = parseFloat(state.price) || 0;
+            const sales = parseFloat(state.sales) || 0;
+            const feePercent = parseFloat(state.fee) || 0;
+            const taxPercent = parseFloat(state.tax) || 0;
+
+            const gross = price * sales;
+            const unityCut = gross * (feePercent / 100);
+            const netBeforeTax = gross - unityCut;
+            const taxAmount = netBeforeTax * (taxPercent / 100);
+            const finalPayout = netBeforeTax - taxAmount;
+            const perUnit = sales > 0 ? finalPayout / sales : 0;
+
+            updateUI({ gross, unityCut, finalPayout, perUnit, taxAmount, share: 100 - feePercent });
+        }
+
+        function formatMoney(amount) {
+            return new Intl.NumberFormat(state.currency.locale, {
+                style: 'currency',
+                currency: state.currency.code,
+                maximumFractionDigits: 2
+            }).format(amount);
+        }
+
+        function updateUI(data) {
+            els.displays.netPayout.textContent = formatMoney(data.finalPayout);
+            els.displays.gross.textContent = formatMoney(data.gross);
+            els.displays.unityCut.textContent = formatMoney(data.unityCut);
+            els.displays.perUnit.textContent = formatMoney(data.perUnit);
+            els.displays.sharePercent.textContent = data.share.toFixed(1);
+            
+            if (data.taxAmount > 0) {
+                els.displays.taxCard.classList.remove('hidden');
+                els.displays.taxAmount.textContent = formatMoney(data.taxAmount);
+            } else {
+                els.displays.taxCard.classList.add('hidden');
+            }
+
+            els.displays.symbols.forEach(el => el.textContent = state.currency.symbol);
+        }
+
+        function addListener(key, el) {
+            el.addEventListener('input', (e) => {
+                state[key] = e.target.value;
+                calculate();
+            });
+        }
+
+        addListener('price', els.inputs.price);
+        addListener('sales', els.inputs.sales);
+        addListener('fee', els.inputs.fee);
+        addListener('tax', els.inputs.tax);
+
+        els.inputs.currency.addEventListener('change', (e) => {
+            state.currency = currencies.find(c => c.code === e.target.value);
+            calculate();
+        });
+
+        window.toggleAdvanced = function() {
+            document.getElementById('advanced-section').classList.toggle('hidden');
+        };
+
+        window.handleBookmark = function() {
+            const toast = document.getElementById('bookmark-toast');
+            toast.classList.remove('hidden');
+            setTimeout(() => toast.classList.add('hidden'), 3000);
+        };
+
+        window.shareSocial = function(platform) {
+             const url = encodeURIComponent(window.location.href);
+             const title = encodeURIComponent("Check out this Unity Asset Store Earnings Calculator!");
+             let shareUrl = '';
+             switch(platform) {
+                case 'facebook': shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${url}`; break;
+                case 'twitter': shareUrl = `https://twitter.com/intent/tweet?url=${url}&text=${title}`; break;
+                case 'linkedin': shareUrl = `https://www.linkedin.com/shareArticle?mini=true&url=${url}`; break;
+                case 'whatsapp': shareUrl = `https://api.whatsapp.com/send?text=${title}%20${url}`; break;
+             }
+             if(shareUrl) window.open(shareUrl, '_blank');
+        };
+
+        calculate();
+    });
+    </script>
+
+    <section class="bg-white py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="prose prose-lg max-w-none prose-h2:text-gray-800 prose-p:text-gray-700">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">How to Use the Unity Developer Payout Calculator</h2>
+                <p class="mb-6 leading-relaxed">
+                    Selling digital assets on the Unity Asset Store is one of the most sustainable ways for game developers to generate passive income. However, understanding exactly how much will land in your bank account requires navigating platform fees and potential taxes. Our <strong>unity developer payout calculator</strong> simplifies this process by providing an instant breakdown of your gross revenue versus net earnings.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Understanding the Unity Asset Store Fee Structure</h2>
+                <p class="mb-6 leading-relaxed">
+                    Unity operates on a standard revenue-share model. For most creators, the platform takes a <strong>30% commission</strong> on every sale. This fee covers the hosting, payment processing, and global distribution of your assets. While 70% goes to the developer, there are other factors to consider, such as VAT (Value Added Tax) for European customers or withholding taxes depending on your country of residence.
+                </p>
+                <p class="mb-6 leading-relaxed">
+                    Using an <em>asset store fee calculator</em> helps you price your products competitively. If you want to earn a specific amount per sale, you must factor in the 30% cut. For example, to net $35 per sale, you would need to list your asset at $50.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Maximizing Your Game Dev Income</h2>
+                <p class="mb-6 leading-relaxed">
+                    To increase your payout, focus on high-demand categories like 3D models, specialized shaders, or complete project templates. Many developers use our tool alongside the <a href="https://simpliconvert.com/freelance_hourly_rate_calculator/">Freelance Hourly Rate Calculator</a> to determine if the time spent developing an asset is worth the projected long-term royalties.
+                </p>
+                <ul class="list-disc pl-6 mb-6 space-y-2 text-gray-700">
+                    <li><strong>Bundle Assets:</strong> Creating packs often leads to higher average order values.</li>
+                    <li><strong>Seasonal Sales:</strong> Participate in Unity's official sales to boost volume, even if the per-unit profit is lower.</li>
+                    <li><strong>Update Regularly:</strong> Assets that support the latest Unity LTS versions rank higher in search results.</li>
+                </ul>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Taxes and Payout Thresholds</h2>
+                <p class="mb-6 leading-relaxed">
+                    It is important to remember that Unity has a minimum payout threshold. If you choose wire transfer, you typically need to accumulate $100 before a payment is triggered. Furthermore, if you are an international developer selling to US customers, you may be subject to US withholding tax unless your country has a tax treaty. Our advanced settings allow you to simulate these deductions so you aren't surprised when your monthly statement arrives.
+                </p>
+                <p class="mb-6 leading-relaxed">
+                    If you are also active on other platforms, you might find our <a href="https://simpliconvert.com/roblox-game-pass-calculator/">Roblox Game Pass Calculator</a> or <a href="https://simpliconvert.com/fiverr-fee-calculator/">Fiverr Fee Calculator</a> useful for comparing platform profitability.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-center text-gray-900 mb-8">Unity Payout – Frequently Asked Questions</h2>
+            <div class="space-y-4">
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>What is the standard Unity Asset Store commission?</span>
+                        <i class="fas fa-chevron-down faq-icon transition-transform duration-300"></i>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500">
+                        <p class="p-5 pt-0 text-gray-600">Unity takes a 30% cut of the gross sales price. The developer receives the remaining 70%.</p>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>How often does Unity pay developers?</span>
+                        <i class="fas fa-chevron-down faq-icon transition-transform duration-300"></i>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500">
+                        <p class="p-5 pt-0 text-gray-600">Payouts are processed monthly, usually around the 15th of each month for the previous month's earnings, provided the minimum threshold is met.</p>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>Are there any hidden fees?</span>
+                        <i class="fas fa-chevron-down faq-icon transition-transform duration-300"></i>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500">
+                        <p class="p-5 pt-0 text-gray-600">Beyond the 30% commission, you may encounter bank wire transfer fees (often $15-$25) or currency conversion fees depending on your bank and payout method.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 pb-16">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-slate-200 pt-16">
+            <h2 class="text-2xl font-bold text-center text-slate-800 mb-10">Popular Tools on SimpliConvert</h2>
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+                <a href="/roblox-game-pass-calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-slate-50 text-slate-700 flex items-center justify-center shrink-0 group-hover:bg-slate-800 group-hover:text-white transition-colors">
+                        <i class="fas fa-gamepad text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Roblox Calc</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Calculate Robux earnings.</p>
+                    </div>
+                </a>
+                <a href="/fiverr-fee-calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-green-50 text-green-600 flex items-center justify-center shrink-0 group-hover:bg-green-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-briefcase text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Fiverr Fee</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Calculate gig net profit.</p>
+                    </div>
+                </a>
+                <a href="/upwork-fee-calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center shrink-0 group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                        <i class="fab fa-upwork text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Upwork Fee</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Estimate Upwork take-home.</p>
+                    </div>
+                </a>
+                <a href="/paypal-fee-calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0 group-hover:bg-indigo-600 group-hover:text-white transition-colors">
+                        <i class="fab fa-paypal text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">PayPal Fee</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Calculate transaction fees.</p>
+                    </div>
+                </a>
+                <a href="/freelance-hourly-rate-calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0 group-hover:bg-emerald-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-clock text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Rate Calc</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Set your hourly pricing.</p>
+                    </div>
+                </a>
+                <a href="/youtube-earnings-calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-red-50 text-red-600 flex items-center justify-center shrink-0 group-hover:bg-red-600 group-hover:text-white transition-colors">
+                        <i class="fab fa-youtube text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">YouTube Calc</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Estimate AdSense revenue.</p>
+                    </div>
+                </a>
+                <a href="/roi-calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-orange-50 text-orange-600 flex items-center justify-center shrink-0 group-hover:bg-orange-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-chart-line text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">ROI Calc</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Calculate return on investment.</p>
+                    </div>
+                </a>
+                <a href="/profit-margin-calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-purple-50 text-purple-600 flex items-center justify-center shrink-0 group-hover:bg-purple-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-percentage text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Margin Calc</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Calculate profit margins.</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <div id="footer"></div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // FAQ Toggle Logic
+        const faqToggles = document.querySelectorAll('[data-faq-toggle]');
+        faqToggles.forEach(button => {
+            button.addEventListener('click', () => {
+                const answer = button.nextElementSibling;
+                const icon = button.querySelector('.faq-icon');
+                const isOpening = !answer.style.maxHeight;
+
+                faqToggles.forEach(other => {
+                    if (other !== button) {
+                        other.nextElementSibling.style.maxHeight = null;
+                        other.querySelector('.faq-icon').style.transform = 'rotate(0deg)';
+                    }
+                });
+
+                if (isOpening) {
+                    answer.style.maxHeight = answer.scrollHeight + "px";
+                    icon.style.transform = 'rotate(180deg)';
+                } else {
+                    answer.style.maxHeight = null;
+                    icon.style.transform = 'rotate(0deg)';
+                }
+            });
+        });
+
+        // Load Components (Simulated)
+        const loadComp = (id, html) => { if(document.getElementById(id)) document.getElementById(id).innerHTML = html; };
+        // In real environment, use fetch()
+    });
+    </script>
+</body>
+</html>

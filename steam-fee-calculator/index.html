@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Steam Community Market Fee Calculator – Calculate CS:GO & Rust Tax | SimpliConvert</title>
+    <meta name="description" content="Calculate exactly how much you'll receive after Steam's 15% market fee. Our free tool breaks down Valve and Game-specific fees for CS:GO, Rust, and Dota 2 items.">
+    <meta name="keywords" content="steam community market fee calculator, csgo skin fee, steam tax, valve fee, rust market fee, dota 2 market tax, calculate steam profit">
+    <meta name="author" content="SimpliConvert">
+    <meta property="og:site_name" content="SimpliConvert">
+    <meta name="robots" content="index, follow">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://simpliconvert.com/steam-fee-calculator/">
+    <meta property="og:title" content="Steam Community Market Fee Calculator – Instant Results">
+    <meta property="og:description" content="Don't lose money on Steam trades. Use our calculator to see the exact fees Valve takes from your community market sales.">
+    <meta property="og:image" content="https://simpliconvert.com/images/steam-fee-calculator-og.jpg">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://simpliconvert.com/steam-fee-calculator/">
+    <meta name="twitter:title" content="Steam Community Market Fee Calculator">
+    <meta name="twitter:description" content="Free tool to calculate Steam Market fees (15%) for CS:GO, Rust, and more. See your net profit instantly.">
+    <meta name="twitter:image" content="https://simpliconvert.com/images/steam-fee-calculator-og.jpg">
+
+    <link rel="canonical" href="https://simpliconvert.com/steam-fee-calculator/">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Steam Community Market Fee Calculator",
+      "url": "https://simpliconvert.com/steam-fee-calculator/",
+      "description": "A specialized tool for Steam users to calculate the 15% transaction fee on the Community Market, including Valve and Game-specific fees.",
+      "applicationCategory": "FinanceApplication",
+      "operatingSystem": "Web Browser",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "SimpliConvert",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://simpliconvert.com/logo.png"
+        }
+      }
+    }
+    </script>
+
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [{
+    "@type": "ListItem",
+    "position": 1,
+    "name": "Home",
+    "item": "https://simpliconvert.com/"
+  },{
+    "@type": "ListItem",
+    "position": 2,
+    "name": "Calculator Tools",
+    "item": "https://simpliconvert.com/calculator_tools/"
+  },{
+    "@type": "ListItem",
+    "position": 3,
+    "name": "Steam Market Fee Calculator",
+    "item": "https://simpliconvert.com/steam-fee-calculator/"
+  }]
+}
+</script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [{
+        "@type": "Question",
+        "name": "What is the Steam Community Market fee?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The total fee is 15%. This consists of a 5% Steam Transaction Fee and a 10% Game-Specific Fee (for games like CS:GO, Rust, and Dota 2). Both fees have a minimum of $0.01 each."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Who pays the fee on the Steam Market?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The buyer pays the total price, but the fees are deducted from the amount the seller receives. For example, if an item is listed for $1.15, the buyer pays $1.15, and the seller receives $1.00."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Is the fee different for different games?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Most major games (Valve titles like CS2, Dota 2, TF2) use the 10% game fee. Some third-party games might have different game-specific fees, but 10% is the standard for the vast majority of items."
+        }
+      }]
+    }
+    </script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #1b2838;
+            --accent: #66c0f4;
+            --steam-blue: #171a21;
+            --primary-hover: #2a475e;
+            --bg: #f8fafc;
+            --text-dark: #0f172a;
+            --success: #4c6b22;
+            --danger: #dc2626;
+        }
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: var(--text-dark); }
+        .hero-card { background: white; border: 1px solid #f1f5f9; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05); position: relative; overflow: hidden; }
+        .hero-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px; background-color: var(--accent); }
+        .tooltip-container { position: relative; display: inline-block; }
+        .tooltip-text {
+            visibility: hidden; width: 220px; background-color: #1e293b; color: #fff;
+            text-align: center; border-radius: 8px; padding: 10px; position: absolute;
+            z-index: 50; bottom: 125%; left: 50%; margin-left: -110px; opacity: 0;
+            transition: opacity 0.2s; font-size: 0.75rem; font-weight: 400;
+            pointer-events: none; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+        .tooltip-container:hover .tooltip-text { visibility: visible; opacity: 1; }
+        .animate-fade { animation: fadeIn 0.3s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+        .tool-card { transition: transform 0.2s ease, box-shadow 0.2s ease; }
+        .tool-card:hover { transform: translateY(-4px); box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
+        .prose a { color: #66c0f4; text-decoration: none; font-weight: 600; }
+        .prose a:hover { text-decoration: underline; }
+    </style>
+</head>
+
+<body class="bg-gray-50 min-h-screen flex flex-col">
+    <div id="navbar" style="min-height: 70px;"></div>
+	
+	<section class="hero-white text-black py-2 md:py-10">
+        <div class="container mx-auto px-4">
+            <nav class="flex pb-4 text-sm text-slate-500 items-center space-x-2 justify-center">
+                <a href="https://simpliconvert.com/" class="hover:text-[#66c0f4] transition-colors">Home</a>
+                <i class="fas fa-chevron-right text-[10px]"></i>
+                <a href="https://simpliconvert.com/calculator_tools/" class="hover:text-[#66c0f4] transition-colors">Calculators</a>
+                <i class="fas fa-chevron-right text-[10px]"></i>
+                <span class="text-slate-900 font-medium">Steam Market Fee Calculator</span>
+            </nav>
+            <div class="text-center">
+                <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-2">steam community market fee calculator</h1>
+                <p class="text-lg md:text-xl max-w-3xl mx-auto mb-2 text-slate-600">
+                Calculate exactly how much you'll receive from your Steam Community Market sales. Supports CS:GO/CS2, Rust, Dota 2, and more.
+                </p>
+            </div>
+        </div>
+    </section>		
+
+    <div id="calculator-app" class="w-full max-w-6xl mx-auto p-4 sm:p-6">
+        <div class="bg-white rounded-[2rem] shadow-2xl overflow-hidden border border-slate-100">
+            <header class="bg-slate-50/50 border-b border-slate-100 p-6 md:p-8 flex flex-col md:flex-row justify-between items-center gap-6">
+                <div class="text-center md:text-left">
+                  <h2 class="text-2xl font-black text-slate-800 tracking-tight flex items-center justify-center md:justify-start gap-3">
+                    <span class="bg-[#1b2838] text-white p-2 rounded-xl text-lg shadow-lg">
+                      <i class="fab fa-steam"></i>
+                    </span>
+                    Steam Profit Calculator
+                  </h2>
+                </div>
+                
+                <div class="flex items-center gap-3 bg-white p-1 rounded-xl border border-slate-200 shadow-sm">
+                    <button id="mode-receive" class="px-4 py-2 rounded-lg text-xs font-bold transition-all bg-[#1b2838] text-white">I want to receive</button>
+                    <button id="mode-pay" class="px-4 py-2 rounded-lg text-xs font-bold transition-all text-slate-500 hover:bg-slate-50">Buyer pays</button>
+                </div>
+            </header>
+    
+            <main class="flex flex-col lg:flex-row">
+                <div class="lg:w-[50%] p-6 md:p-10 lg:p-12 border-r border-slate-100">
+                    <div class="space-y-8">
+                        <div>
+                            <div class="flex items-center text-xs font-bold text-slate-500 uppercase tracking-widest mb-3">
+                                <label id="input-label">Amount you want to receive</label>
+                                <span class="tooltip-container ml-2">
+                                    <i class="fas fa-info-circle text-slate-300 hover:text-[#66c0f4] cursor-help text-xs"></i>
+                                    <span class="tooltip-text">Enter the net amount you want to see in your Steam Wallet after fees.</span>
+                                </span>
+                            </div>
+                            <div class="relative rounded-2xl shadow-sm">
+                                <div class="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none">
+                                    <span class="text-slate-400 font-bold text-xl">$</span>
+                                </div>
+                                <input type="number" id="main-input" value="100" class="block w-full rounded-2xl border-slate-200 border-2 py-5 pl-12 pr-6 focus:ring-4 focus:ring-[#66c0f420] focus:border-[#66c0f4] text-2xl font-black text-slate-800 transition-all" placeholder="0.00">
+                            </div>
+                        </div>
+
+                        <div class="bg-slate-50 p-6 rounded-2xl border border-slate-100">
+                            <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-4">Fee Breakdown</h3>
+                            <div class="space-y-4">
+                                <div class="flex justify-between items-center">
+                                    <span class="text-sm text-slate-600 font-medium">Steam Transaction Fee (5%)</span>
+                                    <span id="breakdown-steam" class="text-sm font-bold text-slate-800">$0.00</span>
+                                </div>
+                                <div class="flex justify-between items-center">
+                                    <span class="text-sm text-slate-600 font-medium">Game-Specific Fee (10%)</span>
+                                    <span id="breakdown-game" class="text-sm font-bold text-slate-800">$0.00</span>
+                                </div>
+                                <div class="pt-4 border-t border-slate-200 flex justify-between items-center">
+                                    <span class="text-sm font-bold text-slate-800">Total Fees (15%)</span>
+                                    <span id="breakdown-total" class="text-sm font-black text-[#dc2626]">$0.00</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+    
+                <div class="lg:w-[50%] bg-slate-50/50 p-6 md:p-10 lg:p-12 flex flex-col justify-center">
+                   <div class="space-y-6">
+                     <div class="hero-card p-10 flex flex-col items-center text-center">
+                         <p id="result-label" class="text-xs font-black text-[#66c0f4] uppercase tracking-[0.2em] mb-4">Buyer Must Pay</p>
+                         <div class="flex items-center justify-center">
+                           <span id="display-result" class="text-6xl md:text-7xl font-black tracking-tighter leading-none text-slate-800">$0.00</span>
+                         </div>
+                         <p class="text-sm text-slate-400 font-medium mt-6">Calculated using standard Valve market logic</p>
+                     </div>
+
+                     <div class="grid grid-cols-1 gap-4">
+                         <div class="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm flex items-center gap-4">
+                            <div class="w-12 h-12 bg-green-50 rounded-xl flex items-center justify-center text-green-600">
+                                <i class="fas fa-wallet text-xl"></i>
+                            </div>
+                            <div>
+                                <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Net Profit</p>
+                                <p id="display-profit" class="text-xl font-black text-slate-800">$0.00</p>
+                            </div>
+                         </div>
+                     </div>
+                   </div>
+                </div>
+            </main>
+    
+            <footer class="bg-slate-50 border-t border-slate-100 p-6 md:p-8">
+               <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+                   <div class="flex flex-wrap justify-center gap-3">
+                       <a href="#" onclick="shareSocial('facebook')" class="w-10 h-10 rounded-full flex items-center justify-center text-white transition-transform hover:-translate-y-1 bg-[#1877F2]"><i class="fab fa-facebook-f"></i></a>
+                       <a href="#" onclick="shareSocial('twitter')" class="w-10 h-10 rounded-full flex items-center justify-center text-white transition-transform hover:-translate-y-1 bg-[#1DA1F2]"><i class="fab fa-twitter"></i></a>
+                       <a href="#" onclick="shareSocial('whatsapp')" class="w-10 h-10 rounded-full flex items-center justify-center text-white transition-transform hover:-translate-y-1 bg-[#25D366]"><i class="fab fa-whatsapp"></i></a>
+                   </div>
+                   <button onclick="handleBookmark()" class="flex items-center gap-2 bg-white border border-slate-200 hover:border-[#66c0f4] hover:text-[#66c0f4] text-slate-600 px-6 py-3 rounded-xl text-sm font-bold transition-all shadow-sm">
+                      <i class="fas fa-bookmark"></i> Bookmark Tool
+                   </button>
+               </div>
+            </footer>
+        </div>
+    </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const input = document.getElementById('main-input');
+        const modeReceiveBtn = document.getElementById('mode-receive');
+        const modePayBtn = document.getElementById('mode-pay');
+        const inputLabel = document.getElementById('input-label');
+        const resultLabel = document.getElementById('result-label');
+        
+        const displayResult = document.getElementById('display-result');
+        const displayProfit = document.getElementById('display-profit');
+        const breakdownSteam = document.getElementById('breakdown-steam');
+        const breakdownGame = document.getElementById('breakdown-game');
+        const breakdownTotal = document.getElementById('breakdown-total');
+
+        let mode = 'receive'; // 'receive' or 'pay'
+
+        function format(val) {
+            return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(val);
+        }
+
+        function calculate() {
+            let val = parseFloat(input.value) || 0;
+            let steamFee, gameFee, totalFees, result;
+
+            if (mode === 'receive') {
+                // If seller wants to receive X, buyer pays Y
+                // Steam Fee = max(0.01, floor(X * 0.05))
+                // Game Fee = max(0.01, floor(X * 0.10))
+                steamFee = Math.max(0.01, Math.floor(val * 5) / 100);
+                gameFee = Math.max(0.01, Math.floor(val * 10) / 100);
+                result = val + steamFee + gameFee;
+                totalFees = steamFee + gameFee;
+                
+                displayResult.textContent = format(result);
+                displayProfit.textContent = format(val);
+            } else {
+                // If buyer pays Y, seller receives X
+                // This is trickier because fees are based on the 'receive' amount
+                // X = Y / 1.15 (approx)
+                let estimatedReceive = val / 1.15;
+                // Refine with Steam's floor logic
+                steamFee = Math.max(0.01, Math.floor(estimatedReceive * 5) / 100);
+                gameFee = Math.max(0.01, Math.floor(estimatedReceive * 10) / 100);
+                let receive = val - steamFee - gameFee;
+                
+                displayResult.textContent = format(receive);
+                displayProfit.textContent = format(receive);
+                totalFees = steamFee + gameFee;
+            }
+
+            breakdownSteam.textContent = format(steamFee);
+            breakdownGame.textContent = format(gameFee);
+            breakdownTotal.textContent = format(totalFees);
+        }
+
+        modeReceiveBtn.addEventListener('click', () => {
+            mode = 'receive';
+            modeReceiveBtn.className = "px-4 py-2 rounded-lg text-xs font-bold transition-all bg-[#1b2838] text-white";
+            modePayBtn.className = "px-4 py-2 rounded-lg text-xs font-bold transition-all text-slate-500 hover:bg-slate-50";
+            inputLabel.textContent = "Amount you want to receive";
+            resultLabel.textContent = "Buyer Must Pay";
+            calculate();
+        });
+
+        modePayBtn.addEventListener('click', () => {
+            mode = 'pay';
+            modePayBtn.className = "px-4 py-2 rounded-lg text-xs font-bold transition-all bg-[#1b2838] text-white";
+            modeReceiveBtn.className = "px-4 py-2 rounded-lg text-xs font-bold transition-all text-slate-500 hover:bg-slate-50";
+            inputLabel.textContent = "Amount buyer pays";
+            resultLabel.textContent = "You Will Receive";
+            calculate();
+        });
+
+        input.addEventListener('input', calculate);
+        calculate();
+
+        window.shareSocial = function(platform) {
+            const url = encodeURIComponent(window.location.href);
+            const text = encodeURIComponent("Check out this Steam Market Fee Calculator!");
+            const shareUrls = {
+                facebook: `https://www.facebook.com/sharer/sharer.php?u=${url}`,
+                twitter: `https://twitter.com/intent/tweet?url=${url}&text=${text}`,
+                whatsapp: `https://api.whatsapp.com/send?text=${text}%20${url}`
+            };
+            window.open(shareUrls[platform], '_blank');
+        };
+
+        window.handleBookmark = function() {
+            alert("Press Ctrl+D (or Cmd+D on Mac) to bookmark this tool.");
+        };
+    });
+    </script>
+
+    <section class="bg-white py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="prose prose-lg max-w-none prose-h2:text-gray-800 prose-p:text-gray-700">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">Understanding the Steam Community Market Fee</h2>
+                <p class="mb-6 leading-relaxed">
+                    Selling items on the Steam Community Market is the primary way for gamers to turn their in-game drops, skins, and trading cards into Steam Wallet funds. However, many users are surprised when they receive significantly less than the listing price. This is due to the <strong>steam community market fee calculator</strong> logic that Valve applies to every transaction.
+                </p>
+                <p class="mb-6 leading-relaxed">
+                    The standard fee is 15% for most games. This isn't just one flat tax; it is split into two distinct parts: the Steam Transaction Fee (5%) and the Game-Specific Fee (10%). For popular titles like Counter-Strike 2 (CS2), Rust, and Dota 2, these fees are mandatory and automatically deducted.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">How the 15% Steam Tax is Calculated</h2>
+                <p class="mb-6 leading-relaxed">
+                    Valve uses a specific rounding method that can be confusing. The fees are calculated based on the "Receive" amount (what the seller gets), not the "Buyer Pays" amount. 
+                </p>
+                <ul class="list-disc pl-6 mb-6 space-y-2 text-gray-700">
+                    <li><strong>Steam Transaction Fee:</strong> 5% of the seller's price (minimum $0.01).</li>
+                    <li><strong>Game Fee:</strong> 10% of the seller's price (minimum $0.01).</li>
+                    <li><strong>Total Cost:</strong> The sum of the seller's price plus both fees.</li>
+                </ul>
+                <p class="mb-6 leading-relaxed">
+                    Because of the $0.01 minimum for each fee, the smallest possible total fee for any item is $0.02. This means if you sell a trading card for $0.03, you only receive $0.01, effectively paying a 66% fee on very low-value items.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Why Use a Steam Fee Calculator?</h2>
+                <p class="mb-6 leading-relaxed">
+                    Whether you are a casual gamer selling a few cases or a high-tier skin trader, knowing your net profit is essential. Using our tool helps you avoid the "math headache" of Steam's reverse calculation. If you want to buy a specific game that costs $20, you can't just sell $20 worth of skins; you need to know exactly what to list them for to end up with $20 in your wallet.
+                </p>
+                <p class="mb-6 leading-relaxed">
+                    This is similar to how developers use a <a href="https://simpliconvert.com/roblox-game-pass-calculator/">Roblox Game Pass Calculator</a> to determine their earnings after platform cuts. In the digital economy, platform fees are a standard reality, and being prepared is the best way to manage your budget.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Tips for Selling on the Steam Market</h2>
+                <p class="mb-6 leading-relaxed">
+                    To maximize your returns, consider the following strategies:
+                </p>
+                <ul class="list-disc pl-6 mb-6 space-y-2 text-gray-700">
+                    <li><strong>Check Market Trends:</strong> Prices fluctuate based on game updates and operations.</li>
+                    <li><strong>Bulk Selling:</strong> For low-value items like crates, the $0.02 minimum fee hurts your margins. Sometimes it's better to wait for prices to rise.</li>
+                    <li><strong>Compare with External Sites:</strong> High-value CS2 skins often sell for "real money" on third-party marketplaces, though those come with their own risks and fee structures.</li>
+                </ul>
+                <p class="mb-6 leading-relaxed">
+                    If you're also a freelancer or seller on other platforms, you might find our <a href="https://simpliconvert.com/fiverr-fee-calculator/">Fiverr Fee Calculator</a> or <a href="https://simpliconvert.com/paypal-fee-calculator/">PayPal Fee Calculator</a> useful for managing your various income streams.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-center text-gray-900 mb-8">Frequently Asked Questions</h2>
+            <div class="space-y-4">
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg transition-all">
+                        <span>Is there any way to avoid the Steam Market fee?</span>
+                        <i class="fas fa-chevron-down faq-icon transition-transform"></i>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-300">
+                        <p class="p-5 pt-0 text-gray-600">No, all transactions on the official Steam Community Market are subject to these fees. The only way to avoid them is through direct user-to-user trading (which has no fee but carries higher scam risks) or using third-party marketplaces.</p>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg transition-all">
+                        <span>Does the fee change for expensive items?</span>
+                        <i class="fas fa-chevron-down faq-icon transition-transform"></i>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-300">
+                        <p class="p-5 pt-0 text-gray-600">The percentage remains the same (15%), but Steam does have a maximum wallet balance and a maximum listing price (usually around $2,000 USD depending on your currency). For extremely rare items, the fee can be hundreds of dollars.</p>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg transition-all">
+                        <span>Why does Steam charge a fee?</span>
+                        <i class="fas fa-chevron-down faq-icon transition-transform"></i>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-300">
+                        <p class="p-5 pt-0 text-gray-600">The fees cover the cost of maintaining the market servers, fraud prevention, and provide revenue to both Valve and the game developers who created the items.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 pb-16">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-slate-200 pt-16">
+            <h2 class="text-2xl font-bold text-center text-slate-800 mb-10">Popular Tools on SimpliConvert</h2>
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+                <a href="/roblox-game-pass-calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#66c0f4] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-slate-50 text-slate-700 flex items-center justify-center shrink-0 group-hover:bg-slate-800 group-hover:text-white transition-colors">
+                        <i class="fas fa-gamepad text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#66c0f4]">Roblox Calc</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Calculate Robux after 30% tax.</p>
+                    </div>
+                </a>
+                <a href="/fiverr-fee-calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#66c0f4] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-green-50 text-green-600 flex items-center justify-center shrink-0 group-hover:bg-green-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-briefcase text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#66c0f4]">Fiverr Calc</h3>
+                        <p class="text-xs text-slate-500 leading-snug">See your net Fiverr earnings.</p>
+                    </div>
+                </a>
+                <a href="/paypal-fee-calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#66c0f4] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center shrink-0 group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                        <i class="fab fa-paypal text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#66c0f4]">PayPal Calc</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Calculate PayPal merchant fees.</p>
+                    </div>
+                </a>
+                <a href="/upwork-fee-calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#66c0f4] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-slate-50 text-slate-800 flex items-center justify-center shrink-0 group-hover:bg-slate-900 group-hover:text-white transition-colors">
+                        <i class="fas fa-laptop-code text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#66c0f4]">Upwork Calc</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Calculate Upwork service fees.</p>
+                    </div>
+                </a>
+                <a href="/etsy-fee-calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#66c0f4] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-orange-50 text-orange-600 flex items-center justify-center shrink-0 group-hover:bg-orange-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-store text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#66c0f4]">Etsy Calc</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Calculate Etsy seller fees.</p>
+                    </div>
+                </a>
+                <a href="/stripe-fee-calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#66c0f4] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0 group-hover:bg-indigo-600 group-hover:text-white transition-colors">
+                        <i class="fab fa-stripe-s text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#66c0f4]">Stripe Calc</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Calculate Stripe processing fees.</p>
+                    </div>
+                </a>
+                <a href="/roi-calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#66c0f4] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0 group-hover:bg-emerald-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-chart-pie text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#66c0f4]">ROI Calc</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Calculate return on investment.</p>
+                    </div>
+                </a>
+                <a href="/profit-margin-calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#66c0f4] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-red-50 text-red-600 flex items-center justify-center shrink-0 group-hover:bg-red-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-percentage text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#66c0f4]">Margin Calc</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Calculate profit margins easily.</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <div id="footer"></div>
+
+    <script>
+    async function loadComponent(url, elementId) {
+        try {
+            const response = await fetch(url);
+            const text = await response.text();
+            document.getElementById(elementId).innerHTML = text;
+        } catch (e) { console.error(e); }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        loadComponent('/components/navbar.html', 'navbar');
+        loadComponent('/components/footer.html', 'footer');
+        
+        const faqToggles = document.querySelectorAll('[data-faq-toggle]');
+        faqToggles.forEach(button => {
+            button.addEventListener('click', () => {
+                const answer = button.nextElementSibling;
+                const icon = button.querySelector('.faq-icon');
+                if (answer.style.maxHeight) {
+                    answer.style.maxHeight = null;
+                    icon.style.transform = 'rotate(0deg)';
+                } else {
+                    answer.style.maxHeight = answer.scrollHeight + "px";
+                    icon.style.transform = 'rotate(180deg)';
+                }
+            });
+        });
+    });
+    </script>
+</body>
+</html>

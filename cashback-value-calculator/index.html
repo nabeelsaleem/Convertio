@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Credit Card Cashback Calculator – Calculate Your Rewards | SimpliConvert</title>
+    <meta name="description" content="Calculate your total cash back rewards instantly. Use our free credit card cashback calculator to estimate savings based on spending categories and percentage rates.">
+    <meta name="keywords" content="credit card cashback calculator, cash back returns, spending rewards, discount value, calculate rewards, credit card savings tool">
+    <meta name="author" content="SimpliConvert">
+    <meta property="og:site_name" content="SimpliConvert">
+    <meta name="robots" content="index, follow">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://simpliconvert.com/cashback-value-calculator/">
+    <meta property="og:title" content="Credit Card Cashback Calculator – Maximize Your Rewards">
+    <meta property="og:description" content="Stop guessing your rewards. Accurately calculate cashback earnings for any credit card based on your monthly or yearly spending.">
+    <meta property="og:image" content="https://simpliconvert.com/images/cashback-calculator-og.jpg">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://simpliconvert.com/cashback-value-calculator/">
+    <meta name="twitter:title" content="Credit Card Cashback Calculator – Free Rewards Tool">
+    <meta name="twitter:description" content="Free tool to calculate credit card cashback, including category-specific rewards. Perfect for maximizing financial savings.">
+    <meta name="twitter:image" content="https://simpliconvert.com/images/cashback-calculator-og.jpg">
+
+    <link rel="canonical" href="https://simpliconvert.com/cashback-value-calculator/">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Cashback Value Calculator",
+      "url": "https://simpliconvert.com/cashback-value-calculator/",
+      "description": "A free online tool to calculate credit card cashback rewards based on spending amounts and percentage rates across different categories.",
+      "applicationCategory": "FinanceApplication",
+      "operatingSystem": "Web Browser",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "SimpliConvert",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://simpliconvert.com/logo.png"
+        }
+      }
+    }
+    </script>
+
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [{
+    "@type": "ListItem",
+    "position": 1,
+    "name": "Home",
+    "item": "https://simpliconvert.com/"
+  },{
+    "@type": "ListItem",
+    "position": 2,
+    "name": "Calculator Tools",
+    "item": "https://simpliconvert.com/calculator_tools/"
+  },{
+    "@type": "ListItem",
+    "position": 3,
+    "name": "Cashback Value Calculator",
+    "item": "https://simpliconvert.com/cashback-value-calculator/"
+  }]
+}
+</script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [{
+        "@type": "Question",
+        "name": "How do I calculate my total cashback?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The formula is simple: (Spending Amount * Cashback Percentage) / 100. For example, if you spend $1,000 at a 2% rate, you earn $20. Our calculator allows you to add multiple categories to find your total effective rewards."
+        }
+      }, {
+        "@type": "Question",
+        "name": "What is an effective cashback rate?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The effective rate is your total cashback earned divided by your total spending. If you earn $50 in rewards on $2,000 of total spending, your effective rate is 2.5%."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Are cashback rewards considered taxable income?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "In most cases, no. The IRS generally treats credit card cashback as a rebate or a discount on your purchases rather than income, so it is not typically taxable."
+        }
+      }]
+    }
+    </script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #da3f0b;
+            --primary-hover: #b53409;
+            --primary-light: #fff5f2;
+            --bg: #f8fafc;
+            --text-dark: #0f172a;
+            --success: #16a34a;
+            --danger: #dc2626;
+        }
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: var(--text-dark); }
+        .hero-card { background: white; border: 1px solid #f1f5f9; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05); position: relative; overflow: hidden; }
+        .hero-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px; background-color: var(--primary); }
+        .tooltip-container { position: relative; display: inline-block; }
+        .tooltip-text { visibility: hidden; width: 220px; background-color: #1e293b; color: #fff; text-align: center; border-radius: 8px; padding: 10px; position: absolute; z-index: 50; bottom: 125%; left: 50%; margin-left: -110px; opacity: 0; transition: opacity 0.2s; font-size: 0.75rem; pointer-events: none; }
+        .tooltip-container:hover .tooltip-text { visibility: visible; opacity: 1; }
+        .animate-fade { animation: fadeIn 0.3s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+        .tool-card { transition: transform 0.2s ease, box-shadow 0.2s ease; }
+        .tool-card:hover { transform: translateY(-4px); box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
+        .prose a { color: #da3f0b; text-decoration: none; }
+        .prose a:hover { text-decoration: underline; }
+    </style>
+</head>
+
+<body class="bg-gray-50 min-h-screen flex flex-col">
+    <div id="navbar" style="min-height: 70px;"></div>
+	
+	<section class="hero-white text-black py-2 md:py-10">
+        <div class="container mx-auto px-4">
+            <nav class="flex pb-4 text-sm text-slate-500 items-center space-x-2 justify-center">
+                <a href="https://simpliconvert.com/" class="hover:text-[#da3f0b] transition-colors">Home</a>
+                <i class="fas fa-chevron-right text-[10px]"></i>
+                <a href="https://simpliconvert.com/calculator_tools/" class="hover:text-[#da3f0b] transition-colors">Calculators</a>
+                <i class="fas fa-chevron-right text-[10px]"></i>
+                <span class="text-slate-900 font-medium">Cashback Value Calculator</span>
+            </nav>
+            <div class="text-center">
+                <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-2">credit card cashback calculator</h1>
+                <p class="text-lg md:text-xl max-w-3xl mx-auto mb-2 text-slate-600">
+                Maximize your spending rewards. Calculate exactly how much cash back you earn based on your monthly expenses and card rates.
+                </p>
+            </div>
+        </div>
+    </section>		
+
+    <div id="calculator-app" class="w-full max-w-6xl mx-auto p-4 sm:p-6">
+        <div class="bg-white rounded-[2rem] shadow-2xl overflow-hidden border border-slate-100">
+            <header class="bg-slate-50/50 border-b border-slate-100 p-6 md:p-8 flex flex-col md:flex-row justify-between items-center gap-6">
+                <div class="text-center md:text-left">
+                  <h2 class="text-2xl font-black text-slate-800 tracking-tight flex items-center justify-center md:justify-start gap-3">
+                    <span class="bg-[#da3f0b] text-white p-2 rounded-xl text-lg shadow-lg shadow-[#da3f0b30]">
+                      <i class="fas fa-piggy-bank"></i>
+                    </span>
+                    Rewards Value Estimator
+                  </h2>
+                </div>
+                
+                <div class="relative group min-w-[140px]">
+                  <select id="currency-select" class="appearance-none w-full bg-white border border-slate-200 text-slate-700 py-2.5 pl-4 pr-10 rounded-xl text-xs font-bold focus:outline-none focus:ring-4 focus:ring-[#da3f0b15] focus:border-[#da3f0b] shadow-sm cursor-pointer">
+                    <option value="USD">USD ($)</option>
+                    <option value="EUR">EUR (€)</option>
+                    <option value="GBP">GBP (£)</option>
+                    <option value="INR">INR (₹)</option>
+                    <option value="CAD">CAD (C$)</option>
+                    <option value="AUD">AUD (A$)</option>
+                  </select>
+                  <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-slate-400">
+                    <i class="fas fa-chevron-down text-[10px]"></i>
+                  </div>
+                </div>
+            </header>
+    
+            <main class="flex flex-col lg:flex-row">
+                <div class="lg:w-[55%] p-6 md:p-10 lg:p-12 border-r border-slate-100">
+                    <div class="space-y-6">
+                        <div id="category-container" class="space-y-4">
+                            <!-- Categories will be injected here -->
+                        </div>
+
+                        <button onclick="addCategory()" class="w-full py-3 border-2 border-dashed border-slate-200 rounded-2xl text-slate-400 font-bold text-sm hover:border-[#da3f0b] hover:text-[#da3f0b] transition-all flex items-center justify-center gap-2">
+                            <i class="fas fa-plus-circle"></i> Add Spending Category
+                        </button>
+
+                        <div class="bg-slate-50 p-6 rounded-2xl border border-slate-100 mt-8">
+                            <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-4">Calculation Period</h3>
+                            <div class="flex gap-4">
+                                <button onclick="setPeriod('monthly')" id="btn-monthly" class="flex-1 py-3 rounded-xl font-bold text-sm transition-all bg-[#da3f0b] text-white shadow-lg shadow-[#da3f0b30]">Monthly</button>
+                                <button onclick="setPeriod('yearly')" id="btn-yearly" class="flex-1 py-3 rounded-xl font-bold text-sm transition-all bg-white border border-slate-200 text-slate-600 hover:bg-slate-100">Yearly</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+    
+                <div class="lg:w-[45%] bg-slate-50/50 p-6 md:p-10 lg:p-12 flex flex-col justify-center">
+                   <div class="space-y-6">
+                     <div class="hero-card p-8 flex flex-col items-center text-center">
+                         <p class="text-xs font-black text-[#da3f0b] uppercase tracking-[0.2em] mb-4">Total Cashback Earned</p>
+                         <div class="flex items-center justify-center">
+                           <span id="display-total-cashback" class="text-5xl md:text-6xl font-black tracking-tighter leading-none text-[#16a34a]">$0.00</span>
+                         </div>
+                         <p class="text-sm text-slate-400 font-medium mt-4">Effective Rate: <span id="display-effective-rate">0.00</span>%</p>
+                     </div>
+    
+                     <div class="grid grid-cols-2 gap-4">
+                         <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex flex-col items-center text-center">
+                            <div class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Total Spending</div>
+                            <p id="display-total-spend" class="text-xl font-extrabold text-slate-900">$0.00</p>
+                         </div>
+                         <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex flex-col items-center text-center">
+                            <div class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Net Cost</div>
+                            <p id="display-net-cost" class="text-xl font-extrabold text-slate-900">$0.00</p>
+                         </div>
+                     </div>
+
+                     <div class="bg-white rounded-xl p-6 border border-slate-100 shadow-sm">
+                        <h4 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Savings Projection</h4>
+                        <div class="space-y-3">
+                            <div class="flex justify-between items-center">
+                                <span class="text-sm text-slate-600">1 Year Savings</span>
+                                <span id="project-1yr" class="font-bold text-slate-800">$0.00</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-sm text-slate-600">5 Year Savings</span>
+                                <span id="project-5yr" class="font-bold text-slate-800">$0.00</span>
+                            </div>
+                        </div>
+                     </div>
+                   </div>
+                </div>
+            </main>
+    
+            <footer class="bg-slate-50 border-t border-slate-100 p-6 md:p-8">
+               <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+                   <div class="text-center md:text-left">
+                       <h4 class="text-sm font-bold text-slate-700 mb-1">Share this tool</h4>
+                       <p class="text-xs text-slate-400">Help others maximize their savings.</p>
+                   </div>
+                   <div class="flex flex-wrap justify-center gap-3">
+                       <button onclick="shareSocial('facebook')" class="w-10 h-10 rounded-full flex items-center justify-center text-white bg-[#1877F2] hover:-translate-y-1 transition-all"><i class="fab fa-facebook-f"></i></button>
+                       <button onclick="shareSocial('twitter')" class="w-10 h-10 rounded-full flex items-center justify-center text-white bg-[#1DA1F2] hover:-translate-y-1 transition-all"><i class="fab fa-twitter"></i></button>
+                       <button onclick="shareSocial('whatsapp')" class="w-10 h-10 rounded-full flex items-center justify-center text-white bg-[#25D366] hover:-translate-y-1 transition-all"><i class="fab fa-whatsapp"></i></button>
+                       <button onclick="shareSocial('linkedin')" class="w-10 h-10 rounded-full flex items-center justify-center text-white bg-[#0A66C2] hover:-translate-y-1 transition-all"><i class="fab fa-linkedin-in"></i></button>
+                   </div>
+                   <button onclick="handleBookmark()" class="flex items-center gap-2 bg-white border border-slate-200 hover:border-[#da3f0b] hover:text-[#da3f0b] text-slate-600 px-4 py-2 rounded-lg text-sm font-bold transition-all shadow-sm">
+                      <i class="fas fa-bookmark"></i> Bookmark
+                   </button>
+               </div>
+            </footer>
+        </div>
+    </div>
+
+    <script>
+    let categories = [
+        { id: 1, name: 'General Spending', spend: 1500, rate: 1.5 },
+        { id: 2, name: 'Groceries & Dining', spend: 600, rate: 3.0 }
+    ];
+    let period = 'monthly';
+    let currency = { code: 'USD', symbol: '$', locale: 'en-US' };
+
+    function renderCategories() {
+        const container = document.getElementById('category-container');
+        container.innerHTML = '';
+        categories.forEach((cat, index) => {
+            const div = document.createElement('div');
+            div.className = 'bg-white p-5 rounded-2xl border border-slate-100 shadow-sm animate-fade';
+            div.innerHTML = `
+                <div class="flex justify-between items-center mb-4">
+                    <input type="text" value="${cat.name}" onchange="updateCat(${cat.id}, 'name', this.value)" class="text-sm font-bold text-slate-700 bg-transparent border-none focus:ring-0 w-2/3" placeholder="Category Name">
+                    ${categories.length > 1 ? `<button onclick="removeCategory(${cat.id})" class="text-slate-300 hover:text-red-500 transition-colors"><i class="fas fa-times-circle"></i></button>` : ''}
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-2">Spend (${period})</label>
+                        <div class="relative">
+                            <span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm font-bold">${currency.symbol}</span>
+                            <input type="number" value="${cat.spend}" oninput="updateCat(${cat.id}, 'spend', this.value)" class="w-full pl-8 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm font-bold focus:ring-2 focus:ring-[#da3f0b20] focus:border-[#da3f0b] outline-none">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-2">Cashback Rate</label>
+                        <div class="relative">
+                            <span class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm font-bold">%</span>
+                            <input type="number" step="0.1" value="${cat.rate}" oninput="updateCat(${cat.id}, 'rate', this.value)" class="w-full pl-4 pr-8 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm font-bold focus:ring-2 focus:ring-[#da3f0b20] focus:border-[#da3f0b] outline-none">
+                        </div>
+                    </div>
+                </div>
+            `;
+            container.appendChild(div);
+        });
+        calculate();
+    }
+
+    function updateCat(id, field, value) {
+        const cat = categories.find(c => c.id === id);
+        if (field === 'name') cat.name = value;
+        else cat[field] = parseFloat(value) || 0;
+        calculate();
+    }
+
+    function addCategory() {
+        categories.push({ id: Date.now(), name: 'New Category', spend: 0, rate: 1.0 });
+        renderCategories();
+    }
+
+    function removeCategory(id) {
+        categories = categories.filter(c => c.id !== id);
+        renderCategories();
+    }
+
+    function setPeriod(p) {
+        period = p;
+        document.getElementById('btn-monthly').className = p === 'monthly' ? 'flex-1 py-3 rounded-xl font-bold text-sm transition-all bg-[#da3f0b] text-white shadow-lg shadow-[#da3f0b30]' : 'flex-1 py-3 rounded-xl font-bold text-sm transition-all bg-white border border-slate-200 text-slate-600 hover:bg-slate-100';
+        document.getElementById('btn-yearly').className = p === 'yearly' ? 'flex-1 py-3 rounded-xl font-bold text-sm transition-all bg-[#da3f0b] text-white shadow-lg shadow-[#da3f0b30]' : 'flex-1 py-3 rounded-xl font-bold text-sm transition-all bg-white border border-slate-200 text-slate-600 hover:bg-slate-100';
+        renderCategories();
+    }
+
+    function calculate() {
+        let totalSpend = 0;
+        let totalCashback = 0;
+
+        categories.forEach(cat => {
+            totalSpend += cat.spend;
+            totalCashback += (cat.spend * (cat.rate / 100));
+        });
+
+        const effectiveRate = totalSpend > 0 ? (totalCashback / totalSpend) * 100 : 0;
+        const netCost = totalSpend - totalCashback;
+
+        const formatter = new Intl.NumberFormat(currency.locale, { style: 'currency', currency: currency.code });
+
+        document.getElementById('display-total-cashback').textContent = formatter.format(totalCashback);
+        document.getElementById('display-effective-rate').textContent = effectiveRate.toFixed(2);
+        document.getElementById('display-total-spend').textContent = formatter.format(totalSpend);
+        document.getElementById('display-net-cost').textContent = formatter.format(netCost);
+
+        const yearlyFactor = period === 'monthly' ? 12 : 1;
+        const annualCashback = totalCashback * yearlyFactor;
+        document.getElementById('project-1yr').textContent = formatter.format(annualCashback);
+        document.getElementById('project-5yr').textContent = formatter.format(annualCashback * 5);
+    }
+
+    document.getElementById('currency-select').addEventListener('change', (e) => {
+        const val = e.target.value;
+        const map = {
+            'USD': { code: 'USD', symbol: '$', locale: 'en-US' },
+            'EUR': { code: 'EUR', symbol: '€', locale: 'de-DE' },
+            'GBP': { code: 'GBP', symbol: '£', locale: 'en-GB' },
+            'INR': { code: 'INR', symbol: '₹', locale: 'en-IN' },
+            'CAD': { code: 'CAD', symbol: 'C$', locale: 'en-CA' },
+            'AUD': { code: 'AUD', symbol: 'A$', locale: 'en-AU' }
+        };
+        currency = map[val];
+        renderCategories();
+    });
+
+    function shareSocial(platform) {
+        const url = encodeURIComponent(window.location.href);
+        const text = encodeURIComponent("Check out this Credit Card Cashback Calculator!");
+        const shares = {
+            facebook: `https://www.facebook.com/sharer/sharer.php?u=${url}`,
+            twitter: `https://twitter.com/intent/tweet?url=${url}&text=${text}`,
+            whatsapp: `https://api.whatsapp.com/send?text=${text}%20${url}`,
+            linkedin: `https://www.linkedin.com/sharing/share-offsite/?url=${url}`
+        };
+        window.open(shares[platform], '_blank');
+    }
+
+    function handleBookmark() {
+        alert("Press Ctrl+D (or Cmd+D on Mac) to bookmark this calculator.");
+    }
+
+    document.addEventListener('DOMContentLoaded', renderCategories);
+    </script>
+
+    <section class="bg-white py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="prose prose-lg max-w-none prose-h2:text-gray-800 prose-p:text-gray-700">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">How to Use the Credit Card Cashback Calculator</h2>
+                <p class="mb-6 leading-relaxed">
+                    Maximizing your financial health starts with understanding where your money goes and how much of it you can get back. Our <strong>credit card cashback calculator</strong> is designed to provide a clear, detailed view of your potential rewards. Unlike simple calculators that only look at a flat rate, this tool allows you to break down your spending into specific categories like groceries, travel, or utilities, which often carry higher reward tiers.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Understanding Cash Back Returns and Spending Rewards</h2>
+                <p class="mb-6 leading-relaxed">
+                    Cashback is essentially a discount on everything you buy. If you are using a card with a 2% flat rate, you are effectively paying 98 cents for every dollar spent. However, many modern cards offer tiered rewards—for example, 5% on gas and 3% on dining. By using our tool, you can input these different rates to see your <em>effective cashback rate</em>. This is a crucial metric that tells you the real value of your card across your entire budget.
+                </p>
+                <p class="mb-6 leading-relaxed">
+                    For those managing a business or a high-expense household, these rewards can translate into thousands of dollars annually. Just as our <a href="https://simpliconvert.com/roi-calculator/">ROI Calculator</a> helps you measure investment success, this tool measures the efficiency of your daily spending.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Strategies to Maximize Your Discount Value</h2>
+                <p class="mb-6 leading-relaxed">
+                    To get the most out of your credit cards, consider these expert tips:
+                </p>
+                <ul class="list-disc pl-6 mb-6 space-y-2 text-gray-700">
+                    <li><strong>Match Categories:</strong> Use cards that offer high percentages in your highest spending areas (e.g., a grocery-specific card).</li>
+                    <li><strong>Watch for Caps:</strong> Some cards limit rewards after a certain spending threshold. Adjust your inputs in our calculator to reflect these limits.</li>
+                    <li><strong>Calculate Net Value:</strong> If a card has an annual fee, subtract that from your total annual cashback to see if the card is actually profitable.</li>
+                    <li><strong>Time Your Payments:</strong> Always pay your balance in full to avoid interest charges, which can quickly negate any cashback earned.</li>
+                </ul>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Why Accuracy Matters in Financial Planning</h2>
+                <p class="mb-6 leading-relaxed">
+                    Small percentages add up. A difference between a 1.5% and a 2% cashback rate might seem negligible on a single purchase, but over a year of spending $30,000, it’s an extra $150 in your pocket. Using a <strong>credit card cashback calculator</strong> helps you decide if it's time to switch to a new card or if your current strategy is optimal. If you are also looking at your professional earnings, our <a href="https://simpliconvert.com/salary-to-hourly-calculator/">Salary to Hourly Calculator</a> can help you understand the true value of your time alongside your spending.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Final Thoughts on Rewards Optimization</h2>
+                <p class="mb-6 leading-relaxed">
+                    Financial freedom is built on the back of smart, incremental decisions. By tracking your <strong>cash back returns</strong> and optimizing your <strong>spending rewards</strong>, you are taking an active role in your wealth management. Use this calculator monthly to stay on top of your budget and ensure you are never leaving money on the table.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-center text-gray-900 mb-8">Frequently Asked Questions</h2>
+            <div class="space-y-4">
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg transition-all">
+                        <span>How do I calculate my total cashback?</span>
+                        <i class="fas fa-chevron-down faq-icon transition-transform"></i>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-300">
+                        <p class="p-5 pt-0 text-gray-600">The formula is simple: (Spending Amount * Cashback Percentage) / 100. For example, if you spend $1,000 at a 2% rate, you earn $20. Our calculator allows you to add multiple categories to find your total effective rewards.</p>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg transition-all">
+                        <span>What is an effective cashback rate?</span>
+                        <i class="fas fa-chevron-down faq-icon transition-transform"></i>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-300">
+                        <p class="p-5 pt-0 text-gray-600">The effective rate is your total cashback earned divided by your total spending. If you earn $50 in rewards on $2,000 of total spending, your effective rate is 2.5%.</p>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg transition-all">
+                        <span>Are cashback rewards considered taxable income?</span>
+                        <i class="fas fa-chevron-down faq-icon transition-transform"></i>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-300">
+                        <p class="p-5 pt-0 text-gray-600">In most cases, no. The IRS generally treats credit card cashback as a rebate or a discount on your purchases rather than income, so it is not typically taxable.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 pb-16">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-slate-200 pt-16">
+            <h2 class="text-2xl font-bold text-center text-slate-800 mb-10">Popular Tools on SimpliConvert</h2>
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+                <a href="/salary-to-hourly-calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0 group-hover:bg-emerald-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-calculator text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Salary to Hourly</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Convert annual pay to hourly.</p>
+                    </div>
+                </a>
+                <a href="/roi-calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center shrink-0 group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-chart-pie text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">ROI Calc</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Calculate return on investment.</p>
+                    </div>
+                </a>
+                <a href="/profit-margin-calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-orange-50 text-orange-600 flex items-center justify-center shrink-0 group-hover:bg-orange-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-percentage text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Profit Margin</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Calculate business margins.</p>
+                    </div>
+                </a>
+                <a href="/paypal-fee-calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-blue-50 text-blue-800 flex items-center justify-center shrink-0 group-hover:bg-blue-800 group-hover:text-white transition-colors">
+                        <i class="fab fa-paypal text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">PayPal Fees</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Calculate transaction costs.</p>
+                    </div>
+                </a>
+                <a href="/freelance-hourly-rate-calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-purple-50 text-purple-600 flex items-center justify-center shrink-0 group-hover:bg-purple-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-user-tie text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Freelance Rate</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Set your hourly pricing.</p>
+                    </div>
+                </a>
+                <a href="/break-even-calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-red-50 text-red-600 flex items-center justify-center shrink-0 group-hover:bg-red-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-balance-scale text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Break Even</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Find your profitability point.</p>
+                    </div>
+                </a>
+                <a href="/work-hours-calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-slate-50 text-slate-800 flex items-center justify-center shrink-0 group-hover:bg-slate-800 group-hover:text-white transition-colors">
+                        <i class="fas fa-clock text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Work Hours</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Track your time easily.</p>
+                    </div>
+                </a>
+                <a href="/overtime-pay-calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-yellow-50 text-yellow-600 flex items-center justify-center shrink-0 group-hover:bg-yellow-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-money-bill-wave text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Overtime Pay</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Calculate extra earnings.</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <div id="footer"></div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const faqToggles = document.querySelectorAll('[data-faq-toggle]');
+        faqToggles.forEach(button => {
+            button.addEventListener('click', () => {
+                const answer = button.nextElementSibling;
+                const icon = button.querySelector('.faq-icon');
+                if (answer.style.maxHeight) {
+                    answer.style.maxHeight = null;
+                    icon.style.transform = 'rotate(0deg)';
+                } else {
+                    answer.style.maxHeight = answer.scrollHeight + "px";
+                    icon.style.transform = 'rotate(180deg)';
+                }
+            });
+        });
+    });
+
+    async function loadComponent(url, elementId) {
+        try {
+            const response = await fetch(url);
+            const text = await response.text();
+            document.getElementById(elementId).innerHTML = text;
+        } catch (e) { console.error(e); }
+    }
+    loadComponent('/components/navbar.html', 'navbar');
+    loadComponent('/components/footer.html', 'footer');
+    </script>
+</body>
+</html>

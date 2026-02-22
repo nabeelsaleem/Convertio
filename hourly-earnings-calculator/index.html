@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Hourly Earnings Calculator – Calculate Real Hourly Wage | SimpliConvert</title>
+    <meta name="description" content="Determine your effective hourly rate based on total income and hours worked. Factor in commute time and expenses to calculate your real hourly wage accurately.">
+    <meta name="keywords" content="calculate real hourly wage, true hourly rate, salary division, time value of money, hourly pay calculator, effective wage tool">
+    <meta name="author" content="SimpliConvert">
+    <meta property="og:site_name" content="SimpliConvert">
+    <meta name="robots" content="index, follow">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://simpliconvert.com/hourly-earnings-calculator/">
+    <meta property="og:title" content="Hourly Earnings Calculator – Find Your True Value">
+    <meta property="og:description" content="Stop guessing your worth. Calculate your real hourly wage by factoring in all work-related time and costs.">
+    <meta property="og:image" content="https://simpliconvert.com/images/hourly-earnings-calculator-og.jpg">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://simpliconvert.com/hourly-earnings-calculator/">
+    <meta name="twitter:title" content="Hourly Earnings Calculator – Calculate Real Hourly Wage">
+    <meta name="twitter:description" content="Free tool to determine your effective hourly rate. Perfect for freelancers and salaried employees.">
+    <meta name="twitter:image" content="https://simpliconvert.com/images/hourly-earnings-calculator-og.jpg">
+
+    <link rel="canonical" href="https://simpliconvert.com/hourly-earnings-calculator/">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Hourly Earnings Calculator",
+      "url": "https://simpliconvert.com/hourly-earnings-calculator/",
+      "description": "A free online tool to calculate your real hourly wage by factoring in total income, hours worked, commute time, and work-related expenses.",
+      "applicationCategory": "FinanceApplication",
+      "operatingSystem": "Web Browser",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "SimpliConvert",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://simpliconvert.com/logo.png"
+        }
+      }
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [{
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://simpliconvert.com/"
+      },{
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Calculator Tools",
+        "item": "https://simpliconvert.com/calculator_tools/"
+      },{
+        "@type": "ListItem",
+        "position": 3,
+        "name": "Hourly Earnings Calculator",
+        "item": "https://simpliconvert.com/hourly-earnings-calculator/"
+      }]
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [{
+        "@type": "Question",
+        "name": "How do I calculate my real hourly wage?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "To calculate your real hourly wage, take your total net income and divide it by the total time spent on work-related activities, including commute, unpaid prep time, and administrative tasks. Subtract any work-related expenses from your income first for the most accurate result."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Why is my effective hourly rate lower than my contract rate?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Your effective rate is often lower because it accounts for 'hidden' work hours like commuting, unpaid overtime, and expenses like fuel or software subscriptions that your contract rate ignores."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Should I include commute time in this calculator?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. If you want to know the true value of your time, you must include commute hours. If you spend 10 hours a week driving to a job, those are hours you cannot spend on other productive or leisure activities."
+        }
+      }]
+    }
+    </script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #da3f0b;
+            --primary-hover: #b53409;
+            --bg: #f8fafc;
+            --text-dark: #0f172a;
+        }
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: var(--text-dark); }
+        .hero-card { background: white; border: 1px solid #f1f5f9; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05); position: relative; overflow: hidden; }
+        .hero-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px; background-color: var(--primary); }
+        .tooltip-container { position: relative; display: inline-block; }
+        .tooltip-text {
+            visibility: hidden; width: 200px; background-color: #1e293b; color: #fff;
+            text-align: center; border-radius: 8px; padding: 8px; position: absolute;
+            z-index: 50; bottom: 125%; left: 50%; margin-left: -100px; opacity: 0;
+            transition: opacity 0.2s; font-size: 0.7rem; pointer-events: none;
+        }
+        .tooltip-container:hover .tooltip-text { visibility: visible; opacity: 1; }
+        .animate-fade { animation: fadeIn 0.3s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+        .tool-card { transition: transform 0.2s ease, box-shadow 0.2s ease; }
+        .tool-card:hover { transform: translateY(-4px); box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
+        .prose a { color: #da3f0b; text-decoration: none; }
+        .prose a:hover { text-decoration: underline; }
+    </style>
+</head>
+
+<body class="bg-gray-50 min-h-screen flex flex-col">
+    <div id="navbar" style="min-height: 70px;"></div>
+	
+	<section class="hero-white text-black py-2 md:py-10">
+        <div class="container mx-auto px-4">
+            <nav class="flex pb-4 text-sm text-slate-500 items-center space-x-2 justify-center">
+                <a href="https://simpliconvert.com/" class="hover:text-[#da3f0b] transition-colors">Home</a>
+                <i class="fas fa-chevron-right text-[10px]"></i>
+                <a href="https://simpliconvert.com/calculator_tools/" class="hover:text-[#da3f0b] transition-colors">Calculators</a>
+                <i class="fas fa-chevron-right text-[10px]"></i>
+                <span class="text-slate-900 font-medium">Hourly Earnings Calculator</span>
+            </nav>
+            <div class="text-center">
+                <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-2">calculate real hourly wage</h1>
+                <p class="text-lg md:text-xl max-w-3xl mx-auto mb-2 text-slate-600">
+                Go beyond your base salary. Calculate your effective hourly rate by accounting for commuting, expenses, and hidden work hours.
+                </p>
+            </div>
+        </div>
+    </section>		
+
+    <div id="calculator-app" class="w-full max-w-6xl mx-auto p-4 sm:p-6">
+        <div class="bg-white rounded-[2rem] shadow-2xl overflow-hidden border border-slate-100">
+            <header class="bg-slate-50/50 border-b border-slate-100 p-6 md:p-8 flex flex-col md:flex-row justify-between items-center gap-6">
+                <div class="text-center md:text-left">
+                  <h2 class="text-2xl font-black text-slate-800 tracking-tight flex items-center justify-center md:justify-start gap-3">
+                    <span class="bg-[#da3f0b] text-white p-2 rounded-xl text-lg shadow-lg shadow-[#da3f0b30]">
+                      <i class="fas fa-clock"></i>
+                    </span>
+                    Effective Wage Calculator
+                  </h2>
+                </div>
+                
+                <div class="relative group min-w-[140px]">
+                  <select id="currency-select" class="appearance-none w-full bg-white border border-slate-200 text-slate-700 py-2.5 pl-4 pr-10 rounded-xl text-xs font-bold focus:outline-none focus:ring-4 focus:ring-[#da3f0b15] focus:border-[#da3f0b] shadow-sm cursor-pointer">
+                    <option value="USD">USD ($)</option>
+                    <option value="EUR">EUR (€)</option>
+                    <option value="GBP">GBP (£)</option>
+                    <option value="INR">INR (₹)</option>
+                    <option value="AUD">AUD (A$)</option>
+                    <option value="CAD">CAD (C$)</option>
+                  </select>
+                  <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-slate-400">
+                    <i class="fas fa-chevron-down text-[10px]"></i>
+                  </div>
+                </div>
+            </header>
+    
+            <main class="flex flex-col lg:flex-row">
+                <div class="lg:w-[50%] p-6 md:p-10 lg:p-12 border-r border-slate-100">
+                    <div class="space-y-6">
+                        <div class="bg-slate-50 p-6 rounded-2xl border border-slate-100">
+                            <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-6"><i class="fas fa-money-bill-wave mr-2"></i>Income Details</h3>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="mb-2">
+                                    <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Total Income</label>
+                                    <div class="relative">
+                                        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                            <span class="text-slate-400 font-semibold currency-symbol">$</span>
+                                        </div>
+                                        <input type="number" id="input-income" value="5000" class="block w-full rounded-xl border-slate-200 border py-3 pl-9 pr-4 focus:ring-4 focus:ring-[#da3f0b20] focus:border-[#da3f0b] font-semibold text-slate-800">
+                                    </div>
+                                </div>
+                                <div class="mb-2">
+                                    <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Time Period</label>
+                                    <select id="input-period" class="block w-full rounded-xl border-slate-200 border py-3 px-4 focus:ring-4 focus:ring-[#da3f0b20] focus:border-[#da3f0b] font-semibold text-slate-800">
+                                        <option value="weekly">Weekly</option>
+                                        <option value="monthly" selected>Monthly</option>
+                                        <option value="yearly">Yearly</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+    
+                        <div class="bg-[#da3f0b08] p-6 rounded-2xl border border-[#da3f0b15]">
+                            <h3 class="text-xs font-black text-[#da3f0b] uppercase tracking-widest mb-6"><i class="fas fa-business-time mr-2"></i>Time Investment</h3>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Work Hours / Week</label>
+                                    <input type="number" id="input-hours" value="40" class="block w-full rounded-xl border-slate-200 border py-3 px-4 focus:ring-4 focus:ring-[#da3f0b20] focus:border-[#da3f0b] font-semibold text-slate-800">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Commute (Hrs/Day)</label>
+                                    <input type="number" id="input-commute" value="1" class="block w-full rounded-xl border-slate-200 border py-3 px-4 focus:ring-4 focus:ring-[#da3f0b20] focus:border-[#da3f0b] font-semibold text-slate-800">
+                                </div>
+                            </div>
+                        </div>
+    
+                        <div class="p-2">
+                           <button onclick="toggleAdvanced()" class="text-xs font-bold text-slate-400 flex items-center gap-2 hover:text-[#da3f0b] transition-colors">
+                             <i class="fas fa-plus-circle"></i> Add Expenses & Prep Time
+                           </button>
+                           <div id="advanced-section" class="hidden grid grid-cols-2 gap-4 mt-4 animate-fade">
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Monthly Expenses</label>
+                                    <input type="number" id="input-expenses" value="0" class="block w-full rounded-xl border-slate-200 border py-3 px-4 focus:ring-4 focus:ring-[#da3f0b20] focus:border-[#da3f0b] font-semibold text-slate-800">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Prep Time (Hrs/Week)</label>
+                                    <input type="number" id="input-prep" value="0" class="block w-full rounded-xl border-slate-200 border py-3 px-4 focus:ring-4 focus:ring-[#da3f0b20] focus:border-[#da3f0b] font-semibold text-slate-800">
+                                </div>
+                           </div>
+                        </div>
+                    </div>
+                </div>
+    
+                <div class="lg:w-[50%] bg-slate-50/50 p-6 md:p-10 lg:p-12 flex flex-col justify-center">
+                   <div class="space-y-6">
+                     <div class="hero-card p-8 flex flex-col items-center text-center">
+                         <p class="text-xs font-black text-[#da3f0b] uppercase tracking-[0.2em] mb-4">Real Hourly Wage</p>
+                         <div class="flex items-center justify-center">
+                           <span id="display-real-rate" class="text-5xl md:text-6xl font-black tracking-tighter leading-none text-slate-900">$0.00</span>
+                         </div>
+                         <p class="text-sm text-slate-400 font-medium mt-4">Gross Rate: <span id="display-gross-rate">$0.00</span>/hr</p>
+                     </div>
+    
+                     <div class="grid grid-cols-2 gap-4">
+                         <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm text-center">
+                            <div class="text-[10px] font-black text-slate-400 uppercase mb-1">Total Hours Spent</div>
+                            <p id="display-total-hours" class="text-xl font-extrabold text-slate-900">0</p>
+                            <p class="text-[10px] text-slate-400 uppercase">Hours/Week</p>
+                         </div>
+                         <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm text-center">
+                            <div class="text-[10px] font-black text-slate-400 uppercase mb-1">Adjusted Income</div>
+                            <p id="display-adj-income" class="text-xl font-extrabold text-slate-900">$0.00</p>
+                            <p class="text-[10px] text-slate-400 uppercase">After Expenses</p>
+                         </div>
+                     </div>
+    
+                     <div class="bg-white rounded-xl p-6 border border-slate-100 shadow-sm">
+                         <div class="flex justify-between items-center mb-2">
+                            <span class="text-xs font-bold text-slate-400 uppercase">Time Efficiency</span>
+                            <span id="display-efficiency" class="text-lg font-black text-[#da3f0b]">0%</span>
+                         </div>
+                         <div class="w-full bg-slate-100 rounded-full h-2 overflow-hidden">
+                            <div id="efficiency-bar" class="bg-[#da3f0b] h-2 rounded-full transition-all duration-700" style="width: 0%"></div>
+                         </div>
+                         <p class="text-[10px] text-slate-400 mt-2">
+                           Ratio of paid work hours to total work-related time.
+                         </p>
+                     </div>
+                   </div>
+                </div>
+            </main>
+    
+            <footer class="bg-slate-50 border-t border-slate-100 p-6 md:p-8">
+               <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+                   <div class="text-center md:text-left">
+                       <h4 class="text-sm font-bold text-slate-700 mb-1">Share this tool</h4>
+                       <p class="text-xs text-slate-400">Help others calculate their true value.</p>
+                   </div>
+                   <div class="flex flex-wrap justify-center gap-3">
+                       <button onclick="shareSocial('facebook')" class="w-10 h-10 rounded-full flex items-center justify-center text-white bg-[#1877F2] hover:scale-110 transition-transform"><i class="fab fa-facebook-f"></i></button>
+                       <button onclick="shareSocial('twitter')" class="w-10 h-10 rounded-full flex items-center justify-center text-white bg-[#1DA1F2] hover:scale-110 transition-transform"><i class="fab fa-twitter"></i></button>
+                       <button onclick="shareSocial('whatsapp')" class="w-10 h-10 rounded-full flex items-center justify-center text-white bg-[#25D366] hover:scale-110 transition-transform"><i class="fab fa-whatsapp"></i></button>
+                   </div>
+                   <button onclick="handleBookmark()" class="flex items-center gap-2 bg-white border border-slate-200 hover:border-[#da3f0b] px-4 py-2 rounded-lg text-sm font-bold transition-all shadow-sm">
+                      <i class="fas fa-bookmark"></i> Bookmark
+                   </button>
+               </div>
+            </footer>
+        </div>
+    </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const state = {
+            currency: { code: 'USD', symbol: '$', locale: 'en-US' },
+            income: 5000,
+            period: 'monthly',
+            hours: 40,
+            commute: 1,
+            expenses: 0,
+            prep: 0
+        };
+
+        const currencies = {
+            USD: { symbol: '$', locale: 'en-US' },
+            EUR: { symbol: '€', locale: 'de-DE' },
+            GBP: { symbol: '£', locale: 'en-GB' },
+            INR: { symbol: '₹', locale: 'en-IN' },
+            AUD: { symbol: 'A$', locale: 'en-AU' },
+            CAD: { symbol: 'C$', locale: 'en-CA' }
+        };
+
+        const inputs = ['income', 'period', 'hours', 'commute', 'expenses', 'prep'];
+        
+        function calculate() {
+            const income = parseFloat(document.getElementById('input-income').value) || 0;
+            const period = document.getElementById('input-period').value;
+            const hours = parseFloat(document.getElementById('input-hours').value) || 0;
+            const commute = parseFloat(document.getElementById('input-commute').value) || 0;
+            const expenses = parseFloat(document.getElementById('input-expenses').value) || 0;
+            const prep = parseFloat(document.getElementById('input-prep').value) || 0;
+
+            let weeklyIncome = income;
+            let monthlyExpenses = expenses;
+            
+            if (period === 'monthly') {
+                weeklyIncome = income / 4.33;
+            } else if (period === 'yearly') {
+                weeklyIncome = income / 52;
+                monthlyExpenses = expenses / 12;
+            } else {
+                monthlyExpenses = expenses * 4.33;
+            }
+
+            const weeklyExpenses = monthlyExpenses / 4.33;
+            const adjWeeklyIncome = weeklyIncome - weeklyExpenses;
+            
+            const totalWeeklyHours = hours + (commute * 5) + prep;
+            
+            const grossRate = hours > 0 ? weeklyIncome / hours : 0;
+            const realRate = totalWeeklyHours > 0 ? adjWeeklyIncome / totalWeeklyHours : 0;
+            const efficiency = totalWeeklyHours > 0 ? (hours / totalWeeklyHours) * 100 : 0;
+
+            updateUI({
+                grossRate,
+                realRate,
+                totalWeeklyHours,
+                adjIncome: adjWeeklyIncome * (period === 'monthly' ? 4.33 : (period === 'yearly' ? 52 : 1)),
+                efficiency
+            });
+        }
+
+        function updateUI(data) {
+            const formatter = new Intl.NumberFormat(state.currency.locale, {
+                style: 'currency',
+                currency: state.currency.code
+            });
+
+            document.getElementById('display-real-rate').textContent = formatter.format(data.realRate);
+            document.getElementById('display-gross-rate').textContent = formatter.format(data.grossRate);
+            document.getElementById('display-total-hours').textContent = data.totalWeeklyHours.toFixed(1);
+            document.getElementById('display-adj-income').textContent = formatter.format(data.adjIncome);
+            document.getElementById('display-efficiency').textContent = data.efficiency.toFixed(0) + '%';
+            document.getElementById('efficiency-bar').style.width = data.efficiency + '%';
+            
+            document.querySelectorAll('.currency-symbol').forEach(el => el.textContent = state.currency.symbol);
+        }
+
+        inputs.forEach(id => {
+            document.getElementById('input-' + id).addEventListener('input', calculate);
+        });
+
+        document.getElementById('currency-select').addEventListener('change', (e) => {
+            state.currency = { code: e.target.value, ...currencies[e.target.value] };
+            calculate();
+        });
+
+        window.toggleAdvanced = function() {
+            document.getElementById('advanced-section').classList.toggle('hidden');
+        };
+
+        window.shareSocial = function(platform) {
+            const url = encodeURIComponent(window.location.href);
+            const text = encodeURIComponent("Calculate your real hourly wage with this tool!");
+            const shares = {
+                facebook: `https://www.facebook.com/sharer/sharer.php?u=${url}`,
+                twitter: `https://twitter.com/intent/tweet?url=${url}&text=${text}`,
+                whatsapp: `https://api.whatsapp.com/send?text=${text}%20${url}`
+            };
+            window.open(shares[platform], '_blank');
+        };
+
+        window.handleBookmark = function() {
+            alert("Press Ctrl+D (or Cmd+D) to bookmark this calculator.");
+        };
+
+        calculate();
+    });
+    </script>
+
+    <section class="bg-white py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="prose prose-lg max-w-none">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">Why You Should Calculate Your Real Hourly Wage</h2>
+                <p>Most people look at their paycheck or their contract and see a single number. If you earn $60,000 a year and work 40 hours a week, you might think your hourly rate is roughly $28.85. However, this "gross" figure is often a financial illusion. To truly understand your time's value, you must <strong>calculate real hourly wage</strong> by accounting for the hidden costs of employment.</p>
+                
+                <p>Our Hourly Earnings Calculator goes beyond simple division. It factors in the time you spend commuting, the money you spend on work-related expenses, and the unpaid hours you spend preparing for your day. By the time you subtract these factors, your "real" rate might be 20% to 30% lower than what's on your contract.</p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">The Hidden Costs of Work</h2>
+                <p>When you use a <a href="https://simpliconvert.com/salary-to-hourly-calculator/">salary to hourly calculator</a>, you're getting a mathematical baseline. But to get the full picture, you need to consider:</p>
+                <ul>
+                    <li><strong>Commute Time:</strong> If you spend an hour a day in traffic, that’s 5 hours a week of "work-related" time that you aren't being paid for.</li>
+                    <li><strong>Work Expenses:</strong> Fuel, professional attire, software subscriptions, and even the extra cost of "convenience" meals all eat into your net earnings.</li>
+                    <li><strong>Unpaid Prep:</strong> Checking emails before clocking in or staying late to finish a report reduces your effective hourly rate.</li>
+                </ul>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">How Freelancers Can Use This Tool</h2>
+                <p>For independent workers, this tool is even more critical. Freelancers often forget to account for administrative tasks, marketing, and invoicing. If you charge a client $50/hour but spend 10 hours a week on non-billable work, your real rate is significantly lower. Using this tool alongside a <a href="https://simpliconvert.com/freelance-hourly-rate-calculator/">freelance hourly rate calculator</a> helps you set better prices and ensure your business is actually profitable.</p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Improving Your Time Efficiency</h2>
+                <p>Once you see your real hourly wage, you can make better life decisions. Is a job with a higher salary worth it if the commute is twice as long? Should you outsource certain tasks to save time? By understanding the <strong>time value of money</strong>, you can optimize your schedule to maximize both your earnings and your freedom. Use our <a href="https://simpliconvert.com/work-hours-calculator/">work hours calculator</a> to further refine your schedule and find the perfect balance.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-center text-gray-900 mb-8">Frequently Asked Questions</h2>
+            <div class="space-y-4">
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg">
+                        <span>How is the "Real" rate different from the "Gross" rate?</span>
+                        <i class="fas fa-chevron-down faq-icon transition-transform"></i>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-300">
+                        <p class="p-5 pt-0 text-gray-600">The gross rate is simply your income divided by your official work hours. The real rate subtracts expenses and adds "hidden" hours like commuting and prep time to show what your time is actually worth.</p>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg">
+                        <span>Should I use my pre-tax or post-tax income?</span>
+                        <i class="fas fa-chevron-down faq-icon transition-transform"></i>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-300">
+                        <p class="p-5 pt-0 text-gray-600">For the most accurate "take-home" value, use your post-tax (net) income. If you want to compare job offers, using pre-tax (gross) income is usually standard.</p>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg">
+                        <span>What counts as a work expense?</span>
+                        <i class="fas fa-chevron-down faq-icon transition-transform"></i>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-300">
+                        <p class="p-5 pt-0 text-gray-600">Anything you pay for specifically because of your job: fuel for commuting, professional uniforms, specialized tools, software, or union dues.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 pb-16">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-slate-200 pt-16">
+            <h2 class="text-2xl font-bold text-center text-slate-800 mb-10">Popular Tools on SimpliConvert</h2>
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+                <a href="/salary-to-hourly-calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center shrink-0"><i class="fas fa-calculator"></i></div>
+                    <div><h3 class="font-bold text-sm mb-1">Salary to Hourly</h3><p class="text-xs text-slate-500">Convert annual pay to hourly.</p></div>
+                </a>
+                <a href="/hourly-to-salary-calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-green-50 text-green-600 flex items-center justify-center shrink-0"><i class="fas fa-money-bill"></i></div>
+                    <div><h3 class="font-bold text-sm mb-1">Hourly to Salary</h3><p class="text-xs text-slate-500">Find your yearly earnings.</p></div>
+                </a>
+                <a href="/freelance-hourly-rate-calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-purple-50 text-purple-600 flex items-center justify-center shrink-0"><i class="fas fa-user-tie"></i></div>
+                    <div><h3 class="font-bold text-sm mb-1">Freelance Rate</h3><p class="text-xs text-slate-500">Set your project prices.</p></div>
+                </a>
+                <a href="/work-hours-calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-orange-50 text-orange-600 flex items-center justify-center shrink-0"><i class="fas fa-calendar-alt"></i></div>
+                    <div><h3 class="font-bold text-sm mb-1">Work Hours</h3><p class="text-xs text-slate-500">Track your weekly time.</p></div>
+                </a>
+                <a href="/overtime-pay-calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-red-50 text-red-600 flex items-center justify-center shrink-0"><i class="fas fa-clock"></i></div>
+                    <div><h3 class="font-bold text-sm mb-1">Overtime Calc</h3><p class="text-xs text-slate-500">Calculate time-and-a-half.</p></div>
+                </a>
+                <a href="/profit-margin-calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0"><i class="fas fa-chart-pie"></i></div>
+                    <div><h3 class="font-bold text-sm mb-1">Profit Margin</h3><p class="text-xs text-slate-500">Analyze business gains.</p></div>
+                </a>
+                <a href="/roi-calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0"><i class="fas fa-percentage"></i></div>
+                    <div><h3 class="font-bold text-sm mb-1">ROI Calc</h3><p class="text-xs text-slate-500">Measure investment returns.</p></div>
+                </a>
+                <a href="/break-even-calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-slate-50 text-slate-800 flex items-center justify-center shrink-0"><i class="fas fa-balance-scale"></i></div>
+                    <div><h3 class="font-bold text-sm mb-1">Break-Even</h3><p class="text-xs text-slate-500">Find your profit point.</p></div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <div id="footer"></div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // FAQ Toggles
+        const faqToggles = document.querySelectorAll('[data-faq-toggle]');
+        faqToggles.forEach(button => {
+            button.addEventListener('click', () => {
+                const answer = button.nextElementSibling;
+                const icon = button.querySelector('.faq-icon');
+                if (answer.style.maxHeight) {
+                    answer.style.maxHeight = null;
+                    icon.style.transform = 'rotate(0deg)';
+                } else {
+                    answer.style.maxHeight = answer.scrollHeight + "px";
+                    icon.style.transform = 'rotate(180deg)';
+                }
+            });
+        });
+
+        // Load Components
+        async function loadComp(url, id) {
+            try {
+                const res = await fetch(url);
+                if (res.ok) document.getElementById(id).innerHTML = await res.text();
+            } catch (e) { console.error(e); }
+        }
+        loadComp('/components/navbar.html', 'navbar');
+        loadComp('/components/footer.html', 'footer');
+    });
+    </script>
+</body>
+</html>

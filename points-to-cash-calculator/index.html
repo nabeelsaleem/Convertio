@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Points to Cash Calculator – Convert Reward Points to Value | SimpliConvert</title>
+    <meta name="description" content="Determine the actual cash value of your credit card or loyalty reward points. Calculate redemption value and find out exactly how much your points are worth.">
+    <meta name="keywords" content="credit card points value, redemption value, point worth, convert points to cash, reward points calculator, Amex points value, Chase points value">
+    <meta name="author" content="SimpliConvert">
+    <meta property="og:site_name" content="SimpliConvert">
+    <meta name="robots" content="index, follow">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://simpliconvert.com/points-to-cash-calculator/">
+    <meta property="og:title" content="Points to Cash Calculator – Convert Reward Points to Value">
+    <meta property="og:description" content="Stop guessing your rewards value. Accurately convert credit card and loyalty points into real cash value instantly.">
+    <meta property="og:image" content="https://simpliconvert.com/images/points-to-cash-og.jpg">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://simpliconvert.com/points-to-cash-calculator/">
+    <meta name="twitter:title" content="Points to Cash Calculator – Calculate Redemption Value">
+    <meta name="twitter:description" content="Free tool to calculate the cash value of your reward points. Supports custom redemption ratios for all major loyalty programs.">
+    <meta name="twitter:image" content="https://simpliconvert.com/images/points-to-cash-og.jpg">
+
+    <link rel="canonical" href="https://simpliconvert.com/points-to-cash-calculator/">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Points to Cash Calculator",
+      "url": "https://simpliconvert.com/points-to-cash-calculator/",
+      "description": "A free online tool to determine the cash value of credit card, airline, and hotel reward points based on custom redemption rates.",
+      "applicationCategory": "FinanceApplication",
+      "operatingSystem": "Web Browser",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "SimpliConvert",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://simpliconvert.com/logo.png"
+        }
+      }
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [{
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://simpliconvert.com/"
+      },{
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Calculator Tools",
+        "item": "https://simpliconvert.com/calculator_tools/"
+      },{
+        "@type": "ListItem",
+        "position": 3,
+        "name": "Points to Cash Calculator",
+        "item": "https://simpliconvert.com/points-to-cash-calculator/"
+      }]
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [{
+        "@type": "Question",
+        "name": "How much is 1 reward point worth in cash?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The standard value for most credit card points (like Chase or Amex) is 1 cent per point ($0.01) when redeemed for travel or statement credits. However, this can range from 0.5 cents to over 2 cents depending on the redemption method."
+        }
+      }, {
+        "@type": "Question",
+        "name": "How do I calculate the cash value of my points?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "To calculate the value, multiply the number of points by the value per point. For example, 50,000 points at $0.01 each equals $500. Alternatively, divide the total points by the redemption ratio (e.g., 100 points per $1)."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Is it better to redeem points for cash or travel?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Generally, travel redemptions offer higher value (often 1.5 to 2.0 cents per point) compared to cash back or statement credits (usually 0.5 to 1.0 cent per point)."
+        }
+      }]
+    }
+    </script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #da3f0b;
+            --primary-hover: #b53409;
+            --bg: #f8fafc;
+            --text-dark: #0f172a;
+        }
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: var(--text-dark); }
+        .hero-card { background: white; border: 1px solid #f1f5f9; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05); position: relative; overflow: hidden; }
+        .hero-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px; background-color: var(--primary); }
+        .tooltip-container { position: relative; display: inline-block; }
+        .tooltip-text { visibility: hidden; width: 200px; background-color: #1e293b; color: #fff; text-align: center; border-radius: 8px; padding: 8px; position: absolute; z-index: 50; bottom: 125%; left: 50%; margin-left: -100px; opacity: 0; transition: opacity 0.2s; font-size: 0.7rem; pointer-events: none; }
+        .tooltip-container:hover .tooltip-text { visibility: visible; opacity: 1; }
+        .animate-fade { animation: fadeIn 0.3s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+        .tool-card { transition: transform 0.2s ease, box-shadow 0.2s ease; }
+        .tool-card:hover { transform: translateY(-4px); box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
+        .prose a { color: #da3f0b; text-decoration: none; }
+        .prose a:hover { text-decoration: underline; }
+    </style>
+</head>
+
+<body class="bg-gray-50 min-h-screen flex flex-col">
+    <div id="navbar" style="min-height: 70px;"></div>
+	
+	<section class="hero-white text-black py-2 md:py-10">
+        <div class="container mx-auto px-4">
+            <nav class="flex pb-4 text-sm text-slate-500 items-center space-x-2 justify-center">
+                <a href="https://simpliconvert.com/" class="hover:text-[#da3f0b] transition-colors">Home</a>
+                <i class="fas fa-chevron-right text-[10px]"></i>
+                <a href="https://simpliconvert.com/calculator_tools/" class="hover:text-[#da3f0b] transition-colors">Calculators</a>
+                <i class="fas fa-chevron-right text-[10px]"></i>
+                <span class="text-slate-900 font-medium">Points to Cash Calculator</span>
+            </nav>
+            <div class="text-center">
+                <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-2">convert reward points to cash value</h1>
+                <p class="text-lg md:text-xl max-w-3xl mx-auto mb-2 text-slate-600">
+                Determine the real-world value of your credit card, airline, or hotel points. Compare redemption options and maximize your rewards.
+                </p>
+            </div>
+        </div>
+    </section>		
+
+    <div id="calculator-app" class="w-full max-w-6xl mx-auto p-4 sm:p-6">
+        <div class="bg-white rounded-[2rem] shadow-2xl overflow-hidden border border-slate-100">
+            <header class="bg-slate-50/50 border-b border-slate-100 p-6 md:p-8 flex flex-col md:flex-row justify-between items-center gap-6">
+                <div class="text-center md:text-left">
+                  <h2 class="text-2xl font-black text-slate-800 tracking-tight flex items-center justify-center md:justify-start gap-3">
+                    <span class="bg-[#da3f0b] text-white p-2 rounded-xl text-lg shadow-lg shadow-[#da3f0b30]">
+                      <i class="fas fa-coins"></i>
+                    </span>
+                    Reward Points Valuation Tool
+                  </h2>
+                </div>
+                
+                <div class="relative group min-w-[140px]">
+                  <select id="currency-select" class="appearance-none w-full bg-white border border-slate-200 text-slate-700 py-2.5 pl-4 pr-10 rounded-xl text-xs font-bold focus:outline-none focus:ring-4 focus:ring-[#da3f0b15] focus:border-[#da3f0b] shadow-sm cursor-pointer">
+                    <option value="USD">USD ($)</option>
+                    <option value="EUR">EUR (€)</option>
+                    <option value="GBP">GBP (£)</option>
+                    <option value="CAD">CAD (C$)</option>
+                    <option value="AUD">AUD (A$)</option>
+                  </select>
+                  <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-slate-400">
+                    <i class="fas fa-chevron-down text-[10px]"></i>
+                  </div>
+                </div>
+            </header>
+    
+            <main class="flex flex-col lg:flex-row">
+                <div class="lg:w-[50%] p-6 md:p-10 lg:p-12 border-r border-slate-100">
+                    <div class="space-y-6">
+                        <div class="bg-slate-50 p-6 rounded-2xl border border-slate-100">
+                            <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-6"><i class="fas fa-star mr-2"></i>Points Details</h3>
+                            
+                            <div class="mb-5">
+                                <div class="flex items-center text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">
+                                    <label>Total Points Balance</label>
+                                    <span class="tooltip-container ml-2">
+                                        <i class="fas fa-info-circle text-slate-300 hover:text-[#da3f0b] cursor-help text-xs"></i>
+                                        <span class="tooltip-text">The total number of points you currently have.</span>
+                                    </span>
+                                </div>
+                                <div class="relative rounded-xl shadow-sm">
+                                    <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                        <i class="fas fa-piggy-bank text-slate-400"></i>
+                                    </div>
+                                    <input type="number" id="input-points" value="50000" class="block w-full rounded-xl border-slate-200 border py-3 pl-10 pr-4 focus:ring-4 focus:ring-[#da3f0b20] focus:border-[#da3f0b] sm:text-sm font-semibold text-slate-800 transition-all bg-white" placeholder="e.g. 50000">
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="mb-5">
+                                    <div class="flex items-center text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">
+                                        <label>Value Per Point</label>
+                                    </div>
+                                    <div class="relative rounded-xl shadow-sm">
+                                        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                            <span class="text-slate-400 font-semibold currency-symbol">$</span>
+                                        </div>
+                                        <input type="number" id="input-point-value" value="0.01" step="0.001" class="block w-full rounded-xl border-slate-200 border py-3 pl-9 pr-4 focus:ring-4 focus:ring-[#da3f0b20] focus:border-[#da3f0b] sm:text-sm font-semibold text-slate-800 transition-all bg-white">
+                                    </div>
+                                </div>
+
+                                <div class="mb-5">
+                                    <div class="flex items-center text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">
+                                        <label>OR Points per <span class="currency-symbol">$</span>1</label>
+                                    </div>
+                                    <div class="relative rounded-xl shadow-sm">
+                                        <input type="number" id="input-ratio" value="100" class="block w-full rounded-xl border-slate-200 border py-3 pl-4 pr-4 focus:ring-4 focus:ring-[#da3f0b20] focus:border-[#da3f0b] sm:text-sm font-semibold text-slate-800 transition-all bg-white">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-[#da3f0b08] p-6 rounded-2xl border border-[#da3f0b15]">
+                           <h3 class="text-xs font-black text-[#da3f0b] uppercase tracking-widest mb-4"><i class="fas fa-bolt mr-2"></i>Common Valuations</h3>
+                           <div class="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                               <button onclick="applyVal(0.01)" class="text-[10px] bg-white border border-[#da3f0b20] text-[#da3f0b] px-2 py-2 rounded-md font-bold hover:bg-[#da3f0b] hover:text-white transition-all">Standard (1¢)</button>
+                               <button onclick="applyVal(0.015)" class="text-[10px] bg-white border border-[#da3f0b20] text-[#da3f0b] px-2 py-2 rounded-md font-bold hover:bg-[#da3f0b] hover:text-white transition-all">Travel (1.5¢)</button>
+                               <button onclick="applyVal(0.005)" class="text-[10px] bg-white border border-[#da3f0b20] text-[#da3f0b] px-2 py-2 rounded-md font-bold hover:bg-[#da3f0b] hover:text-white transition-all">Cash Back (0.5¢)</button>
+                               <button onclick="applyVal(0.02)" class="text-[10px] bg-white border border-[#da3f0b20] text-[#da3f0b] px-2 py-2 rounded-md font-bold hover:bg-[#da3f0b] hover:text-white transition-all">Premium (2¢)</button>
+                               <button onclick="applyVal(0.008)" class="text-[10px] bg-white border border-[#da3f0b20] text-[#da3f0b] px-2 py-2 rounded-md font-bold hover:bg-[#da3f0b] hover:text-white transition-all">Retail (0.8¢)</button>
+                               <button onclick="applyVal(0.0125)" class="text-[10px] bg-white border border-[#da3f0b20] text-[#da3f0b] px-2 py-2 rounded-md font-bold hover:bg-[#da3f0b] hover:text-white transition-all">Chase Sapphire (1.25¢)</button>
+                           </div>
+                        </div>
+                    </div>
+                </div>
+    
+                <div class="lg:w-[50%] bg-slate-50/50 p-6 md:p-10 lg:p-12 flex flex-col justify-center">
+                   <div class="space-y-6">
+                     <div class="hero-card p-8 flex flex-col items-center text-center">
+                         <p class="text-xs font-black text-[#da3f0b] uppercase tracking-[0.2em] mb-4">Total Cash Value</p>
+                         <div class="flex items-center justify-center">
+                           <span id="display-cash" class="text-5xl md:text-6xl font-black tracking-tighter leading-none text-slate-900">$500.00</span>
+                         </div>
+                         <p class="text-sm text-slate-400 font-medium mt-4">Based on <span id="display-rate-summary">1.00</span> cent per point</p>
+                     </div>
+    
+                     <div class="grid grid-cols-2 gap-4">
+                         <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex flex-col items-center text-center">
+                            <div class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Value of 1,000 Pts</div>
+                            <p id="display-k-value" class="text-xl font-extrabold text-slate-900">$10.00</p>
+                         </div>
+                         <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex flex-col items-center text-center">
+                            <div class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Value of 10,000 Pts</div>
+                            <p id="display-10k-value" class="text-xl font-extrabold text-slate-900">$100.00</p>
+                         </div>
+                     </div>
+    
+                     <div class="bg-white rounded-xl p-6 border border-slate-100 shadow-sm">
+                         <h4 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Redemption Power</h4>
+                         <div class="space-y-3">
+                            <div class="flex justify-between items-center text-sm">
+                                <span class="text-slate-500">Redemption Ratio</span>
+                                <span class="font-bold text-slate-800"><span id="display-ratio-calc">100</span>:1</span>
+                            </div>
+                            <div class="w-full bg-slate-100 rounded-full h-2 overflow-hidden">
+                                <div id="power-bar" class="bg-[#da3f0b] h-2 rounded-full transition-all duration-500" style="width: 50%"></div>
+                            </div>
+                            <p class="text-[10px] text-slate-400 text-center italic">
+                                Values above 1.5¢ are considered excellent redemptions.
+                            </p>
+                         </div>
+                     </div>
+                   </div>
+                </div>
+            </main>
+    
+            <footer class="bg-slate-50 border-t border-slate-100 p-6 md:p-8">
+               <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+                   <div class="text-center md:text-left">
+                       <h4 class="text-sm font-bold text-slate-700 mb-1">Share this valuation</h4>
+                       <p class="text-xs text-slate-400">Help others find the best deal.</p>
+                   </div>
+                   <div class="flex flex-wrap justify-center gap-3">
+                       <button onclick="shareSocial('facebook')" class="w-10 h-10 rounded-full flex items-center justify-center text-white bg-[#1877F2] hover:-translate-y-1 transition-all"><i class="fab fa-facebook-f"></i></button>
+                       <button onclick="shareSocial('twitter')" class="w-10 h-10 rounded-full flex items-center justify-center text-white bg-[#1DA1F2] hover:-translate-y-1 transition-all"><i class="fab fa-twitter"></i></button>
+                       <button onclick="shareSocial('whatsapp')" class="w-10 h-10 rounded-full flex items-center justify-center text-white bg-[#25D366] hover:-translate-y-1 transition-all"><i class="fab fa-whatsapp"></i></button>
+                       <button onclick="shareSocial('telegram')" class="w-10 h-10 rounded-full flex items-center justify-center text-white bg-[#0088cc] hover:-translate-y-1 transition-all"><i class="fab fa-telegram-plane"></i></button>
+                   </div>
+                   <button onclick="handleBookmark()" class="flex items-center gap-2 bg-white border border-slate-200 hover:border-[#da3f0b] hover:text-[#da3f0b] text-slate-600 px-4 py-2 rounded-lg text-sm font-bold transition-all shadow-sm">
+                      <i class="fas fa-bookmark"></i> Bookmark
+                   </button>
+               </div>
+            </footer>
+        </div>
+    </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const state = {
+            currency: { code: 'USD', symbol: '$', locale: 'en-US' },
+            points: 50000,
+            pointValue: 0.01,
+            ratio: 100
+        };
+
+        const currencies = {
+            'USD': { symbol: '$', locale: 'en-US' },
+            'EUR': { symbol: '€', locale: 'de-DE' },
+            'GBP': { symbol: '£', locale: 'en-GB' },
+            'CAD': { symbol: 'C$', locale: 'en-CA' },
+            'AUD': { symbol: 'A$', locale: 'en-AU' }
+        };
+
+        const els = {
+            points: document.getElementById('input-points'),
+            val: document.getElementById('input-point-value'),
+            ratio: document.getElementById('input-ratio'),
+            currency: document.getElementById('currency-select'),
+            displayCash: document.getElementById('display-cash'),
+            displayRate: document.getElementById('display-rate-summary'),
+            displayK: document.getElementById('display-k-value'),
+            display10K: document.getElementById('display-10k-value'),
+            displayRatio: document.getElementById('display-ratio-calc'),
+            powerBar: document.getElementById('power-bar'),
+            symbols: document.querySelectorAll('.currency-symbol')
+        };
+
+        function formatMoney(amount) {
+            return new Intl.NumberFormat(state.currency.locale, {
+                style: 'currency',
+                currency: state.currency.code,
+                maximumFractionDigits: 2
+            }).format(amount);
+        }
+
+        function calculate(source) {
+            state.points = parseFloat(els.points.value) || 0;
+            
+            if (source === 'val') {
+                state.pointValue = parseFloat(els.val.value) || 0;
+                state.ratio = state.pointValue > 0 ? 1 / state.pointValue : 0;
+                els.ratio.value = state.ratio.toFixed(2);
+            } else if (source === 'ratio') {
+                state.ratio = parseFloat(els.ratio.value) || 0;
+                state.pointValue = state.ratio > 0 ? 1 / state.ratio : 0;
+                els.val.value = state.pointValue.toFixed(4);
+            }
+
+            const totalCash = state.points * state.pointValue;
+            const kValue = 1000 * state.pointValue;
+            const tenKValue = 10000 * state.pointValue;
+
+            els.displayCash.textContent = formatMoney(totalCash);
+            els.displayRate.textContent = (state.pointValue * 100).toFixed(2);
+            els.displayK.textContent = formatMoney(kValue);
+            els.display10K.textContent = formatMoney(tenKValue);
+            els.displayRatio.textContent = state.ratio.toFixed(0);
+
+            // Power bar logic (0.5c to 2.5c range)
+            let percent = ((state.pointValue * 100) / 2.5) * 100;
+            els.powerBar.style.width = Math.min(Math.max(percent, 5), 100) + '%';
+        }
+
+        els.points.addEventListener('input', () => calculate('val'));
+        els.val.addEventListener('input', () => calculate('val'));
+        els.ratio.addEventListener('input', () => calculate('ratio'));
+        
+        els.currency.addEventListener('change', (e) => {
+            state.currency = { code: e.target.value, ...currencies[e.target.value] };
+            els.symbols.forEach(s => s.textContent = state.currency.symbol);
+            calculate('val');
+        });
+
+        window.applyVal = function(val) {
+            els.val.value = val;
+            calculate('val');
+        };
+
+        window.shareSocial = function(platform) {
+            const url = encodeURIComponent(window.location.href);
+            const text = encodeURIComponent("Check out this Points to Cash Calculator!");
+            const shares = {
+                facebook: `https://www.facebook.com/sharer/sharer.php?u=${url}`,
+                twitter: `https://twitter.com/intent/tweet?url=${url}&text=${text}`,
+                whatsapp: `https://api.whatsapp.com/send?text=${text}%20${url}`,
+                telegram: `https://t.me/share/url?url=${url}&text=${text}`
+            };
+            window.open(shares[platform], '_blank');
+        };
+
+        window.handleBookmark = function() {
+            alert("Press Ctrl+D (or Cmd+D) to bookmark this calculator.");
+        };
+
+        calculate('val');
+    });
+    </script>
+
+    <section class="bg-white py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="prose prose-lg max-w-none prose-h2:text-gray-800 prose-p:text-gray-700">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">How to Convert Reward Points to Cash Value</h2>
+                <p class="mb-6 leading-relaxed">
+                    Reward points from credit cards, airlines, and hotels are a form of "private currency," but their value isn't always clear. Unlike a dollar bill, which is always worth a dollar, a "point" can be worth anywhere from half a cent to three cents depending on how you use it. Our <strong>Points to Cash Calculator</strong> removes the guesswork by allowing you to instantly see the real-world monetary value of your loyalty balance.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Understanding Point Valuation and Redemption Ratios</h2>
+                <p class="mb-6 leading-relaxed">
+                    The most common question in the rewards world is: <em>"What is my point worth?"</em> Most major programs like Chase Ultimate Rewards or American Express Membership Rewards have a baseline value of 1 cent per point. This means 50,000 points are worth $500. However, if you redeem those points for a high-end flight, you might get a <strong>redemption value</strong> of 2 cents per point, doubling your value to $1,000.
+                </p>
+                <p class="mb-6 leading-relaxed">
+                    Conversely, using points for Amazon purchases or gift cards often results in a lower value, sometimes as low as 0.7 cents per point. By using this tool, you can compare different redemption offers to ensure you aren't leaving money on the table.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">How to Use the Points to Cash Calculator</h2>
+                <p class="mb-6 leading-relaxed">
+                    Using our tool is straightforward. Simply follow these steps to find your <strong>point worth</strong>:
+                </p>
+                <ul class="list-disc pl-6 mb-6 space-y-2 text-gray-700">
+                    <li><strong>Enter your points:</strong> Type in your total balance (e.g., 75,000).</li>
+                    <li><strong>Set the value:</strong> If you know the cent-per-point value (like 1.5¢ for travel), enter it in the "Value Per Point" field.</li>
+                    <li><strong>Use the ratio:</strong> Alternatively, if a program says "200 points = $1", enter 200 in the ratio field.</li>
+                    <li><strong>Check the results:</strong> The calculator will instantly show the total cash value and the value for smaller increments like 1,000 points.</li>
+                </ul>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Tips for Maximizing Your Credit Card Points Value</h2>
+                <p class="mb-6 leading-relaxed">
+                    To get the most out of your rewards, always aim for a redemption value of at least 1 cent per point. If a redemption offer results in a value lower than that, you are likely better off paying with cash and saving your points for a better opportunity. For those managing business expenses, calculating the <a href="https://simpliconvert.com/roi-calculator/">ROI</a> of your rewards strategy is just as important as tracking your <a href="https://simpliconvert.com/salary-to-hourly-calculator/">hourly earnings</a>.
+                </p>
+                <p class="mb-6 leading-relaxed">
+                    High-value redemptions are typically found in international business class flights or luxury hotel stays. Low-value redemptions are usually found in "Pay with Points" features at retail checkouts. Use this calculator every time you are about to click "Redeem" to ensure you're getting a fair deal.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 py-12">
+        <div class="max-w-4xl mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center text-gray-900 mb-8">Frequently Asked Questions</h2>
+            <div class="space-y-4">
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg">
+                        <span>What is the "Cent Per Point" (CPP) value?</span>
+                        <i class="fas fa-chevron-down transition-transform duration-300"></i>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-300">
+                        <p class="p-5 pt-0 text-gray-600">CPP is a metric used to determine how much value you are getting from a single point. It is calculated by dividing the cash price of an item by the number of points required to buy it.</p>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg">
+                        <span>How much is 100,000 Amex points worth?</span>
+                        <i class="fas fa-chevron-down transition-transform duration-300"></i>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-300">
+                        <p class="p-5 pt-0 text-gray-600">At a standard 1 cent per point valuation, 100,000 points are worth $1,000. If transferred to airline partners, they could be worth $2,000 or more.</p>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg">
+                        <span>Do reward points expire?</span>
+                        <i class="fas fa-chevron-down transition-transform duration-300"></i>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-300">
+                        <p class="p-5 pt-0 text-gray-600">It depends on the program. Most major credit card points (Chase, Amex, Citi) do not expire as long as your account is open. Many airline and hotel points expire after 12-24 months of inactivity.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 pb-16">
+        <div class="max-w-6xl mx-auto px-4 border-t border-slate-200 pt-16">
+            <h2 class="text-2xl font-bold text-center text-slate-800 mb-10">Popular Financial Tools</h2>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+                <a href="https://simpliconvert.com/roi-calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0"><i class="fas fa-chart-pie"></i></div>
+                    <div><h3 class="font-bold text-sm">ROI Calc</h3><p class="text-xs text-slate-500">Calculate returns.</p></div>
+                </a>
+                <a href="https://simpliconvert.com/salary-to-hourly-calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center shrink-0"><i class="fas fa-clock"></i></div>
+                    <div><h3 class="font-bold text-sm">Salary Calc</h3><p class="text-xs text-slate-500">Hourly breakdown.</p></div>
+                </a>
+                <a href="https://simpliconvert.com/paypal-fee-calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0"><i class="fab fa-paypal"></i></div>
+                    <div><h3 class="font-bold text-sm">PayPal Fee</h3><p class="text-xs text-slate-500">Calculate net pay.</p></div>
+                </a>
+                <a href="https://simpliconvert.com/profit-margin-calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-orange-50 text-orange-600 flex items-center justify-center shrink-0"><i class="fas fa-percentage"></i></div>
+                    <div><h3 class="font-bold text-sm">Margin Calc</h3><p class="text-xs text-slate-500">Business profits.</p></div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <div id="footer"></div>
+
+    <script>
+        document.querySelectorAll('[data-faq-toggle]').forEach(button => {
+            button.addEventListener('click', () => {
+                const answer = button.nextElementSibling;
+                const icon = button.querySelector('i');
+                const isOpen = answer.style.maxHeight !== '0px' && answer.style.maxHeight !== '';
+                
+                document.querySelectorAll('.faq-answer').forEach(a => a.style.maxHeight = '0px');
+                document.querySelectorAll('[data-faq-toggle] i').forEach(i => i.style.transform = 'rotate(0deg)');
+
+                if (!isOpen) {
+                    answer.style.maxHeight = answer.scrollHeight + 'px';
+                    icon.style.transform = 'rotate(180deg)';
+                }
+            });
+        });
+
+        async function loadComponent(url, elementId) {
+            try {
+                const response = await fetch(url);
+                const text = await response.text();
+                document.getElementById(elementId).innerHTML = text;
+            } catch (e) { console.error(e); }
+        }
+        loadComponent('/components/navbar.html', 'navbar');
+        loadComponent('/components/footer.html', 'footer');
+    </script>
+</body>
+</html>
