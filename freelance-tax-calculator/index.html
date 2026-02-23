@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Freelance Income Tax Calculator – Estimate 1099 & Self-Employment Tax | SimpliConvert</title>
+    <meta name="description" content="Estimate your self-employment and federal income taxes with our free freelance tax calculator. Calculate 1099 taxes, quarterly payments, and net take-home pay.">
+    <meta name="keywords" content="estimated tax for freelancers calculator, 1099 tax calculator, self employment tax, quarterly taxes, freelance tax estimator, independent contractor tax">
+    <meta name="author" content="SimpliConvert">
+    <meta property="og:site_name" content="SimpliConvert">
+    <meta name="robots" content="index, follow">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://simpliconvert.com/freelance-tax-calculator/">
+    <meta property="og:title" content="Freelance Income Tax Calculator – Plan Your Quarterly Taxes">
+    <meta property="og:description" content="Don't get surprised by the IRS. Use our estimated tax for freelancers calculator to see how much you owe in self-employment and income taxes.">
+    <meta property="og:image" content="https://simpliconvert.com/images/freelance-tax-calculator-og.jpg">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://simpliconvert.com/freelance-tax-calculator/">
+    <meta name="twitter:title" content="Freelance Income Tax Calculator – Estimate 1099 Taxes">
+    <meta name="twitter:description" content="Free tool for 1099 workers to calculate self-employment tax and federal income tax obligations.">
+    <meta name="twitter:image" content="https://simpliconvert.com/images/freelance-tax-calculator-og.jpg">
+
+    <link rel="canonical" href="https://simpliconvert.com/freelance-tax-calculator/">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Freelance Income Tax Calculator",
+      "url": "https://simpliconvert.com/freelance-tax-calculator/",
+      "description": "An online tool for freelancers and independent contractors to estimate self-employment tax, federal income tax, and quarterly tax payments.",
+      "applicationCategory": "FinanceApplication",
+      "operatingSystem": "Web Browser",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "SimpliConvert",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://simpliconvert.com/logo.png"
+        }
+      }
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [{
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://simpliconvert.com/"
+      },{
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Calculator Tools",
+        "item": "https://simpliconvert.com/calculator_tools/"
+      },{
+        "@type": "ListItem",
+        "position": 3,
+        "name": "Freelance Income Tax Calculator",
+        "item": "https://simpliconvert.com/freelance-tax-calculator/"
+      }]
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [{
+        "@type": "Question",
+        "name": "How much should a freelancer save for taxes?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "As a general rule, freelancers should set aside 25% to 30% of their net income for taxes. This covers both the 15.3% self-employment tax and your estimated federal income tax."
+        }
+      }, {
+        "@type": "Question",
+        "name": "What is self-employment tax?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Self-employment tax consists of Social Security and Medicare taxes. For employees, these are split between employer and employee. For freelancers, you pay both halves, totaling 15.3%."
+        }
+      }, {
+        "@type": "Question",
+        "name": "When are quarterly estimated tax payments due?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "In the US, quarterly taxes are typically due on April 15, June 15, September 15, and January 15 of the following year."
+        }
+      }]
+    }
+    </script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #da3f0b;
+            --primary-hover: #b53409;
+            --bg: #f8fafc;
+            --text-dark: #0f172a;
+            --success: #16a34a;
+            --danger: #dc2626;
+        }
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: var(--text-dark); }
+        .hero-card { background: white; border: 1px solid #f1f5f9; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05); position: relative; overflow: hidden; }
+        .hero-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px; background-color: var(--primary); }
+        .tooltip-container { position: relative; display: inline-block; }
+        .tooltip-text {
+            visibility: hidden; width: 220px; background-color: #1e293b; color: #fff;
+            text-align: center; border-radius: 8px; padding: 10px; position: absolute;
+            z-index: 50; bottom: 125%; left: 50%; margin-left: -110px; opacity: 0;
+            transition: opacity 0.2s; font-size: 0.75rem; pointer-events: none;
+        }
+        .tooltip-container:hover .tooltip-text { visibility: visible; opacity: 1; }
+        .animate-fade { animation: fadeIn 0.3s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+        .tool-card { transition: transform 0.2s ease, box-shadow 0.2s ease; }
+        .tool-card:hover { transform: translateY(-4px); box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
+        .prose a { color: #da3f0b; text-decoration: none; }
+        .prose a:hover { text-decoration: underline; }
+    </style>
+</head>
+
+<body class="bg-gray-50 min-h-screen flex flex-col">
+    <div id="navbar" style="min-height: 70px;"></div>
+	
+	<section class="hero-white text-black py-2 md:py-10">
+        <div class="container mx-auto px-4">
+            <nav class="flex pb-4 text-sm text-slate-500 items-center space-x-2 justify-center">
+                <a href="https://simpliconvert.com/" class="hover:text-[#da3f0b] transition-colors">Home</a>
+                <i class="fas fa-chevron-right text-[10px]"></i>
+                <a href="https://simpliconvert.com/calculator_tools/" class="hover:text-[#da3f0b] transition-colors">Calculators</a>
+                <i class="fas fa-chevron-right text-[10px]"></i>
+                <span class="text-slate-900 font-medium">Freelance Tax Calculator</span>
+            </nav>
+            <div class="text-center">
+                <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-2">estimated tax for freelancers calculator</h1>
+                <p class="text-lg md:text-xl max-w-3xl mx-auto mb-2 text-slate-600">
+                Calculate your self-employment tax, federal income tax, and estimated quarterly payments to stay ahead of tax season.
+                </p>
+            </div>
+        </div>
+    </section>		
+
+    <div id="calculator-app" class="w-full max-w-6xl mx-auto p-4 sm:p-6">
+        <div class="bg-white rounded-[2rem] shadow-2xl overflow-hidden border border-slate-100">
+            <header class="bg-slate-50/50 border-b border-slate-100 p-6 md:p-8 flex flex-col md:flex-row justify-between items-center gap-6">
+                <div class="text-center md:text-left">
+                  <h2 class="text-2xl font-black text-slate-800 tracking-tight flex items-center justify-center md:justify-start gap-3">
+                    <span class="bg-[#da3f0b] text-white p-2 rounded-xl text-lg shadow-lg shadow-[#da3f0b30]">
+                      <i class="fas fa-file-invoice-dollar"></i>
+                    </span>
+                    1099 Tax Estimator
+                  </h2>
+                </div>
+                
+                <div class="relative group min-w-[140px]">
+                  <select id="filing-status" class="appearance-none w-full bg-white border border-slate-200 text-slate-700 py-2.5 pl-4 pr-10 rounded-xl text-xs font-bold focus:outline-none focus:ring-4 focus:ring-[#da3f0b15] focus:border-[#da3f0b] shadow-sm cursor-pointer">
+                    <option value="single">Single Filer</option>
+                    <option value="married">Married Filing Jointly</option>
+                  </select>
+                  <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-slate-400">
+                    <i class="fas fa-chevron-down text-[10px]"></i>
+                  </div>
+                </div>
+            </header>
+    
+            <main class="flex flex-col lg:flex-row">
+                <div class="lg:w-[50%] p-6 md:p-10 lg:p-12 border-r border-slate-100">
+                    <div class="space-y-6">
+                        <div class="bg-slate-50 p-6 rounded-2xl border border-slate-100">
+                            <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-6"><i class="fas fa-coins mr-2"></i>Annual Earnings</h3>
+                            <div class="grid grid-cols-1 gap-4">
+                                <div class="mb-5">
+                                    <div class="flex items-center text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">
+                                        <label>Gross Annual Income</label>
+                                        <span class="tooltip-container ml-2">
+                                            <i class="fas fa-info-circle text-slate-300 hover:text-[#da3f0b] cursor-help text-xs transition-colors"></i>
+                                            <span class="tooltip-text">Total revenue before any expenses or taxes.</span>
+                                        </span>
+                                    </div>
+                                    <div class="relative rounded-xl shadow-sm">
+                                        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                            <span class="text-slate-400 font-semibold">$</span>
+                                        </div>
+                                        <input type="number" id="input-income" value="60000" class="block w-full rounded-xl border-slate-200 border py-3 pl-9 pr-4 focus:ring-4 focus:ring-[#da3f0b20] focus:border-[#da3f0b] sm:text-sm font-semibold text-slate-800 transition-all bg-white" placeholder="0.00">
+                                    </div>
+                                </div>
+    
+                                <div class="mb-5">
+                                    <div class="flex items-center text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">
+                                        <label>Business Expenses</label>
+                                        <span class="tooltip-container ml-2">
+                                            <i class="fas fa-info-circle text-slate-300 hover:text-[#da3f0b] cursor-help text-xs transition-colors"></i>
+                                            <span class="tooltip-text">Deductible costs like software, hardware, and office supplies.</span>
+                                        </span>
+                                    </div>
+                                    <div class="relative rounded-xl shadow-sm">
+                                        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                            <span class="text-slate-400 font-semibold">$</span>
+                                        </div>
+                                        <input type="number" id="input-expenses" value="5000" class="block w-full rounded-xl border-slate-200 border py-3 pl-9 pr-4 focus:ring-4 focus:ring-[#da3f0b20] focus:border-[#da3f0b] sm:text-sm font-semibold text-slate-800 transition-all bg-white" placeholder="0.00">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+    
+                        <div class="bg-[#da3f0b08] p-6 rounded-2xl border border-[#da3f0b15]">
+                           <h3 class="text-xs font-black text-[#da3f0b] uppercase tracking-widest mb-6"><i class="fas fa-university mr-2"></i>State Tax (Optional)</h3>
+                           <div class="mb-5">
+                                <div class="flex items-center text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">
+                                    <label>Estimated State Tax Rate</label>
+                                </div>
+                                <div class="relative rounded-xl shadow-sm">
+                                    <input type="number" id="input-state-rate" value="5" class="block w-full rounded-xl border-slate-200 border py-3 pl-4 pr-12 focus:ring-4 focus:ring-[#da3f0b20] focus:border-[#da3f0b] sm:text-sm font-semibold text-slate-800 transition-all bg-white" placeholder="0">
+                                    <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none"><span class="text-slate-400 font-semibold">%</span></div>
+                                </div>
+                           </div>
+                        </div>
+                    </div>
+                </div>
+    
+                <div class="lg:w-[50%] bg-slate-50/50 p-6 md:p-10 lg:p-12 flex flex-col justify-center">
+                   <div class="space-y-6">
+                     <div class="hero-card p-8 flex flex-col items-center text-center">
+                         <p class="text-xs font-black text-[#da3f0b] uppercase tracking-[0.2em] mb-4">Total Estimated Tax Owed</p>
+                         <div class="flex items-center justify-center">
+                           <span id="display-total-tax" class="text-5xl md:text-6xl font-black tracking-tighter leading-none text-[#dc2626]">$0.00</span>
+                         </div>
+                         <p class="text-sm text-slate-400 font-medium mt-4">Effective Tax Rate: <span id="display-effective-rate">0.00</span>%</p>
+                     </div>
+    
+                     <div class="grid grid-cols-2 gap-4">
+                         <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex flex-col items-center text-center">
+                            <div class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Self-Employment Tax</div>
+                            <p id="display-se-tax" class="text-xl font-extrabold text-slate-900">$0.00</p>
+                            <p class="text-[10px] text-slate-400 font-medium mt-1 uppercase tracking-tight">Social Security & Medicare</p>
+                         </div>
+                         <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex flex-col items-center text-center">
+                            <div class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Federal Income Tax</div>
+                            <p id="display-fed-tax" class="text-xl font-extrabold text-slate-900">$0.00</p>
+                            <p class="text-[10px] text-slate-400 font-medium mt-1 uppercase tracking-tight">Estimated Bracket</p>
+                         </div>
+                     </div>
+    
+                     <div class="bg-white rounded-xl p-6 border border-slate-100 shadow-sm mt-4">
+                         <div class="flex justify-between items-center mb-2">
+                            <span class="text-xs font-bold text-slate-400 uppercase tracking-widest">Quarterly Payment</span>
+                            <span id="display-quarterly" class="text-lg font-black text-slate-700">$0.00</span>
+                         </div>
+                         <div class="w-full bg-slate-100 rounded-full h-2 mb-2 overflow-hidden">
+                            <div class="bg-[#da3f0b] h-2 rounded-full transition-all duration-500" style="width: 25%"></div>
+                         </div>
+                         <p class="text-[10px] text-slate-400">
+                           Save <strong id="display-take-home">$0.00</strong> as your annual net take-home pay.
+                         </p>
+                     </div>
+                   </div>
+                </div>
+            </main>
+    
+            <footer class="bg-slate-50 border-t border-slate-100 p-6 md:p-8">
+               <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+                   <div class="text-center md:text-left">
+                       <h4 class="text-sm font-bold text-slate-700 mb-1">Share this calculator</h4>
+                       <p class="text-xs text-slate-400">Help other freelancers plan their finances.</p>
+                   </div>
+                   <div class="flex flex-wrap justify-center gap-3">
+                       <button onclick="shareSocial('facebook')" class="w-10 h-10 rounded-full flex items-center justify-center text-white bg-[#1877F2] hover:-translate-y-1 transition-all"><i class="fab fa-facebook-f"></i></button>
+                       <button onclick="shareSocial('twitter')" class="w-10 h-10 rounded-full flex items-center justify-center text-white bg-[#1DA1F2] hover:-translate-y-1 transition-all"><i class="fab fa-twitter"></i></button>
+                       <button onclick="shareSocial('linkedin')" class="w-10 h-10 rounded-full flex items-center justify-center text-white bg-[#0A66C2] hover:-translate-y-1 transition-all"><i class="fab fa-linkedin-in"></i></button>
+                       <button onclick="shareSocial('whatsapp')" class="w-10 h-10 rounded-full flex items-center justify-center text-white bg-[#25D366] hover:-translate-y-1 transition-all"><i class="fab fa-whatsapp"></i></button>
+                   </div>
+                   <button onclick="handleBookmark()" class="flex items-center gap-2 bg-white border border-slate-200 hover:border-[#da3f0b] hover:text-[#da3f0b] text-slate-600 px-4 py-2 rounded-lg text-sm font-bold transition-all shadow-sm">
+                      <i class="fas fa-bookmark"></i> Bookmark
+                   </button>
+               </div>
+            </footer>
+        </div>
+    </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const inputs = {
+            income: document.getElementById('input-income'),
+            expenses: document.getElementById('input-expenses'),
+            stateRate: document.getElementById('input-state-rate'),
+            status: document.getElementById('filing-status')
+        };
+
+        const displays = {
+            totalTax: document.getElementById('display-total-tax'),
+            effectiveRate: document.getElementById('display-effective-rate'),
+            seTax: document.getElementById('display-se-tax'),
+            fedTax: document.getElementById('display-fed-tax'),
+            quarterly: document.getElementById('display-quarterly'),
+            takeHome: document.getElementById('display-take-home')
+        };
+
+        function calculateTaxes() {
+            const gross = parseFloat(inputs.income.value) || 0;
+            const expenses = parseFloat(inputs.expenses.value) || 0;
+            const stateRate = (parseFloat(inputs.stateRate.value) || 0) / 100;
+            const status = inputs.status.value;
+
+            const netProfit = Math.max(0, gross - expenses);
+
+            // 1. Self-Employment Tax (15.3% on 92.35% of net profit)
+            const seTaxableIncome = netProfit * 0.9235;
+            const seTax = seTaxableIncome * 0.153;
+
+            // 2. Federal Income Tax (Simplified 2024 Brackets)
+            // Deduct half of SE tax and standard deduction
+            const standardDeduction = status === 'single' ? 14600 : 29200;
+            const taxableIncome = Math.max(0, netProfit - (seTax / 2) - standardDeduction);
+            
+            let fedTax = 0;
+            if (status === 'single') {
+                if (taxableIncome > 609350) fedTax = 174238 + (taxableIncome - 609350) * 0.37;
+                else if (taxableIncome > 243725) fedTax = 52832 + (taxableIncome - 243725) * 0.35;
+                else if (taxableIncome > 191950) fedTax = 36244 + (taxableIncome - 191950) * 0.32;
+                else if (taxableIncome > 100525) fedTax = 16140 + (taxableIncome - 100525) * 0.24;
+                else if (taxableIncome > 47150) fedTax = 5404 + (taxableIncome - 47150) * 0.22;
+                else if (taxableIncome > 11600) fedTax = 1160 + (taxableIncome - 11600) * 0.12;
+                else fedTax = taxableIncome * 0.10;
+            } else {
+                // Married Filing Jointly
+                if (taxableIncome > 731200) fedTax = 186828 + (taxableIncome - 731200) * 0.37;
+                else if (taxableIncome > 487450) fedTax = 101485 + (taxableIncome - 487450) * 0.35;
+                else if (taxableIncome > 383900) fedTax = 68309 + (taxableIncome - 383900) * 0.32;
+                else if (taxableIncome > 201050) fedTax = 34421 + (taxableIncome - 201050) * 0.24;
+                else if (taxableIncome > 94300) fedTax = 10808 + (taxableIncome - 94300) * 0.22;
+                else if (taxableIncome > 23200) fedTax = 2320 + (taxableIncome - 23200) * 0.12;
+                else fedTax = taxableIncome * 0.10;
+            }
+
+            // 3. State Tax
+            const stateTax = netProfit * stateRate;
+
+            const totalTax = seTax + fedTax + stateTax;
+            const effectiveRate = gross > 0 ? (totalTax / gross) * 100 : 0;
+            const takeHome = gross - totalTax;
+
+            updateUI({
+                totalTax,
+                effectiveRate,
+                seTax,
+                fedTax,
+                quarterly: totalTax / 4,
+                takeHome
+            });
+        }
+
+        function formatCurrency(val) {
+            return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(val);
+        }
+
+        function updateUI(data) {
+            displays.totalTax.textContent = formatCurrency(data.totalTax);
+            displays.effectiveRate.textContent = data.effectiveRate.toFixed(2);
+            displays.seTax.textContent = formatCurrency(data.seTax);
+            displays.fedTax.textContent = formatCurrency(data.fedTax);
+            displays.quarterly.textContent = formatCurrency(data.quarterly);
+            displays.takeHome.textContent = formatCurrency(data.takeHome);
+        }
+
+        [inputs.income, inputs.expenses, inputs.stateRate, inputs.status].forEach(el => {
+            el.addEventListener('input', calculateTaxes);
+        });
+
+        calculateTaxes();
+    });
+
+    window.shareSocial = function(platform) {
+        const url = encodeURIComponent(window.location.href);
+        const text = encodeURIComponent("Check out this Freelance Tax Calculator!");
+        const platforms = {
+            facebook: `https://www.facebook.com/sharer/sharer.php?u=${url}`,
+            twitter: `https://twitter.com/intent/tweet?url=${url}&text=${text}`,
+            linkedin: `https://www.linkedin.com/shareArticle?mini=true&url=${url}`,
+            whatsapp: `https://api.whatsapp.com/send?text=${text}%20${url}`
+        };
+        window.open(platforms[platform], '_blank');
+    };
+
+    window.handleBookmark = function() {
+        alert("Press Ctrl+D (or Cmd+D on Mac) to bookmark this calculator.");
+    };
+    </script>
+
+    <section class="bg-white py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="prose prose-lg max-w-none">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">How to Use the Estimated Tax for Freelancers Calculator</h2>
+                <p>Transitioning from a traditional W-2 job to 1099 freelance work is liberating, but it comes with a major responsibility: managing your own taxes. Unlike employees, freelancers don't have taxes withheld from their paychecks. Our <strong>estimated tax for freelancers calculator</strong> is designed to help you navigate the complexities of self-employment tax and federal income tax so you can save accurately and avoid IRS penalties.</p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Understanding Self-Employment Tax (1099 Tax)</h2>
+                <p>The most common surprise for new independent contractors is the <strong>self-employment tax</strong>. In a standard job, you pay 7.65% for Social Security and Medicare, and your employer matches that 7.65%. When you are the boss, you pay both sides—a total of 15.3%. This calculator automatically applies this rate to your net profit, ensuring you aren't caught off guard at the end of the year.</p>
+                
+                <h2 class="text-2xl font-bold mt-8 mb-4">Maximizing Deductions to Lower Your Tax Bill</h2>
+                <p>One of the perks of freelancing is the ability to deduct business expenses. Every dollar you spend on software, hardware, or office space reduces your taxable income. By using our tool, you can see exactly how your expenses impact your final tax bill. For more detailed business planning, you might also find our <a href="https://simpliconvert.com/profit-margin-calculator/">Profit Margin Calculator</a> helpful for setting your rates.</p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Why Quarterly Estimated Payments Matter</h2>
+                <p>The IRS operates on a "pay-as-you-go" system. If you expect to owe more than $1,000 in taxes, you are generally required to make quarterly estimated payments. Our calculator breaks down your annual obligation into four manageable chunks. Staying consistent with these payments helps you avoid underpayment penalties and keeps your cash flow predictable.</p>
+                
+                <p>If you are still figuring out what to charge to cover these tax obligations, check out our <a href="https://simpliconvert.com/freelance-hourly-rate-calculator/">Freelance Hourly Rate Calculator</a> to ensure your take-home pay meets your lifestyle goals after the IRS takes its share.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-center text-gray-900 mb-8">Freelance Tax FAQ</h2>
+            <div class="space-y-4">
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg">
+                        <span>What is the 15.3% self-employment tax?</span>
+                        <i class="fas fa-chevron-down faq-icon transition-transform"></i>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-300">
+                        <p class="p-5 pt-0 text-gray-600">It covers Social Security (12.4%) and Medicare (2.9%). Since you are both the employer and the employee, you are responsible for the full amount on your net earnings.</p>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg">
+                        <span>Can I deduct my home office?</span>
+                        <i class="fas fa-chevron-down faq-icon transition-transform"></i>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-300">
+                        <p class="p-5 pt-0 text-gray-600">Yes, if you use a portion of your home exclusively for business, you can deduct expenses related to that space. This reduces your net profit and, consequently, your tax bill.</p>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg">
+                        <span>What happens if I don't pay quarterly taxes?</span>
+                        <i class="fas fa-chevron-down faq-icon transition-transform"></i>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-300">
+                        <p class="p-5 pt-0 text-gray-600">You may be hit with an underpayment penalty when you file your annual return. It's always safer to pay small amounts throughout the year than one giant bill in April.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 pb-16">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-slate-200 pt-16">
+            <h2 class="text-2xl font-bold text-center text-slate-800 mb-10">Popular Tools for Freelancers</h2>
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+                <a href="/freelance-hourly-rate-calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0"><i class="fas fa-calculator"></i></div>
+                    <div><h3 class="font-bold text-slate-800 text-sm mb-1">Rate Calc</h3><p class="text-xs text-slate-500">Calculate hourly rates.</p></div>
+                </a>
+                <a href="/salary-to-hourly-calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center shrink-0"><i class="fas fa-clock"></i></div>
+                    <div><h3 class="font-bold text-slate-800 text-sm mb-1">Salary to Hourly</h3><p class="text-xs text-slate-500">Convert annual pay.</p></div>
+                </a>
+                <a href="/profit-margin-calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-purple-50 text-purple-600 flex items-center justify-center shrink-0"><i class="fas fa-chart-pie"></i></div>
+                    <div><h3 class="font-bold text-slate-800 text-sm mb-1">Profit Margin</h3><p class="text-xs text-slate-500">Track your business health.</p></div>
+                </a>
+                <a href="/upwork-fee-calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-green-50 text-green-600 flex items-center justify-center shrink-0"><i class="fas fa-briefcase"></i></div>
+                    <div><h3 class="font-bold text-slate-800 text-sm mb-1">Upwork Fee</h3><p class="text-xs text-slate-500">Calculate platform costs.</p></div>
+                </a>
+                <a href="/fiverr-fee-calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-orange-50 text-orange-600 flex items-center justify-center shrink-0"><i class="fas fa-bolt"></i></div>
+                    <div><h3 class="font-bold text-slate-800 text-sm mb-1">Fiverr Fee</h3><p class="text-xs text-slate-500">See your net earnings.</p></div>
+                </a>
+                <a href="/paypal-fee-calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-blue-50 text-blue-500 flex items-center justify-center shrink-0"><i class="fab fa-paypal"></i></div>
+                    <div><h3 class="font-bold text-slate-800 text-sm mb-1">PayPal Fee</h3><p class="text-xs text-slate-500">Calculate transaction fees.</p></div>
+                </a>
+                <a href="/roi-calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-red-50 text-red-600 flex items-center justify-center shrink-0"><i class="fas fa-percentage"></i></div>
+                    <div><h3 class="font-bold text-slate-800 text-sm mb-1">ROI Calc</h3><p class="text-xs text-slate-500">Measure investment return.</p></div>
+                </a>
+                <a href="/work-hours-calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-slate-50 text-slate-700 flex items-center justify-center shrink-0"><i class="fas fa-user-clock"></i></div>
+                    <div><h3 class="font-bold text-slate-800 text-sm mb-1">Work Hours</h3><p class="text-xs text-slate-500">Track your billable time.</p></div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <div id="footer"></div>
+
+    <script>
+    async function loadComponent(url, elementId) {
+        try {
+            const response = await fetch(url);
+            const text = await response.text();
+            document.getElementById(elementId).innerHTML = text;
+        } catch (e) { console.error(e); }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        loadComponent('/components/navbar.html', 'navbar');
+        loadComponent('/components/footer.html', 'footer');
+
+        document.querySelectorAll('[data-faq-toggle]').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const ans = btn.nextElementSibling;
+                const icon = btn.querySelector('.faq-icon');
+                const isOpen = ans.style.maxHeight !== '0px' && ans.style.maxHeight !== '';
+                
+                document.querySelectorAll('.faq-answer').forEach(a => a.style.maxHeight = '0px');
+                document.querySelectorAll('.faq-icon').forEach(i => i.style.transform = 'rotate(0deg)');
+
+                if (!isOpen) {
+                    ans.style.maxHeight = ans.scrollHeight + 'px';
+                    icon.style.transform = 'rotate(180deg)';
+                }
+            });
+        });
+    });
+    </script>
+</body>
+</html>

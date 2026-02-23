@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Display Advertising ROI Calculator – Calculate Ad Profit & ROAS | SimpliConvert</title>
+    <meta name="description" content="Measure the success of your banner and display ad campaigns. Calculate ROI, ROAS, CPC, and CPM instantly with our free display advertising profit calculator.">
+    <meta name="keywords" content="display advertising roi calculator, banner ad profit, ppc calculator, display campaign ROI, ROAS calculator, calculate ad spend profitability, digital marketing calculator">
+    <meta name="author" content="SimpliConvert">
+    <meta property="og:site_name" content="SimpliConvert">
+    <meta name="robots" content="index, follow">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://simpliconvert.com/display-ads-calculator/">
+    <meta property="og:title" content="Display Advertising ROI Calculator – Analyze Campaign Performance">
+    <meta property="og:description" content="Stop guessing your ad performance. Accurately calculate ROI, ROAS, and net profit for your display and banner ad campaigns.">
+    <meta property="og:image" content="https://simpliconvert.com/images/display-ads-calculator-og.jpg">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://simpliconvert.com/display-ads-calculator/">
+    <meta name="twitter:title" content="Display Advertising ROI Calculator – Free Marketing Tool">
+    <meta name="twitter:description" content="Free tool to calculate display ad profitability, including CPC, CPM, and CPA. Perfect for digital marketers and business owners.">
+    <meta name="twitter:image" content="https://simpliconvert.com/images/display-ads-calculator-og.jpg">
+
+    <link rel="canonical" href="https://simpliconvert.com/display-ads-calculator/">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Display Ads Profit Calculator",
+      "url": "https://simpliconvert.com/display-ads-calculator/",
+      "description": "A professional tool for digital marketers to calculate the ROI, ROAS, and profitability of display advertising campaigns by analyzing spend, clicks, and conversions.",
+      "applicationCategory": "BusinessApplication",
+      "operatingSystem": "Web Browser",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "SimpliConvert",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://simpliconvert.com/logo.png"
+        }
+      }
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [{
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://simpliconvert.com/"
+      },{
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Calculator Tools",
+        "item": "https://simpliconvert.com/calculator_tools/"
+      },{
+        "@type": "ListItem",
+        "position": 3,
+        "name": "Display Ads Profit Calculator",
+        "item": "https://simpliconvert.com/display-ads-calculator/"
+      }]
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [{
+        "@type": "Question",
+        "name": "How do I calculate ROI for display advertising?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "ROI is calculated by subtracting the total ad spend from the total revenue generated, then dividing that number by the ad spend. Formula: ((Revenue - Cost) / Cost) * 100."
+        }
+      }, {
+        "@type": "Question",
+        "name": "What is the difference between ROI and ROAS?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "ROAS (Return on Ad Spend) measures gross revenue generated for every dollar spent on advertising, while ROI (Return on Investment) accounts for all costs and shows the actual profit percentage."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Why is my CPA higher than my revenue per sale?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "This means you are losing money on every acquisition. To fix this, you need to either lower your CPC (by improving ad quality), increase your conversion rate, or increase the average value of each sale."
+        }
+      }]
+    }
+    </script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #da3f0b;
+            --primary-hover: #b53409;
+            --primary-light: #fff5f2;
+            --bg: #f8fafc;
+            --text-dark: #0f172a;
+            --success: #16a34a;
+            --danger: #dc2626;
+        }
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: var(--text-dark); }
+        .hero-card { background: white; border: 1px solid #f1f5f9; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05); position: relative; overflow: hidden; }
+        .hero-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px; background-color: var(--primary); }
+        .tooltip-container { position: relative; display: inline-block; }
+        .tooltip-text {
+            visibility: hidden; width: 220px; background-color: #1e293b; color: #fff;
+            text-align: center; border-radius: 8px; padding: 10px; position: absolute;
+            z-index: 50; bottom: 125%; left: 50%; margin-left: -110px; opacity: 0;
+            transition: opacity 0.2s; font-size: 0.75rem; font-weight: 400;
+            pointer-events: none; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+        .tooltip-container:hover .tooltip-text { visibility: visible; opacity: 1; }
+        .animate-fade { animation: fadeIn 0.3s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+        .tool-card { transition: transform 0.2s ease, box-shadow 0.2s ease; }
+        .tool-card:hover { transform: translateY(-4px); box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
+        .prose a { color: #da3f0b; text-decoration: none; }
+        .prose a:hover { text-decoration: underline; }
+    </style>
+</head>
+
+<body class="bg-gray-50 min-h-screen flex flex-col">
+    <div id="navbar" style="min-height: 70px;"></div>
+	
+	<section class="hero-white text-black py-2 md:py-10">
+        <div class="container mx-auto px-4">
+            <nav class="flex pb-4 text-sm text-slate-500 items-center space-x-2 justify-center">
+                <a href="https://simpliconvert.com/" class="hover:text-[#da3f0b] transition-colors">Home</a>
+                <i class="fas fa-chevron-right text-[10px]"></i>
+                <a href="https://simpliconvert.com/calculator_tools/" class="hover:text-[#da3f0b] transition-colors">Calculators</a>
+                <i class="fas fa-chevron-right text-[10px]"></i>
+                <span class="text-slate-900 font-medium">Display Ads Profit Calculator</span>
+            </nav>
+            <div class="text-center">
+                <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-2 uppercase tracking-tight">display advertising roi calculator</h1>
+                <p class="text-lg md:text-xl max-w-3xl mx-auto mb-2 text-slate-600">
+                Evaluate your campaign performance instantly. Calculate ROI, ROAS, and key metrics like CPC, CPM, and CPA to optimize your display ad strategy.
+                </p>
+            </div>
+        </div>
+    </section>		
+
+    <div id="calculator-app" class="w-full max-w-6xl mx-auto p-4 sm:p-6">
+        <div class="bg-white rounded-[2rem] shadow-2xl overflow-hidden border border-slate-100">
+            <header class="bg-slate-50/50 border-b border-slate-100 p-6 md:p-8 flex flex-col md:flex-row justify-between items-center gap-6">
+                <div class="text-center md:text-left">
+                  <h2 class="text-2xl font-black text-slate-800 tracking-tight flex items-center justify-center md:justify-start gap-3">
+                    <span class="bg-[#da3f0b] text-white p-2 rounded-xl text-lg shadow-lg shadow-[#da3f0b30]">
+                      <i class="fas fa-ad"></i>
+                    </span>
+                    Campaign Profitability Analyzer
+                  </h2>
+                </div>
+                
+                <div class="relative group min-w-[140px]">
+                  <select id="currency-select" class="appearance-none w-full bg-white border border-slate-200 text-slate-700 py-2.5 pl-4 pr-10 rounded-xl text-xs font-bold focus:outline-none focus:ring-4 focus:ring-[#da3f0b15] focus:border-[#da3f0b] shadow-sm cursor-pointer hover:border-[#da3f0b40]">
+                    <option value="USD">USD ($)</option>
+                    <option value="EUR">EUR (€)</option>
+                    <option value="GBP">GBP (£)</option>
+                    <option value="JPY">JPY (¥)</option>
+                    <option value="AUD">AUD (A$)</option>
+                    <option value="CAD">CAD (C$)</option>
+                    <option value="INR">INR (₹)</option>
+                  </select>
+                  <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-slate-400">
+                    <i class="fas fa-chevron-down text-[10px]"></i>
+                  </div>
+                </div>
+            </header>
+    
+            <main class="flex flex-col lg:flex-row">
+                <div class="lg:w-[50%] p-6 md:p-10 lg:p-12 border-r border-slate-100">
+                    <div class="space-y-6">
+                        
+                        <div class="bg-slate-50 p-6 rounded-2xl border border-slate-100">
+                            <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-6"><i class="fas fa-funnel-dollar mr-2"></i>Campaign Costs</h3>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="mb-5">
+                                    <div class="flex items-center text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">
+                                        <label>Total Ad Spend</label>
+                                        <span class="tooltip-container ml-2">
+                                            <i class="fas fa-info-circle text-slate-300 hover:text-[#da3f0b] cursor-help text-xs transition-colors"></i>
+                                            <span class="tooltip-text">Total amount spent on the display campaign.</span>
+                                        </span>
+                                    </div>
+                                    <div class="relative rounded-xl shadow-sm">
+                                        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                            <span class="text-slate-400 font-semibold currency-symbol">$</span>
+                                        </div>
+                                        <input type="number" id="input-spend" value="5000" class="block w-full rounded-xl border-slate-200 border py-3 pl-9 pr-4 focus:ring-4 focus:ring-[#da3f0b20] focus:border-[#da3f0b] sm:text-sm font-semibold text-slate-800 transition-all bg-white" placeholder="0.00">
+                                    </div>
+                                </div>
+    
+                                <div class="mb-5">
+                                    <div class="flex items-center text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">
+                                        <label>Total Impressions</label>
+                                    </div>
+                                    <div class="relative rounded-xl shadow-sm">
+                                        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                            <i class="fas fa-eye text-slate-300 text-xs"></i>
+                                        </div>
+                                        <input type="number" id="input-impressions" value="1000000" class="block w-full rounded-xl border-slate-200 border py-3 pl-9 pr-4 focus:ring-4 focus:ring-[#da3f0b20] focus:border-[#da3f0b] sm:text-sm font-semibold text-slate-800 transition-all bg-white" placeholder="0">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+    
+                        <div class="bg-[#da3f0b08] p-6 rounded-2xl border border-[#da3f0b15]">
+                           <h3 class="text-xs font-black text-[#da3f0b] uppercase tracking-widest mb-6"><i class="fas fa-mouse-pointer mr-2"></i>Engagement & Conversions</h3>
+                           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="mb-5">
+                                    <div class="flex items-center text-xs font-bold text-slate-500 uppercase tracking-widest mb-2"><label>Total Clicks</label></div>
+                                    <input type="number" id="input-clicks" value="5000" class="block w-full rounded-xl border-slate-200 border py-3 px-4 focus:ring-4 focus:ring-[#da3f0b20] focus:border-[#da3f0b] sm:text-sm font-semibold text-slate-800 transition-all bg-white" placeholder="0">
+                                </div>
+                                <div class="mb-5">
+                                    <div class="flex items-center text-xs font-bold text-slate-500 uppercase tracking-widest mb-2"><label>Total Conversions</label></div>
+                                    <input type="number" id="input-conversions" value="100" class="block w-full rounded-xl border-slate-200 border py-3 px-4 focus:ring-4 focus:ring-[#da3f0b20] focus:border-[#da3f0b] sm:text-sm font-semibold text-slate-800 transition-all bg-white" placeholder="0">
+                                </div>
+                           </div>
+                           <div class="mb-5">
+                                <div class="flex items-center text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">
+                                    <label>Revenue per Conversion</label>
+                                    <span class="tooltip-container ml-2">
+                                        <i class="fas fa-info-circle text-slate-300 hover:text-[#da3f0b] cursor-help text-xs transition-colors"></i>
+                                        <span class="tooltip-text">Average value of a single sale or lead.</span>
+                                    </span>
+                                </div>
+                                <div class="relative rounded-xl shadow-sm">
+                                    <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                        <span class="text-slate-400 font-semibold currency-symbol">$</span>
+                                    </div>
+                                    <input type="number" id="input-rev-per-sale" value="150" class="block w-full rounded-xl border-slate-200 border py-3 pl-9 pr-4 focus:ring-4 focus:ring-[#da3f0b20] focus:border-[#da3f0b] sm:text-sm font-semibold text-slate-800 transition-all bg-white" placeholder="0.00">
+                                </div>
+                           </div>
+                        </div>
+                    </div>
+                </div>
+    
+                <div class="lg:w-[50%] bg-slate-50/50 p-6 md:p-10 lg:p-12 flex flex-col justify-center">
+                   <div class="space-y-6">
+                     
+                     <div class="hero-card p-8 flex flex-col items-center text-center">
+                         <p class="text-xs font-black text-[#da3f0b] uppercase tracking-[0.2em] mb-4">Return on Investment (ROI)</p>
+                         <div class="flex items-center justify-center">
+                           <span id="display-roi" class="text-5xl md:text-6xl font-black tracking-tighter leading-none text-[#16a34a]">0.00%</span>
+                         </div>
+                         <p class="text-sm text-slate-400 font-medium mt-4">Net Profit: <span id="display-net-profit" class="font-bold text-slate-700">$0.00</span></p>
+                     </div>
+    
+                     <div class="grid grid-cols-2 gap-4">
+                         <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex flex-col items-center text-center">
+                            <div class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">ROAS</div>
+                            <p id="display-roas" class="text-xl font-extrabold text-slate-900">0.00x</p>
+                            <p class="text-[10px] text-slate-400 font-medium mt-1 uppercase tracking-tight">Revenue / Spend</p>
+                         </div>
+                         <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex flex-col items-center text-center">
+                            <div class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">CPA</div>
+                            <p id="display-cpa" class="text-xl font-extrabold text-slate-900">$0.00</p>
+                            <p class="text-[10px] text-slate-400 font-medium mt-1 uppercase tracking-tight">Cost per Acquisition</p>
+                         </div>
+                     </div>
+    
+                     <div class="bg-white rounded-xl p-6 border border-slate-100 shadow-sm">
+                         <div class="grid grid-cols-3 gap-4 text-center">
+                            <div>
+                                <p class="text-[10px] font-black text-slate-400 uppercase mb-1">CTR</p>
+                                <p id="display-ctr" class="text-sm font-bold text-slate-700">0.00%</p>
+                            </div>
+                            <div>
+                                <p class="text-[10px] font-black text-slate-400 uppercase mb-1">CPC</p>
+                                <p id="display-cpc" class="text-sm font-bold text-slate-700">$0.00</p>
+                            </div>
+                            <div>
+                                <p class="text-[10px] font-black text-slate-400 uppercase mb-1">CPM</p>
+                                <p id="display-cpm" class="text-sm font-bold text-slate-700">$0.00</p>
+                            </div>
+                         </div>
+                     </div>
+                   </div>
+                </div>
+            </main>
+    
+            <footer class="bg-slate-50 border-t border-slate-100 p-6 md:p-8">
+               <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+                   <div class="text-center md:text-left">
+                       <h4 class="text-sm font-bold text-slate-700 mb-1">Share this calculator</h4>
+                       <p class="text-xs text-slate-400">Help your marketing team optimize campaigns.</p>
+                   </div>
+                   
+                   <div class="flex flex-wrap justify-center gap-3">
+                       <a href="#" onclick="shareSocial('facebook')" class="w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center text-white transition-transform hover:-translate-y-1 hover:shadow-lg bg-[#1877F2]"><i class="fab fa-facebook-f"></i></a>
+                       <a href="#" onclick="shareSocial('twitter')" class="w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center text-white transition-transform hover:-translate-y-1 hover:shadow-lg bg-[#1DA1F2]"><i class="fab fa-twitter"></i></a>
+                       <a href="#" onclick="shareSocial('linkedin')" class="w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center text-white transition-transform hover:-translate-y-1 hover:shadow-lg bg-[#0A66C2]"><i class="fab fa-linkedin-in"></i></a>
+                       <a href="#" onclick="shareSocial('whatsapp')" class="w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center text-white transition-transform hover:-translate-y-1 hover:shadow-lg bg-[#25D366]"><i class="fab fa-whatsapp"></i></a>
+                   </div>
+    
+                   <div class="relative">
+                       <button onclick="handleBookmark()" class="flex items-center gap-2 bg-white border border-slate-200 hover:border-[#da3f0b] hover:text-[#da3f0b] text-slate-600 px-4 py-2 rounded-lg text-sm font-bold transition-all shadow-sm active:scale-95">
+                          <i class="fas fa-bookmark"></i> Bookmark
+                       </button>
+                       <div id="bookmark-toast" class="hidden absolute bottom-full mb-3 left-1/2 -translate-x-1/2 bg-slate-800 text-white text-xs py-2 px-4 rounded-lg shadow-lg whitespace-nowrap animate-fade">
+                           Press <span class="font-bold text-[#da3f0b]">Ctrl + D</span> to bookmark
+                       </div>
+                   </div>
+               </div>
+            </footer>
+        </div>
+    </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const state = {
+            currency: { code: 'USD', symbol: '$', locale: 'en-US' },
+            spend: 5000,
+            impressions: 1000000,
+            clicks: 5000,
+            conversions: 100,
+            revPerSale: 150
+        };
+
+        const currencies = [
+            { code: 'USD', symbol: '$', locale: 'en-US' },
+            { code: 'EUR', symbol: '€', locale: 'de-DE' },
+            { code: 'GBP', symbol: '£', locale: 'en-GB' },
+            { code: 'JPY', symbol: '¥', locale: 'ja-JP' },
+            { code: 'AUD', symbol: 'A$', locale: 'en-AU' },
+            { code: 'CAD', symbol: 'C$', locale: 'en-CA' },
+            { code: 'INR', symbol: '₹', locale: 'en-IN' }
+        ];
+
+        const els = {
+            inputs: {
+                spend: document.getElementById('input-spend'),
+                impressions: document.getElementById('input-impressions'),
+                clicks: document.getElementById('input-clicks'),
+                conversions: document.getElementById('input-conversions'),
+                revPerSale: document.getElementById('input-rev-per-sale'),
+                currency: document.getElementById('currency-select')
+            },
+            displays: {
+                roi: document.getElementById('display-roi'),
+                netProfit: document.getElementById('display-net-profit'),
+                roas: document.getElementById('display-roas'),
+                cpa: document.getElementById('display-cpa'),
+                ctr: document.getElementById('display-ctr'),
+                cpc: document.getElementById('display-cpc'),
+                cpm: document.getElementById('display-cpm'),
+                symbols: document.querySelectorAll('.currency-symbol')
+            }
+        };
+
+        function calculate() {
+            const spend = parseFloat(state.spend) || 0;
+            const impressions = parseFloat(state.impressions) || 0;
+            const clicks = parseFloat(state.clicks) || 0;
+            const conversions = parseFloat(state.conversions) || 0;
+            const revPerSale = parseFloat(state.revPerSale) || 0;
+
+            const totalRevenue = conversions * revPerSale;
+            const netProfit = totalRevenue - spend;
+            const roi = spend > 0 ? (netProfit / spend) * 100 : 0;
+            const roas = spend > 0 ? totalRevenue / spend : 0;
+            const cpa = conversions > 0 ? spend / conversions : 0;
+            const ctr = impressions > 0 ? (clicks / impressions) * 100 : 0;
+            const cpc = clicks > 0 ? spend / clicks : 0;
+            const cpm = impressions > 0 ? (spend / impressions) * 1000 : 0;
+
+            updateUI({ roi, netProfit, roas, cpa, ctr, cpc, cpm });
+        }
+
+        function formatMoney(amount) {
+            return new Intl.NumberFormat(state.currency.locale, {
+                style: 'currency',
+                currency: state.currency.code,
+                maximumFractionDigits: 2
+            }).format(amount);
+        }
+
+        function updateUI(data) {
+            els.displays.roi.textContent = data.roi.toFixed(2) + '%';
+            els.displays.roi.className = `text-5xl md:text-6xl font-black tracking-tighter leading-none ${data.roi >= 0 ? 'text-[#16a34a]' : 'text-[#dc2626]'}`;
+            
+            els.displays.netProfit.textContent = formatMoney(data.netProfit);
+            els.displays.roas.textContent = data.roas.toFixed(2) + 'x';
+            els.displays.cpa.textContent = formatMoney(data.cpa);
+            els.displays.ctr.textContent = data.ctr.toFixed(3) + '%';
+            els.displays.cpc.textContent = formatMoney(data.cpc);
+            els.displays.cpm.textContent = formatMoney(data.cpm);
+
+            els.displays.symbols.forEach(el => el.textContent = state.currency.symbol);
+        }
+
+        function addInputListener(key, element) {
+            element.addEventListener('input', (e) => {
+                state[key] = e.target.value;
+                calculate();
+            });
+        }
+
+        addInputListener('spend', els.inputs.spend);
+        addInputListener('impressions', els.inputs.impressions);
+        addInputListener('clicks', els.inputs.clicks);
+        addInputListener('conversions', els.inputs.conversions);
+        addInputListener('revPerSale', els.inputs.revPerSale);
+
+        els.inputs.currency.addEventListener('change', (e) => {
+            state.currency = currencies.find(c => c.code === e.target.value);
+            calculate();
+        });
+
+        window.handleBookmark = function() {
+            const toast = document.getElementById('bookmark-toast');
+            toast.classList.remove('hidden');
+            setTimeout(() => toast.classList.add('hidden'), 3000);
+        };
+        
+        window.shareSocial = function(platform) {
+             const url = encodeURIComponent(window.location.href);
+             const title = encodeURIComponent("Check out this Display Ads ROI Calculator!");
+             let shareUrl = '';
+             switch(platform) {
+                case 'facebook': shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${url}`; break;
+                case 'twitter': shareUrl = `https://twitter.com/intent/tweet?url=${url}&text=${title}`; break;
+                case 'linkedin': shareUrl = `https://www.linkedin.com/shareArticle?mini=true&url=${url}`; break;
+                case 'whatsapp': shareUrl = `https://api.whatsapp.com/send?text=${title}%20${url}`; break;
+             }
+             if(shareUrl) window.open(shareUrl, '_blank');
+        };
+
+        calculate();
+    });
+    </script>
+
+    <section class="bg-white py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="prose prose-lg max-w-none prose-h2:text-gray-800 prose-p:text-gray-700">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">Mastering Your Display Advertising ROI</h2>
+                <p class="mb-6 leading-relaxed">
+                    In the world of digital marketing, display advertising is a powerful tool for brand awareness and lead generation. However, without a precise <strong>display advertising roi calculator</strong>, it's easy to burn through your budget without seeing tangible results. Our tool is designed to provide marketers with instant clarity on their campaign performance, moving beyond simple vanity metrics to focus on what truly matters: profitability.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Why Tracking ROAS and ROI is Essential</h2>
+                <p class="mb-6 leading-relaxed">
+                    Many advertisers confuse ROAS (Return on Ad Spend) with ROI (Return on Investment). While ROAS tells you how much gross revenue you earned for every dollar spent on ads, ROI factors in the total cost of doing business. Using a <em>banner ad profit calculator</em> allows you to see the net profit after all expenses. If your ROAS is high but your ROI is negative, it’s a clear signal that your margins are too thin or your acquisition costs are unsustainable.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Key Metrics Explained: CPM, CPC, and CTR</h2>
+                <p class="mb-6 leading-relaxed">
+                    To optimize a display campaign, you must understand the relationship between these three pillars:
+                </p>
+                <ul class="list-disc pl-6 mb-6 space-y-2 text-gray-700">
+                    <li><strong>CPM (Cost Per Mille):</strong> The cost for 1,000 impressions. This is the standard for brand awareness campaigns.</li>
+                    <li><strong>CPC (Cost Per Click):</strong> The actual price you pay for each user who clicks your ad. Lowering this while maintaining quality is the goal of every PPC specialist.</li>
+                    <li><strong>CTR (Click-Through Rate):</strong> The percentage of people who saw your ad and clicked it. A low CTR often indicates poor ad creative or incorrect targeting.</li>
+                </ul>
+                <p class="mb-6 leading-relaxed">
+                    By inputting these values into our <strong>display campaign calculator</strong>, you can identify exactly where your funnel is leaking. For instance, a high CTR but low conversion rate suggests your landing page isn't fulfilling the promise made in your banner ad.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">How to Improve Your Ad Profitability</h2>
+                <p class="mb-6 leading-relaxed">
+                    Once you have your baseline numbers, the next step is optimization. If your <em>ppc calculator</em> results show a high Cost per Acquisition (CPA), consider A/B testing your creatives or refining your audience segments. Small improvements in your conversion rate can lead to exponential increases in ROI. 
+                </p>
+                <p class="mb-6 leading-relaxed">
+                    For those managing multiple revenue streams, comparing your display ad performance against other channels is vital. You might find that your <a href="https://simpliconvert.com/adsense-revenue-calculator/">AdSense revenue</a> is stable, but your direct display spend needs more aggressive management to stay profitable.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Final Thoughts for Digital Marketers</h2>
+                <p class="mb-6 leading-relaxed">
+                    Data-driven decision-making is the hallmark of a successful marketing strategy. Whether you are a small business owner or a senior media buyer, using a reliable <strong>roi calculator</strong> ensures that your display advertising remains a growth engine rather than a financial drain. Use this tool regularly to audit your campaigns and ensure every dollar spent is working toward your bottom line.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-center text-gray-900 mb-8">Frequently Asked Questions</h2>
+            <div class="space-y-4">
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>What is a good ROI for display ads?</span>
+                        <i class="fas fa-chevron-down faq-icon transition-transform duration-300"></i>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500">
+                        <p class="p-5 pt-0 text-gray-600">A "good" ROI depends on your industry and business goals. However, a common benchmark is a 4:1 ROAS (400% return), which usually translates to a healthy net ROI after accounting for overhead and product costs.</p>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>How does CTR impact my profit?</span>
+                        <i class="fas fa-chevron-down faq-icon transition-transform duration-300"></i>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500">
+                        <p class="p-5 pt-0 text-gray-600">CTR impacts profit indirectly. A higher CTR often leads to a lower CPC on many platforms (like Google Display Network) because it signals that your ad is relevant. Lower CPCs mean you get more traffic for the same spend, increasing your chances of conversion.</p>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>Can I use this for social media ads?</span>
+                        <i class="fas fa-chevron-down faq-icon transition-transform duration-300"></i>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500">
+                        <p class="p-5 pt-0 text-gray-600">Yes! While designed for display/banner ads, the math for ROI, ROAS, and CPA is identical for Facebook, Instagram, and LinkedIn advertising campaigns.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 pb-16">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-slate-200 pt-16">
+            <h2 class="text-2xl font-bold text-center text-slate-800 mb-10">Popular Marketing Tools</h2>
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+                <a href="https://simpliconvert.com/adsense-revenue-calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-yellow-50 text-yellow-600 flex items-center justify-center shrink-0 group-hover:bg-yellow-600 group-hover:text-white transition-colors"><i class="fas fa-dollar-sign"></i></div>
+                    <div><h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">AdSense Calc</h3><p class="text-xs text-slate-500">Estimate website earnings.</p></div>
+                </a>
+                <a href="https://simpliconvert.com/roi-calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-green-50 text-green-600 flex items-center justify-center shrink-0 group-hover:bg-green-600 group-hover:text-white transition-colors"><i class="fas fa-chart-pie"></i></div>
+                    <div><h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">ROI Calc</h3><p class="text-xs text-slate-500">General investment return.</p></div>
+                </a>
+                <a href="https://simpliconvert.com/cpm-to-earnings-calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center shrink-0 group-hover:bg-blue-600 group-hover:text-white transition-colors"><i class="fas fa-calculator"></i></div>
+                    <div><h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">CPM Calc</h3><p class="text-xs text-slate-500">Calculate cost per mille.</p></div>
+                </a>
+                <a href="https://simpliconvert.com/profit-margin-calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-purple-50 text-purple-600 flex items-center justify-center shrink-0 group-hover:bg-purple-600 group-hover:text-white transition-colors"><i class="fas fa-percentage"></i></div>
+                    <div><h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Margin Calc</h3><p class="text-xs text-slate-500">Calculate sales margins.</p></div>
+                </a>
+                <a href="https://simpliconvert.com/affiliate-commission-calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-orange-50 text-orange-600 flex items-center justify-center shrink-0 group-hover:bg-orange-600 group-hover:text-white transition-colors"><i class="fas fa-handshake"></i></div>
+                    <div><h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Affiliate Calc</h3><p class="text-xs text-slate-500">Track referral earnings.</p></div>
+                </a>
+                <a href="https://simpliconvert.com/website-traffic-revenue-calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-red-50 text-red-600 flex items-center justify-center shrink-0 group-hover:bg-red-600 group-hover:text-white transition-colors"><i class="fas fa-globe"></i></div>
+                    <div><h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Traffic Calc</h3><p class="text-xs text-slate-500">Revenue from visitors.</p></div>
+                </a>
+                <a href="https://simpliconvert.com/break-even-calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0 group-hover:bg-indigo-600 group-hover:text-white transition-colors"><i class="fas fa-balance-scale"></i></div>
+                    <div><h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Break-Even</h3><p class="text-xs text-slate-500">Find your profit floor.</p></div>
+                </a>
+                <a href="https://simpliconvert.com/rpm-calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-pink-50 text-pink-600 flex items-center justify-center shrink-0 group-hover:bg-pink-600 group-hover:text-white transition-colors"><i class="fas fa-tachometer-alt"></i></div>
+                    <div><h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">RPM Calc</h3><p class="text-xs text-slate-500">Revenue per mille views.</p></div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <div id="footer"></div>
+
+    <script>
+    async function loadComponent(url, elementId, callback) {
+        try {
+            const response = await fetch(url);
+            const text = await response.text();
+            const element = document.getElementById(elementId);
+            if (element) {
+                element.innerHTML = text;
+                if (callback) callback();
+            }
+        } catch (error) {
+            console.error('Error loading component:', error);
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        loadComponent('/components/navbar.html', 'navbar');
+        loadComponent('/components/footer.html', 'footer', () => {
+            const yearSpan = document.getElementById('current-year');
+            if(yearSpan) yearSpan.textContent = new Date().getFullYear();
+        });
+        
+        const faqToggles = document.querySelectorAll('[data-faq-toggle]');
+        faqToggles.forEach(button => {
+            button.addEventListener('click', () => {
+                const answer = button.nextElementSibling;
+                const icon = button.querySelector('.faq-icon');
+                const isOpening = !answer.style.maxHeight;
+                if (isOpening) {
+                    answer.style.maxHeight = answer.scrollHeight + "px";
+                    icon.style.transform = "rotate(180deg)";
+                } else {
+                    answer.style.maxHeight = null;
+                    icon.style.transform = "rotate(0deg)";
+                }
+            });
+        });
+    });
+    </script>
+</body>
+</html>

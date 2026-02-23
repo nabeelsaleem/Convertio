@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Freelance Hourly Rate Calculator – Calculate Your Minimum Rate | SimpliConvert</title>
+    <meta name="description" content="Calculate the hourly rate you must charge to cover your expenses, taxes, and desired profit as a freelancer. Use our free tool to plan your contractor pricing accurately.">
+    <meta name="keywords" content="freelance pricing, contractor rate, minimum hourly rate, calculate freelance rate needed to survive, freelance salary calculator, independent contractor rates">
+    <meta name="author" content="SimpliConvert">
+    <meta property="og:site_name" content="SimpliConvert">
+    <meta name="robots" content="index, follow">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://simpliconvert.com/freelance-hourly-rate-calculator/">
+    <meta property="og:title" content="Freelance Hourly Rate Calculator – Plan Your Pricing">
+    <meta property="og:description" content="Stop undercharging. Use this calculator to determine the exact hourly rate you need to survive and thrive as a freelancer.">
+    <meta property="og:image" content="https://simpliconvert.com/images/freelance-rate-calculator-og.jpg">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://simpliconvert.com/freelance-hourly-rate-calculator/">
+    <meta name="twitter:title" content="Freelance Hourly Rate Calculator – Calculate Your Survival Rate">
+    <meta name="twitter:description" content="Free tool for freelancers to calculate their ideal hourly rate based on expenses, billable hours, and tax obligations.">
+    <meta name="twitter:image" content="https://simpliconvert.com/images/freelance-rate-calculator-og.jpg">
+
+    <link rel="canonical" href="https://simpliconvert.com/freelance-hourly-rate-calculator/">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Freelance Hourly Rate Calculator",
+      "url": "https://simpliconvert.com/freelance-hourly-rate-calculator/",
+      "description": "A free online tool for freelancers and contractors to calculate the hourly rate required to cover personal expenses, business costs, and profit targets.",
+      "applicationCategory": "FinanceApplication",
+      "operatingSystem": "Web Browser",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "SimpliConvert",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://simpliconvert.com/logo.png"
+        }
+      }
+    }
+    </script>
+
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [{
+    "@type": "ListItem",
+    "position": 1,
+    "name": "Home",
+    "item": "https://simpliconvert.com/"
+  },{
+    "@type": "ListItem",
+    "position": 2,
+    "name": "Calculator Tools",
+    "item": "https://simpliconvert.com/calculator_tools/"
+  },{
+    "@type": "ListItem",
+    "position": 3,
+    "name": "Freelance Hourly Rate Calculator",
+    "item": "https://simpliconvert.com/freelance-hourly-rate-calculator/"
+  }]
+}
+</script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [{
+        "@type": "Question",
+        "name": "What is a good freelance hourly rate?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "A good rate is one that covers your personal cost of living, business overhead (software, hardware, insurance), taxes (usually 20-30%), and leaves room for profit and savings. It should also account for non-billable time spent on admin and marketing."
+        }
+      }, {
+        "@type": "Question",
+        "name": "How many billable hours should I calculate per week?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Most full-time freelancers find that only 20-25 hours per week are truly billable. The rest of the time is spent on client acquisition, invoicing, learning, and administrative tasks. Calculating based on 40 billable hours often leads to burnout or financial shortfalls."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Why do I need to add a profit margin to my rate?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Your hourly rate shouldn't just cover your bills. Profit is what allows you to grow your business, invest in new equipment, and build an emergency fund. Without profit, you are simply 'buying' a job rather than running a business."
+        }
+      }]
+    }
+    </script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #da3f0b;
+            --primary-hover: #b53409;
+            --primary-light: #fff5f2;
+            --bg: #f8fafc;
+            --text-dark: #0f172a;
+            --success: #16a34a;
+            --danger: #dc2626;
+        }
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: var(--text-dark); }
+        .hero-card { background: white; border: 1px solid #f1f5f9; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05); position: relative; overflow: hidden; }
+        .hero-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px; background-color: var(--primary); }
+        .tooltip-container { position: relative; display: inline-block; }
+        .tooltip-text {
+            visibility: hidden; width: 220px; background-color: #1e293b; color: #fff;
+            text-align: center; border-radius: 8px; padding: 10px; position: absolute;
+            z-index: 50; bottom: 125%; left: 50%; margin-left: -110px; opacity: 0;
+            transition: opacity 0.2s; font-size: 0.75rem; font-weight: 400;
+            pointer-events: none; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+        .tooltip-container:hover .tooltip-text { visibility: visible; opacity: 1; }
+        .animate-fade { animation: fadeIn 0.3s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+        .tool-card { transition: transform 0.2s ease, box-shadow 0.2s ease; }
+        .tool-card:hover { transform: translateY(-4px); box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
+        .prose a { color: #da3f0b; text-decoration: none; }
+        .prose a:hover { text-decoration: underline; }
+    </style>
+</head>
+
+<body class="bg-gray-50 min-h-screen flex flex-col">
+    <div id="navbar" style="min-height: 70px;"></div>
+	
+	<section class="hero-white text-black py-2 md:py-10">
+        <div class="container mx-auto px-4">
+            <nav class="flex pb-4 text-sm text-slate-500 items-center space-x-2 justify-center">
+                <a href="https://simpliconvert.com/" class="hover:text-[#da3f0b] transition-colors">Home</a>
+                <i class="fas fa-chevron-right text-[10px]"></i>
+                <a href="https://simpliconvert.com/calculator_tools/" class="hover:text-[#da3f0b] transition-colors">Calculators</a>
+                <i class="fas fa-chevron-right text-[10px]"></i>
+                <span class="text-slate-900 font-medium">Freelance Rate Calculator</span>
+            </nav>
+            <div class="text-center">
+                <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-2">calculate freelance rate needed to survive</h1>
+                <p class="text-lg md:text-xl max-w-3xl mx-auto mb-2 text-slate-600">
+                Determine your ideal hourly rate by factoring in your cost of living, business overhead, taxes, and desired profit margin.
+                </p>
+            </div>
+        </div>
+    </section>		
+
+    <div id="calculator-app" class="w-full max-w-6xl mx-auto p-4 sm:p-6">
+        <div class="bg-white rounded-[2rem] shadow-2xl overflow-hidden border border-slate-100">
+            <header class="bg-slate-50/50 border-b border-slate-100 p-6 md:p-8 flex flex-col md:flex-row justify-between items-center gap-6">
+                <div class="text-center md:text-left">
+                  <h2 class="text-2xl font-black text-slate-800 tracking-tight flex items-center justify-center md:justify-start gap-3">
+                    <span class="bg-[#da3f0b] text-white p-2 rounded-xl text-lg shadow-lg shadow-[#da3f0b30]">
+                      <i class="fas fa-hand-holding-dollar"></i>
+                    </span>
+                    Freelance Pricing Strategy Tool
+                  </h2>
+                </div>
+                
+                <div class="relative group min-w-[140px]">
+                  <select id="currency-select" class="appearance-none w-full bg-white border border-slate-200 text-slate-700 py-2.5 pl-4 pr-10 rounded-xl text-xs font-bold focus:outline-none focus:ring-4 focus:ring-[#da3f0b15] focus:border-[#da3f0b] shadow-sm cursor-pointer hover:border-[#da3f0b40]">
+                    <option value="USD">USD ($)</option>
+                    <option value="EUR">EUR (€)</option>
+                    <option value="GBP">GBP (£)</option>
+                    <option value="AUD">AUD (A$)</option>
+                    <option value="CAD">CAD (C$)</option>
+                    <option value="INR">INR (₹)</option>
+                  </select>
+                  <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-slate-400">
+                    <i class="fas fa-chevron-down text-[10px]"></i>
+                  </div>
+                </div>
+            </header>
+    
+            <main class="flex flex-col lg:flex-row">
+                <div class="lg:w-[55%] p-6 md:p-10 lg:p-12 border-r border-slate-100">
+                    <div class="space-y-8">
+                        
+                        <!-- Expenses Section -->
+                        <div class="bg-slate-50 p-6 rounded-2xl border border-slate-100">
+                            <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-6"><i class="fas fa-house-user mr-2"></i>Annual Financial Needs</h3>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <label class="flex items-center text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">
+                                        Personal Expenses
+                                        <span class="tooltip-container ml-2">
+                                            <i class="fas fa-info-circle text-slate-300 hover:text-[#da3f0b] cursor-help text-xs"></i>
+                                            <span class="tooltip-text">Annual cost for rent, food, health, and lifestyle.</span>
+                                        </span>
+                                    </label>
+                                    <div class="relative">
+                                        <span class="absolute inset-y-0 left-0 pl-4 flex items-center text-slate-400 font-semibold currency-symbol">$</span>
+                                        <input type="number" id="personal-expenses" value="36000" class="block w-full rounded-xl border-slate-200 border py-3 pl-9 pr-4 focus:ring-4 focus:ring-[#da3f0b20] focus:border-[#da3f0b] font-semibold text-slate-800">
+                                    </div>
+                                </div>
+                                <div>
+                                    <label class="flex items-center text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">
+                                        Business Overhead
+                                        <span class="tooltip-container ml-2">
+                                            <i class="fas fa-info-circle text-slate-300 hover:text-[#da3f0b] cursor-help text-xs"></i>
+                                            <span class="tooltip-text">Software, hardware, office space, and marketing.</span>
+                                        </span>
+                                    </label>
+                                    <div class="relative">
+                                        <span class="absolute inset-y-0 left-0 pl-4 flex items-center text-slate-400 font-semibold currency-symbol">$</span>
+                                        <input type="number" id="business-expenses" value="5000" class="block w-full rounded-xl border-slate-200 border py-3 pl-9 pr-4 focus:ring-4 focus:ring-[#da3f0b20] focus:border-[#da3f0b] font-semibold text-slate-800">
+                                    </div>
+                                </div>
+                                <div>
+                                    <label class="flex items-center text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">
+                                        Desired Annual Profit
+                                        <span class="tooltip-container ml-2">
+                                            <i class="fas fa-info-circle text-slate-300 hover:text-[#da3f0b] cursor-help text-xs"></i>
+                                            <span class="tooltip-text">Savings, investments, and business growth funds.</span>
+                                        </span>
+                                    </label>
+                                    <div class="relative">
+                                        <span class="absolute inset-y-0 left-0 pl-4 flex items-center text-slate-400 font-semibold currency-symbol">$</span>
+                                        <input type="number" id="desired-profit" value="15000" class="block w-full rounded-xl border-slate-200 border py-3 pl-9 pr-4 focus:ring-4 focus:ring-[#da3f0b20] focus:border-[#da3f0b] font-semibold text-slate-800">
+                                    </div>
+                                </div>
+                                <div>
+                                    <label class="flex items-center text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">
+                                        Estimated Tax Rate (%)
+                                    </label>
+                                    <div class="relative">
+                                        <input type="number" id="tax-rate" value="25" class="block w-full rounded-xl border-slate-200 border py-3 pl-4 pr-12 focus:ring-4 focus:ring-[#da3f0b20] focus:border-[#da3f0b] font-semibold text-slate-800">
+                                        <span class="absolute inset-y-0 right-0 pr-4 flex items-center text-slate-400 font-semibold">%</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+    
+                        <!-- Schedule Section -->
+                        <div class="bg-[#da3f0b08] p-6 rounded-2xl border border-[#da3f0b15]">
+                            <h3 class="text-xs font-black text-[#da3f0b] uppercase tracking-widest mb-6"><i class="fas fa-calendar-check mr-2"></i>Work Schedule</h3>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <label class="flex items-center text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Billable Hours / Week</label>
+                                    <input type="number" id="billable-hours" value="25" class="block w-full rounded-xl border-slate-200 border py-3 px-4 focus:ring-4 focus:ring-[#da3f0b20] focus:border-[#da3f0b] font-semibold text-slate-800">
+                                    <p class="text-[10px] text-slate-400 mt-1">Note: Admin/Sales time is usually not billable.</p>
+                                </div>
+                                <div>
+                                    <label class="flex items-center text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Vacation Weeks / Year</label>
+                                    <input type="number" id="vacation-weeks" value="4" class="block w-full rounded-xl border-slate-200 border py-3 px-4 focus:ring-4 focus:ring-[#da3f0b20] focus:border-[#da3f0b] font-semibold text-slate-800">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+    
+                <div class="lg:w-[45%] bg-slate-50/50 p-6 md:p-10 lg:p-12 flex flex-col justify-center">
+                   <div class="space-y-6">
+                     <div class="hero-card p-8 flex flex-col items-center text-center">
+                         <p class="text-xs font-black text-[#da3f0b] uppercase tracking-[0.2em] mb-4">Required Hourly Rate</p>
+                         <div class="flex items-center justify-center">
+                           <span id="display-hourly-rate" class="text-5xl md:text-6xl font-black tracking-tighter leading-none text-slate-900">$0.00</span>
+                         </div>
+                         <p class="text-sm text-slate-400 font-medium mt-4">To meet your annual goal of <span id="display-gross-annual" class="font-bold text-slate-600">$0</span></p>
+                     </div>
+    
+                     <div class="grid grid-cols-1 gap-4">
+                         <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex justify-between items-center">
+                            <div>
+                                <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Total Billable Hours / Year</p>
+                                <p id="display-total-hours" class="text-xl font-extrabold text-slate-900">0</p>
+                            </div>
+                            <i class="fas fa-clock text-slate-100 text-3xl"></i>
+                         </div>
+                         <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex justify-between items-center">
+                            <div>
+                                <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Annual Tax Liability</p>
+                                <p id="display-tax-amount" class="text-xl font-extrabold text-danger">-$0.00</p>
+                            </div>
+                            <i class="fas fa-receipt text-slate-100 text-3xl"></i>
+                         </div>
+                         <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex justify-between items-center">
+                            <div>
+                                <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Net Monthly Income</p>
+                                <p id="display-monthly-net" class="text-xl font-extrabold text-success">$0.00</p>
+                            </div>
+                            <i class="fas fa-calendar-day text-slate-100 text-3xl"></i>
+                         </div>
+                     </div>
+                   </div>
+                </div>
+            </main>
+    
+            <footer class="bg-slate-50 border-t border-slate-100 p-6 md:p-8">
+               <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+                   <div class="text-center md:text-left">
+                       <h4 class="text-sm font-bold text-slate-700 mb-1">Share this tool</h4>
+                       <p class="text-xs text-slate-400">Help other freelancers price correctly.</p>
+                   </div>
+                   <div class="flex flex-wrap justify-center gap-3">
+                       <button onclick="shareSocial('facebook')" class="w-10 h-10 rounded-full flex items-center justify-center text-white bg-[#1877F2] hover:-translate-y-1 transition-all"><i class="fab fa-facebook-f"></i></button>
+                       <button onclick="shareSocial('twitter')" class="w-10 h-10 rounded-full flex items-center justify-center text-white bg-[#1DA1F2] hover:-translate-y-1 transition-all"><i class="fab fa-twitter"></i></button>
+                       <button onclick="shareSocial('linkedin')" class="w-10 h-10 rounded-full flex items-center justify-center text-white bg-[#0A66C2] hover:-translate-y-1 transition-all"><i class="fab fa-linkedin-in"></i></button>
+                       <button onclick="shareSocial('whatsapp')" class="w-10 h-10 rounded-full flex items-center justify-center text-white bg-[#25D366] hover:-translate-y-1 transition-all"><i class="fab fa-whatsapp"></i></button>
+                   </div>
+                   <button onclick="handleBookmark()" class="flex items-center gap-2 bg-white border border-slate-200 hover:border-[#da3f0b] hover:text-[#da3f0b] text-slate-600 px-4 py-2 rounded-lg text-sm font-bold transition-all">
+                      <i class="fas fa-bookmark"></i> Bookmark
+                   </button>
+               </div>
+            </footer>
+        </div>
+    </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const state = {
+            currency: { code: 'USD', symbol: '$', locale: 'en-US' },
+            personal: 36000,
+            business: 5000,
+            profit: 15000,
+            taxRate: 25,
+            billableHours: 25,
+            vacationWeeks: 4
+        };
+
+        const currencies = {
+            'USD': { symbol: '$', locale: 'en-US' },
+            'EUR': { symbol: '€', locale: 'de-DE' },
+            'GBP': { symbol: '£', locale: 'en-GB' },
+            'AUD': { symbol: 'A$', locale: 'en-AU' },
+            'CAD': { symbol: 'C$', locale: 'en-CA' },
+            'INR': { symbol: '₹', locale: 'en-IN' }
+        };
+
+        const inputs = {
+            personal: document.getElementById('personal-expenses'),
+            business: document.getElementById('business-expenses'),
+            profit: document.getElementById('desired-profit'),
+            tax: document.getElementById('tax-rate'),
+            hours: document.getElementById('billable-hours'),
+            weeks: document.getElementById('vacation-weeks'),
+            currency: document.getElementById('currency-select')
+        };
+
+        const displays = {
+            rate: document.getElementById('display-hourly-rate'),
+            gross: document.getElementById('display-gross-annual'),
+            totalHours: document.getElementById('display-total-hours'),
+            taxAmount: document.getElementById('display-tax-amount'),
+            monthlyNet: document.getElementById('display-monthly-net'),
+            symbols: document.querySelectorAll('.currency-symbol')
+        };
+
+        function format(val) {
+            return new Intl.NumberFormat(state.currency.locale, {
+                style: 'currency',
+                currency: state.currency.code,
+                maximumFractionDigits: 2
+            }).format(val);
+        }
+
+        function calculate() {
+            const totalNetNeeded = state.personal + state.business + state.profit;
+            const taxMultiplier = 1 - (state.taxRate / 100);
+            const grossAnnualNeeded = taxMultiplier > 0 ? totalNetNeeded / taxMultiplier : totalNetNeeded;
+            
+            const workWeeks = 52 - state.vacationWeeks;
+            const totalAnnualHours = workWeeks * state.billableHours;
+            
+            const hourlyRate = totalAnnualHours > 0 ? grossAnnualNeeded / totalAnnualHours : 0;
+            const taxAmount = grossAnnualNeeded - totalNetNeeded;
+            const monthlyNet = (state.personal + state.profit) / 12;
+
+            displays.rate.textContent = format(hourlyRate);
+            displays.gross.textContent = format(grossAnnualNeeded);
+            displays.totalHours.textContent = totalAnnualHours.toLocaleString();
+            displays.taxAmount.textContent = `-${format(taxAmount)}`;
+            displays.monthlyNet.textContent = format(monthlyNet);
+        }
+
+        function updateState() {
+            state.personal = parseFloat(inputs.personal.value) || 0;
+            state.business = parseFloat(inputs.business.value) || 0;
+            state.profit = parseFloat(inputs.profit.value) || 0;
+            state.taxRate = parseFloat(inputs.tax.value) || 0;
+            state.billableHours = parseFloat(inputs.hours.value) || 0;
+            state.vacationWeeks = parseFloat(inputs.weeks.value) || 0;
+            calculate();
+        }
+
+        Object.values(inputs).forEach(input => {
+            input.addEventListener('input', updateState);
+        });
+
+        inputs.currency.addEventListener('change', (e) => {
+            const code = e.target.value;
+            state.currency = { code, ...currencies[code] };
+            displays.symbols.forEach(s => s.textContent = state.currency.symbol);
+            calculate();
+        });
+
+        window.shareSocial = function(platform) {
+            const url = encodeURIComponent(window.location.href);
+            const text = encodeURIComponent("Check out this Freelance Hourly Rate Calculator!");
+            const shareUrls = {
+                facebook: `https://www.facebook.com/sharer/sharer.php?u=${url}`,
+                twitter: `https://twitter.com/intent/tweet?url=${url}&text=${text}`,
+                linkedin: `https://www.linkedin.com/shareArticle?mini=true&url=${url}`,
+                whatsapp: `https://api.whatsapp.com/send?text=${text}%20${url}`
+            };
+            window.open(shareUrls[platform], '_blank');
+        };
+
+        window.handleBookmark = function() {
+            alert("Press Ctrl+D (or Cmd+D on Mac) to bookmark this calculator.");
+        };
+
+        calculate();
+    });
+    </script>
+
+    <section class="bg-white py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="prose prose-lg max-w-none">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">How to Calculate Freelance Rate Needed to Survive</h2>
+                <p>Transitioning from a traditional salary to freelance work is a major financial shift. One of the most common mistakes new contractors make is setting their rate based on what they used to earn as an employee. However, as a freelancer, you are responsible for your own taxes, insurance, equipment, and unpaid time off. Our <strong>Freelance Hourly Rate Calculator</strong> helps you bridge this gap by calculating the gross income required to maintain your lifestyle while growing a sustainable business.</p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">The Formula for Sustainable Freelance Pricing</h2>
+                <p>To truly understand your pricing, you must look beyond your monthly rent. A professional rate is built on three pillars:</p>
+                <ul>
+                    <li><strong>Personal Survival:</strong> Your core living expenses including housing, food, and healthcare.</li>
+                    <li><strong>Business Overhead:</strong> The cost of doing business, such as Adobe Creative Cloud subscriptions, laptop upgrades, and professional insurance.</li>
+                    <li><strong>The Tax Buffer:</strong> Unlike employees, freelancers pay the full share of self-employment taxes. Depending on your region, you should set aside 20% to 35% of every invoice for the government.</li>
+                </ul>
+                <p>By using our tool, you can see how adjusting your billable hours or vacation time drastically changes the rate you need to charge. For instance, if you plan to take 6 weeks off instead of 2, your hourly rate must increase to cover those "unpaid" days.</p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Billable vs. Non-Billable Hours</h2>
+                <p>A common trap is assuming a 40-hour billable work week. In reality, freelancers spend a significant portion of their time on "admin" tasks: writing proposals, chasing invoices, marketing on LinkedIn, and learning new skills. Most successful contractors aim for 20 to 25 billable hours per week. If you calculate your rate based on 40 hours but only find 20 hours of client work, you will face a 50% budget shortfall.</p>
+                <p>If you are moving from a full-time job, you might also find our <a href="https://simpliconvert.com/salary-to-hourly-calculator/">Salary to Hourly Calculator</a> useful to see how your current pay translates to the freelance world.</p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Why Profit Margin Matters</h2>
+                <p>Your "survival rate" is the absolute minimum you need to keep the lights on. However, to thrive, you need a profit margin. Profit is what allows you to survive a "dry spell" when clients are scarce or to invest in a better workstation. We recommend adding at least a 10-20% profit target to your annual calculations. This ensures your business is actually generating wealth, not just paying for your existence.</p>
+                <p>For those working on platforms like Fiverr or Upwork, remember to factor in their service fees. You can use our <a href="https://simpliconvert.com/fiverr-gig-pricing-calculator/">Fiverr Pricing Tool</a> to adjust your rates accordingly.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 py-12">
+        <div class="max-w-4xl mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center text-gray-900 mb-8">Frequently Asked Questions</h2>
+            <div class="space-y-4">
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg">
+                        <span>Should I charge by the hour or by the project?</span>
+                        <i class="fas fa-chevron-down faq-icon transition-transform"></i>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-300">
+                        <p class="p-5 pt-0 text-gray-600">While this calculator gives you an hourly rate, many freelancers prefer project-based pricing. To do this, estimate how many hours a project will take and multiply it by your required hourly rate, then add a 10-20% "buffer" for unexpected revisions.</p>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg">
+                        <span>How often should I raise my freelance rates?</span>
+                        <i class="fas fa-chevron-down faq-icon transition-transform"></i>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-300">
+                        <p class="p-5 pt-0 text-gray-600">Most freelancers raise their rates annually by 5-10% to account for inflation and increased expertise. You should also raise your rates whenever your demand exceeds your capacity.</p>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg">
+                        <span>Does this calculator include health insurance?</span>
+                        <i class="fas fa-chevron-down faq-icon transition-transform"></i>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-300">
+                        <p class="p-5 pt-0 text-gray-600">You should include your health insurance premiums in the "Personal Expenses" or "Business Overhead" field. Since freelancers pay for their own benefits, this is a critical cost to capture.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 pb-16">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-slate-200 pt-16">
+            <h2 class="text-2xl font-bold text-center text-slate-800 mb-10">Popular Tools for Freelancers</h2>
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+                <a href="/fiverr-fee-calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-green-50 text-green-600 flex items-center justify-center shrink-0"><i class="fas fa-bolt"></i></div>
+                    <div><h3 class="font-bold text-slate-800 text-sm mb-1">Fiverr Fee Calc</h3><p class="text-xs text-slate-500">Calculate net earnings after fees.</p></div>
+                </a>
+                <a href="/upwork-fee-calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center shrink-0"><i class="fas fa-briefcase"></i></div>
+                    <div><h3 class="font-bold text-slate-800 text-sm mb-1">Upwork Fee Calc</h3><p class="text-xs text-slate-500">See your take-home pay.</p></div>
+                </a>
+                <a href="/salary-to-hourly-calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-purple-50 text-purple-600 flex items-center justify-center shrink-0"><i class="fas fa-clock"></i></div>
+                    <div><h3 class="font-bold text-slate-800 text-sm mb-1">Salary to Hourly</h3><p class="text-xs text-slate-500">Convert annual pay to hourly.</p></div>
+                </a>
+                <a href="/profit-margin-calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-orange-50 text-orange-600 flex items-center justify-center shrink-0"><i class="fas fa-chart-pie"></i></div>
+                    <div><h3 class="font-bold text-slate-800 text-sm mb-1">Profit Margin</h3><p class="text-xs text-slate-500">Calculate business profitability.</p></div>
+                </a>
+                <a href="/paypal-fee-calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-blue-50 text-blue-800 flex items-center justify-center shrink-0"><i class="fab fa-paypal"></i></div>
+                    <div><h3 class="font-bold text-slate-800 text-sm mb-1">PayPal Fees</h3><p class="text-xs text-slate-500">Calculate transaction costs.</p></div>
+                </a>
+                <a href="/invoice-generator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-slate-50 text-slate-700 flex items-center justify-center shrink-0"><i class="fas fa-file-invoice-dollar"></i></div>
+                    <div><h3 class="font-bold text-slate-800 text-sm mb-1">Invoice Gen</h3><p class="text-xs text-slate-500">Create professional invoices.</p></div>
+                </a>
+                <a href="/work-hours-calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0"><i class="fas fa-calendar-alt"></i></div>
+                    <div><h3 class="font-bold text-slate-800 text-sm mb-1">Work Hours</h3><p class="text-xs text-slate-500">Track your billable time.</p></div>
+                </a>
+                <a href="/roi-calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-red-50 text-red-600 flex items-center justify-center shrink-0"><i class="fas fa-percentage"></i></div>
+                    <div><h3 class="font-bold text-slate-800 text-sm mb-1">ROI Calc</h3><p class="text-xs text-slate-500">Measure investment returns.</p></div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <div id="footer"></div>
+
+    <script>
+        async function loadComponent(url, elementId) {
+            try {
+                const response = await fetch(url);
+                const text = await response.text();
+                document.getElementById(elementId).innerHTML = text;
+            } catch (e) { console.error(e); }
+        }
+        document.addEventListener('DOMContentLoaded', () => {
+            loadComponent('/components/navbar.html', 'navbar');
+            loadComponent('/components/footer.html', 'footer');
+
+            document.querySelectorAll('[data-faq-toggle]').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const content = btn.nextElementSibling;
+                    const icon = btn.querySelector('.faq-icon');
+                    const isOpen = content.style.maxHeight;
+                    
+                    document.querySelectorAll('.faq-answer').forEach(el => el.style.maxHeight = null);
+                    document.querySelectorAll('.faq-icon').forEach(el => el.style.transform = 'rotate(0deg)');
+
+                    if (!isOpen) {
+                        content.style.maxHeight = content.scrollHeight + "px";
+                        icon.style.transform = 'rotate(180deg)';
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

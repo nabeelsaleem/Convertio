@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Gumroad Seller Fee Calculator – Calculate Net Earnings | SimpliConvert</title>
+    <meta name="description" content="Calculate your actual earnings after Gumroad's 10% platform fee and payment processing costs. Use our gumroad seller fee calculator to plan your digital product pricing accurately.">
+    <meta name="keywords" content="gumroad seller fee calculator, gumroad discovery fee, calculate gumroad profit, digital product fees, gumroad net earnings, gumroad pricing tool">
+    <meta name="author" content="SimpliConvert">
+    <meta property="og:site_name" content="SimpliConvert">
+    <meta name="robots" content="index, follow">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://simpliconvert.com/gumroad-fee-calculator/">
+    <meta property="og:title" content="Gumroad Seller Fee Calculator – Plan Your Digital Sales">
+    <meta property="og:description" content="Stop guessing your take-home pay. Accurately calculate Gumroad fees, processing costs, and Discover marketplace fees.">
+    <meta property="og:image" content="https://simpliconvert.com/images/gumroad-fee-calculator-og.jpg">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://simpliconvert.com/gumroad-fee-calculator/">
+    <meta name="twitter:title" content="Gumroad Seller Fee Calculator – Calculate Net Profit">
+    <meta name="twitter:description" content="Free tool to calculate Gumroad platform fees and payment processing. Perfect for creators and digital entrepreneurs.">
+    <meta name="twitter:image" content="https://simpliconvert.com/images/gumroad-fee-calculator-og.jpg">
+
+    <link rel="canonical" href="https://simpliconvert.com/gumroad-fee-calculator/">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Gumroad Fee Calculator",
+      "url": "https://simpliconvert.com/gumroad-fee-calculator/",
+      "description": "A free online tool for Gumroad sellers to calculate platform fees, payment processing costs, and net profit from digital product sales.",
+      "applicationCategory": "FinanceApplication",
+      "operatingSystem": "Web Browser",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "SimpliConvert",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://simpliconvert.com/logo.png"
+        }
+      }
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [{
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://simpliconvert.com/"
+      },{
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Calculator Tools",
+        "item": "https://simpliconvert.com/calculator_tools/"
+      },{
+        "@type": "ListItem",
+        "position": 3,
+        "name": "Gumroad Fee Calculator",
+        "item": "https://simpliconvert.com/gumroad-fee-calculator/"
+      }]
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [{
+        "@type": "Question",
+        "name": "What is the current Gumroad platform fee?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "As of 2023, Gumroad charges a flat 10% platform fee on every sale. This replaced their previous tiered fee structure."
+        }
+      }, {
+        "@type": "Question",
+        "name": "What is the Gumroad Discover fee?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "If a customer finds and buys your product through Gumroad's 'Discover' marketplace, Gumroad charges an additional 10% fee on top of the standard platform fee, totaling 20% plus processing costs."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Are payment processing fees included in the 10%?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "No. Payment processing fees (typically 2.9% + $0.30) are charged by the payment gateway (Stripe or PayPal) and are separate from Gumroad's 10% platform fee."
+        }
+      }]
+    }
+    </script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #da3f0b;
+            --primary-hover: #b53409;
+            --bg: #f8fafc;
+            --text-dark: #0f172a;
+        }
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: var(--text-dark); }
+        .hero-card { background: white; border: 1px solid #f1f5f9; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05); position: relative; overflow: hidden; }
+        .hero-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px; background-color: var(--primary); }
+        .tooltip-container { position: relative; display: inline-block; }
+        .tooltip-text {
+            visibility: hidden; width: 220px; background-color: #1e293b; color: #fff;
+            text-align: center; border-radius: 8px; padding: 10px; position: absolute;
+            z-index: 50; bottom: 125%; left: 50%; margin-left: -110px; opacity: 0;
+            transition: opacity 0.2s; font-size: 0.75rem; pointer-events: none;
+        }
+        .tooltip-container:hover .tooltip-text { visibility: visible; opacity: 1; }
+        .animate-fade { animation: fadeIn 0.3s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+        .tool-card { transition: transform 0.2s ease, box-shadow 0.2s ease; }
+        .tool-card:hover { transform: translateY(-4px); box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
+        .prose a { color: #da3f0b; text-decoration: none; }
+        .prose a:hover { text-decoration: underline; }
+        .toggle-checkbox:checked { right: 0; border-color: #da3f0b; }
+        .toggle-checkbox:checked + .toggle-label { background-color: #da3f0b; }
+    </style>
+</head>
+
+<body class="bg-gray-50 min-h-screen flex flex-col">
+    <div id="navbar" style="min-height: 70px;"></div>
+	
+	<section class="hero-white text-black py-2 md:py-10">
+        <div class="container mx-auto px-4">
+            <nav class="flex pb-4 text-sm text-slate-500 items-center space-x-2 justify-center">
+                <a href="https://simpliconvert.com/" class="hover:text-[#da3f0b] transition-colors">Home</a>
+                <i class="fas fa-chevron-right text-[10px]"></i>
+                <a href="https://simpliconvert.com/calculator_tools/" class="hover:text-[#da3f0b] transition-colors">Calculators</a>
+                <i class="fas fa-chevron-right text-[10px]"></i>
+                <span class="text-slate-900 font-medium">Gumroad Fee Calculator</span>
+            </nav>
+            <div class="text-center">
+                <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-2">gumroad seller fee calculator</h1>
+                <p class="text-lg md:text-xl max-w-3xl mx-auto mb-2 text-slate-600">
+                Calculate your net profit from digital product sales. Factor in Gumroad's flat 10% fee, payment processing, and Discover marketplace costs.
+                </p>
+            </div>
+        </div>
+    </section>		
+
+    <div id="calculator-app" class="w-full max-w-6xl mx-auto p-4 sm:p-6">
+        <div class="bg-white rounded-[2rem] shadow-2xl overflow-hidden border border-slate-100">
+            <header class="bg-slate-50/50 border-b border-slate-100 p-6 md:p-8 flex flex-col md:flex-row justify-between items-center gap-6">
+                <div class="text-center md:text-left">
+                  <h2 class="text-2xl font-black text-slate-800 tracking-tight flex items-center justify-center md:justify-start gap-3">
+                    <span class="bg-[#da3f0b] text-white p-2 rounded-xl text-lg shadow-lg shadow-[#da3f0b30]">
+                      <i class="fas fa-shopping-cart"></i>
+                    </span>
+                    Gumroad Profit Estimator
+                  </h2>
+                </div>
+                
+                <div class="relative group min-w-[140px]">
+                  <select id="currency-select" class="appearance-none w-full bg-white border border-slate-200 text-slate-700 py-2.5 pl-4 pr-10 rounded-xl text-xs font-bold focus:outline-none focus:ring-4 focus:ring-[#da3f0b15] focus:border-[#da3f0b] shadow-sm cursor-pointer">
+                    <option value="USD">USD ($)</option>
+                    <option value="EUR">EUR (€)</option>
+                    <option value="GBP">GBP (£)</option>
+                    <option value="JPY">JPY (¥)</option>
+                    <option value="AUD">AUD (A$)</option>
+                    <option value="CAD">CAD (C$)</option>
+                  </select>
+                  <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-slate-400">
+                    <i class="fas fa-chevron-down text-[10px]"></i>
+                  </div>
+                </div>
+            </header>
+    
+            <main class="flex flex-col lg:flex-row">
+                <div class="lg:w-[50%] p-6 md:p-10 lg:p-12 border-r border-slate-100">
+                    <div class="space-y-6">
+                        <div class="bg-slate-50 p-6 rounded-2xl border border-slate-100">
+                            <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-6"><i class="fas fa-tag mr-2"></i>Product Details</h3>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="mb-5">
+                                    <label class="flex items-center text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">
+                                        Product Price
+                                        <span class="tooltip-container ml-2">
+                                            <i class="fas fa-info-circle text-slate-300 hover:text-[#da3f0b] cursor-help text-xs"></i>
+                                            <span class="tooltip-text">The listed price of your digital product.</span>
+                                        </span>
+                                    </label>
+                                    <div class="relative rounded-xl shadow-sm">
+                                        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                            <span class="text-slate-400 font-semibold currency-symbol">$</span>
+                                        </div>
+                                        <input type="number" id="input-price" value="49" class="block w-full rounded-xl border-slate-200 border py-3 pl-9 pr-4 focus:ring-4 focus:ring-[#da3f0b20] focus:border-[#da3f0b] sm:text-sm font-semibold text-slate-800 transition-all bg-white">
+                                    </div>
+                                </div>
+    
+                                <div class="mb-5">
+                                    <label class="flex items-center text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">
+                                        Quantity Sold
+                                    </label>
+                                    <div class="relative rounded-xl shadow-sm">
+                                        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                            <i class="fas fa-box text-slate-400 text-xs"></i>
+                                        </div>
+                                        <input type="number" id="input-quantity" value="1" class="block w-full rounded-xl border-slate-200 border py-3 pl-9 pr-4 focus:ring-4 focus:ring-[#da3f0b20] focus:border-[#da3f0b] sm:text-sm font-semibold text-slate-800 transition-all bg-white">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+    
+                        <div class="bg-[#da3f0b08] p-6 rounded-2xl border border-[#da3f0b15]">
+                           <h3 class="text-xs font-black text-[#da3f0b] uppercase tracking-widest mb-6"><i class="fas fa-cog mr-2"></i>Sale Type & Fees</h3>
+                           
+                           <div class="space-y-4">
+                               <div class="flex items-center justify-between p-3 bg-white rounded-xl border border-slate-100">
+                                   <div>
+                                       <p class="text-sm font-bold text-slate-700">Gumroad Discover</p>
+                                       <p class="text-[10px] text-slate-400">Additional 10% fee for marketplace sales</p>
+                                   </div>
+                                   <div class="relative inline-block w-10 mr-2 align-middle select-none transition duration-200 ease-in">
+                                       <input type="checkbox" id="toggle-discover" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer"/>
+                                       <label for="toggle-discover" class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer"></label>
+                                   </div>
+                               </div>
+
+                               <div class="flex items-center justify-between p-3 bg-white rounded-xl border border-slate-100">
+                                   <div>
+                                       <p class="text-sm font-bold text-slate-700">PayPal Processing</p>
+                                       <p class="text-[10px] text-slate-400">Standard PayPal fees (approx. 2.9% + $0.30)</p>
+                                   </div>
+                                   <div class="relative inline-block w-10 mr-2 align-middle select-none transition duration-200 ease-in">
+                                       <input type="checkbox" id="toggle-paypal" checked class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer"/>
+                                       <label for="toggle-paypal" class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer"></label>
+                                   </div>
+                               </div>
+                           </div>
+                        </div>
+                    </div>
+                </div>
+    
+                <div class="lg:w-[50%] bg-slate-50/50 p-6 md:p-10 lg:p-12 flex flex-col justify-center">
+                   <div class="space-y-6">
+                     <div class="hero-card p-8 flex flex-col items-center text-center">
+                         <p class="text-xs font-black text-[#da3f0b] uppercase tracking-[0.2em] mb-4">Net Earnings</p>
+                         <div class="flex items-center justify-center">
+                           <span id="display-net" class="text-5xl md:text-6xl font-black tracking-tighter leading-none text-[#16a34a]">$0.00</span>
+                         </div>
+                         <p class="text-sm text-slate-400 font-medium mt-4">Profit Margin: <span id="display-margin">0.00</span>%</p>
+                     </div>
+    
+                     <div class="grid grid-cols-2 gap-4">
+                         <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex flex-col items-center text-center">
+                            <div class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Total Fees</div>
+                            <p id="display-total-fees" class="text-xl font-extrabold text-slate-900">$0.00</p>
+                         </div>
+                         <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex flex-col items-center text-center">
+                            <div class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Gross Revenue</div>
+                            <p id="display-gross" class="text-xl font-extrabold text-slate-900">$0.00</p>
+                         </div>
+                     </div>
+    
+                     <div class="bg-white rounded-xl p-6 border border-slate-100 shadow-sm">
+                         <div class="space-y-3">
+                             <div class="flex justify-between text-xs font-medium">
+                                 <span class="text-slate-500">Gumroad Platform (10%)</span>
+                                 <span id="fee-platform" class="text-slate-800 font-bold">$0.00</span>
+                             </div>
+                             <div class="flex justify-between text-xs font-medium">
+                                 <span class="text-slate-500">Processing Fee (2.9% + $0.30)</span>
+                                 <span id="fee-processing" class="text-slate-800 font-bold">$0.00</span>
+                             </div>
+                             <div id="discover-fee-row" class="hidden flex justify-between text-xs font-medium">
+                                 <span class="text-slate-500">Discover Fee (10%)</span>
+                                 <span id="fee-discover" class="text-slate-800 font-bold">$0.00</span>
+                             </div>
+                         </div>
+                     </div>
+                   </div>
+                </div>
+            </main>
+    
+            <footer class="bg-slate-50 border-t border-slate-100 p-6 md:p-8">
+               <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+                   <div class="text-center md:text-left">
+                       <h4 class="text-sm font-bold text-slate-700 mb-1">Share this calculator</h4>
+                       <p class="text-xs text-slate-400">Help other creators price their products.</p>
+                   </div>
+                   <div class="flex flex-wrap justify-center gap-3">
+                       <button onclick="shareSocial('facebook')" class="w-10 h-10 rounded-full flex items-center justify-center text-white bg-[#1877F2] hover:-translate-y-1 transition-all"><i class="fab fa-facebook-f"></i></button>
+                       <button onclick="shareSocial('twitter')" class="w-10 h-10 rounded-full flex items-center justify-center text-white bg-[#1DA1F2] hover:-translate-y-1 transition-all"><i class="fab fa-twitter"></i></button>
+                       <button onclick="shareSocial('linkedin')" class="w-10 h-10 rounded-full flex items-center justify-center text-white bg-[#0A66C2] hover:-translate-y-1 transition-all"><i class="fab fa-linkedin-in"></i></button>
+                       <button onclick="shareSocial('whatsapp')" class="w-10 h-10 rounded-full flex items-center justify-center text-white bg-[#25D366] hover:-translate-y-1 transition-all"><i class="fab fa-whatsapp"></i></button>
+                   </div>
+                   <button onclick="handleBookmark()" class="flex items-center gap-2 bg-white border border-slate-200 hover:border-[#da3f0b] hover:text-[#da3f0b] text-slate-600 px-4 py-2 rounded-lg text-sm font-bold transition-all shadow-sm">
+                      <i class="fas fa-bookmark"></i> Bookmark
+                   </button>
+               </div>
+            </footer>
+        </div>
+    </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const state = {
+            currency: { code: 'USD', symbol: '$', locale: 'en-US' },
+            price: 49,
+            quantity: 1,
+            isDiscover: false,
+            isPaypal: true
+        };
+
+        const currencies = {
+            'USD': { symbol: '$', locale: 'en-US' },
+            'EUR': { symbol: '€', locale: 'de-DE' },
+            'GBP': { symbol: '£', locale: 'en-GB' },
+            'JPY': { symbol: '¥', locale: 'ja-JP' },
+            'AUD': { symbol: 'A$', locale: 'en-AU' },
+            'CAD': { symbol: 'C$', locale: 'en-CA' }
+        };
+
+        const inputs = {
+            price: document.getElementById('input-price'),
+            quantity: document.getElementById('input-quantity'),
+            discover: document.getElementById('toggle-discover'),
+            paypal: document.getElementById('toggle-paypal'),
+            currency: document.getElementById('currency-select')
+        };
+
+        const displays = {
+            net: document.getElementById('display-net'),
+            margin: document.getElementById('display-margin'),
+            totalFees: document.getElementById('display-total-fees'),
+            gross: document.getElementById('display-gross'),
+            feePlatform: document.getElementById('fee-platform'),
+            feeProcessing: document.getElementById('fee-processing'),
+            feeDiscover: document.getElementById('fee-discover'),
+            discoverRow: document.getElementById('discover-fee-row'),
+            symbols: document.querySelectorAll('.currency-symbol')
+        };
+
+        function formatMoney(amount) {
+            return new Intl.NumberFormat(state.currency.locale, {
+                style: 'currency',
+                currency: state.currency.code
+            }).format(amount);
+        }
+
+        function calculate() {
+            const gross = state.price * state.quantity;
+            const platformFee = gross * 0.10;
+            const discoverFee = state.isDiscover ? (gross * 0.10) : 0;
+            
+            // Standard processing: 2.9% + $0.30 (approximate for most regions)
+            let processingFee = 0;
+            if (gross > 0) {
+                processingFee = (gross * 0.029) + 0.30;
+            }
+
+            const totalFees = platformFee + discoverFee + processingFee;
+            const net = Math.max(0, gross - totalFees);
+            const margin = gross > 0 ? (net / gross) * 100 : 0;
+
+            updateUI({ gross, platformFee, discoverFee, processingFee, totalFees, net, margin });
+        }
+
+        function updateUI(data) {
+            displays.net.textContent = formatMoney(data.net);
+            displays.margin.textContent = data.margin.toFixed(1);
+            displays.totalFees.textContent = formatMoney(data.totalFees);
+            displays.gross.textContent = formatMoney(data.gross);
+            displays.feePlatform.textContent = formatMoney(data.platformFee);
+            displays.feeProcessing.textContent = formatMoney(data.processingFee);
+            displays.feeDiscover.textContent = formatMoney(data.discoverFee);
+            
+            displays.discoverRow.classList.toggle('hidden', !state.isDiscover);
+            displays.symbols.forEach(el => el.textContent = state.currency.symbol);
+        }
+
+        inputs.price.addEventListener('input', (e) => { state.price = parseFloat(e.target.value) || 0; calculate(); });
+        inputs.quantity.addEventListener('input', (e) => { state.quantity = parseInt(e.target.value) || 0; calculate(); });
+        inputs.discover.addEventListener('change', (e) => { state.isDiscover = e.target.checked; calculate(); });
+        inputs.paypal.addEventListener('change', (e) => { state.isPaypal = e.target.checked; calculate(); });
+        inputs.currency.addEventListener('change', (e) => {
+            state.currency = { code: e.target.value, ...currencies[e.target.value] };
+            calculate();
+        });
+
+        window.shareSocial = function(platform) {
+            const url = encodeURIComponent(window.location.href);
+            const text = encodeURIComponent("Check out this Gumroad Fee Calculator!");
+            const shareUrls = {
+                facebook: `https://www.facebook.com/sharer/sharer.php?u=${url}`,
+                twitter: `https://twitter.com/intent/tweet?url=${url}&text=${text}`,
+                linkedin: `https://www.linkedin.com/shareArticle?mini=true&url=${url}`,
+                whatsapp: `https://api.whatsapp.com/send?text=${text}%20${url}`
+            };
+            window.open(shareUrls[platform], '_blank');
+        };
+
+        window.handleBookmark = function() {
+            alert("Press Ctrl+D (or Cmd+D) to bookmark this page.");
+        };
+
+        calculate();
+    });
+    </script>
+
+    <section class="bg-white py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="prose prose-lg max-w-none">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">Understanding the Gumroad Seller Fee Calculator</h2>
+                <p class="mb-6">
+                    Selling digital products on Gumroad is one of the most popular ways for creators to monetize their skills. However, understanding exactly how much you'll take home after fees can be confusing. Our <strong>gumroad seller fee calculator</strong> is designed to provide instant clarity on your net earnings, helping you set the right price for your eBooks, courses, or software.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">How Gumroad's Flat 10% Fee Works</h2>
+                <p class="mb-6">
+                    In early 2023, Gumroad simplified its pricing model. Instead of a tiered system based on lifetime sales, they moved to a flat <strong>10% platform fee</strong> for all creators. This means whether you are selling your first product or your thousandth, Gumroad takes a 10% cut of the gross sale price. This fee covers the hosting of your files, the checkout experience, and customer management tools.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">The Impact of Payment Processing Fees</h2>
+                <p class="mb-6">
+                    It is important to remember that the 10% platform fee does not include payment processing. When a customer pays via credit card or PayPal, the payment gateway charges its own fee. Typically, this is <strong>2.9% + $0.30</strong> per transaction. Our calculator factors these costs in so you don't get a surprise when you look at your payout dashboard.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">What is the Gumroad Discovery Fee?</h2>
+                <p class="mb-6">
+                    Gumroad has a marketplace called "Discover" that helps new customers find your work. If a sale originates from the Discover marketplace, Gumroad charges an <strong>additional 10% fee</strong>. This brings the total platform fee to 20% for those specific sales. If you are driving your own traffic via social media or email, you only pay the standard 10%.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Strategies to Maximize Your Digital Product Profit</h2>
+                <ul class="list-disc pl-6 mb-6 space-y-2">
+                    <li><strong>Value-Based Pricing:</strong> Since fees are percentage-based, higher-priced products often yield better margins relative to the fixed $0.30 processing fee.</li>
+                    <li><strong>Bundle Products:</strong> Encourage customers to buy multiple items at once to minimize the impact of the per-transaction flat fee.</li>
+                    <li><strong>Direct Traffic:</strong> Focus on building an email list to drive direct sales and avoid the extra 10% Discover fee.</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-center text-gray-900 mb-8">Frequently Asked Questions</h2>
+            <div class="space-y-4">
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg">
+                        <span>Does Gumroad charge a monthly subscription fee?</span>
+                        <i class="fas fa-chevron-down faq-icon transition-transform"></i>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-300">
+                        <p class="p-5 pt-0 text-gray-600">No, Gumroad does not have a monthly subscription fee. They only make money when you make a sale through their platform fee system.</p>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg">
+                        <span>Is there a fee for free products?</span>
+                        <i class="fas fa-chevron-down faq-icon transition-transform"></i>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-300">
+                        <p class="p-5 pt-0 text-gray-600">No. If you offer a product for free ($0), Gumroad does not charge any platform or processing fees. This makes it a great tool for lead magnets.</p>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg">
+                        <span>How often does Gumroad pay out?</span>
+                        <i class="fas fa-chevron-down faq-icon transition-transform"></i>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-300">
+                        <p class="p-5 pt-0 text-gray-600">Gumroad typically processes payouts every Friday for sales made up to the previous Friday, provided you have met the minimum payout threshold (usually $10).</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 pb-16">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-slate-200 pt-16">
+            <h2 class="text-2xl font-bold text-center text-slate-800 mb-10">Popular Tools on SimpliConvert</h2>
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+                <a href="https://simpliconvert.com/fiverr-fee-calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-green-50 text-green-600 flex items-center justify-center shrink-0"><i class="fas fa-briefcase"></i></div>
+                    <div><h3 class="font-bold text-slate-800 text-sm mb-1">Fiverr Fee Calc</h3><p class="text-xs text-slate-500">Calculate Fiverr seller earnings.</p></div>
+                </a>
+                <a href="https://simpliconvert.com/upwork-fee-calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center shrink-0"><i class="fas fa-laptop-code"></i></div>
+                    <div><h3 class="font-bold text-slate-800 text-sm mb-1">Upwork Fee Calc</h3><p class="text-xs text-slate-500">Estimate Upwork service fees.</p></div>
+                </a>
+                <a href="https://simpliconvert.com/etsy-fee-calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-orange-50 text-orange-600 flex items-center justify-center shrink-0"><i class="fas fa-store"></i></div>
+                    <div><h3 class="font-bold text-slate-800 text-sm mb-1">Etsy Fee Calc</h3><p class="text-xs text-slate-500">Calculate Etsy shop profits.</p></div>
+                </a>
+                <a href="https://simpliconvert.com/paypal-fee-calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-blue-50 text-blue-800 flex items-center justify-center shrink-0"><i class="fab fa-paypal"></i></div>
+                    <div><h3 class="font-bold text-slate-800 text-sm mb-1">PayPal Fee Calc</h3><p class="text-xs text-slate-500">Calculate PayPal merchant fees.</p></div>
+                </a>
+                <a href="https://simpliconvert.com/stripe-fee-calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0"><i class="fab fa-stripe-s"></i></div>
+                    <div><h3 class="font-bold text-slate-800 text-sm mb-1">Stripe Fee Calc</h3><p class="text-xs text-slate-500">Estimate Stripe processing costs.</p></div>
+                </a>
+                <a href="https://simpliconvert.com/freelance-hourly-rate-calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0"><i class="fas fa-calculator"></i></div>
+                    <div><h3 class="font-bold text-slate-800 text-sm mb-1">Rate Calc</h3><p class="text-xs text-slate-500">Set your freelance hourly rate.</p></div>
+                </a>
+                <a href="https://simpliconvert.com/salary-to-hourly-calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-slate-50 text-slate-700 flex items-center justify-center shrink-0"><i class="fas fa-money-bill-wave"></i></div>
+                    <div><h3 class="font-bold text-slate-800 text-sm mb-1">Salary to Hourly</h3><p class="text-xs text-slate-500">Convert annual pay to hourly.</p></div>
+                </a>
+                <a href="https://simpliconvert.com/roi-calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-red-50 text-red-600 flex items-center justify-center shrink-0"><i class="fas fa-chart-pie"></i></div>
+                    <div><h3 class="font-bold text-slate-800 text-sm mb-1">ROI Calculator</h3><p class="text-xs text-slate-500">Calculate return on investment.</p></div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <div id="footer"></div>
+
+    <script>
+        document.querySelectorAll('[data-faq-toggle]').forEach(button => {
+            button.addEventListener('click', () => {
+                const answer = button.nextElementSibling;
+                const icon = button.querySelector('.faq-icon');
+                if (answer.style.maxHeight) {
+                    answer.style.maxHeight = null;
+                    icon.style.transform = 'rotate(0deg)';
+                } else {
+                    answer.style.maxHeight = answer.scrollHeight + "px";
+                    icon.style.transform = 'rotate(180deg)';
+                }
+            });
+        });
+
+        async function loadComponent(url, elementId) {
+            try {
+                const response = await fetch(url);
+                const text = await response.text();
+                document.getElementById(elementId).innerHTML = text;
+            } catch (e) { console.error(e); }
+        }
+        loadComponent('/components/navbar.html', 'navbar');
+        loadComponent('/components/footer.html', 'footer');
+    </script>
+</body>
+</html>

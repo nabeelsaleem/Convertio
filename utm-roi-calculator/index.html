@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>UTM Campaign ROI Calculator – track utm campaign performance | SimpliConvert</title>
+    <meta name="description" content="Calculate the Return on Investment (ROI) for your marketing campaigns. Track UTM performance, analyze cost per acquisition (CPA), and optimize your ad spend with our free tool.">
+    <meta name="keywords" content="marketing analytics, google analytics utm, campaign profit, UTM ROI calculator, marketing spend tracker, CPA calculator, digital marketing ROI">
+    <meta name="author" content="SimpliConvert">
+    <meta property="og:site_name" content="SimpliConvert">
+    <meta name="robots" content="index, follow">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://simpliconvert.com/utm-roi-calculator/">
+    <meta property="og:title" content="UTM Campaign ROI Calculator – Analyze Marketing Performance">
+    <meta property="og:description" content="Stop wasting ad spend. Accurately calculate the ROI and profitability of your UTM-tracked marketing campaigns.">
+    <meta property="og:image" content="https://simpliconvert.com/images/utm-roi-calculator-og.jpg">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://simpliconvert.com/utm-roi-calculator/">
+    <meta name="twitter:title" content="UTM Campaign ROI Calculator – track utm campaign performance">
+    <meta name="twitter:description" content="Free tool to calculate marketing campaign ROI, CPA, and net profit. Perfect for performance marketers and SEOs.">
+    <meta name="twitter:image" content="https://simpliconvert.com/images/utm-roi-calculator-og.jpg">
+
+    <link rel="canonical" href="https://simpliconvert.com/utm-roi-calculator/">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "UTM Campaign ROI Calculator",
+      "url": "https://simpliconvert.com/utm-roi-calculator/",
+      "description": "A free online tool for marketers to calculate the return on investment (ROI) and profitability of specific marketing campaigns using UTM parameters.",
+      "applicationCategory": "BusinessApplication",
+      "operatingSystem": "Web Browser",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "SimpliConvert",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://simpliconvert.com/logo.png"
+        }
+      }
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [{
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://simpliconvert.com/"
+      },{
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Calculator Tools",
+        "item": "https://simpliconvert.com/calculator_tools/"
+      },{
+        "@type": "ListItem",
+        "position": 3,
+        "name": "UTM Campaign ROI Calculator",
+        "item": "https://simpliconvert.com/utm-roi-calculator/"
+      }]
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [{
+        "@type": "Question",
+        "name": "How do I calculate ROI for a UTM campaign?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The formula is: ((Total Revenue - Total Cost) / Total Cost) * 100. Our calculator automates this by taking your campaign spend and revenue to provide a net profit and ROI percentage."
+        }
+      }, {
+        "@type": "Question",
+        "name": "What is the difference between ROI and ROAS?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "ROAS (Return on Ad Spend) only looks at revenue generated per dollar spent on ads. ROI (Return on Investment) factors in all costs, including creative, management fees, and overhead, giving a more accurate picture of profitability."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Why is tracking UTM performance important?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "UTM parameters allow you to see exactly which source, medium, or campaign is driving sales. Without them, you cannot accurately attribute revenue to specific marketing efforts, leading to wasted budget."
+        }
+      }]
+    }
+    </script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #da3f0b;
+            --primary-hover: #b53409;
+            --primary-light: #fff5f2;
+            --bg: #f8fafc;
+            --text-dark: #0f172a;
+            --success: #16a34a;
+            --danger: #dc2626;
+        }
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: var(--text-dark); }
+        .hero-card { background: white; border: 1px solid #f1f5f9; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05); position: relative; overflow: hidden; }
+        .hero-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px; background-color: var(--primary); }
+        .tooltip-container { position: relative; display: inline-block; }
+        .tooltip-text { visibility: hidden; width: 220px; background-color: #1e293b; color: #fff; text-align: center; border-radius: 8px; padding: 10px; position: absolute; z-index: 50; bottom: 125%; left: 50%; margin-left: -110px; opacity: 0; transition: opacity 0.2s; font-size: 0.75rem; pointer-events: none; }
+        .tooltip-container:hover .tooltip-text { visibility: visible; opacity: 1; }
+        .animate-fade { animation: fadeIn 0.3s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+        .tool-card { transition: transform 0.2s ease, box-shadow 0.2s ease; }
+        .tool-card:hover { transform: translateY(-4px); box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
+        .prose a { color: #da3f0b; text-decoration: none; }
+        .prose a:hover { text-decoration: underline; }
+    </style>
+</head>
+
+<body class="bg-gray-50 min-h-screen flex flex-col">
+    <div id="navbar" style="min-height: 70px;"></div>
+	
+	<section class="hero-white text-black py-2 md:py-10">
+        <div class="container mx-auto px-4">
+            <nav class="flex pb-4 text-sm text-slate-500 items-center space-x-2 justify-center">
+                <a href="https://simpliconvert.com/" class="hover:text-[#da3f0b] transition-colors">Home</a>
+                <i class="fas fa-chevron-right text-[10px]"></i>
+                <a href="https://simpliconvert.com/calculator_tools/" class="hover:text-[#da3f0b] transition-colors">Calculators</a>
+                <i class="fas fa-chevron-right text-[10px]"></i>
+                <span class="text-slate-900 font-medium">UTM ROI Calculator</span>
+            </nav>
+            <div class="text-center">
+                <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-2 uppercase tracking-tight">track utm campaign performance</h1>
+                <p class="text-lg md:text-xl max-w-3xl mx-auto mb-2 text-slate-600">
+                Measure the exact profitability of your marketing channels. Calculate ROI, CPA, and net gains for specific UTM-tracked campaigns.
+                </p>
+            </div>
+        </div>
+    </section>		
+
+    <div id="calculator-app" class="w-full max-w-6xl mx-auto p-4 sm:p-6">
+        <div class="bg-white rounded-[2rem] shadow-2xl overflow-hidden border border-slate-100">
+            <header class="bg-slate-50/50 border-b border-slate-100 p-6 md:p-8 flex flex-col md:flex-row justify-between items-center gap-6">
+                <div class="text-center md:text-left">
+                  <h2 class="text-2xl font-black text-slate-800 tracking-tight flex items-center justify-center md:justify-start gap-3">
+                    <span class="bg-[#da3f0b] text-white p-2 rounded-xl text-lg shadow-lg shadow-[#da3f0b30]">
+                      <i class="fas fa-bullseye"></i>
+                    </span>
+                    Campaign Performance Analyzer
+                  </h2>
+                </div>
+                
+                <div class="relative group min-w-[140px]">
+                  <select id="currency-select" class="appearance-none w-full bg-white border border-slate-200 text-slate-700 py-2.5 pl-4 pr-10 rounded-xl text-xs font-bold focus:outline-none focus:ring-4 focus:ring-[#da3f0b15] focus:border-[#da3f0b] shadow-sm cursor-pointer">
+                    <option value="USD">USD ($)</option>
+                    <option value="EUR">EUR (€)</option>
+                    <option value="GBP">GBP (£)</option>
+                    <option value="INR">INR (₹)</option>
+                    <option value="AUD">AUD (A$)</option>
+                    <option value="CAD">CAD (C$)</option>
+                  </select>
+                  <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-slate-400">
+                    <i class="fas fa-chevron-down text-[10px]"></i>
+                  </div>
+                </div>
+            </header>
+    
+            <main class="flex flex-col lg:flex-row">
+                <div class="lg:w-[50%] p-6 md:p-10 lg:p-12 border-r border-slate-100">
+                    <div class="space-y-6">
+                        <div class="bg-slate-50 p-6 rounded-2xl border border-slate-100">
+                            <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-6"><i class="fas fa-funnel-dollar mr-2"></i>Campaign Data</h3>
+                            <div class="space-y-5">
+                                <div>
+                                    <div class="flex items-center text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">
+                                        <label>Total Campaign Cost</label>
+                                        <span class="tooltip-container ml-2">
+                                            <i class="fas fa-info-circle text-slate-300 hover:text-[#da3f0b] cursor-help text-xs"></i>
+                                            <span class="tooltip-text">Include ad spend, creative costs, and agency fees.</span>
+                                        </span>
+                                    </div>
+                                    <div class="relative rounded-xl shadow-sm">
+                                        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                            <span class="text-slate-400 font-semibold currency-symbol">$</span>
+                                        </div>
+                                        <input type="number" id="input-cost" value="500" class="block w-full rounded-xl border-slate-200 border py-3 pl-9 pr-4 focus:ring-4 focus:ring-[#da3f0b20] focus:border-[#da3f0b] sm:text-sm font-semibold text-slate-800 transition-all bg-white">
+                                    </div>
+                                </div>
+    
+                                <div>
+                                    <div class="flex items-center text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">
+                                        <label>Total Revenue Generated</label>
+                                        <span class="tooltip-container ml-2">
+                                            <i class="fas fa-info-circle text-slate-300 hover:text-[#da3f0b] cursor-help text-xs"></i>
+                                            <span class="tooltip-text">Total sales value attributed to this UTM campaign.</span>
+                                        </span>
+                                    </div>
+                                    <div class="relative rounded-xl shadow-sm">
+                                        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                            <span class="text-slate-400 font-semibold currency-symbol">$</span>
+                                        </div>
+                                        <input type="number" id="input-revenue" value="2500" class="block w-full rounded-xl border-slate-200 border py-3 pl-9 pr-4 focus:ring-4 focus:ring-[#da3f0b20] focus:border-[#da3f0b] sm:text-sm font-semibold text-slate-800 transition-all bg-white">
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <div class="flex items-center text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">
+                                        <label>Conversions / Leads</label>
+                                        <span class="tooltip-container ml-2">
+                                            <i class="fas fa-info-circle text-slate-300 hover:text-[#da3f0b] cursor-help text-xs"></i>
+                                            <span class="tooltip-text">Number of successful actions (sales, signups, etc).</span>
+                                        </span>
+                                    </div>
+                                    <div class="relative rounded-xl shadow-sm">
+                                        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                            <i class="fas fa-users text-slate-400 text-xs"></i>
+                                        </div>
+                                        <input type="number" id="input-conversions" value="50" class="block w-full rounded-xl border-slate-200 border py-3 pl-9 pr-4 focus:ring-4 focus:ring-[#da3f0b20] focus:border-[#da3f0b] sm:text-sm font-semibold text-slate-800 transition-all bg-white">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+    
+                        <div class="bg-[#da3f0b08] p-6 rounded-2xl border border-[#da3f0b15]">
+                           <h3 class="text-xs font-black text-[#da3f0b] uppercase tracking-widest mb-4"><i class="fas fa-chart-pie mr-2"></i>Quick Benchmarks</h3>
+                           <div class="grid grid-cols-2 gap-3">
+                                <button onclick="setBenchmark(1000, 5000, 100)" class="text-[10px] bg-white border border-[#da3f0b20] text-[#da3f0b] px-2 py-2 rounded-md font-bold hover:bg-[#da3f0b] hover:text-white transition-all">High Growth</button>
+                                <button onclick="setBenchmark(500, 1000, 20)" class="text-[10px] bg-white border border-[#da3f0b20] text-[#da3f0b] px-2 py-2 rounded-md font-bold hover:bg-[#da3f0b] hover:text-white transition-all">Steady State</button>
+                           </div>
+                        </div>
+                    </div>
+                </div>
+    
+                <div class="lg:w-[50%] bg-slate-50/50 p-6 md:p-10 lg:p-12 flex flex-col justify-center">
+                   <div class="space-y-6">
+                     <div class="hero-card p-8 flex flex-col items-center text-center">
+                         <p class="text-xs font-black text-[#da3f0b] uppercase tracking-[0.2em] mb-4">Campaign ROI</p>
+                         <div class="flex items-center justify-center">
+                           <span id="display-roi" class="text-5xl md:text-6xl font-black tracking-tighter leading-none text-[#16a34a]">0%</span>
+                         </div>
+                         <p class="text-sm text-slate-400 font-medium mt-4">Net Profit: <span id="display-profit" class="font-bold text-slate-700">$0.00</span></p>
+                     </div>
+    
+                     <div class="grid grid-cols-2 gap-4">
+                         <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex flex-col items-center text-center">
+                            <div class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Cost Per Lead (CPA)</div>
+                            <p id="display-cpa" class="text-xl font-extrabold text-slate-900">$0.00</p>
+                         </div>
+                         <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex flex-col items-center text-center">
+                            <div class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Revenue Per Lead</div>
+                            <p id="display-rpl" class="text-xl font-extrabold text-slate-900">$0.00</p>
+                         </div>
+                     </div>
+    
+                     <div class="bg-white rounded-xl p-6 border border-slate-100 shadow-sm">
+                         <div class="flex justify-between items-center mb-2">
+                            <span class="text-xs font-bold text-slate-400 uppercase tracking-widest">Profit Margin</span>
+                            <span id="display-margin" class="text-lg font-black text-slate-700">0%</span>
+                         </div>
+                         <div class="w-full bg-slate-100 rounded-full h-2 overflow-hidden">
+                            <div id="margin-bar" class="bg-[#da3f0b] h-2 rounded-full transition-all duration-500" style="width: 0%"></div>
+                         </div>
+                     </div>
+                   </div>
+                </div>
+            </main>
+    
+            <footer class="bg-slate-50 border-t border-slate-100 p-6 md:p-8">
+               <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+                   <div class="text-center md:text-left">
+                       <h4 class="text-sm font-bold text-slate-700 mb-1">Share this analysis</h4>
+                       <p class="text-xs text-slate-400">Help your team track performance.</p>
+                   </div>
+                   
+                   <div class="flex flex-wrap justify-center gap-3">
+                       <a href="#" onclick="shareSocial('facebook')" class="w-10 h-10 rounded-full flex items-center justify-center text-white transition-transform hover:-translate-y-1 bg-[#1877F2]"><i class="fab fa-facebook-f"></i></a>
+                       <a href="#" onclick="shareSocial('twitter')" class="w-10 h-10 rounded-full flex items-center justify-center text-white transition-transform hover:-translate-y-1 bg-[#1DA1F2]"><i class="fab fa-twitter"></i></a>
+                       <a href="#" onclick="shareSocial('linkedin')" class="w-10 h-10 rounded-full flex items-center justify-center text-white transition-transform hover:-translate-y-1 bg-[#0A66C2]"><i class="fab fa-linkedin-in"></i></a>
+                       <a href="#" onclick="shareSocial('whatsapp')" class="w-10 h-10 rounded-full flex items-center justify-center text-white transition-transform hover:-translate-y-1 bg-[#25D366]"><i class="fab fa-whatsapp"></i></a>
+                   </div>
+    
+                   <button onclick="handleBookmark()" class="flex items-center gap-2 bg-white border border-slate-200 hover:border-[#da3f0b] hover:text-[#da3f0b] text-slate-600 px-4 py-2 rounded-lg text-sm font-bold transition-all shadow-sm">
+                      <i class="fas fa-bookmark"></i> Bookmark
+                   </button>
+               </div>
+            </footer>
+        </div>
+    </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const state = {
+            currency: { code: 'USD', symbol: '$', locale: 'en-US' },
+            cost: 500,
+            revenue: 2500,
+            conversions: 50
+        };
+
+        const currencies = [
+            { code: 'USD', symbol: '$', locale: 'en-US' },
+            { code: 'EUR', symbol: '€', locale: 'de-DE' },
+            { code: 'GBP', symbol: '£', locale: 'en-GB' },
+            { code: 'INR', symbol: '₹', locale: 'en-IN' },
+            { code: 'AUD', symbol: 'A$', locale: 'en-AU' },
+            { code: 'CAD', symbol: 'C$', locale: 'en-CA' }
+        ];
+
+        const els = {
+            cost: document.getElementById('input-cost'),
+            revenue: document.getElementById('input-revenue'),
+            conversions: document.getElementById('input-conversions'),
+            currency: document.getElementById('currency-select'),
+            displayRoi: document.getElementById('display-roi'),
+            displayProfit: document.getElementById('display-profit'),
+            displayCpa: document.getElementById('display-cpa'),
+            displayRpl: document.getElementById('display-rpl'),
+            displayMargin: document.getElementById('display-margin'),
+            marginBar: document.getElementById('margin-bar'),
+            symbols: document.querySelectorAll('.currency-symbol')
+        };
+
+        function calculate() {
+            const cost = parseFloat(state.cost) || 0;
+            const revenue = parseFloat(state.revenue) || 0;
+            const conv = parseFloat(state.conversions) || 0;
+
+            const profit = revenue - cost;
+            const roi = cost > 0 ? (profit / cost) * 100 : 0;
+            const cpa = conv > 0 ? cost / conv : 0;
+            const rpl = conv > 0 ? revenue / conv : 0;
+            const margin = revenue > 0 ? (profit / revenue) * 100 : 0;
+
+            updateUI({ profit, roi, cpa, rpl, margin });
+        }
+
+        function formatMoney(amount) {
+            return new Intl.NumberFormat(state.currency.locale, {
+                style: 'currency',
+                currency: state.currency.code
+            }).format(amount);
+        }
+
+        function updateUI(data) {
+            els.displayRoi.textContent = data.roi.toFixed(1) + '%';
+            els.displayRoi.className = `text-5xl md:text-6xl font-black tracking-tighter leading-none ${data.roi >= 0 ? 'text-[#16a34a]' : 'text-[#dc2626]'}`;
+            
+            els.displayProfit.textContent = formatMoney(data.profit);
+            els.displayCpa.textContent = formatMoney(data.cpa);
+            els.displayRpl.textContent = formatMoney(data.rpl);
+            els.displayMargin.textContent = data.margin.toFixed(1) + '%';
+            els.marginBar.style.width = Math.min(Math.max(data.margin, 0), 100) + '%';
+
+            els.symbols.forEach(s => s.textContent = state.currency.symbol);
+        }
+
+        els.cost.addEventListener('input', e => { state.cost = e.target.value; calculate(); });
+        els.revenue.addEventListener('input', e => { state.revenue = e.target.value; calculate(); });
+        els.conversions.addEventListener('input', e => { state.conversions = e.target.value; calculate(); });
+        els.currency.addEventListener('change', e => {
+            state.currency = currencies.find(c => c.code === e.target.value);
+            calculate();
+        });
+
+        window.setBenchmark = (c, r, conv) => {
+            els.cost.value = c;
+            els.revenue.value = r;
+            els.conversions.value = conv;
+            state.cost = c; state.revenue = r; state.conversions = conv;
+            calculate();
+        };
+
+        window.shareSocial = (platform) => {
+            const url = encodeURIComponent(window.location.href);
+            const text = encodeURIComponent("Check out this UTM ROI Calculator!");
+            const shares = {
+                facebook: `https://www.facebook.com/sharer/sharer.php?u=${url}`,
+                twitter: `https://twitter.com/intent/tweet?url=${url}&text=${text}`,
+                linkedin: `https://www.linkedin.com/shareArticle?mini=true&url=${url}`,
+                whatsapp: `https://api.whatsapp.com/send?text=${text}%20${url}`
+            };
+            window.open(shares[platform], '_blank');
+        };
+
+        window.handleBookmark = () => alert("Press Ctrl+D (or Cmd+D) to bookmark this tool.");
+
+        calculate();
+    });
+    </script>
+
+    <section class="bg-white py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="prose prose-lg max-w-none">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">Why You Need to Track UTM Campaign Performance</h2>
+                <p class="mb-6">
+                    In the world of digital marketing, "half the money I spend on advertising is wasted; the trouble is I don't know which half." This famous quote by John Wanamaker is exactly what our <strong>UTM Campaign ROI Calculator</strong> aims to solve. By using UTM parameters, you can slice your data to see exactly which Facebook ad, email newsletter, or influencer link is actually driving profit.
+                </p>
+                <p class="mb-6">
+                    Tracking ROI isn't just about seeing a positive number; it's about identifying the <em>efficiency</em> of your capital. A campaign might generate $10,000 in revenue, but if it cost $9,500 to run, your ROI is a slim 5.2%. Meanwhile, a smaller campaign costing $500 that generates $2,000 in revenue has a 300% ROI. Our tool helps you visualize these discrepancies instantly.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">How to Calculate Marketing ROI Correctly</h2>
+                <p class="mb-6">
+                    Most marketers make the mistake of looking only at ROAS (Return on Ad Spend). While ROAS is helpful for checking ad platform efficiency, it ignores the "hidden" costs of marketing. To truly <strong>track utm campaign performance</strong>, you must factor in:
+                </p>
+                <ul class="list-disc pl-6 mb-6 space-y-2">
+                    <li><strong>Direct Ad Spend:</strong> What you paid Google, Meta, or TikTok.</li>
+                    <li><strong>Creative Costs:</strong> Fees for designers, copywriters, or video editors.</li>
+                    <li><strong>Management Fees:</strong> Agency or freelancer costs to run the campaign.</li>
+                </ul>
+                <p class="mb-6">
+                    Our calculator uses the standard ROI formula: <code>((Revenue - Cost) / Cost) * 100</code>. This gives you a clear percentage that you can compare across different channels, whether you're using an <a href="https://simpliconvert.com/affiliate-commission-calculator/">affiliate commission calculator</a> for partners or checking your <a href="https://simpliconvert.com/adsense-revenue-calculator/">AdSense revenue</a>.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Understanding CPA and Profit Margins</h2>
+                <p class="mb-6">
+                    Beyond ROI, the Cost Per Acquisition (CPA) is a vital metric. If your CPA is higher than your customer's lifetime value (LTV), your campaign is fundamentally unsustainable. By entering your conversion data into our tool, you can see exactly how much each lead is costing you. This allows you to set "bid caps" in your ad platforms with confidence.
+                </p>
+                <p class="mb-6">
+                    For those running complex businesses, understanding the net profit margin of a campaign is the final step. A high ROI is great, but if the volume is too low, it won't move the needle for your business. Use this tool alongside our <a href="https://simpliconvert.com/roi-calculator/">standard ROI calculator</a> to get a 360-degree view of your financial health.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Pro Tips for UTM Optimization</h2>
+                <p class="mb-6">
+                    To get the most out of this calculator, ensure your UTM naming conventions are consistent. Use lowercase for everything, avoid spaces, and be specific with your <code>utm_content</code> tags. This level of detail allows you to use our analyzer to compare not just "Facebook vs Google," but "Image A vs Video B" within the same campaign.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-center text-gray-900 mb-8">Marketing ROI – Frequently Asked Questions</h2>
+            <div class="space-y-4">
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg">
+                        <span>What is a good ROI for a marketing campaign?</span>
+                        <i class="fas fa-chevron-down faq-icon transition-transform"></i>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-300">
+                        <p class="p-5 pt-0 text-gray-600">A 5:1 ratio (500% ROI) is generally considered strong for most industries. A 2:1 ratio is often the break-even point once you factor in product costs and overhead.</p>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg">
+                        <span>How do UTM parameters help in ROI calculation?</span>
+                        <i class="fas fa-chevron-down faq-icon transition-transform"></i>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-300">
+                        <p class="p-5 pt-0 text-gray-600">UTMs tag your traffic sources. When a sale happens, your analytics tool (like Google Analytics) attributes that revenue to the specific UTM tag, allowing you to input that revenue into this calculator.</p>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg">
+                        <span>Can I use this for offline marketing?</span>
+                        <i class="fas fa-chevron-down faq-icon transition-transform"></i>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-300">
+                        <p class="p-5 pt-0 text-gray-600">Yes! If you use QR codes or custom vanity URLs that redirect to a UTM-tagged link, you can track the ROI of print ads, billboards, or direct mail just as easily as digital ads.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 pb-16">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-slate-200 pt-16">
+            <h2 class="text-2xl font-bold text-center text-slate-800 mb-10">Popular Tools on SimpliConvert</h2>
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                <a href="/roi-calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center shrink-0"><i class="fas fa-chart-line"></i></div>
+                    <div><h3 class="font-bold text-sm">ROI Calc</h3><p class="text-xs text-slate-500">General investment returns.</p></div>
+                </a>
+                <a href="/adsense-revenue-calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-yellow-50 text-yellow-600 flex items-center justify-center shrink-0"><i class="fab fa-google"></i></div>
+                    <div><h3 class="font-bold text-sm">AdSense Calc</h3><p class="text-xs text-slate-500">Estimate ad earnings.</p></div>
+                </a>
+                <a href="/affiliate-commission-calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-green-50 text-green-600 flex items-center justify-center shrink-0"><i class="fas fa-handshake"></i></div>
+                    <div><h3 class="font-bold text-sm">Affiliate Calc</h3><p class="text-xs text-slate-500">Track partner payouts.</p></div>
+                </a>
+                <a href="/profit-margin-calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-purple-50 text-purple-600 flex items-center justify-center shrink-0"><i class="fas fa-percentage"></i></div>
+                    <div><h3 class="font-bold text-sm">Margin Calc</h3><p class="text-xs text-slate-500">Calculate net margins.</p></div>
+                </a>
+                <a href="/break-even-calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-red-50 text-red-600 flex items-center justify-center shrink-0"><i class="fas fa-balance-scale"></i></div>
+                    <div><h3 class="font-bold text-sm">Break-Even</h3><p class="text-xs text-slate-500">Find your profit floor.</p></div>
+                </a>
+                <a href="/salary-to-hourly-calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0"><i class="fas fa-clock"></i></div>
+                    <div><h3 class="font-bold text-sm">Salary Calc</h3><p class="text-xs text-slate-500">Convert pay rates.</p></div>
+                </a>
+                <a href="/paypal-fee-calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-blue-50 text-blue-800 flex items-center justify-center shrink-0"><i class="fab fa-paypal"></i></div>
+                    <div><h3 class="font-bold text-sm">PayPal Fee</h3><p class="text-xs text-slate-500">Calculate transaction fees.</p></div>
+                </a>
+                <a href="/freelance-hourly-rate-calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0"><i class="fas fa-user-tie"></i></div>
+                    <div><h3 class="font-bold text-sm">Rate Calc</h3><p class="text-xs text-slate-500">Set your freelance price.</p></div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <div id="footer"></div>
+
+    <script>
+    async function loadComponent(url, elementId) {
+        try {
+            const response = await fetch(url);
+            const text = await response.text();
+            document.getElementById(elementId).innerHTML = text;
+        } catch (e) { console.error(e); }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        loadComponent('/components/navbar.html', 'navbar');
+        loadComponent('/components/footer.html', 'footer');
+
+        document.querySelectorAll('[data-faq-toggle]').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const ans = btn.nextElementSibling;
+                const icon = btn.querySelector('.faq-icon');
+                const isOpen = ans.style.maxHeight !== '0px' && ans.style.maxHeight !== '';
+                
+                document.querySelectorAll('.faq-answer').forEach(a => a.style.maxHeight = '0px');
+                document.querySelectorAll('.faq-icon').forEach(i => i.style.transform = 'rotate(0deg)');
+
+                if (!isOpen) {
+                    ans.style.maxHeight = ans.scrollHeight + 'px';
+                    icon.style.transform = 'rotate(180deg)';
+                }
+            });
+        });
+    });
+    </script>
+</body>
+</html>

@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Token Market Cap Calculator – Calculate FDV & Crypto Market Cap | SimpliConvert</title>
+    <meta name="description" content="Calculate the market cap and fully diluted valuation (FDV) of any cryptocurrency. Analyze token supply, price impact, and tokenomics with our free FDV calculator.">
+    <meta name="keywords" content="fdv calculator, crypto market cap, token price, fully diluted valuation calculator, cryptocurrency supply tool, tokenomics calculator, calculate crypto market cap">
+    <meta name="author" content="SimpliConvert">
+    <meta property="og:site_name" content="SimpliConvert">
+    <meta name="robots" content="index, follow">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://simpliconvert.com/token-market-cap-calculator/">
+    <meta property="og:title" content="Token Market Cap & FDV Calculator – Analyze Crypto Supply">
+    <meta property="og:description" content="Determine the true value of a crypto project. Calculate Market Cap and Fully Diluted Valuation instantly based on token price and supply.">
+    <meta property="og:image" content="https://simpliconvert.com/images/token-market-cap-og.jpg">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://simpliconvert.com/token-market-cap-calculator/">
+    <meta name="twitter:title" content="Fully Diluted Valuation (FDV) Calculator for Crypto">
+    <meta name="twitter:description" content="Free tool to calculate crypto market cap and FDV. Essential for analyzing tokenomics and potential price dilution.">
+    <meta name="twitter:image" content="https://simpliconvert.com/images/token-market-cap-og.jpg">
+
+    <link rel="canonical" href="https://simpliconvert.com/token-market-cap-calculator/">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Token Market Cap Calculator",
+      "url": "https://simpliconvert.com/token-market-cap-calculator/",
+      "description": "An advanced tool for crypto investors to calculate market capitalization and fully diluted valuation (FDV) by analyzing circulating and total token supply.",
+      "applicationCategory": "FinanceApplication",
+      "operatingSystem": "Web Browser",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "SimpliConvert",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://simpliconvert.com/logo.png"
+        }
+      }
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [{
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://simpliconvert.com/"
+      },{
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Calculator Tools",
+        "item": "https://simpliconvert.com/calculator_tools/"
+      },{
+        "@type": "ListItem",
+        "position": 3,
+        "name": "Token Market Cap Calculator",
+        "item": "https://simpliconvert.com/token-market-cap-calculator/"
+      }]
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [{
+        "@type": "Question",
+        "name": "What is the difference between Market Cap and FDV?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Market Cap is calculated as (Current Price * Circulating Supply). Fully Diluted Valuation (FDV) is (Current Price * Total/Max Supply). FDV represents the market cap if all tokens were in circulation today."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Why does FDV matter for crypto investors?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "FDV helps investors understand potential future dilution. If a project has a low circulating supply but a very high FDV, it means many tokens are yet to be released, which could put downward pressure on the price."
+        }
+      }, {
+        "@type": "Question",
+        "name": "How do I calculate the market cap of a new token?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Simply multiply the current trading price of the token by the number of tokens currently available in the public market (circulating supply)."
+        }
+      }]
+    }
+    </script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #da3f0b;
+            --primary-hover: #b53409;
+            --bg: #f8fafc;
+            --text-dark: #0f172a;
+        }
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: var(--text-dark); }
+        .hero-card { background: white; border: 1px solid #f1f5f9; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05); position: relative; overflow: hidden; }
+        .hero-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px; background-color: var(--primary); }
+        .tooltip-container { position: relative; display: inline-block; }
+        .tooltip-text {
+            visibility: hidden; width: 200px; background-color: #1e293b; color: #fff;
+            text-align: center; border-radius: 8px; padding: 8px; position: absolute;
+            z-index: 50; bottom: 125%; left: 50%; margin-left: -100px; opacity: 0;
+            transition: opacity 0.2s; font-size: 0.7rem; pointer-events: none;
+        }
+        .tooltip-container:hover .tooltip-text { visibility: visible; opacity: 1; }
+        .animate-fade { animation: fadeIn 0.3s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+        .tool-card { transition: transform 0.2s ease, box-shadow 0.2s ease; }
+        .tool-card:hover { transform: translateY(-4px); box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
+        .prose a { color: #da3f0b; text-decoration: none; }
+        .prose a:hover { text-decoration: underline; }
+    </style>
+</head>
+
+<body class="bg-gray-50 min-h-screen flex flex-col">
+    <div id="navbar" style="min-height: 70px;"></div>
+	
+	<section class="hero-white text-black py-2 md:py-10">
+        <div class="container mx-auto px-4">
+            <nav class="flex pb-4 text-sm text-slate-500 items-center space-x-2 justify-center">
+                <a href="https://simpliconvert.com/" class="hover:text-[#da3f0b] transition-colors">Home</a>
+                <i class="fas fa-chevron-right text-[10px]"></i>
+                <a href="https://simpliconvert.com/calculator_tools/" class="hover:text-[#da3f0b] transition-colors">Calculators</a>
+                <i class="fas fa-chevron-right text-[10px]"></i>
+                <span class="text-slate-900 font-medium">Token Market Cap Calculator</span>
+            </nav>
+            <div class="text-center">
+                <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-2">fully diluted valuation calculator</h1>
+                <p class="text-lg md:text-xl max-w-3xl mx-auto mb-2 text-slate-600">
+                Calculate the real value of any crypto token. Compare current market cap against fully diluted valuation (FDV) to understand supply dynamics.
+                </p>
+            </div>
+        </div>
+    </section>		
+
+    <div id="calculator-app" class="w-full max-w-6xl mx-auto p-4 sm:p-6">
+        <div class="bg-white rounded-[2rem] shadow-2xl overflow-hidden border border-slate-100">
+            <header class="bg-slate-50/50 border-b border-slate-100 p-6 md:p-8 flex flex-col md:flex-row justify-between items-center gap-6">
+                <div class="text-center md:text-left">
+                  <h2 class="text-2xl font-black text-slate-800 tracking-tight flex items-center justify-center md:justify-start gap-3">
+                    <span class="bg-[#da3f0b] text-white p-2 rounded-xl text-lg shadow-lg shadow-[#da3f0b30]">
+                      <i class="fas fa-coins"></i>
+                    </span>
+                    Tokenomics Analyzer
+                  </h2>
+                </div>
+                
+                <div class="relative group min-w-[140px]">
+                  <select id="currency-select" class="appearance-none w-full bg-white border border-slate-200 text-slate-700 py-2.5 pl-4 pr-10 rounded-xl text-xs font-bold focus:outline-none focus:ring-4 focus:ring-[#da3f0b15] focus:border-[#da3f0b] shadow-sm cursor-pointer hover:border-[#da3f0b40]">
+                    <option value="USD">USD ($)</option>
+                    <option value="EUR">EUR (€)</option>
+                    <option value="GBP">GBP (£)</option>
+                    <option value="JPY">JPY (¥)</option>
+                    <option value="AUD">AUD (A$)</option>
+                    <option value="CAD">CAD (C$)</option>
+                    <option value="INR">INR (₹)</option>
+                  </select>
+                  <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-slate-400">
+                    <i class="fas fa-chevron-down text-[10px]"></i>
+                  </div>
+                </div>
+            </header>
+    
+            <main class="flex flex-col lg:flex-row">
+                <div class="lg:w-[50%] p-6 md:p-10 lg:p-12 border-r border-slate-100">
+                    <div class="space-y-6">
+                        <div class="bg-slate-50 p-6 rounded-2xl border border-slate-100">
+                            <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-6"><i class="fas fa-tag mr-2"></i>Price & Supply</h3>
+                            
+                            <div class="mb-5">
+                                <div class="flex items-center text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">
+                                    <label>Token Price</label>
+                                    <span class="tooltip-container ml-2">
+                                        <i class="fas fa-info-circle text-slate-300 hover:text-[#da3f0b] cursor-help text-xs transition-colors"></i>
+                                        <span class="tooltip-text">Current market price of a single token.</span>
+                                    </span>
+                                </div>
+                                <div class="relative rounded-xl shadow-sm">
+                                    <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                        <span class="text-slate-400 font-semibold currency-symbol">$</span>
+                                    </div>
+                                    <input type="number" id="input-price" value="1.50" step="any" class="block w-full rounded-xl border-slate-200 border py-3 pl-9 pr-4 focus:ring-4 focus:ring-[#da3f0b20] focus:border-[#da3f0b] sm:text-sm font-semibold text-slate-800 transition-all bg-white">
+                                </div>
+                            </div>
+
+                            <div class="mb-5">
+                                <div class="flex items-center text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">
+                                    <label>Circulating Supply</label>
+                                    <span class="tooltip-container ml-2">
+                                        <i class="fas fa-info-circle text-slate-300 hover:text-[#da3f0b] cursor-help text-xs transition-colors"></i>
+                                        <span class="tooltip-text">Tokens currently available and trading in the market.</span>
+                                    </span>
+                                </div>
+                                <div class="relative rounded-xl shadow-sm">
+                                    <input type="number" id="input-circulating" value="100000000" class="block w-full rounded-xl border-slate-200 border py-3 px-4 focus:ring-4 focus:ring-[#da3f0b20] focus:border-[#da3f0b] sm:text-sm font-semibold text-slate-800 transition-all bg-white">
+                                </div>
+                            </div>
+
+                            <div class="mb-2">
+                                <div class="flex items-center text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">
+                                    <label>Total / Max Supply</label>
+                                    <span class="tooltip-container ml-2">
+                                        <i class="fas fa-info-circle text-slate-300 hover:text-[#da3f0b] cursor-help text-xs transition-colors"></i>
+                                        <span class="tooltip-text">The maximum number of tokens that will ever exist.</span>
+                                    </span>
+                                </div>
+                                <div class="relative rounded-xl shadow-sm">
+                                    <input type="number" id="input-total" value="500000000" class="block w-full rounded-xl border-slate-200 border py-3 px-4 focus:ring-4 focus:ring-[#da3f0b20] focus:border-[#da3f0b] sm:text-sm font-semibold text-slate-800 transition-all bg-white">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-[#da3f0b08] p-6 rounded-2xl border border-[#da3f0b15]">
+                            <h3 class="text-xs font-black text-[#da3f0b] uppercase tracking-widest mb-4"><i class="fas fa-lightbulb mr-2"></i>Quick Presets</h3>
+                            <div class="grid grid-cols-2 gap-2">
+                                <button onclick="applyPreset(21000000, 21000000)" class="text-[10px] bg-white border border-[#da3f0b20] text-[#da3f0b] px-3 py-2 rounded-lg font-bold hover:bg-[#da3f0b] hover:text-white transition-all">Bitcoin (Fixed)</button>
+                                <button onclick="applyPreset(120000000, 120000000)" class="text-[10px] bg-white border border-[#da3f0b20] text-[#da3f0b] px-3 py-2 rounded-lg font-bold hover:bg-[#da3f0b] hover:text-white transition-all">Ethereum (Approx)</button>
+                                <button onclick="applyPreset(450000000, 1000000000)" class="text-[10px] bg-white border border-[#da3f0b20] text-[#da3f0b] px-3 py-2 rounded-lg font-bold hover:bg-[#da3f0b] hover:text-white transition-all">Solana (Approx)</button>
+                                <button onclick="applyPreset(500000000, 1000000000)" class="text-[10px] bg-white border border-[#da3f0b20] text-[#da3f0b] px-3 py-2 rounded-lg font-bold hover:bg-[#da3f0b] hover:text-white transition-all">50% Circulating</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+    
+                <div class="lg:w-[50%] bg-slate-50/50 p-6 md:p-10 lg:p-12 flex flex-col justify-center">
+                   <div class="space-y-6">
+                     <div class="hero-card p-8 flex flex-col items-center text-center">
+                         <p class="text-xs font-black text-[#da3f0b] uppercase tracking-[0.2em] mb-4">Current Market Cap</p>
+                         <div class="flex items-center justify-center">
+                           <span id="display-mcap" class="text-4xl md:text-5xl font-black tracking-tighter leading-none text-slate-800">$150,000,000</span>
+                         </div>
+                         <p class="text-sm text-slate-400 font-medium mt-4">Based on circulating supply</p>
+                     </div>
+    
+                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                         <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex flex-col items-center text-center">
+                            <div class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Fully Diluted (FDV)</div>
+                            <p id="display-fdv" class="text-xl font-extrabold text-[#da3f0b]">$750,000,000</p>
+                            <p class="text-[10px] text-slate-400 font-medium mt-1 uppercase tracking-tight">Max Potential Value</p>
+                         </div>
+                         <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex flex-col items-center text-center">
+                            <div class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Supply Ratio</div>
+                            <p id="display-ratio" class="text-xl font-extrabold text-slate-900">20.00%</p>
+                            <p class="text-[10px] text-slate-400 font-medium mt-1 uppercase tracking-tight">Circulating / Total</p>
+                         </div>
+                     </div>
+    
+                     <div class="bg-white rounded-xl p-6 border border-slate-100 shadow-sm mt-4">
+                         <div class="flex justify-between items-center mb-2">
+                            <span class="text-xs font-bold text-slate-400 uppercase tracking-widest">Dilution Risk</span>
+                            <span id="risk-label" class="text-xs font-black px-2 py-1 rounded bg-red-100 text-red-600">HIGH</span>
+                         </div>
+                         <div class="w-full bg-slate-100 rounded-full h-2 mb-2 overflow-hidden">
+                            <div id="ratio-bar" class="bg-[#da3f0b] h-2 rounded-full transition-all duration-500" style="width: 20%"></div>
+                         </div>
+                         <p class="text-[10px] text-slate-400">
+                           <span id="locked-tokens">400,000,000</span> tokens are still locked or unminted.
+                         </p>
+                     </div>
+                   </div>
+                </div>
+            </main>
+    
+            <footer class="bg-slate-50 border-t border-slate-100 p-6 md:p-8">
+               <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+                   <div class="text-center md:text-left">
+                       <h4 class="text-sm font-bold text-slate-700 mb-1">Share this tool</h4>
+                       <p class="text-xs text-slate-400">Help others analyze tokenomics.</p>
+                   </div>
+                   
+                   <div class="flex flex-wrap justify-center gap-3">
+                       <a href="#" onclick="shareSocial('facebook')" class="w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center text-white transition-transform hover:-translate-y-1 hover:shadow-lg bg-[#1877F2]"><i class="fab fa-facebook-f"></i></a>
+                       <a href="#" onclick="shareSocial('twitter')" class="w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center text-white transition-transform hover:-translate-y-1 hover:shadow-lg bg-[#1DA1F2]"><i class="fab fa-twitter"></i></a>
+                       <a href="#" onclick="shareSocial('linkedin')" class="w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center text-white transition-transform hover:-translate-y-1 hover:shadow-lg bg-[#0A66C2]"><i class="fab fa-linkedin-in"></i></a>
+                       <a href="#" onclick="shareSocial('whatsapp')" class="w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center text-white transition-transform hover:-translate-y-1 hover:shadow-lg bg-[#25D366]"><i class="fab fa-whatsapp"></i></a>
+                       <a href="#" onclick="shareSocial('telegram')" class="w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center text-white transition-transform hover:-translate-y-1 hover:shadow-lg bg-[#0088cc]"><i class="fab fa-telegram-plane"></i></a>
+                   </div>
+    
+                   <div class="relative">
+                       <button onclick="handleBookmark()" class="flex items-center gap-2 bg-white border border-slate-200 hover:border-[#da3f0b] hover:text-[#da3f0b] text-slate-600 px-4 py-2 rounded-lg text-sm font-bold transition-all shadow-sm active:scale-95">
+                          <i class="fas fa-bookmark"></i> Bookmark
+                       </button>
+                       <div id="bookmark-toast" class="hidden absolute bottom-full mb-3 left-1/2 -translate-x-1/2 bg-slate-800 text-white text-xs py-2 px-4 rounded-lg shadow-lg whitespace-nowrap animate-fade">
+                           Press <span class="font-bold text-[#da3f0b]">Ctrl + D</span> to bookmark
+                       </div>
+                   </div>
+               </div>
+            </footer>
+        </div>
+    </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const state = {
+            currency: { code: 'USD', symbol: '$', locale: 'en-US' },
+            price: 1.50,
+            circulating: 100000000,
+            total: 500000000
+        };
+
+        const currencies = [
+            { code: 'USD', symbol: '$', locale: 'en-US' },
+            { code: 'EUR', symbol: '€', locale: 'de-DE' },
+            { code: 'GBP', symbol: '£', locale: 'en-GB' },
+            { code: 'JPY', symbol: '¥', locale: 'ja-JP' },
+            { code: 'AUD', symbol: 'A$', locale: 'en-AU' },
+            { code: 'CAD', symbol: 'C$', locale: 'en-CA' },
+            { code: 'INR', symbol: '₹', locale: 'en-IN' }
+        ];
+
+        const els = {
+            price: document.getElementById('input-price'),
+            circulating: document.getElementById('input-circulating'),
+            total: document.getElementById('input-total'),
+            currency: document.getElementById('currency-select'),
+            displayMcap: document.getElementById('display-mcap'),
+            displayFdv: document.getElementById('display-fdv'),
+            displayRatio: document.getElementById('display-ratio'),
+            ratioBar: document.getElementById('ratio-bar'),
+            riskLabel: document.getElementById('risk-label'),
+            lockedTokens: document.getElementById('locked-tokens'),
+            symbols: document.querySelectorAll('.currency-symbol')
+        };
+
+        function calculate() {
+            const price = parseFloat(state.price) || 0;
+            const circ = parseFloat(state.circulating) || 0;
+            const total = parseFloat(state.total) || circ; // Fallback to circ if total is 0
+
+            const mcap = price * circ;
+            const fdv = price * total;
+            const ratio = total > 0 ? (circ / total) * 100 : 100;
+            const locked = Math.max(0, total - circ);
+
+            updateUI(mcap, fdv, ratio, locked);
+        }
+
+        function formatMoney(amount) {
+            return new Intl.NumberFormat(state.currency.locale, {
+                style: 'currency',
+                currency: state.currency.code,
+                maximumFractionDigits: 0
+            }).format(amount);
+        }
+
+        function updateUI(mcap, fdv, ratio, locked) {
+            els.displayMcap.textContent = formatMoney(mcap);
+            els.displayFdv.textContent = formatMoney(fdv);
+            els.displayRatio.textContent = ratio.toFixed(2) + '%';
+            els.ratioBar.style.width = Math.min(100, ratio) + '%';
+            els.lockedTokens.textContent = new Intl.NumberFormat().format(locked);
+
+            if (ratio < 25) {
+                els.riskLabel.textContent = 'HIGH DILUTION RISK';
+                els.riskLabel.className = 'text-[10px] font-black px-2 py-1 rounded bg-red-100 text-red-600';
+            } else if (ratio < 75) {
+                els.riskLabel.textContent = 'MODERATE RISK';
+                els.riskLabel.className = 'text-[10px] font-black px-2 py-1 rounded bg-yellow-100 text-yellow-600';
+            } else {
+                els.riskLabel.textContent = 'LOW DILUTION RISK';
+                els.riskLabel.className = 'text-[10px] font-black px-2 py-1 rounded bg-green-100 text-green-600';
+            }
+
+            els.symbols.forEach(el => el.textContent = state.currency.symbol);
+        }
+
+        els.price.addEventListener('input', (e) => { state.price = e.target.value; calculate(); });
+        els.circulating.addEventListener('input', (e) => { state.circulating = e.target.value; calculate(); });
+        els.total.addEventListener('input', (e) => { state.total = e.target.value; calculate(); });
+        els.currency.addEventListener('change', (e) => {
+            state.currency = currencies.find(c => c.code === e.target.value);
+            calculate();
+        });
+
+        window.applyPreset = function(circ, total) {
+            state.circulating = circ;
+            state.total = total;
+            els.circulating.value = circ;
+            els.total.value = total;
+            calculate();
+        };
+
+        window.handleBookmark = function() {
+            const toast = document.getElementById('bookmark-toast');
+            toast.classList.remove('hidden');
+            setTimeout(() => toast.classList.add('hidden'), 3000);
+        };
+
+        window.shareSocial = function(platform) {
+            const url = encodeURIComponent(window.location.href);
+            const title = encodeURIComponent("Check out this Token Market Cap & FDV Calculator!");
+            let shareUrl = '';
+            switch(platform) {
+                case 'facebook': shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${url}`; break;
+                case 'twitter': shareUrl = `https://twitter.com/intent/tweet?url=${url}&text=${title}`; break;
+                case 'linkedin': shareUrl = `https://www.linkedin.com/shareArticle?mini=true&url=${url}`; break;
+                case 'whatsapp': shareUrl = `https://api.whatsapp.com/send?text=${title}%20${url}`; break;
+                case 'telegram': shareUrl = `https://t.me/share/url?url=${url}&text=${title}`; break;
+            }
+            if(shareUrl) window.open(shareUrl, '_blank');
+        };
+
+        calculate();
+    });
+    </script>
+
+    <section class="bg-white py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="prose prose-lg max-w-none prose-h2:text-gray-800 prose-p:text-gray-700">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">Understanding the Fully Diluted Valuation Calculator</h2>
+                <p class="mb-6 leading-relaxed">
+                    In the world of cryptocurrency, price alone tells only half the story. To truly understand the value of a project, investors look at market capitalization and, more importantly, the <strong>fully diluted valuation (FDV)</strong>. Our <em>fully diluted valuation calculator</em> is designed to help you bridge the gap between current market dynamics and future supply realities.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Market Cap vs. Fully Diluted Valuation (FDV)</h2>
+                <p class="mb-6 leading-relaxed">
+                    Market Capitalization is the current market value of a project's circulating supply. It is calculated by multiplying the current token price by the number of tokens available in the market. However, many projects have "locked" tokens reserved for the team, advisors, or future ecosystem rewards.
+                </p>
+                <p class="mb-6 leading-relaxed">
+                    The <strong>FDV</strong> represents the market cap if 100% of the tokens were in circulation at the current price. If a project has a Market Cap of $100 million but an FDV of $1 billion, it means only 10% of the supply is currently liquid. The remaining 90% will eventually enter the market, potentially diluting the value for current holders.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Why Tokenomics and Supply Ratios Matter</h2>
+                <p class="mb-6 leading-relaxed">
+                    Smart investors use the supply ratio (Circulating Supply / Total Supply) to gauge risk. A low supply ratio often indicates a high risk of "inflationary pressure." As more tokens are unlocked and sold, the price must face significant buying demand just to stay flat. Using our <em>fdv calculator</em>, you can instantly see this ratio and identify projects with healthier tokenomics.
+                </p>
+                <p class="mb-6 leading-relaxed">
+                    For example, Bitcoin has a very high supply ratio because most of its 21 million tokens have already been mined. In contrast, many new DeFi or Layer 1 projects launch with less than 15% of their supply, leading to massive FDVs that may not be sustainable in the long term.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">How to Use This Token Market Cap Tool</h2>
+                <ul class="list-disc pl-6 mb-6 space-y-2 text-gray-700">
+                    <li><strong>Enter Token Price:</strong> Input the current trading price from an exchange.</li>
+                    <li><strong>Input Circulating Supply:</strong> Find this on explorers like Etherscan or Solscan.</li>
+                    <li><strong>Input Total/Max Supply:</strong> This is the hard cap of the project.</li>
+                    <li><strong>Analyze Results:</strong> Review the FDV and the "Dilution Risk" gauge to make informed decisions.</li>
+                </ul>
+                <p class="mb-6 leading-relaxed">
+                    Whether you are performing a deep dive into a new altcoin or comparing the top 100 assets, this tool provides the clarity needed to avoid "FDV traps." It complements other financial tools like our <a href="https://simpliconvert.com/roi-calculator/">ROI Calculator</a> and <a href="https://simpliconvert.com/profit-margin-calculator/">Profit Margin Calculator</a> to give you a full picture of your investment portfolio.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-center text-gray-900 mb-8">Frequently Asked Questions</h2>
+            <div class="space-y-4">
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg">
+                        <span>What is a "good" FDV for a crypto project?</span>
+                        <i class="fas fa-chevron-down faq-icon transition-transform duration-300"></i>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500">
+                        <p class="p-5 pt-0 text-gray-600">There is no single "good" FDV, as it depends on the sector (DeFi, AI, L1). However, a project with an FDV significantly higher than its competitors in the same niche might be overvalued, especially if the supply ratio is low.</p>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg">
+                        <span>Can FDV be lower than Market Cap?</span>
+                        <i class="fas fa-chevron-down faq-icon transition-transform duration-300"></i>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500">
+                        <p class="p-5 pt-0 text-gray-600">No. Since Total Supply is always equal to or greater than Circulating Supply, FDV will always be equal to or greater than Market Cap.</p>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg">
+                        <span>Does a high FDV mean the price will drop?</span>
+                        <i class="fas fa-chevron-down faq-icon transition-transform duration-300"></i>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500">
+                        <p class="p-5 pt-0 text-gray-600">Not necessarily, but it means there is a high potential for dilution. If the project grows faster than the tokens are released, the price can still go up. However, it creates a "headwind" for price appreciation.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 pb-16">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-slate-200 pt-16">
+            <h2 class="text-2xl font-bold text-center text-slate-800 mb-10">Popular Tools on SimpliConvert</h2>
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+                <a href="/roi-calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center shrink-0 group-hover:bg-blue-600 group-hover:text-white transition-colors"><i class="fas fa-chart-line text-lg"></i></div>
+                    <div><h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">ROI Calc</h3><p class="text-xs text-slate-500 leading-snug">Calculate investment returns.</p></div>
+                </a>
+                <a href="/profit-margin-calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-green-50 text-green-600 flex items-center justify-center shrink-0 group-hover:bg-green-600 group-hover:text-white transition-colors"><i class="fas fa-percentage text-lg"></i></div>
+                    <div><h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Profit Margin</h3><p class="text-xs text-slate-500 leading-snug">Analyze business margins.</p></div>
+                </a>
+                <a href="/break-even-calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-red-50 text-red-600 flex items-center justify-center shrink-0 group-hover:bg-red-600 group-hover:text-white transition-colors"><i class="fas fa-balance-scale text-lg"></i></div>
+                    <div><h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Break-Even</h3><p class="text-xs text-slate-500 leading-snug">Find your break-even point.</p></div>
+                </a>
+                <a href="/salary-to-hourly-calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-slate-50 text-slate-700 flex items-center justify-center shrink-0 group-hover:bg-slate-800 group-hover:text-white transition-colors"><i class="fas fa-clock text-lg"></i></div>
+                    <div><h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Salary Calc</h3><p class="text-xs text-slate-500 leading-snug">Convert annual to hourly.</p></div>
+                </a>
+                <a href="/paypal-fee-calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-blue-50 text-blue-500 flex items-center justify-center shrink-0 group-hover:bg-blue-500 group-hover:text-white transition-colors"><i class="fab fa-paypal text-lg"></i></div>
+                    <div><h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">PayPal Fee</h3><p class="text-xs text-slate-500 leading-snug">Calculate transaction fees.</p></div>
+                </a>
+                <a href="/adsense-revenue-calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-yellow-50 text-yellow-600 flex items-center justify-center shrink-0 group-hover:bg-yellow-600 group-hover:text-white transition-colors"><i class="fas fa-ad text-lg"></i></div>
+                    <div><h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">AdSense Calc</h3><p class="text-xs text-slate-500 leading-snug">Estimate website earnings.</p></div>
+                </a>
+                <a href="/freelance-hourly-rate-calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0 group-hover:bg-emerald-600 group-hover:text-white transition-colors"><i class="fas fa-calculator text-lg"></i></div>
+                    <div><h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Rate Calc</h3><p class="text-xs text-slate-500 leading-snug">Set your freelance rates.</p></div>
+                </a>
+                <a href="/roblox-game-pass-calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-gray-50 text-gray-800 flex items-center justify-center shrink-0 group-hover:bg-gray-900 group-hover:text-white transition-colors"><i class="fas fa-gamepad text-lg"></i></div>
+                    <div><h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Roblox Calc</h3><p class="text-xs text-slate-500 leading-snug">Calculate Robux earnings.</p></div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <div id="footer"></div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // FAQ Toggle
+        const faqToggles = document.querySelectorAll('[data-faq-toggle]');
+        faqToggles.forEach(button => {
+            button.addEventListener('click', () => {
+                const answer = button.nextElementSibling;
+                const icon = button.querySelector('.faq-icon');
+                if (answer.style.maxHeight) {
+                    answer.style.maxHeight = null;
+                    icon.style.transform = 'rotate(0deg)';
+                } else {
+                    answer.style.maxHeight = answer.scrollHeight + "px";
+                    icon.style.transform = 'rotate(180deg)';
+                }
+            });
+        });
+
+        // Load Components (Mock)
+        const loadComp = (id, html) => { document.getElementById(id).innerHTML = html; };
+        // In real production, use fetch() as per template
+    });
+    </script>
+</body>
+</html>

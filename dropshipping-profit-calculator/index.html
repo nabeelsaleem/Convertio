@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Dropshipping Profit Calculator – Calculate Margins & ROAS | SimpliConvert</title>
+    <meta name="description" content="Calculate your net profit for dropshipping accurately. Factor in AliExpress product costs, shipping, ad spend, and transaction fees with our free margin calculator.">
+    <meta name="keywords" content="aliexpress dropshipping profit calculator, dropship margin, ad spend calculator, roas calculator, dropshipping break even, ecommerce profit tool">
+    <meta name="author" content="SimpliConvert">
+    <meta property="og:site_name" content="SimpliConvert">
+    <meta name="robots" content="index, follow">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://simpliconvert.com/dropshipping-profit-calculator/">
+    <meta property="og:title" content="Dropshipping Profit Calculator – Plan Your Margins">
+    <meta property="og:description" content="Stop guessing your margins. Accurately calculate dropshipping profit, ROAS, and fees for your Shopify or WooCommerce store.">
+    <meta property="og:image" content="https://simpliconvert.com/images/dropshipping-profit-calculator-og.jpg">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://simpliconvert.com/dropshipping-profit-calculator/">
+    <meta name="twitter:title" content="Dropshipping Profit Calculator – Calculate ROI & Fees">
+    <meta name="twitter:description" content="Free tool to calculate dropshipping P&L, including ad spend and transaction fees. Perfect for AliExpress sellers.">
+    <meta name="twitter:image" content="https://simpliconvert.com/images/dropshipping-profit-calculator-og.jpg">
+
+    <link rel="canonical" href="https://simpliconvert.com/dropshipping-profit-calculator/">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Dropshipping Profit Calculator",
+      "url": "https://simpliconvert.com/dropshipping-profit-calculator/",
+      "description": "A free online tool for dropshippers to calculate net profit, profit margins, and break-even ROAS while factoring in product costs and advertising spend.",
+      "applicationCategory": "FinanceApplication",
+      "operatingSystem": "Web Browser",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "SimpliConvert",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://simpliconvert.com/logo.png"
+        }
+      }
+    }
+    </script>
+
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [{
+    "@type": "ListItem",
+    "position": 1,
+    "name": "Home",
+    "item": "https://simpliconvert.com/"
+  },{
+    "@type": "ListItem",
+    "position": 2,
+    "name": "Calculator Tools",
+    "item": "https://simpliconvert.com/calculator_tools/"
+  },{
+    "@type": "ListItem",
+    "position": 3,
+    "name": "Dropshipping Profit Calculator",
+    "item": "https://simpliconvert.com/dropshipping-profit-calculator/"
+  }]
+}
+</script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [{
+        "@type": "Question",
+        "name": "What is a good profit margin for dropshipping?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "A healthy net profit margin for dropshipping typically ranges between 15% and 30%. However, this depends heavily on your niche, ad spend efficiency, and product price point."
+        }
+      }, {
+        "@type": "Question",
+        "name": "How do I calculate break-even ROAS?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Break-even ROAS is calculated as: Selling Price / (Selling Price - Total Costs excluding Ads). It tells you the minimum return on ad spend needed to not lose money on a sale."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Does this calculator include transaction fees?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. You can input percentage-based fees (like Shopify Payments or PayPal) and fixed per-transaction fees to get a precise net profit figure."
+        }
+      }]
+    }
+    </script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #da3f0b;
+            --primary-hover: #b53409;
+            --bg: #f8fafc;
+            --text-dark: #0f172a;
+            --success: #16a34a;
+            --danger: #dc2626;
+        }
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: var(--text-dark); }
+        .hero-card { background: white; border: 1px solid #f1f5f9; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05); position: relative; overflow: hidden; }
+        .hero-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px; background-color: var(--primary); }
+        .tooltip-container { position: relative; display: inline-block; }
+        .tooltip-text {
+            visibility: hidden; width: 200px; background-color: #1e293b; color: #fff;
+            text-align: center; border-radius: 8px; padding: 8px; position: absolute;
+            z-index: 50; bottom: 125%; left: 50%; margin-left: -100px; opacity: 0;
+            transition: opacity 0.2s; font-size: 0.7rem; pointer-events: none;
+        }
+        .tooltip-container:hover .tooltip-text { visibility: visible; opacity: 1; }
+        .animate-fade { animation: fadeIn 0.3s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+        .tool-card { transition: transform 0.2s ease, box-shadow 0.2s ease; }
+        .tool-card:hover { transform: translateY(-4px); box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
+    </style>
+</head>
+
+<body class="bg-gray-50 min-h-screen flex flex-col">
+    <div id="navbar" style="min-height: 70px;"></div>
+	
+	<section class="hero-white text-black py-2 md:py-10">
+        <div class="container mx-auto px-4">
+            <nav class="flex pb-4 text-sm text-slate-500 items-center space-x-2 justify-center">
+                <a href="https://simpliconvert.com/" class="hover:text-[#da3f0b] transition-colors">Home</a>
+                <i class="fas fa-chevron-right text-[10px]"></i>
+                <a href="https://simpliconvert.com/calculator_tools/" class="hover:text-[#da3f0b] transition-colors">Calculators</a>
+                <i class="fas fa-chevron-right text-[10px]"></i>
+                <span class="text-slate-900 font-medium">Dropshipping Profit Calculator</span>
+            </nav>
+            <div class="text-center">
+                <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-2">aliexpress dropshipping profit calculator</h1>
+                <p class="text-lg md:text-xl max-w-3xl mx-auto mb-2 text-slate-600">
+                Calculate your exact margins, ad spend efficiency, and net profit per sale. Factor in AliExpress costs, shipping, and payment gateway fees.
+                </p>
+            </div>
+        </div>
+    </section>		
+
+    <div id="calculator-app" class="w-full max-w-6xl mx-auto p-4 sm:p-6">
+        <div class="bg-white rounded-[2rem] shadow-2xl overflow-hidden border border-slate-100">
+            <header class="bg-slate-50/50 border-b border-slate-100 p-6 md:p-8 flex flex-col md:flex-row justify-between items-center gap-6">
+                <div class="text-center md:text-left">
+                  <h2 class="text-2xl font-black text-slate-800 tracking-tight flex items-center justify-center md:justify-start gap-3">
+                    <span class="bg-[#da3f0b] text-white p-2 rounded-xl text-lg shadow-lg shadow-[#da3f0b30]">
+                      <i class="fas fa-box-open"></i>
+                    </span>
+                    Dropship Margin & ROAS Tool
+                  </h2>
+                </div>
+                
+                <div class="relative group min-w-[140px]">
+                  <select id="currency-select" class="appearance-none w-full bg-white border border-slate-200 text-slate-700 py-2.5 pl-4 pr-10 rounded-xl text-xs font-bold focus:outline-none focus:ring-4 focus:ring-[#da3f0b15] focus:border-[#da3f0b] shadow-sm cursor-pointer">
+                    <option value="USD">USD ($)</option>
+                    <option value="EUR">EUR (€)</option>
+                    <option value="GBP">GBP (£)</option>
+                    <option value="CAD">CAD (C$)</option>
+                    <option value="AUD">AUD (A$)</option>
+                    <option value="INR">INR (₹)</option>
+                  </select>
+                  <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-slate-400">
+                    <i class="fas fa-chevron-down text-[10px]"></i>
+                  </div>
+                </div>
+            </header>
+    
+            <main class="flex flex-col lg:flex-row">
+                <div class="lg:w-[50%] p-6 md:p-10 lg:p-12 border-r border-slate-100">
+                    <div class="space-y-6">
+                        
+                        <div class="bg-slate-50 p-6 rounded-2xl border border-slate-100">
+                            <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-6"><i class="fas fa-tags mr-2"></i>Pricing & Product</h3>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="mb-5">
+                                    <label class="flex items-center text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Selling Price</label>
+                                    <div class="relative">
+                                        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none"><span class="text-slate-400 font-semibold currency-symbol">$</span></div>
+                                        <input type="number" id="input-sell-price" value="49.99" class="block w-full rounded-xl border-slate-200 border py-3 pl-9 pr-4 focus:ring-4 focus:ring-[#da3f0b20] focus:border-[#da3f0b] sm:text-sm font-semibold text-slate-800 transition-all bg-white">
+                                    </div>
+                                </div>
+                                <div class="mb-5">
+                                    <label class="flex items-center text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Product Cost (COGS)</label>
+                                    <div class="relative">
+                                        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none"><span class="text-slate-400 font-semibold currency-symbol">$</span></div>
+                                        <input type="number" id="input-product-cost" value="15.00" class="block w-full rounded-xl border-slate-200 border py-3 pl-9 pr-4 focus:ring-4 focus:ring-[#da3f0b20] focus:border-[#da3f0b] sm:text-sm font-semibold text-slate-800 transition-all bg-white">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mb-5">
+                                <label class="flex items-center text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Shipping Cost</label>
+                                <div class="relative">
+                                    <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none"><span class="text-slate-400 font-semibold currency-symbol">$</span></div>
+                                    <input type="number" id="input-shipping-cost" value="5.00" class="block w-full rounded-xl border-slate-200 border py-3 pl-9 pr-4 focus:ring-4 focus:ring-[#da3f0b20] focus:border-[#da3f0b] sm:text-sm font-semibold text-slate-800 transition-all bg-white">
+                                </div>
+                            </div>
+                        </div>
+    
+                        <div class="bg-[#da3f0b08] p-6 rounded-2xl border border-[#da3f0b15]">
+                           <h3 class="text-xs font-black text-[#da3f0b] uppercase tracking-widest mb-6"><i class="fas fa-ad mr-2"></i>Marketing & Ads</h3>
+                           <div class="mb-5">
+                                <div class="flex items-center text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">
+                                    <label>Cost Per Acquisition (CPA)</label>
+                                    <span class="tooltip-container ml-2">
+                                        <i class="fas fa-info-circle text-slate-300 hover:text-[#da3f0b] cursor-help text-xs"></i>
+                                        <span class="tooltip-text">How much you spend on ads to get ONE sale.</span>
+                                    </span>
+                                </div>
+                                <div class="relative">
+                                    <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none"><span class="text-slate-400 font-semibold currency-symbol">$</span></div>
+                                    <input type="number" id="input-cpa" value="10.00" class="block w-full rounded-xl border-slate-200 border py-3 pl-9 pr-4 focus:ring-4 focus:ring-[#da3f0b20] focus:border-[#da3f0b] sm:text-sm font-semibold text-slate-800 transition-all bg-white">
+                                </div>
+                           </div>
+                        </div>
+    
+                        <div class="p-2">
+                           <button onclick="toggleFees()" class="text-xs font-bold text-slate-400 flex items-center gap-2 hover:text-[#da3f0b] transition-colors">
+                             <i class="fas fa-sliders-h"></i> Transaction Fees & Misc (Advanced)
+                           </button>
+                           <div id="fee-section" class="hidden grid grid-cols-1 md:grid-cols-2 gap-4 mt-4 animate-fade">
+                                <div class="mb-5">
+                                    <label class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-2 block">Gateway Fee (%)</label>
+                                    <div class="relative">
+                                        <input type="number" id="input-fee-percent" value="2.9" class="block w-full rounded-xl border-slate-200 border py-3 pl-4 pr-12 focus:ring-4 focus:ring-[#da3f0b20] focus:border-[#da3f0b] sm:text-sm font-semibold text-slate-800 transition-all bg-white">
+                                        <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none"><span class="text-slate-400 font-semibold">%</span></div>
+                                    </div>
+                                </div>
+                                <div class="mb-5">
+                                    <label class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-2 block">Fixed Fee (per sale)</label>
+                                    <div class="relative">
+                                        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none"><span class="text-slate-400 font-semibold currency-symbol">$</span></div>
+                                        <input type="number" id="input-fee-fixed" value="0.30" class="block w-full rounded-xl border-slate-200 border py-3 pl-9 pr-4 focus:ring-4 focus:ring-[#da3f0b20] focus:border-[#da3f0b] sm:text-sm font-semibold text-slate-800 transition-all bg-white">
+                                    </div>
+                                </div>
+                           </div>
+                        </div>
+                    </div>
+                </div>
+    
+                <div class="lg:w-[50%] bg-slate-50/50 p-6 md:p-10 lg:p-12 flex flex-col justify-center">
+                   <div class="space-y-6">
+                     
+                     <div class="hero-card p-8 flex flex-col items-center text-center">
+                         <p class="text-xs font-black text-[#da3f0b] uppercase tracking-[0.2em] mb-4">Net Profit Per Sale</p>
+                         <div class="flex items-center justify-center">
+                           <span id="display-profit" class="text-5xl md:text-6xl font-black tracking-tighter leading-none text-[#16a34a]">$0.00</span>
+                         </div>
+                         <p class="text-sm text-slate-400 font-medium mt-4">Profit Margin: <span id="display-margin">0.00</span>%</p>
+                     </div>
+    
+                     <div class="grid grid-cols-2 gap-4">
+                         <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex flex-col items-center text-center">
+                            <div class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Total Costs</div>
+                            <p id="display-total-costs" class="text-xl font-extrabold text-slate-900">$0.00</p>
+                            <p class="text-[10px] text-slate-400 font-medium mt-1 uppercase tracking-tight">Per Unit</p>
+                         </div>
+                         <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex flex-col items-center text-center">
+                            <div class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Current ROAS</div>
+                            <p id="display-roas" class="text-xl font-extrabold text-slate-900">0.00</p>
+                            <p class="text-[10px] text-slate-400 font-medium mt-1 uppercase tracking-tight">Ad Efficiency</p>
+                         </div>
+                     </div>
+    
+                     <div class="bg-white rounded-xl p-6 border border-slate-100 shadow-sm mt-4">
+                         <div class="flex justify-between items-center mb-2">
+                            <span class="text-xs font-bold text-slate-400 uppercase tracking-widest">Break-Even ROAS</span>
+                            <span id="display-breakeven-roas" class="text-lg font-black text-slate-700">0.00</span>
+                         </div>
+                         <div class="w-full bg-slate-100 rounded-full h-2 mb-2 overflow-hidden">
+                            <div id="roas-progress" class="bg-[#da3f0b] h-2 rounded-full transition-all duration-500" style="width: 50%"></div>
+                         </div>
+                         <p class="text-[10px] text-slate-400">
+                           You need a ROAS of <strong id="display-breakeven-roas-sm">0.00</strong> to cover all costs including ads.
+                         </p>
+                     </div>
+                   </div>
+                </div>
+            </main>
+    
+            <footer class="bg-slate-50 border-t border-slate-100 p-6 md:p-8">
+               <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+                   <div class="text-center md:text-left">
+                       <h4 class="text-sm font-bold text-slate-700 mb-1">Share this calculator</h4>
+                       <p class="text-xs text-slate-400">Help other dropshippers scale.</p>
+                   </div>
+                   
+                   <div class="flex flex-wrap justify-center gap-3">
+                       <a href="#" onclick="shareSocial('facebook')" class="w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center text-white transition-transform hover:-translate-y-1 hover:shadow-lg bg-[#1877F2]"><i class="fab fa-facebook-f"></i></a>
+                       <a href="#" onclick="shareSocial('twitter')" class="w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center text-white transition-transform hover:-translate-y-1 hover:shadow-lg bg-[#1DA1F2]"><i class="fab fa-twitter"></i></a>
+                       <a href="#" onclick="shareSocial('whatsapp')" class="w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center text-white transition-transform hover:-translate-y-1 hover:shadow-lg bg-[#25D366]"><i class="fab fa-whatsapp"></i></a>
+                       <a href="#" onclick="shareSocial('telegram')" class="w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center text-white transition-transform hover:-translate-y-1 hover:shadow-lg bg-[#0088cc]"><i class="fab fa-telegram-plane"></i></a>
+                   </div>
+    
+                   <div class="relative">
+                       <button onclick="handleBookmark()" class="flex items-center gap-2 bg-white border border-slate-200 hover:border-[#da3f0b] hover:text-[#da3f0b] text-slate-600 px-4 py-2 rounded-lg text-sm font-bold transition-all shadow-sm active:scale-95">
+                          <i class="fas fa-bookmark"></i> Bookmark
+                       </button>
+                       <div id="bookmark-toast" class="hidden absolute bottom-full mb-3 left-1/2 -translate-x-1/2 bg-slate-800 text-white text-xs py-2 px-4 rounded-lg shadow-lg whitespace-nowrap animate-fade">
+                           Press <span class="font-bold text-[#da3f0b]">Ctrl + D</span> to bookmark
+                       </div>
+                   </div>
+               </div>
+            </footer>
+        </div>
+    </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const state = {
+            currency: { code: 'USD', symbol: '$', locale: 'en-US' },
+            sellPrice: 49.99,
+            productCost: 15.00,
+            shippingCost: 5.00,
+            cpa: 10.00,
+            feePercent: 2.9,
+            feeFixed: 0.30
+        };
+
+        const currencies = [
+            { code: 'USD', symbol: '$', locale: 'en-US' },
+            { code: 'EUR', symbol: '€', locale: 'de-DE' },
+            { code: 'GBP', symbol: '£', locale: 'en-GB' },
+            { code: 'CAD', symbol: 'C$', locale: 'en-CA' },
+            { code: 'AUD', symbol: 'A$', locale: 'en-AU' },
+            { code: 'INR', symbol: '₹', locale: 'en-IN' }
+        ];
+
+        const els = {
+            inputs: {
+                sellPrice: document.getElementById('input-sell-price'),
+                productCost: document.getElementById('input-product-cost'),
+                shippingCost: document.getElementById('input-shipping-cost'),
+                cpa: document.getElementById('input-cpa'),
+                feePercent: document.getElementById('input-fee-percent'),
+                feeFixed: document.getElementById('input-fee-fixed'),
+                currency: document.getElementById('currency-select')
+            },
+            displays: {
+                profit: document.getElementById('display-profit'),
+                margin: document.getElementById('display-margin'),
+                totalCosts: document.getElementById('display-total-costs'),
+                roas: document.getElementById('display-roas'),
+                breakevenRoas: document.getElementById('display-breakeven-roas'),
+                breakevenRoasSm: document.getElementById('display-breakeven-roas-sm'),
+                roasProgress: document.getElementById('roas-progress'),
+                symbols: document.querySelectorAll('.currency-symbol')
+            }
+        };
+
+        function calculate() {
+            const sell = parseFloat(state.sellPrice) || 0;
+            const cost = parseFloat(state.productCost) || 0;
+            const ship = parseFloat(state.shippingCost) || 0;
+            const cpa = parseFloat(state.cpa) || 0;
+            const fPct = parseFloat(state.feePercent) || 0;
+            const fFix = parseFloat(state.feeFixed) || 0;
+
+            const gatewayFee = (sell * (fPct / 100)) + fFix;
+            const totalCosts = cost + ship + cpa + gatewayFee;
+            const netProfit = sell - totalCosts;
+            const margin = sell > 0 ? (netProfit / sell) * 100 : 0;
+            const roas = cpa > 0 ? (sell / cpa) : 0;
+            
+            // Break-even ROAS = Selling Price / (Selling Price - (Product Cost + Shipping + Gateway Fees))
+            const grossMarginPerUnit = sell - (cost + ship + gatewayFee);
+            const breakevenRoas = grossMarginPerUnit > 0 ? (sell / grossMarginPerUnit) : 0;
+
+            updateUI({ netProfit, margin, totalCosts, roas, breakevenRoas });
+        }
+
+        function formatMoney(amount) {
+            return new Intl.NumberFormat(state.currency.locale, {
+                style: 'currency',
+                currency: state.currency.code,
+            }).format(amount);
+        }
+
+        function updateUI(data) {
+            els.displays.profit.textContent = formatMoney(data.netProfit);
+            els.displays.profit.className = `text-5xl md:text-6xl font-black tracking-tighter leading-none ${data.netProfit >= 0 ? 'text-[#16a34a]' : 'text-[#dc2626]'}`;
+            
+            els.displays.margin.textContent = data.margin.toFixed(2);
+            els.displays.totalCosts.textContent = formatMoney(data.totalCosts);
+            els.displays.roas.textContent = data.roas.toFixed(2);
+            els.displays.breakevenRoas.textContent = data.breakevenRoas.toFixed(2);
+            els.displays.breakevenRoasSm.textContent = data.breakevenRoas.toFixed(2);
+
+            // Progress bar logic
+            const progress = data.breakevenRoas > 0 ? Math.min((data.roas / data.breakevenRoas) * 100, 100) : 0;
+            els.displays.roasProgress.style.width = `${progress}%`;
+            els.displays.roasProgress.style.backgroundColor = data.roas >= data.breakevenRoas ? '#16a34a' : '#da3f0b';
+
+            els.displays.symbols.forEach(el => el.textContent = state.currency.symbol);
+        }
+
+        function addInputListener(key, element) {
+            element.addEventListener('input', (e) => {
+                state[key] = e.target.value;
+                calculate();
+            });
+        }
+
+        Object.keys(els.inputs).forEach(key => {
+            if (key !== 'currency') addInputListener(key, els.inputs[key]);
+        });
+
+        els.inputs.currency.addEventListener('change', (e) => {
+            state.currency = currencies.find(c => c.code === e.target.value);
+            calculate();
+        });
+
+        window.toggleFees = function() {
+            document.getElementById('fee-section').classList.toggle('hidden');
+        };
+
+        window.handleBookmark = function() {
+            const toast = document.getElementById('bookmark-toast');
+            toast.classList.remove('hidden');
+            setTimeout(() => toast.classList.add('hidden'), 3000);
+        };
+
+        window.shareSocial = function(platform) {
+             const url = encodeURIComponent(window.location.href);
+             const title = encodeURIComponent("Check out this Dropshipping Profit Calculator!");
+             let shareUrl = '';
+             switch(platform) {
+                case 'facebook': shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${url}`; break;
+                case 'twitter': shareUrl = `https://twitter.com/intent/tweet?url=${url}&text=${title}`; break;
+                case 'whatsapp': shareUrl = `https://api.whatsapp.com/send?text=${title}%20${url}`; break;
+                case 'telegram': shareUrl = `https://t.me/share/url?url=${url}&text=${title}`; break;
+             }
+             if(shareUrl) window.open(shareUrl, '_blank');
+        };
+
+        calculate();
+    });
+    </script>
+
+    <section class="bg-white py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="prose prose-lg max-w-none prose-h2:text-gray-800 prose-p:text-gray-700">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">Master Your Margins with the AliExpress Dropshipping Profit Calculator</h2>
+                <p class="mb-6 leading-relaxed">
+                    Success in e-commerce isn't about how much revenue you generate; it's about how much profit you keep. For AliExpress sellers, the <strong>aliexpress dropshipping profit calculator</strong> is an essential tool to navigate the thin line between scaling a winner and burning through your budget. By accurately tracking every cent—from the initial product cost to the final transaction fee—you can make data-driven decisions that protect your bottom line.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Why Dropshippers Fail: The Hidden Cost Trap</h2>
+                <p class="mb-6 leading-relaxed">
+                    Many beginners look at a product costing $10 and sell it for $30, assuming a $20 profit. However, once you factor in $5 for shipping, a $12 Cost Per Acquisition (CPA) on Facebook Ads, and Shopify's transaction fees, that "profit" quickly vanishes. Our tool helps you visualize these <strong>dropship margins</strong> before you even launch a campaign.
+                </p>
+                <p class="mb-6 leading-relaxed">
+                    Using a dedicated <a href="https://simpliconvert.com/profit-margin-calculator/" class="text-[#da3f0b] hover:underline">profit margin calculator</a> allows you to see the impact of small changes. For instance, increasing your price by just $2 or finding a supplier who offers shipping for $1 less can drastically improve your monthly ROI.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Understanding ROAS and Break-Even Points</h2>
+                <p class="mb-6 leading-relaxed">
+                    In the world of paid advertising, ROAS (Return on Ad Spend) is king. But what is a "good" ROAS? It depends entirely on your margins. Our <strong>roas calculator</strong> functionality determines your "Break-Even ROAS"—the exact point where your ad spend equals your gross profit. 
+                </p>
+                <ul class="list-disc pl-6 mb-6 space-y-2 text-gray-700">
+                    <li><strong>Below Break-Even:</strong> You are losing money on every sale. Stop and optimize.</li>
+                    <li><strong>At Break-Even:</strong> You are acquiring customers for free (great for building an email list).</li>
+                    <li><strong>Above Break-Even:</strong> You are profitable and ready to scale your budget.</li>
+                </ul>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">How to Scale Your Dropshipping Business</h2>
+                <p class="mb-6 leading-relaxed">
+                    Once you have a product with a healthy margin, use the <strong>ad spend calculator</strong> logic to determine how much you can afford to pay for a customer. If your break-even CPA is $20, and you are currently acquiring customers for $12, you have an $8 profit buffer. This knowledge gives you the confidence to increase your daily ad budget without fear.
+                </p>
+                <p class="mb-6 leading-relaxed">
+                    Don't forget to account for the <a href="https://simpliconvert.com/roi-calculator/" class="text-[#da3f0b] hover:underline">ROI</a> of your entire operation. This includes monthly software subscriptions, virtual assistants, and potential returns. A disciplined approach to numbers is what separates professional sellers from hobbyists.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Final Tips for Maximum Profitability</h2>
+                <ul class="list-disc pl-6 mb-6 space-y-2 text-gray-700">
+                    <li><strong>Negotiate with Suppliers:</strong> Once you hit 10+ orders a day, ask for a discount.</li>
+                    <li><strong>Upsell and Cross-sell:</strong> Increase your Average Order Value (AOV) to offset high ad costs.</li>
+                    <li><strong>Monitor Gateway Fees:</strong> PayPal and Stripe fees add up; always include them in your <a href="https://simpliconvert.com/break-even-calculator/" class="text-[#da3f0b] hover:underline">break-even analysis</a>.</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-center text-gray-900 mb-8">Frequently Asked Questions</h2>
+            <div class="space-y-4">
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>How do I calculate my net profit?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">Net Profit = Selling Price - (Product Cost + Shipping + Ad Spend + Transaction Fees). Our calculator automates this for you.</p>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>What is a "Break-Even ROAS"?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">It is the minimum Return on Ad Spend you need to achieve to cover all your costs. If your ROAS is higher than this number, you are making a profit.</p>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>Should I include monthly Shopify fees?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">While this calculator focuses on per-sale profit, you should eventually subtract fixed monthly costs (like the $39 Shopify plan) from your total monthly net profit to see your true business earnings.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 pb-16">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-slate-200 pt-16">
+            <h2 class="text-2xl font-bold text-center text-slate-800 mb-10">Popular Tools on SimpliConvert</h2>
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+                <a href="/profit-margin-calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0 group-hover:bg-emerald-600 group-hover:text-white transition-colors"><i class="fas fa-chart-pie text-lg"></i></div>
+                    <div><h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Margin Calc</h3><p class="text-xs text-slate-500 leading-snug">Calculate gross and net margins.</p></div>
+                </a>
+                <a href="/break-even-calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center shrink-0 group-hover:bg-blue-600 group-hover:text-white transition-colors"><i class="fas fa-balance-scale text-lg"></i></div>
+                    <div><h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Break-Even</h3><p class="text-xs text-slate-500 leading-snug">Find your sales safety point.</p></div>
+                </a>
+                <a href="/roi-calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-purple-50 text-purple-600 flex items-center justify-center shrink-0 group-hover:bg-purple-600 group-hover:text-white transition-colors"><i class="fas fa-hand-holding-usd text-lg"></i></div>
+                    <div><h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">ROI Calc</h3><p class="text-xs text-slate-500 leading-snug">Measure investment returns.</p></div>
+                </a>
+                <a href="/paypal-fee-calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-blue-50 text-blue-800 flex items-center justify-center shrink-0 group-hover:bg-blue-800 group-hover:text-white transition-colors"><i class="fab fa-paypal text-lg"></i></div>
+                    <div><h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">PayPal Fee</h3><p class="text-xs text-slate-500 leading-snug">Calculate merchant fees.</p></div>
+                </a>
+                <a href="/stripe-fee-calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0 group-hover:bg-indigo-600 group-hover:text-white transition-colors"><i class="fab fa-stripe-s text-lg"></i></div>
+                    <div><h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Stripe Fee</h3><p class="text-xs text-slate-500 leading-snug">Estimate Stripe processing costs.</p></div>
+                </a>
+                <a href="/amazon-fba-calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-orange-50 text-orange-600 flex items-center justify-center shrink-0 group-hover:bg-orange-600 group-hover:text-white transition-colors"><i class="fab fa-amazon text-lg"></i></div>
+                    <div><h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Amazon FBA</h3><p class="text-xs text-slate-500 leading-snug">Calculate FBA seller fees.</p></div>
+                </a>
+                <a href="/freelance-hourly-rate-calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-slate-50 text-slate-800 flex items-center justify-center shrink-0 group-hover:bg-slate-900 group-hover:text-white transition-colors"><i class="fas fa-clock text-lg"></i></div>
+                    <div><h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">Rate Calc</h3><p class="text-xs text-slate-500 leading-snug">Set your freelance pricing.</p></div>
+                </a>
+                <a href="/adsense-revenue-calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#da3f0b] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-yellow-50 text-yellow-600 flex items-center justify-center shrink-0 group-hover:bg-yellow-600 group-hover:text-white transition-colors"><i class="fas fa-ad text-lg"></i></div>
+                    <div><h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#da3f0b]">AdSense Calc</h3><p class="text-xs text-slate-500 leading-snug">Estimate website ad earnings.</p></div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <div id="footer"></div>
+
+    <script>
+    async function loadComponent(url, elementId, callback) {
+        try {
+            const response = await fetch(url);
+            const text = await response.text();
+            const element = document.getElementById(elementId);
+            if (element) {
+                element.innerHTML = text;
+                if (callback) callback();
+            }
+        } catch (error) {
+            console.error('Error loading component:', error);
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        loadComponent('/components/navbar.html', 'navbar');
+        loadComponent('/components/footer.html', 'footer', () => {
+            const year = document.getElementById('current-year');
+            if(year) year.textContent = new Date().getFullYear();
+        });
+        
+        const faqToggles = document.querySelectorAll('[data-faq-toggle]');
+        faqToggles.forEach(button => {
+            button.addEventListener('click', () => {
+                const answer = button.nextElementSibling;
+                const icon = button.querySelector('.faq-icon');
+                const isOpen = answer.style.maxHeight;
+                
+                faqToggles.forEach(b => {
+                    b.nextElementSibling.style.maxHeight = null;
+                    b.querySelector('.faq-icon').classList.add('-rotate-90');
+                });
+
+                if (!isOpen) {
+                    answer.style.maxHeight = answer.scrollHeight + "px";
+                    icon.classList.remove('-rotate-90');
+                }
+            });
+        });
+    });
+    </script>
+</body>
+</html>
