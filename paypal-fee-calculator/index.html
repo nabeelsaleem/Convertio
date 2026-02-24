@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>PayPal Fee Calculator – Calculate Goods & Services Fees | SimpliConvert</title>
+    <meta name="description" content="Calculate PayPal transaction fees instantly. Find out exactly how much you will receive or how much to ask for to cover PayPal Goods and Services fees for domestic and international payments.">
+    <meta name="keywords" content="paypal goods and services fee calculator, paypal transaction fee, receive money paypal, international paypal fees, paypal fee tool, calculate paypal deduction">
+    <meta name="author" content="SimpliConvert">
+    <meta property="og:site_name" content="SimpliConvert">
+    <meta name="robots" content="index, follow">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://simpliconvert.com/paypal-fee-calculator/">
+    <meta property="og:title" content="PayPal Fee Calculator – Calculate Goods & Services Fees">
+    <meta property="og:description" content="Stop guessing your PayPal deductions. Accurately calculate fees for domestic and international transactions.">
+    <meta property="og:image" content="https://simpliconvert.com/images/paypal-fee-calculator-og.jpg">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://simpliconvert.com/paypal-fee-calculator/">
+    <meta name="twitter:title" content="PayPal Fee Calculator – Calculate Transaction Fees">
+    <meta name="twitter:description" content="Free tool to calculate PayPal fees. Know exactly what you'll receive after PayPal takes its cut.">
+    <meta name="twitter:image" content="https://simpliconvert.com/images/paypal-fee-calculator-og.jpg">
+
+    <link rel="canonical" href="https://simpliconvert.com/paypal-fee-calculator/">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "PayPal Fee Calculator",
+      "url": "https://simpliconvert.com/paypal-fee-calculator/",
+      "description": "A free online tool to calculate PayPal transaction fees for Goods and Services, including domestic and international rates.",
+      "applicationCategory": "FinanceApplication",
+      "operatingSystem": "Web Browser",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "SimpliConvert",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://simpliconvert.com/logo.png"
+        }
+      }
+    }
+    </script>
+
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [{
+    "@type": "ListItem",
+    "position": 1,
+    "name": "Home",
+    "item": "https://simpliconvert.com/"
+  },{
+    "@type": "ListItem",
+    "position": 2,
+    "name": "Calculator Tools",
+    "item": "https://simpliconvert.com/calculator_tools/"
+  },{
+    "@type": "ListItem",
+    "position": 3,
+    "name": "PayPal Fee Calculator",
+    "item": "https://simpliconvert.com/paypal-fee-calculator/"
+  }]
+}
+</script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [{
+        "@type": "Question",
+        "name": "What is the PayPal Goods and Services fee?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "As of the latest update, the standard PayPal fee for domestic Goods and Services transactions in the US is 2.99% plus a fixed fee of $0.49. International transactions typically incur a higher percentage, often around 4.49% plus a fixed fee."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Who pays the PayPal transaction fee?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "In a Goods and Services transaction, the seller (the person receiving the money) pays the fee. The sender is not charged an additional fee by PayPal, but the recipient receives the amount minus the transaction cost."
+        }
+      }, {
+        "@type": "Question",
+        "name": "How do I calculate how much to ask for to receive a specific amount?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "To receive a specific net amount, use the formula: (Target Amount + Fixed Fee) / (1 - Percentage Fee). Our calculator provides this 'Amount to Invoice' automatically."
+        }
+      }]
+    }
+    </script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #da3f0b;
+            --primary-hover: #b53409;
+            --bg: #f8fafc;
+            --text-dark: #0f172a;
+        }
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: var(--text-dark); }
+        .hero-card { background: white; border: 1px solid #f1f5f9; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05); position: relative; overflow: hidden; }
+        .hero-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px; background-color: var(--primary); }
+        .tooltip-container { position: relative; display: inline-block; }
+        .tooltip-text { visibility: hidden; width: 200px; background-color: #1e293b; color: #fff; text-align: center; border-radius: 8px; padding: 8px; position: absolute; z-index: 50; bottom: 125%; left: 50%; margin-left: -100px; opacity: 0; transition: opacity 0.2s; font-size: 0.7rem; pointer-events: none; }
+        .tooltip-container:hover .tooltip-text { visibility: visible; opacity: 1; }
+        .animate-fade { animation: fadeIn 0.3s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+        .tool-card { transition: transform 0.2s ease, box-shadow 0.2s ease; }
+        .tool-card:hover { transform: translateY(-4px); box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
+    </style>
+</head>
+
+<body class="bg-gray-50 min-h-screen flex flex-col">
+    <div id="navbar" style="min-height: 70px;"></div>
+	
+	<section class="hero-white text-black py-2 md:py-10">
+        <div class="container mx-auto px-4">
+            <nav class="flex pb-4 text-sm text-slate-500 items-center space-x-2 justify-center">
+                <a href="https://simpliconvert.com/" class="hover:text-[#da3f0b] transition-colors">Home</a>
+                <i class="fas fa-chevron-right text-[10px]"></i>
+                <a href="https://simpliconvert.com/calculator_tools/" class="hover:text-[#da3f0b] transition-colors">Calculators</a>
+                <i class="fas fa-chevron-right text-[10px]"></i>
+                <span class="text-slate-900 font-medium">PayPal Fee Calculator</span>
+            </nav>
+            <div class="text-center">
+                <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-2 uppercase tracking-tight">paypal goods and services fee calculator</h1>
+                <p class="text-lg md:text-xl max-w-3xl mx-auto mb-2 text-slate-600">
+                Calculate exactly how much you'll receive after PayPal's transaction fees. Support for domestic, international, and custom rates.
+                </p>
+            </div>
+        </div>
+    </section>		
+
+    <div id="calculator-app" class="w-full max-w-6xl mx-auto p-4 sm:p-6">
+        <div class="bg-white rounded-[2rem] shadow-2xl overflow-hidden border border-slate-100">
+            <header class="bg-slate-50/50 border-b border-slate-100 p-6 md:p-8 flex flex-col md:flex-row justify-between items-center gap-6">
+                <div class="text-center md:text-left">
+                  <h2 class="text-2xl font-black text-slate-800 tracking-tight flex items-center justify-center md:justify-start gap-3">
+                    <span class="bg-[#da3f0b] text-white p-2 rounded-xl text-lg shadow-lg shadow-[#da3f0b30]">
+                      <i class="fab fa-paypal"></i>
+                    </span>
+                    PayPal Transaction Fee Estimator
+                  </h2>
+                </div>
+                
+                <div class="relative group min-w-[140px]">
+                  <select id="currency-select" class="appearance-none w-full bg-white border border-slate-200 text-slate-700 py-2.5 pl-4 pr-10 rounded-xl text-xs font-bold focus:outline-none focus:ring-4 focus:ring-[#da3f0b15] focus:border-[#da3f0b] shadow-sm cursor-pointer">
+                    <option value="USD">USD ($)</option>
+                    <option value="EUR">EUR (€)</option>
+                    <option value="GBP">GBP (£)</option>
+                    <option value="CAD">CAD (C$)</option>
+                    <option value="AUD">AUD (A$)</option>
+                    <option value="JPY">JPY (¥)</option>
+                  </select>
+                  <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-slate-400">
+                    <i class="fas fa-chevron-down text-[10px]"></i>
+                  </div>
+                </div>
+            </header>
+    
+            <main class="flex flex-col lg:flex-row">
+                <div class="lg:w-[50%] p-6 md:p-10 lg:p-12 border-r border-slate-100">
+                    <div class="space-y-6">
+                        <div class="bg-slate-50 p-6 rounded-2xl border border-slate-100">
+                            <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-6"><i class="fas fa-calculator mr-2"></i>Transaction Details</h3>
+                            
+                            <div class="mb-5">
+                                <div class="flex items-center text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">
+                                    <label>Amount to Calculate</label>
+                                    <span class="tooltip-container ml-2">
+                                        <i class="fas fa-info-circle text-slate-300 hover:text-[#da3f0b] cursor-help text-xs"></i>
+                                        <span class="tooltip-text">The total amount being sent or the amount you want to receive.</span>
+                                    </span>
+                                </div>
+                                <div class="relative rounded-xl shadow-sm">
+                                    <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                        <span class="text-slate-400 font-semibold currency-symbol">$</span>
+                                    </div>
+                                    <input type="number" id="input-amount" value="100" class="block w-full rounded-xl border-slate-200 border py-3 pl-9 pr-4 focus:ring-4 focus:ring-[#da3f0b20] focus:border-[#da3f0b] sm:text-sm font-semibold text-slate-800 transition-all bg-white" placeholder="0.00">
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-2 gap-4">
+                                <div class="mb-5">
+                                    <div class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Fee Rate (%)</div>
+                                    <div class="relative rounded-xl shadow-sm">
+                                        <input type="number" id="input-fee-percent" value="2.99" step="0.01" class="block w-full rounded-xl border-slate-200 border py-3 pl-4 pr-10 focus:ring-4 focus:ring-[#da3f0b20] focus:border-[#da3f0b] sm:text-sm font-semibold text-slate-800 transition-all bg-white">
+                                        <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none"><span class="text-slate-400 font-semibold">%</span></div>
+                                    </div>
+                                </div>
+                                <div class="mb-5">
+                                    <div class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Fixed Fee</div>
+                                    <div class="relative rounded-xl shadow-sm">
+                                        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                            <span class="text-slate-400 font-semibold currency-symbol">$</span>
+                                        </div>
+                                        <input type="number" id="input-fixed-fee" value="0.49" step="0.01" class="block w-full rounded-xl border-slate-200 border py-3 pl-9 pr-4 focus:ring-4 focus:ring-[#da3f0b20] focus:border-[#da3f0b] sm:text-sm font-semibold text-slate-800 transition-all bg-white">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-[#da3f0b08] p-6 rounded-2xl border border-[#da3f0b15]">
+                           <h3 class="text-xs font-black text-[#da3f0b] uppercase tracking-widest mb-4"><i class="fas fa-bolt mr-2"></i>Quick Presets</h3>
+                           <div class="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                               <button onclick="applyPreset(2.99, 0.49)" class="text-[10px] bg-white border border-[#da3f0b20] text-[#da3f0b] px-2 py-2 rounded-md font-bold hover:bg-[#da3f0b] hover:text-white transition-all">US Domestic (2.99%)</button>
+                               <button onclick="applyPreset(4.49, 0.49)" class="text-[10px] bg-white border border-[#da3f0b20] text-[#da3f0b] px-2 py-2 rounded-md font-bold hover:bg-[#da3f0b] hover:text-white transition-all">International (4.49%)</button>
+                               <button onclick="applyPreset(1.90, 0.10)" class="text-[10px] bg-white border border-[#da3f0b20] text-[#da3f0b] px-2 py-2 rounded-md font-bold hover:bg-[#da3f0b] hover:text-white transition-all">QR Code (1.90%)</button>
+                           </div>
+                        </div>
+                    </div>
+                </div>
+    
+                <div class="lg:w-[50%] bg-slate-50/50 p-6 md:p-10 lg:p-12 flex flex-col justify-center">
+                   <div class="space-y-6">
+                     <div class="hero-card p-8 flex flex-col items-center text-center">
+                         <p class="text-xs font-black text-[#da3f0b] uppercase tracking-[0.2em] mb-4">You Will Receive</p>
+                         <div class="flex items-center justify-center">
+                           <span id="display-receive" class="text-5xl md:text-6xl font-black tracking-tighter leading-none text-[#16a34a]">$96.52</span>
+                         </div>
+                         <p class="text-sm text-slate-400 font-medium mt-4">Total Fee: <span id="display-fee-total">$3.48</span></p>
+                     </div>
+    
+                     <div class="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm">
+                        <div class="text-center mb-4">
+                            <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">To receive exactly <span class="target-amount-text">$100.00</span></span>
+                        </div>
+                        <div class="flex flex-col items-center">
+                            <p class="text-xs text-slate-500 mb-1">You should ask for / invoice:</p>
+                            <p id="display-ask" class="text-3xl font-black text-slate-800">$103.59</p>
+                        </div>
+                     </div>
+
+                     <div class="bg-white rounded-xl p-4 border border-slate-100 shadow-sm">
+                         <div class="flex justify-between items-center text-xs font-bold text-slate-500">
+                             <span>Effective Fee Rate:</span>
+                             <span id="display-effective-rate" class="text-slate-800">3.48%</span>
+                         </div>
+                     </div>
+                   </div>
+                </div>
+            </main>
+    
+            <footer class="bg-slate-50 border-t border-slate-100 p-6 md:p-8">
+               <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+                   <div class="text-center md:text-left">
+                       <h4 class="text-sm font-bold text-slate-700 mb-1">Share this tool</h4>
+                       <p class="text-xs text-slate-400">Help others calculate PayPal fees accurately.</p>
+                   </div>
+                   <div class="flex flex-wrap justify-center gap-3">
+                       <button onclick="shareSocial('facebook')" class="w-10 h-10 rounded-full flex items-center justify-center text-white bg-[#1877F2] hover:-translate-y-1 transition-all"><i class="fab fa-facebook-f"></i></button>
+                       <button onclick="shareSocial('twitter')" class="w-10 h-10 rounded-full flex items-center justify-center text-white bg-[#1DA1F2] hover:-translate-y-1 transition-all"><i class="fab fa-twitter"></i></button>
+                       <button onclick="shareSocial('whatsapp')" class="w-10 h-10 rounded-full flex items-center justify-center text-white bg-[#25D366] hover:-translate-y-1 transition-all"><i class="fab fa-whatsapp"></i></button>
+                   </div>
+                   <button onclick="handleBookmark()" class="flex items-center gap-2 bg-white border border-slate-200 hover:border-[#da3f0b] hover:text-[#da3f0b] text-slate-600 px-4 py-2 rounded-lg text-sm font-bold transition-all shadow-sm">
+                      <i class="fas fa-bookmark"></i> Bookmark
+                   </button>
+               </div>
+            </footer>
+        </div>
+    </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const state = {
+            currency: { code: 'USD', symbol: '$', locale: 'en-US' },
+            amount: 100,
+            feePercent: 2.99,
+            fixedFee: 0.49
+        };
+
+        const currencies = {
+            USD: { symbol: '$', locale: 'en-US' },
+            EUR: { symbol: '€', locale: 'de-DE' },
+            GBP: { symbol: '£', locale: 'en-GB' },
+            CAD: { symbol: 'C$', locale: 'en-CA' },
+            AUD: { symbol: 'A$', locale: 'en-AU' },
+            JPY: { symbol: '¥', locale: 'ja-JP' }
+        };
+
+        const els = {
+            amount: document.getElementById('input-amount'),
+            feePercent: document.getElementById('input-fee-percent'),
+            fixedFee: document.getElementById('input-fixed-fee'),
+            currency: document.getElementById('currency-select'),
+            displayReceive: document.getElementById('display-receive'),
+            displayFeeTotal: document.getElementById('display-fee-total'),
+            displayAsk: document.getElementById('display-ask'),
+            displayEffective: document.getElementById('display-effective-rate'),
+            targetText: document.querySelector('.target-amount-text'),
+            symbols: document.querySelectorAll('.currency-symbol')
+        };
+
+        function calculate() {
+            const amount = parseFloat(els.amount.value) || 0;
+            const percent = parseFloat(els.feePercent.value) || 0;
+            const fixed = parseFloat(els.fixedFee.value) || 0;
+
+            // If sending X, what do I receive?
+            const feeAmount = (amount * (percent / 100)) + fixed;
+            const receiveAmount = Math.max(0, amount - feeAmount);
+
+            // If I want to receive X, what should I ask for?
+            // Formula: Ask = (Target + Fixed) / (1 - (Percent/100))
+            const askAmount = (amount + fixed) / (1 - (percent / 100));
+
+            const effectiveRate = amount > 0 ? (feeAmount / amount) * 100 : 0;
+
+            updateUI(receiveAmount, feeAmount, askAmount, effectiveRate, amount);
+        }
+
+        function formatMoney(val) {
+            return new Intl.NumberFormat(state.currency.locale, {
+                style: 'currency',
+                currency: state.currency.code
+            }).format(val);
+        }
+
+        function updateUI(receive, fee, ask, effective, target) {
+            els.displayReceive.textContent = formatMoney(receive);
+            els.displayFeeTotal.textContent = formatMoney(fee);
+            els.displayAsk.textContent = formatMoney(ask);
+            els.displayEffective.textContent = effective.toFixed(2) + '%';
+            els.targetText.textContent = formatMoney(target);
+            
+            els.symbols.forEach(s => s.textContent = state.currency.symbol);
+        }
+
+        [els.amount, els.feePercent, els.fixedFee].forEach(input => {
+            input.addEventListener('input', calculate);
+        });
+
+        els.currency.addEventListener('change', (e) => {
+            state.currency = { code: e.target.value, ...currencies[e.target.value] };
+            calculate();
+        });
+
+        window.applyPreset = function(p, f) {
+            els.feePercent.value = p;
+            els.fixedFee.value = f;
+            calculate();
+        };
+
+        window.shareSocial = function(platform) {
+            const url = encodeURIComponent(window.location.href);
+            const text = encodeURIComponent("Calculate PayPal transaction fees instantly!");
+            const shares = {
+                facebook: `https://www.facebook.com/sharer/sharer.php?u=${url}`,
+                twitter: `https://twitter.com/intent/tweet?url=${url}&text=${text}`,
+                whatsapp: `https://api.whatsapp.com/send?text=${text}%20${url}`
+            };
+            window.open(shares[platform], '_blank');
+        };
+
+        window.handleBookmark = function() {
+            alert("Press Ctrl+D (or Cmd+D on Mac) to bookmark this calculator.");
+        };
+
+        calculate();
+    });
+    </script>
+
+    <section class="bg-white py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="prose prose-lg max-w-none prose-h2:text-gray-800 prose-p:text-gray-700">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">Understanding the PayPal Goods and Services Fee Calculator</h2>
+                <p class="mb-6 leading-relaxed">
+                    If you are a freelancer, small business owner, or casual seller, you know that PayPal is one of the most convenient ways to get paid. However, that convenience comes with a cost. The <strong>paypal goods and services fee calculator</strong> is an essential tool for anyone who wants to ensure they aren't losing money on every transaction. By understanding how PayPal calculates its cut, you can price your services more effectively and avoid surprises when you check your balance.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">How PayPal Fees Work in 2024</h2>
+                <p class="mb-6 leading-relaxed">
+                    PayPal typically charges a percentage of the total transaction plus a fixed fee. For domestic transactions within the United States, the standard rate is 2.99% + $0.49. For international payments, this can jump to 4.49% or higher, depending on the currency conversion and the sender's country. Our tool allows you to toggle between these rates or enter a custom rate if you have a special merchant agreement.
+                </p>
+                <p class="mb-6 leading-relaxed">
+                    Unlike "Friends and Family" payments, "Goods and Services" payments offer Purchase Protection for the buyer. This is why PayPal charges a fee—to cover the insurance and processing costs associated with commercial transactions.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">The "Amount to Invoice" Feature</h2>
+                <p class="mb-6 leading-relaxed">
+                    One of the most common mistakes sellers make is asking for the exact amount they want to receive. For example, if you want to receive exactly $100, and you ask for $100, you will only end up with about $96.52. To get exactly $100, you need to account for the fee in your invoice. Our <strong>PayPal transaction fee</strong> tool calculates this for you instantly, showing you the exact "Ask" amount to ensure your net profit remains intact.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">International vs. Domestic PayPal Fees</h2>
+                <p class="mb-6 leading-relaxed">
+                    When dealing with <strong>international paypal fees</strong>, things get complicated. Not only does the percentage increase, but the fixed fee also changes based on the currency received (e.g., £0.30 for GBP, €0.35 for EUR). Our calculator helps you adjust these variables so you can accurately estimate costs for global clients. This is particularly useful for users who also use tools like the <a href="https://simpliconvert.com/freelance-hourly-rate-calculator/">Freelance Hourly Rate Calculator</a> to set their global pricing.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Tips to Minimize PayPal Deductions</h2>
+                <ul class="list-disc pl-6 mb-6 space-y-2 text-gray-700">
+                    <li><strong>Invoice Monthly:</strong> Since there is a fixed fee per transaction ($0.49), sending one large invoice instead of four small ones saves you $1.47 in fixed fees.</li>
+                    <li><strong>Apply for Merchant Rates:</strong> High-volume sellers can sometimes apply for lower percentage rates directly through PayPal.</li>
+                    <li><strong>Pass the Fee:</strong> Many freelancers include the PayPal fee as a line item in their contracts or adjust their base rates to cover the <strong>receive money paypal</strong> costs.</li>
+                    <li><strong>Use Alternatives:</strong> For very large domestic transfers, consider bank wires or compare rates with our <a href="https://simpliconvert.com/stripe-fee-calculator/">Stripe Fee Calculator</a>.</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-center text-gray-900 mb-8">Frequently Asked Questions</h2>
+            <div class="space-y-4">
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg">
+                        <span>Is there a fee for sending money to friends?</span>
+                        <i class="fas fa-chevron-down text-xs transition-transform"></i>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-300">
+                        <p class="p-5 pt-0 text-gray-600">If you use a linked bank account or your PayPal balance to send money to friends and family within the same country, there is usually no fee. However, using a credit card will incur a fee.</p>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg">
+                        <span>Does this calculator work for PayPal Business accounts?</span>
+                        <i class="fas fa-chevron-down text-xs transition-transform"></i>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-300">
+                        <p class="p-5 pt-0 text-gray-600">Yes, the standard Goods and Services rates apply to both Personal and Business accounts when receiving commercial payments.</p>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg">
+                        <span>Why did PayPal charge me more than 2.99%?</span>
+                        <i class="fas fa-chevron-down text-xs transition-transform"></i>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-300">
+                        <p class="p-5 pt-0 text-gray-600">This usually happens if the payment was international (adding a ~1.5% cross-border fee) or if there was a currency conversion involved, which carries its own spread/fee.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 pb-16">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-slate-200 pt-16">
+            <h2 class="text-2xl font-bold text-center text-slate-800 mb-10">Related Financial Tools</h2>
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+                <a href="/stripe-fee-calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center shrink-0"><i class="fab fa-stripe-s text-lg"></i></div>
+                    <div><h3 class="font-bold text-slate-800 text-sm mb-1">Stripe Calc</h3><p class="text-xs text-slate-500">Calculate Stripe processing fees.</p></div>
+                </a>
+                <a href="/roblox-game-pass-calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-slate-50 text-slate-700 flex items-center justify-center shrink-0"><i class="fas fa-gamepad text-lg"></i></div>
+                    <div><h3 class="font-bold text-slate-800 text-sm mb-1">Game Pass Calc</h3><p class="text-xs text-slate-500">Roblox tax and earnings.</p></div>
+                </a>
+                <a href="/fiverr-fee-calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-green-50 text-green-600 flex items-center justify-center shrink-0"><i class="fas fa-briefcase text-lg"></i></div>
+                    <div><h3 class="font-bold text-slate-800 text-sm mb-1">Fiverr Calc</h3><p class="text-xs text-slate-500">Calculate 20% seller fees.</p></div>
+                </a>
+                <a href="/upwork-fee-calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-green-50 text-green-700 flex items-center justify-center shrink-0"><i class="fas fa-terminal text-lg"></i></div>
+                    <div><h3 class="font-bold text-slate-800 text-sm mb-1">Upwork Calc</h3><p class="text-xs text-slate-500">Freelancer service fee estimator.</p></div>
+                </a>
+                <a href="/freelance-hourly-rate-calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0"><i class="fas fa-clock text-lg"></i></div>
+                    <div><h3 class="font-bold text-slate-800 text-sm mb-1">Rate Calc</h3><p class="text-xs text-slate-500">Set your ideal hourly rate.</p></div>
+                </a>
+                <a href="/profit-margin-calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-orange-50 text-orange-600 flex items-center justify-center shrink-0"><i class="fas fa-chart-pie text-lg"></i></div>
+                    <div><h3 class="font-bold text-slate-800 text-sm mb-1">Margin Calc</h3><p class="text-xs text-slate-500">Calculate gross profit margins.</p></div>
+                </a>
+                <a href="/roi-calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0"><i class="fas fa-percentage text-lg"></i></div>
+                    <div><h3 class="font-bold text-slate-800 text-sm mb-1">ROI Calc</h3><p class="text-xs text-slate-500">Measure investment returns.</p></div>
+                </a>
+                <a href="/break-even-calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-red-50 text-red-600 flex items-center justify-center shrink-0"><i class="fas fa-balance-scale text-lg"></i></div>
+                    <div><h3 class="font-bold text-slate-800 text-sm mb-1">Break Even</h3><p class="text-xs text-slate-500">Find your profitability point.</p></div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <div id="footer"></div>
+
+    <script>
+        // FAQ Toggle Logic
+        document.querySelectorAll('[data-faq-toggle]').forEach(button => {
+            button.addEventListener('click', () => {
+                const answer = button.nextElementSibling;
+                const icon = button.querySelector('i');
+                const isOpen = answer.style.maxHeight !== '0px' && answer.style.maxHeight !== '';
+                
+                document.querySelectorAll('.faq-answer').forEach(a => a.style.maxHeight = '0px');
+                document.querySelectorAll('[data-faq-toggle] i').forEach(i => i.style.transform = 'rotate(0deg)');
+
+                if (!isOpen) {
+                    answer.style.maxHeight = answer.scrollHeight + 'px';
+                    icon.style.transform = 'rotate(180deg)';
+                }
+            });
+        });
+
+        // Load Components (Mock for this demo)
+        async function loadComponent(url, id) {
+            const el = document.getElementById(id);
+            if (el) el.innerHTML = `<div class='p-4 text-center text-gray-400'>[${id.toUpperCase()} LOADED]</div>`;
+        }
+        loadComponent('', 'navbar');
+        loadComponent('', 'footer');
+    </script>
+</body>
+</html>

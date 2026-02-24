@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Upwork Fee Calculator – Calculate Freelancer Net Pay | SimpliConvert</title>
+    <meta name="description" content="Calculate your Upwork freelancer service fees and net earnings accurately. Plan your project bids with our free Upwork commission calculator for the 10% flat fee model.">
+    <meta name="keywords" content="upwork freelancer service fee calculator, upwork commission, freelancer net pay, upwork sliding scale fees, calculate upwork earnings, upwork profit calculator">
+    <meta name="author" content="SimpliConvert">
+    <meta property="og:site_name" content="SimpliConvert">
+    <meta name="robots" content="index, follow">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://simpliconvert.com/upwork-fee-calculator/">
+    <meta property="og:title" content="Upwork Fee Calculator – Plan Your Freelance Bids">
+    <meta property="og:description" content="Stop guessing your take-home pay. Accurately calculate Upwork service fees and net earnings for any project amount.">
+    <meta property="og:image" content="https://simpliconvert.com/images/upwork-fee-calculator-og.jpg">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://simpliconvert.com/upwork-fee-calculator/">
+    <meta name="twitter:title" content="Upwork Fee Calculator – Calculate Net Earnings">
+    <meta name="twitter:description" content="Free tool to calculate Upwork freelancer fees. Perfect for planning your bids and managing your freelance income.">
+    <meta name="twitter:image" content="https://simpliconvert.com/images/upwork-fee-calculator-og.jpg">
+
+    <link rel="canonical" href="https://simpliconvert.com/upwork-fee-calculator/">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Upwork Fee Calculator",
+      "url": "https://simpliconvert.com/upwork-fee-calculator/",
+      "description": "A free online tool for Upwork freelancers to calculate service fees, net earnings, and required bid amounts to reach a target income.",
+      "applicationCategory": "FinanceApplication",
+      "operatingSystem": "Web Browser",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "SimpliConvert",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://simpliconvert.com/logo.png"
+        }
+      }
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [{
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://simpliconvert.com/"
+      },{
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Calculator Tools",
+        "item": "https://simpliconvert.com/calculator_tools/"
+      },{
+        "@type": "ListItem",
+        "position": 3,
+        "name": "Upwork Fee Calculator",
+        "item": "https://simpliconvert.com/upwork-fee-calculator/"
+      }]
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [{
+        "@type": "Question",
+        "name": "What is the current Upwork service fee for freelancers?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "As of 2023, Upwork has transitioned to a flat 10% service fee for all new contracts. This replaced the previous sliding scale of 20%, 10%, and 5%."
+        }
+      }, {
+        "@type": "Question",
+        "name": "How do I calculate my take-home pay on Upwork?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "To calculate your net pay, multiply your total project bid by 0.90. For example, if you bid $1,000, Upwork takes $100 (10%), and you receive $900."
+        }
+      }, {
+        "@type": "Question",
+        "name": "How much should I bid to receive a specific amount?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "To receive a specific net amount, divide that amount by 0.90. If you want to take home $500, you should bid $555.56."
+        }
+      }]
+    }
+    </script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #14a800; /* Upwork Green */
+            --primary-hover: #108a00;
+            --primary-light: #f2faf2;
+            --bg: #f8fafc;
+            --text-dark: #0f172a;
+        }
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: var(--text-dark); }
+        .hero-card { background: white; border: 1px solid #f1f5f9; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05); position: relative; overflow: hidden; }
+        .hero-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px; background-color: var(--primary); }
+        .tooltip-container { position: relative; display: inline-block; }
+        .tooltip-text {
+            visibility: hidden; width: 220px; background-color: #1e293b; color: #fff;
+            text-align: center; border-radius: 8px; padding: 10px; position: absolute;
+            z-index: 50; bottom: 125%; left: 50%; margin-left: -110px; opacity: 0;
+            transition: opacity 0.2s; font-size: 0.75rem; pointer-events: none;
+        }
+        .tooltip-container:hover .tooltip-text { visibility: visible; opacity: 1; }
+        .animate-fade { animation: fadeIn 0.3s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+        .tool-card { transition: transform 0.2s ease, box-shadow 0.2s ease; }
+        .tool-card:hover { transform: translateY(-4px); box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
+        .prose a { color: var(--primary); text-decoration: none; font-weight: 600; }
+        .prose a:hover { text-decoration: underline; }
+    </style>
+</head>
+
+<body class="bg-gray-50 min-h-screen flex flex-col">
+    <div id="navbar" style="min-height: 70px;"></div>
+	
+	<section class="hero-white text-black py-2 md:py-10">
+        <div class="container mx-auto px-4">
+            <nav class="flex pb-4 text-sm text-slate-500 items-center space-x-2 justify-center">
+                <a href="https://simpliconvert.com/" class="hover:text-[#14a800] transition-colors">Home</a>
+                <i class="fas fa-chevron-right text-[10px]"></i>
+                <a href="https://simpliconvert.com/calculator_tools/" class="hover:text-[#14a800] transition-colors">Calculators</a>
+                <i class="fas fa-chevron-right text-[10px]"></i>
+                <span class="text-slate-900 font-medium">Upwork Fee Calculator</span>
+            </nav>
+            <div class="text-center">
+                <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-2">upwork freelancer service fee calculator</h1>
+                <p class="text-lg md:text-xl max-w-3xl mx-auto mb-2 text-slate-600">
+                Calculate your exact take-home pay after Upwork's 10% service fee. Plan your project bids and manage your freelance finances with precision.
+                </p>
+            </div>
+        </div>
+    </section>		
+
+    <div id="calculator-app" class="w-full max-w-6xl mx-auto p-4 sm:p-6">
+        <div class="bg-white rounded-[2rem] shadow-2xl overflow-hidden border border-slate-100">
+            <header class="bg-slate-50/50 border-b border-slate-100 p-6 md:p-8 flex flex-col md:flex-row justify-between items-center gap-6">
+                <div class="text-center md:text-left">
+                  <h2 class="text-2xl font-black text-slate-800 tracking-tight flex items-center justify-center md:justify-start gap-3">
+                    <span class="bg-[#14a800] text-white p-2 rounded-xl text-lg shadow-lg shadow-[#14a80030]">
+                      <i class="fas fa-briefcase"></i>
+                    </span>
+                    Freelancer Earnings Calculator
+                  </h2>
+                </div>
+                <div class="flex items-center gap-2 bg-white px-4 py-2 rounded-xl border border-slate-200">
+                    <span class="text-xs font-bold text-slate-500 uppercase">Currency:</span>
+                    <span class="text-sm font-bold text-slate-800">USD ($)</span>
+                </div>
+            </header>
+    
+            <main class="flex flex-col lg:flex-row">
+                <!-- Input Section -->
+                <div class="lg:w-[50%] p-6 md:p-10 lg:p-12 border-r border-slate-100">
+                    <div class="space-y-8">
+                        
+                        <div class="bg-slate-50 p-6 rounded-2xl border border-slate-100">
+                            <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-6"><i class="fas fa-calculator mr-2"></i>Project Details</h3>
+                            
+                            <div class="space-y-6">
+                                <div>
+                                    <div class="flex items-center text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">
+                                        <label>Project Bid Amount</label>
+                                        <span class="tooltip-container ml-2">
+                                            <i class="fas fa-info-circle text-slate-300 hover:text-[#14a800] cursor-help text-xs transition-colors"></i>
+                                            <span class="tooltip-text">The total amount you will charge the client.</span>
+                                        </span>
+                                    </div>
+                                    <div class="relative rounded-xl shadow-sm">
+                                        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                            <span class="text-slate-400 font-semibold">$</span>
+                                        </div>
+                                        <input type="number" id="input-bid" value="1000" class="block w-full rounded-xl border-slate-200 border py-4 pl-9 pr-4 focus:ring-4 focus:ring-[#14a80020] focus:border-[#14a800] text-lg font-bold text-slate-800 transition-all bg-white" placeholder="0.00">
+                                    </div>
+                                </div>
+
+                                <div class="pt-4 border-t border-slate-200">
+                                    <div class="flex items-center text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">
+                                        <label>Target Take-Home Pay</label>
+                                        <span class="tooltip-container ml-2">
+                                            <i class="fas fa-info-circle text-slate-300 hover:text-[#14a800] cursor-help text-xs transition-colors"></i>
+                                            <span class="tooltip-text">Enter how much you want to receive, and we'll tell you what to bid.</span>
+                                        </span>
+                                    </div>
+                                    <div class="relative rounded-xl shadow-sm">
+                                        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                            <span class="text-slate-400 font-semibold">$</span>
+                                        </div>
+                                        <input type="number" id="input-target" class="block w-full rounded-xl border-slate-200 border py-4 pl-9 pr-4 focus:ring-4 focus:ring-[#14a80020] focus:border-[#14a800] text-lg font-bold text-slate-800 transition-all bg-white" placeholder="What you want to earn">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+    
+                        <div class="bg-[#14a80008] p-6 rounded-2xl border border-[#14a80015]">
+                           <h3 class="text-xs font-black text-[#14a800] uppercase tracking-widest mb-4"><i class="fas fa-percent mr-2"></i>Service Fee Settings</h3>
+                           <div class="flex items-center justify-between bg-white p-4 rounded-xl border border-slate-100">
+                               <span class="text-sm font-bold text-slate-700">Standard Upwork Fee</span>
+                               <span class="text-lg font-black text-[#14a800]">10%</span>
+                           </div>
+                           <p class="text-[10px] text-slate-400 mt-3 italic">Upwork transitioned to a flat 10% fee for all new contracts in 2023.</p>
+                        </div>
+                    </div>
+                </div>
+    
+                <!-- Results Section -->
+                <div class="lg:w-[50%] bg-slate-50/50 p-6 md:p-10 lg:p-12 flex flex-col justify-center">
+                   <div class="space-y-6">
+                     
+                     <div class="hero-card p-8 flex flex-col items-center text-center">
+                         <p class="text-xs font-black text-[#14a800] uppercase tracking-[0.2em] mb-4">You'll Receive</p>
+                         <div class="flex items-center justify-center">
+                           <span id="display-net" class="text-5xl md:text-6xl font-black tracking-tighter leading-none text-[#14a800]">$900.00</span>
+                         </div>
+                         <p class="text-sm text-slate-400 font-medium mt-4">After Upwork Service Fee</p>
+                     </div>
+    
+                     <div class="grid grid-cols-2 gap-4">
+                         <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex flex-col items-center text-center">
+                            <div class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Upwork Fee (10%)</div>
+                            <p id="display-fee" class="text-xl font-extrabold text-slate-900">$100.00</p>
+                         </div>
+                         <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex flex-col items-center text-center">
+                            <div class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Client Pays</div>
+                            <p id="display-gross" class="text-xl font-extrabold text-slate-900">$1,000.00</p>
+                         </div>
+                     </div>
+    
+                     <div id="bid-suggestion" class="bg-white rounded-xl p-6 border border-slate-100 shadow-sm mt-4 hidden animate-fade">
+                         <div class="flex justify-between items-center mb-2">
+                            <span class="text-xs font-bold text-slate-400 uppercase tracking-widest">Recommended Bid</span>
+                            <span id="display-suggested-bid" class="text-lg font-black text-[#14a800]">$0.00</span>
+                         </div>
+                         <p class="text-[10px] text-slate-400">
+                           To take home your target amount, you should set your project bid to the value above.
+                         </p>
+                     </div>
+
+                     <div class="p-4 bg-blue-50 rounded-xl border border-blue-100">
+                         <p class="text-[11px] text-blue-700 leading-relaxed">
+                             <i class="fas fa-info-circle mr-1"></i> <strong>Note:</strong> This calculation does not include withdrawal fees (e.g., $0.99 for Direct to Local Bank) or any applicable taxes in your region.
+                         </p>
+                     </div>
+                   </div>
+                </div>
+            </main>
+    
+            <footer class="bg-slate-50 border-t border-slate-100 p-6 md:p-8">
+               <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+                   <div class="text-center md:text-left">
+                       <h4 class="text-sm font-bold text-slate-700 mb-1">Share this calculator</h4>
+                       <p class="text-xs text-slate-400">Help fellow freelancers calculate their earnings.</p>
+                   </div>
+                   <div class="flex flex-wrap justify-center gap-3">
+                       <a href="#" onclick="shareSocial('facebook')" class="w-10 h-10 rounded-full flex items-center justify-center text-white transition-transform hover:-translate-y-1 bg-[#1877F2]"><i class="fab fa-facebook-f"></i></a>
+                       <a href="#" onclick="shareSocial('twitter')" class="w-10 h-10 rounded-full flex items-center justify-center text-white transition-transform hover:-translate-y-1 bg-[#1DA1F2]"><i class="fab fa-twitter"></i></a>
+                       <a href="#" onclick="shareSocial('linkedin')" class="w-10 h-10 rounded-full flex items-center justify-center text-white transition-transform hover:-translate-y-1 bg-[#0A66C2]"><i class="fab fa-linkedin-in"></i></a>
+                       <a href="#" onclick="shareSocial('whatsapp')" class="w-10 h-10 rounded-full flex items-center justify-center text-white transition-transform hover:-translate-y-1 bg-[#25D366]"><i class="fab fa-whatsapp"></i></a>
+                   </div>
+                   <button onclick="handleBookmark()" class="flex items-center gap-2 bg-white border border-slate-200 hover:border-[#14a800] hover:text-[#14a800] text-slate-600 px-4 py-2 rounded-lg text-sm font-bold transition-all shadow-sm">
+                      <i class="fas fa-bookmark"></i> Bookmark
+                   </button>
+               </div>
+            </footer>
+        </div>
+    </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const bidInput = document.getElementById('input-bid');
+        const targetInput = document.getElementById('input-target');
+        const displayNet = document.getElementById('display-net');
+        const displayFee = document.getElementById('display-fee');
+        const displayGross = document.getElementById('display-gross');
+        const bidSuggestion = document.getElementById('bid-suggestion');
+        const displaySuggestedBid = document.getElementById('display-suggested-bid');
+
+        function formatCurrency(num) {
+            return '$' + parseFloat(num).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
+        }
+
+        function calculateFromBid() {
+            const bid = parseFloat(bidInput.value) || 0;
+            const fee = bid * 0.10;
+            const net = bid - fee;
+
+            displayNet.textContent = formatCurrency(net);
+            displayFee.textContent = formatCurrency(fee);
+            displayGross.textContent = formatCurrency(bid);
+            
+            // Clear target input to avoid confusion
+            if (document.activeElement === bidInput) {
+                targetInput.value = '';
+                bidSuggestion.classList.add('hidden');
+            }
+        }
+
+        function calculateFromTarget() {
+            const target = parseFloat(targetInput.value) || 0;
+            if (target > 0) {
+                const requiredBid = target / 0.90;
+                const fee = requiredBid * 0.10;
+
+                displaySuggestedBid.textContent = formatCurrency(requiredBid);
+                bidSuggestion.classList.remove('hidden');
+
+                // Update main display to show what happens with this bid
+                displayNet.textContent = formatCurrency(target);
+                displayFee.textContent = formatCurrency(fee);
+                displayGross.textContent = formatCurrency(requiredBid);
+            } else {
+                bidSuggestion.classList.add('hidden');
+                calculateFromBid();
+            }
+        }
+
+        bidInput.addEventListener('input', calculateFromBid);
+        targetInput.addEventListener('input', calculateFromTarget);
+
+        window.shareSocial = function(platform) {
+            const url = encodeURIComponent(window.location.href);
+            const title = encodeURIComponent("Check out this Upwork Fee Calculator!");
+            let shareUrl = '';
+            switch(platform) {
+                case 'facebook': shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${url}`; break;
+                case 'twitter': shareUrl = `https://twitter.com/intent/tweet?url=${url}&text=${title}`; break;
+                case 'linkedin': shareUrl = `https://www.linkedin.com/shareArticle?mini=true&url=${url}`; break;
+                case 'whatsapp': shareUrl = `https://api.whatsapp.com/send?text=${title}%20${url}`; break;
+            }
+            if(shareUrl) window.open(shareUrl, '_blank');
+        };
+
+        window.handleBookmark = function() {
+            alert("Press Ctrl+D (or Cmd+D on Mac) to bookmark this calculator.");
+        };
+
+        calculateFromBid();
+    });
+    </script>
+
+    <section class="bg-white py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="prose prose-lg max-w-none prose-h2:text-gray-800 prose-p:text-gray-700">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">Understanding the Upwork Freelancer Service Fee Calculator</h2>
+                <p class="mb-6 leading-relaxed">
+                    Navigating the world of freelancing requires more than just talent; it requires sharp financial planning. Our <strong>upwork freelancer service fee calculator</strong> is designed to remove the guesswork from your bidding process. Since Upwork updated its fee structure in 2023, moving away from the complex sliding scale to a simplified flat fee, many freelancers have had to recalibrate their pricing strategies.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">How the 10% Flat Fee Impact Your Earnings</h2>
+                <p class="mb-6 leading-relaxed">
+                    Previously, Upwork charged 20% for the first $500 earned with a client. While the new 10% flat fee is a massive win for small projects, it’s essential to calculate your net pay to ensure your business remains profitable. Whether you are a graphic designer, developer, or writer, knowing exactly how much will hit your bank account is the first step toward a sustainable freelance career.
+                </p>
+                <p class="mb-6 leading-relaxed">
+                    Our tool doesn't just calculate the fee; it helps you work backward. If you know you need $1,000 to cover your monthly rent, you can use the "Target Take-Home Pay" feature to find out exactly what your gross bid should be. This ensures you aren't accidentally undercharging for your valuable time.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Strategic Bidding: Beyond the Service Fee</h2>
+                <p class="mb-6 leading-relaxed">
+                    While the 10% commission is the primary cost, successful freelancers also account for other expenses. Just as our <a href="https://simpliconvert.com/freelance-hourly-rate-calculator/">Freelance Hourly Rate Calculator</a> helps you set a baseline, this Upwork-specific tool ensures you account for platform-specific costs. Remember to also consider:
+                </p>
+                <ul class="list-disc pl-6 mb-6 space-y-2 text-gray-700">
+                    <li><strong>Connects:</strong> The cost of bidding on jobs.</li>
+                    <li><strong>Withdrawal Fees:</strong> Small charges for moving money to your local bank or PayPal.</li>
+                    <li><strong>Taxes:</strong> Depending on your country, you may need to set aside 20-30% of your net earnings for income tax.</li>
+                </ul>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Why Use an Upwork Commission Calculator?</h2>
+                <p class="mb-6 leading-relaxed">
+                    Accuracy builds confidence. When you present a proposal to a client, you want to be sure that the number you provide covers your costs and provides a fair profit. Using an <strong>upwork commission</strong> tool allows you to compare platforms. For instance, you might compare your potential earnings here with our <a href="https://simpliconvert.com/fiverr-fee-calculator/">Fiverr Fee Calculator</a> to see which platform offers the best margins for your specific service type.
+                </p>
+
+                <h2 class="text-2xl font-bold mt-8 mb-4">Final Thoughts for Freelancers</h2>
+                <p class="mb-6 leading-relaxed">
+                    The key to scaling on Upwork is treating your profile like a business. This means tracking every dollar. By using this calculator, you are taking control of your financial health. Don't let hidden fees surprise you at the end of a long project. Calculate, bid, and earn with total clarity.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-center text-gray-900 mb-8">Upwork Fee – Frequently Asked Questions</h2>
+            <div class="space-y-4">
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>Is the Upwork fee still 20%?</span>
+                        <i class="fas fa-chevron-down faq-icon transition-transform"></i>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-300">
+                        <p class="p-5 pt-0 text-gray-600">No. Upwork officially retired the 20% sliding scale fee in May 2023. All new contracts are now subject to a flat 10% freelancer service fee, regardless of the billing amount.</p>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>Does the client pay any fees?</span>
+                        <i class="fas fa-chevron-down faq-icon transition-transform"></i>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-300">
+                        <p class="p-5 pt-0 text-gray-600">Yes, clients typically pay a contract initiation fee and a marketplace fee (usually around 5%) on top of the freelancer's bid. However, this calculator focuses specifically on the freelancer's side of the transaction.</p>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                        <span>What is the "Contract Initiation Fee" for freelancers?</span>
+                        <i class="fas fa-chevron-down faq-icon transition-transform"></i>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-300">
+                        <p class="p-5 pt-0 text-gray-600">Upwork charges a one-time fee of $2.95 for freelancers when they start a new contract. This is separate from the 10% service fee and is deducted from the first payment received from that client.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 pb-16">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-slate-200 pt-16">
+            <h2 class="text-2xl font-bold text-center text-slate-800 mb-10">Popular Tools on SimpliConvert</h2>
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+                <a href="https://simpliconvert.com/fiverr-fee-calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#14a800] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-green-50 text-green-600 flex items-center justify-center shrink-0 group-hover:bg-green-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-coins text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#14a800]">Fiverr Fee</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Calculate Fiverr earnings.</p>
+                    </div>
+                </a>
+                <a href="https://simpliconvert.com/freelance-hourly-rate-calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#14a800] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center shrink-0 group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-clock text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#14a800]">Hourly Rate</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Set your freelance rates.</p>
+                    </div>
+                </a>
+                <a href="https://simpliconvert.com/paypal-fee-calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#14a800] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0 group-hover:bg-indigo-600 group-hover:text-white transition-colors">
+                        <i class="fab fa-paypal text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#14a800]">PayPal Fee</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Calculate PayPal costs.</p>
+                    </div>
+                </a>
+                <a href="https://simpliconvert.com/salary-to-hourly-calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#14a800] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-slate-50 text-slate-800 flex items-center justify-center shrink-0 group-hover:bg-slate-900 group-hover:text-white transition-colors">
+                        <i class="fas fa-calculator text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#14a800]">Salary Calc</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Convert salary to hourly.</p>
+                    </div>
+                </a>
+                <a href="https://simpliconvert.com/profit-margin-calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#14a800] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0 group-hover:bg-emerald-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-chart-pie text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#14a800]">Profit Margin</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Calculate business margins.</p>
+                    </div>
+                </a>
+                <a href="https://simpliconvert.com/roi-calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#14a800] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-orange-50 text-orange-600 flex items-center justify-center shrink-0 group-hover:bg-orange-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-percentage text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#14a800]">ROI Calc</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Calculate return on investment.</p>
+                    </div>
+                </a>
+                <a href="https://simpliconvert.com/work-hours-calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#14a800] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-red-50 text-red-600 flex items-center justify-center shrink-0 group-hover:bg-red-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-calendar-alt text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#14a800]">Work Hours</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Track your billable hours.</p>
+                    </div>
+                </a>
+                <a href="https://simpliconvert.com/stripe-fee-calculator/" class="tool-card bg-white p-4 rounded-xl border border-slate-100 hover:border-[#14a800] hover:shadow-md transition-all group flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-purple-50 text-purple-600 flex items-center justify-center shrink-0 group-hover:bg-purple-600 group-hover:text-white transition-colors">
+                        <i class="fab fa-stripe-s text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-[#14a800]">Stripe Fee</h3>
+                        <p class="text-xs text-slate-500 leading-snug">Calculate Stripe processing.</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <div id="footer"></div>
+
+    <script>
+    async function loadComponent(url, elementId) {
+        try {
+            const response = await fetch(url);
+            const text = await response.text();
+            document.getElementById(elementId).innerHTML = text;
+        } catch (error) {
+            console.error('Error loading component:', error);
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        loadComponent('/components/navbar.html', 'navbar');
+        loadComponent('/components/footer.html', 'footer');
+        
+        const faqToggles = document.querySelectorAll('[data-faq-toggle]');
+        faqToggles.forEach(button => {
+            button.addEventListener('click', () => {
+                const answer = button.nextElementSibling;
+                const icon = button.querySelector('.faq-icon');
+                if (answer.style.maxHeight) {
+                    answer.style.maxHeight = null;
+                    icon.style.transform = 'rotate(0deg)';
+                } else {
+                    answer.style.maxHeight = answer.scrollHeight + "px";
+                    icon.style.transform = 'rotate(180deg)';
+                }
+            });
+        });
+    });
+    </script>
+</body>
+</html>
