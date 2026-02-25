@@ -162,8 +162,8 @@
     <section class="hero-white text-black py-2 md:py-10">
         <div class="container mx-auto px-4 text-center">
             <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-2">Zakat Calculator Gold Silver</h1>
-            <p class="text-lg md:text-xl max-w-3x1 mx-auto mb-2">
-                Fulfill your religious obligation with precision. Calculate Zakat on cash, gold, silver, and investments based on current market rates.
+            <p class="text-lg md:text-xl max-w-3xl mx-auto mb-2">
+                Fulfill your religious obligation with precision. Calculate Zakat on cash, gold, silver, crypto, and investments based on current market rates.
             </p>
         </div>
     </section>
@@ -180,7 +180,15 @@
       { code: 'PKR', symbol: 'Rs', locale: 'en-PK' },
       { code: 'INR', symbol: '₹', locale: 'en-IN' },
       { code: 'SAR', symbol: 'SR', locale: 'ar-SA' },
-      { code: 'AED', symbol: 'DH', locale: 'ar-AE' }
+      { code: 'AED', symbol: 'DH', locale: 'ar-AE' },
+      { code: 'CAD', symbol: '$', locale: 'en-CA' },
+      { code: 'AUD', symbol: '$', locale: 'en-AU' },
+      { code: 'MYR', symbol: 'RM', locale: 'ms-MY' },
+      { code: 'IDR', symbol: 'Rp', locale: 'id-ID' },
+      { code: 'ZAR', symbol: 'R', locale: 'en-ZA' },
+      { code: 'TRY', symbol: '₺', locale: 'tr-TR' },
+      { code: 'NGN', symbol: '₦', locale: 'en-NG' },
+      { code: 'OTHER', symbol: '¤', locale: 'en-US' }
     ];
 
     const Tooltip = ({ text }) => (
@@ -264,36 +272,61 @@
     };
 
     const App = () => {
+      // Global Settings
       const [currency, setCurrency] = useState(currencies[0]);
+      const [nisabStandard, setNisabStandard] = useState('silver');
+      const [yearType, setYearType] = useState('lunar');
+
+      // Rates & Details
       const [goldPrice, setGoldPrice] = useState(65);
       const [silverPrice, setSilverPrice] = useState(0.80);
+      const [goldPurity, setGoldPurity] = useState('24');
+      
+      // Assets
       const [cash, setCash] = useState(5000);
       const [goldWeight, setGoldWeight] = useState(0);
       const [silverWeight, setSilverWeight] = useState(0);
       const [investments, setInvestments] = useState(0);
+      const [crypto, setCrypto] = useState(0);
+      const [businessInventory, setBusinessInventory] = useState(0);
+      const [pensions, setPensions] = useState(0);
+      const [loansGiven, setLoansGiven] = useState(0);
+      
+      // Liabilities
       const [debts, setDebts] = useState(0);
       const [showBookmarkToast, setShowBookmarkToast] = useState(false);
 
       const calculations = useMemo(() => {
         const gPrice = parseFloat(goldPrice) || 0;
         const sPrice = parseFloat(silverPrice) || 0;
+        
+        // Purity adjustment for gold
+        const purityFactor = parseInt(goldPurity) / 24;
+        
         const cashVal = parseFloat(cash) || 0;
         const gWeight = parseFloat(goldWeight) || 0;
         const sWeight = parseFloat(silverWeight) || 0;
         const investVal = parseFloat(investments) || 0;
+        const cryptoVal = parseFloat(crypto) || 0;
+        const inventoryVal = parseFloat(businessInventory) || 0;
+        const pensionsVal = parseFloat(pensions) || 0;
+        const loansVal = parseFloat(loansGiven) || 0;
         const debtVal = parseFloat(debts) || 0;
 
-        const goldValue = gWeight * gPrice;
+        const goldValue = gWeight * gPrice * purityFactor;
         const silverValue = sWeight * sPrice;
-        const totalAssets = cashVal + goldValue + silverValue + investVal;
+        
+        const totalAssets = cashVal + goldValue + silverValue + investVal + cryptoVal + inventoryVal + pensionsVal + loansVal;
         const netWealth = Math.max(0, totalAssets - debtVal);
         
         const nisabGold = 87.48 * gPrice;
         const nisabSilver = 612.36 * sPrice;
         
-        // Using Silver Nisab as it is the standard for most charities to help more people
-        const isEligible = netWealth >= nisabSilver;
-        const zakatDue = isEligible ? netWealth * 0.025 : 0;
+        const activeNisabThreshold = nisabStandard === 'silver' ? nisabSilver : nisabGold;
+        const isEligible = netWealth >= activeNisabThreshold;
+        
+        const zakatRate = yearType === 'lunar' ? 0.025 : 0.02577;
+        const zakatDue = isEligible ? netWealth * zakatRate : 0;
 
         return {
           totalAssets,
@@ -301,16 +334,16 @@
           zakatDue,
           nisabGold,
           nisabSilver,
-          isEligible
+          isEligible,
+          activeNisabThreshold
         };
-      }, [goldPrice, silverPrice, cash, goldWeight, silverWeight, investments, debts]);
+      }, [goldPrice, silverPrice, goldPurity, cash, goldWeight, silverWeight, investments, crypto, businessInventory, pensions, loansGiven, debts, nisabStandard, yearType]);
 
       const formatMoney = (amount) => {
         return new Intl.NumberFormat(currency.locale, {
           style: 'currency',
-          currency: currency.code,
-          maximumFractionDigits: 2
-        }).format(amount);
+          currency: currency.code === 'OTHER' ? 'USD' : currency.code, // Fallback for custom
+        }).format(amount).replace('USD', '¤').replace('$', currency.symbol);
       };
 
       const handleBookmark = () => {
@@ -354,31 +387,72 @@
           <main className="flex flex-col lg:flex-row">
             <div className="lg:w-[55%] p-6 md:p-10 lg:p-12 border-r border-slate-100">
               <div className="space-y-6">
+
+                {/* Settings Panel */}
+                <div className="bg-slate-50 p-6 rounded-2xl border border-slate-100">
+                  <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest mb-6"><i className="fas fa-cog mr-2"></i>Calculation Settings</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="flex items-center text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Nisab Standard <Tooltip text="Silver benefits the poor more. Gold is used if wealth is purely cash/gold."/></label>
+                      <select value={nisabStandard} onChange={(e) => setNisabStandard(e.target.value)} className="block w-full rounded-xl border-slate-200 border py-3 px-4 focus:ring-4 focus:ring-[#16a34a20] focus:border-[#16a34a] sm:text-sm font-semibold text-slate-800 bg-white shadow-sm cursor-pointer">
+                        <option value="silver">Silver Nisab (Recommended)</option>
+                        <option value="gold">Gold Nisab</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label className="flex items-center text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Zakat Year <Tooltip text="Solar year rate is 2.577% to account for the extra ~11 days compared to a Lunar year."/></label>
+                      <select value={yearType} onChange={(e) => setYearType(e.target.value)} className="block w-full rounded-xl border-slate-200 border py-3 px-4 focus:ring-4 focus:ring-[#16a34a20] focus:border-[#16a34a] sm:text-sm font-semibold text-slate-800 bg-white shadow-sm cursor-pointer">
+                        <option value="lunar">Lunar / Hijri (2.5%)</option>
+                        <option value="solar">Solar / Gregorian (2.577%)</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
                 
                 {/* Market Rates */}
                 <div className="bg-slate-50 p-6 rounded-2xl border border-slate-100">
                   <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest mb-6"><i className="fas fa-chart-line mr-2"></i>Current Market Rates (Per Gram)</h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <NumberInput label="Gold Price" value={goldPrice} onChange={setGoldPrice} prefix={currency.symbol} tooltip="Current market price of 24k gold per gram." />
+                    <NumberInput label="Gold Price (24k)" value={goldPrice} onChange={setGoldPrice} prefix={currency.symbol} tooltip="Current market price of 24k gold per gram." />
                     <NumberInput label="Silver Price" value={silverPrice} onChange={setSilverPrice} prefix={currency.symbol} tooltip="Current market price of silver per gram." />
                   </div>
                 </div>
 
                 {/* Assets */}
-                <div className="bg-white p-6 rounded-2xl border border-slate-100">
+                <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm">
                   <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest mb-6"><i className="fas fa-coins mr-2"></i>Your Assets</h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <NumberInput label="Cash on Hand/Bank" value={cash} onChange={setCash} prefix={currency.symbol} />
-                    <NumberInput label="Investments/Shares" value={investments} onChange={setInvestments} prefix={currency.symbol} />
-                    <NumberInput label="Gold Weight" value={goldWeight} onChange={setGoldWeight} suffix="g" tooltip="Total weight of gold jewelry/bullion." />
+                    <NumberInput label="Cash & Bank" value={cash} onChange={setCash} prefix={currency.symbol} tooltip="All cash on hand and in bank accounts." />
+                    <NumberInput label="Investments/Stocks" value={investments} onChange={setInvestments} prefix={currency.symbol} tooltip="Current market value of shares and stocks." />
+                    
+                    <div className="mb-5">
+                      <div className="flex justify-between items-center mb-2">
+                        <label className="text-xs font-bold text-slate-500 uppercase tracking-widest">Gold Weight</label>
+                        <select className="text-xs font-bold text-slate-600 bg-slate-100 rounded border-none py-1 px-2 focus:ring-0 cursor-pointer" value={goldPurity} onChange={(e) => setGoldPurity(e.target.value)}>
+                          <option value="24">24 Karat</option>
+                          <option value="22">22 Karat</option>
+                          <option value="21">21 Karat</option>
+                          <option value="18">18 Karat</option>
+                        </select>
+                      </div>
+                      <div className="relative rounded-xl shadow-sm">
+                        <input type="number" className="block w-full rounded-xl border-slate-200 border py-3 pl-4 pr-12 focus:ring-4 focus:ring-[#16a34a20] focus:border-[#16a34a] sm:text-sm font-semibold text-slate-800 bg-white" value={goldWeight} onChange={(e) => setGoldWeight(e.target.value)} onFocus={(e) => e.target.select()} placeholder="0.00" />
+                        <div className="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none"><span className="text-slate-400 font-semibold">g</span></div>
+                      </div>
+                    </div>
+
                     <NumberInput label="Silver Weight" value={silverWeight} onChange={setSilverWeight} suffix="g" tooltip="Total weight of silver jewelry/bullion." />
+                    <NumberInput label="Business Inventory" value={businessInventory} onChange={setBusinessInventory} prefix={currency.symbol} tooltip="Value of goods intended for sale." />
+                    <NumberInput label="Cryptocurrency" value={crypto} onChange={setCrypto} prefix={currency.symbol} tooltip="Current market value of your crypto portfolio." />
+                    <NumberInput label="Retirement/Pensions" value={pensions} onChange={setPensions} prefix={currency.symbol} tooltip="Accessible/withdrawable amount in retirement funds." />
+                    <NumberInput label="Loans Given (Owed to you)" value={loansGiven} onChange={setLoansGiven} prefix={currency.symbol} tooltip="Money you lent out and expect to get back." />
                   </div>
                 </div>
 
                 {/* Liabilities */}
                 <div className="bg-[#dc262605] p-6 rounded-2xl border border-[#dc262615]">
                    <h3 className="text-xs font-black text-[#dc2626] uppercase tracking-widest mb-6"><i className="fas fa-minus-circle mr-2"></i>Liabilities & Debts</h3>
-                   <NumberInput label="Total Debts/Expenses" value={debts} onChange={setDebts} prefix={currency.symbol} tooltip="Money you owe or immediate expenses to be deducted." />
+                   <NumberInput label="Immediate Debts/Expenses" value={debts} onChange={setDebts} prefix={currency.symbol} tooltip="Money you currently owe or immediate upcoming bills to be deducted." />
                 </div>
 
               </div>
@@ -386,13 +460,13 @@
 
             <div className="lg:w-[45%] bg-slate-50/50 p-6 md:p-10 lg:p-12 flex flex-col justify-center">
                <div className="space-y-6">
-                  
+                 
                   <StatCard 
                     isMain={true}
                     label="Total Zakat Due"
                     value={formatMoney(calculations.zakatDue)}
                     type="success"
-                    subtext={calculations.isEligible ? "Your wealth exceeds the Nisab threshold." : "Your wealth is below the Nisab threshold."}
+                    subtext={calculations.isEligible ? `Your wealth exceeds the ${nisabStandard} Nisab threshold.` : `Your wealth is below the ${nisabStandard} Nisab threshold.`}
                   />
 
                   <div className="grid grid-cols-2 gap-4">
@@ -403,17 +477,17 @@
                   <div className="bg-white rounded-xl p-6 border border-slate-100 shadow-sm">
                      <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4 text-center">Nisab Thresholds</h4>
                      <div className="space-y-3">
-                        <div className="flex justify-between items-center text-sm">
-                            <span className="text-slate-500">Gold Nisab (87.48g)</span>
+                        <div className={`flex justify-between items-center text-sm p-2 rounded-lg ${nisabStandard === 'gold' ? 'bg-[#16a34a10] border border-[#16a34a30]' : ''}`}>
+                            <span className="text-slate-500 font-medium">Gold Nisab (87.48g)</span>
                             <span className="font-bold text-slate-700">{formatMoney(calculations.nisabGold)}</span>
                         </div>
-                        <div className="flex justify-between items-center text-sm">
-                            <span className="text-slate-500">Silver Nisab (612.36g)</span>
+                        <div className={`flex justify-between items-center text-sm p-2 rounded-lg ${nisabStandard === 'silver' ? 'bg-[#16a34a10] border border-[#16a34a30]' : ''}`}>
+                            <span className="text-slate-500 font-medium">Silver Nisab (612.36g)</span>
                             <span className="font-bold text-slate-700">{formatMoney(calculations.nisabSilver)}</span>
                         </div>
                      </div>
-                     <p className="text-[10px] text-slate-400 mt-4 text-center italic">
-                       *Zakat is 2.5% of your Net Wealth if it exceeds the Nisab.
+                     <p className="text-[10px] text-slate-400 mt-5 text-center leading-relaxed">
+                       *Zakat is calculated at <strong className="text-slate-600">{yearType === 'lunar' ? '2.5%' : '2.577%'}</strong> of your Net Wealth because you selected a <strong className="text-slate-600">{yearType === 'lunar' ? 'Lunar' : 'Solar'} Year</strong>.
                      </p>
                   </div>
                </div>
@@ -459,24 +533,24 @@
             <div class="prose prose-lg max-w-none prose-h2:text-gray-800 prose-p:text-gray-700">
                 <h2 class="text-3xl font-bold text-gray-900 mb-4">Zakat Calculator Gold Silver – Simplify Your Giving</h2>
                 <p class="mb-6 leading-relaxed">
-                    Zakat is one of the five pillars of Islam, a mandatory form of almsgiving that purifies a Muslim's wealth. However, calculating the exact amount can be complex when dealing with different assets like gold, silver, cash, and business investments. Our <strong>Zakat Calculator Gold Silver</strong> is designed to provide a seamless experience, ensuring you meet your obligations accurately and with confidence.
+                    Zakat is one of the five pillars of Islam, a mandatory form of almsgiving that purifies a Muslim's wealth. However, calculating the exact amount can be complex when dealing with different assets like gold, silver, cash, cryptocurrency, and business investments. Our <strong>Zakat Calculator Gold Silver</strong> is designed to provide a seamless experience, ensuring you meet your obligations accurately and with confidence.
                 </p>
 
                 <h2 class="text-2xl font-bold mt-8 mb-4">How to Use the Zakat Calculator</h2>
                 <p class="mb-6 leading-relaxed">
-                    To get an accurate result, you need to input your assets and liabilities. The calculator follows the standard 2.5% rate applied to net wealth that has been held for one lunar year (Hawl).
+                    To get an accurate result, you need to input your assets and liabilities. The calculator allows you to switch between Lunar (2.5%) and Solar (2.577%) years, ensuring total global compliance.
                 </p>
                 <ul class="list-disc pl-6 mb-6 space-y-2 text-gray-700">
-                    <li><strong>Market Rates:</strong> Enter the current price of gold and silver per gram in your local currency.</li>
+                    <li><strong>Market Rates:</strong> Enter the current price of 24k gold and silver per gram in your local currency.</li>
                     <li><strong>Cash & Savings:</strong> Include all cash on hand, bank balances, and digital wallets.</li>
-                    <li><strong>Gold & Silver:</strong> Input the total weight of your jewelry or bullion in grams.</li>
-                    <li><strong>Investments:</strong> Add the current value of shares, stocks, or business assets.</li>
-                    <li><strong>Liabilities:</strong> Subtract any immediate debts or bills you owe.</li>
+                    <li><strong>Gold & Silver:</strong> Input the total weight. For gold, you can specify the purity (24k, 22k, 21k, or 18k) to avoid overpaying.</li>
+                    <li><strong>Modern Assets:</strong> Easily add the value of your cryptocurrency, business inventory, and accessible pensions.</li>
+                    <li><strong>Liabilities:</strong> Subtract any immediate debts or bills you owe to find your true net wealth.</li>
                 </ul>
 
                 <h2 class="text-2xl font-bold mt-8 mb-4">Understanding Nisab: Gold vs. Silver</h2>
                 <p class="mb-6 leading-relaxed">
-                    Nisab is the minimum threshold of wealth required before Zakat becomes due. Historically, this is defined as 87.48 grams of gold or 612.36 grams of silver. Because the value of silver is currently much lower than gold, using the silver Nisab allows more people to contribute to the welfare of the poor, which is the primary goal of Zakat. Our tool displays both thresholds to help you make an informed decision based on your school of thought.
+                    Nisab is the minimum threshold of wealth required before Zakat becomes due. Historically, this is defined as 87.48 grams of gold or 612.36 grams of silver. Because the value of silver is currently much lower than gold, using the silver Nisab allows more people to contribute to the welfare of the poor, which is the primary goal of Zakat. Our tool displays both thresholds and lets you toggle between them based on your school of thought.
                 </p>
 
                 <h2 class="text-2xl font-bold mt-8 mb-4">Why Accuracy Matters in Islamic Finance</h2>
@@ -490,10 +564,10 @@
 
                 <h2 class="text-2xl font-bold mt-8 mb-4">Key Features of Our Zakat Tool</h2>
                 <ul class="list-disc pl-6 mb-6 space-y-2 text-gray-700">
-                    <li><strong>Multi-Currency Support:</strong> Calculate in USD, EUR, PKR, INR, and more.</li>
+                    <li><strong>Global Customization:</strong> Supports 15+ currencies, Lunar/Solar rates, and Gold/Silver Nisab standards.</li>
                     <li><strong>Real-Time Calculation:</strong> Results update instantly as you change your asset values.</li>
+                    <li><strong>Gold Purity Support:</strong> Adjusts the value based on 24k, 22k, 21k, or 18k karat grades.</li>
                     <li><strong>Debt Deduction:</strong> Automatically subtracts liabilities to find your true net wealth.</li>
-                    <li><strong>Nisab Comparison:</strong> Clear visibility of both gold and silver thresholds.</li>
                     <li><strong>Privacy Focused:</strong> Your financial data is processed locally and never stored on our servers.</li>
                 </ul>
             </div>
