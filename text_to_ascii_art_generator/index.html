@@ -158,143 +158,302 @@
             <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-2">Text To ASCII Art Generator</h1>
             <p class="text-lg md:text-xl max-w-3x1 mx-auto mb-2">
                 Turn your text into visual masterpieces. Create unique ASCII banners and headers for your code, terminal, or social media profiles.
-            </p>
-        </div>
-    </section>
-
-    <div id="root" class="w-full max-w-6xl mx-auto p-4 sm:p-6"></div>
+            </p><div id="root" class="w-full max-w-[1400px] mx-auto p-4 sm:p-6 min-h-screen relative"></div>
 
     <script type="text/babel">
-    const { useState, useEffect, useCallback } = React;
+    const { useState, useEffect, useCallback, useRef, useMemo } = React;
 
-    // --- IMPORTANT FIX: Point Figlet to the CDN for fonts ---
-figlet.defaults({ fontPath: 'https://unpkg.com/figlet@1.7.0/fonts' });
-    const fonts = [
-      "Standard", "Slant", "Shadow", "Small", "Script", "Ogre", "Ivrit", "Graffiti", "Epic", "Doom", "Bulbhead", "Block", "Banner"
+    // Configure Figlet to point to the UNPKG CDN for the fonts
+    figlet.defaults({ fontPath: 'https://unpkg.com/figlet@1.7.0/fonts' });
+    
+    // A robust list of over 140 Figlet styles
+    const ALL_FONTS = [
+        "Standard", "Slant", "Shadow", "Small", "Script", "Ogre", "Ivrit", "Graffiti", "Epic", "Doom", "Bulbhead", "Block", "Banner", 
+        "3-D", "3D Diagonal", "Acrobatic", "Alligator", "Alligator2", "Alphabet", "Avatar", "Banner3-D", "Banner3", "Banner4", "Barbwire", 
+        "Basic", "Bell", "Big", "Big Chief", "Binary", "Blood", "Bolger", "Braced", "Bright", "Broad", "Bubble", "Bulhead", "Caligraphy", 
+        "Catwalk", "Chiseled", "Chunky", "Coinstruction", "Comic", "Computer", "Contessa", "Contrast", "Cosmic", "Cosmike", "Crawford", 
+        "Crazy", "Cricket", "Cursive", "Cyberlarge", "Cybermedium", "Cybersmall", "Dancing Font", "Decimal", "Def Leppard", "Diamond", 
+        "Diet Cola", "Digital", "Doh", "Dot Matrix", "Double", "Double Shorts", "Dr Pepper", "Efti Chess", "Efti Font", "Efti Italic", 
+        "Efti Piti", "Efti Robot", "Efti Wall", "Efti Water", "Electronic", "Elite", "Fender", "Filter", "Firecracker", "Flipped", 
+        "Flower Power", "Four Tops", "Fraktur", "Fun Face", "Fun Faces", "Fuzzy", "Ghost", "Ghoulish", "Glenyn", "Goofy", "Gothic", 
+        "Graceful", "Gradient", "Greek", "Heart Left", "Heart Right", "Henry 3D", "Hex", "Hieroglyphs", "Hollywood", "Horizontal Left", 
+        "Horizontal Right", "ICLL", "Isometric1", "Isometric2", "Isometric3", "Isometric4", "Italic", "Jacky", "Jazmine", "Jerusalem", 
+        "Katakana", "Kban", "Keyboard", "Knob", "Konto", "Konto Slant", "LCD", "Lean", "Letters", "Linux", "Lockergnome", "Madrid", 
+        "Marquee", "Maxfour", "Merlin1", "Merlin2", "Mike", "Mini", "Mirror", "Mnemonic", "Modular", "Morse", "Morse2", "Moscow", 
+        "Muzzle", "NScript", "NT Greek", "NV Script", "Nancyj-Fancy", "Nancyj-Underlined", "Nancyj", "Nipples", "O8", "OS2", "Octal", 
+        "Ogres", "Pawp", "Peaks", "Pebbles", "Pepper", "Poison", "Puffy", "Puzzle", "Pyramid", "Rammstein", "Rectangles", "Red Phoenix", 
+        "Relief", "Relief2", "Reverse", "Roman", "Rot13", "Rotated", "Rounded", "Rowan Cap", "Rozzo", "Runic", "Runyc", "S Blood", 
+        "SL Script", "Santa Clara", "Schizo", "Serifcap", "Shimrod", "Short", "Slant Relief", "Slide", "Sm Keyboard", "Sm Script", 
+        "Sm Shadow", "Small Isometric1", "Small Keyboard", "Small Poison", "Small Script", "Small Shadow", "Small Slant", "Small Tengwar", 
+        "Soft", "Speed", "Splinters", "Stacey", "Stampate", "Stampatello", "Star Strips", "Star Wars", "Stellar", "Stforek", "Stick Letters", 
+        "Stop", "Straight", "Stronger Than", "Sub-Zero", "Swamp Land", "Swan", "Sweet", "TOC I", "DOS Rebel", "Thick", "Thin", "Tintin", 
+        "Tombstone", "Train", "Trek", "Tsalagi", "Tubular", "Twisted", "Two Point", "Univers", "USA Flag", "Varsity", "Wavy", "Weird", 
+        "Wet Letter", "Whimsy", "Wow"
     ];
 
-    const App = () => {
-      const [inputText, setInputText] = useState("SimpliConvert");
-      const [selectedFont, setSelectedFont] = useState("Standard");
-      const [asciiArt, setAsciiArt] = useState("Generating...");
-      const [copyStatus, setCopyStatus] = useState("Copy Art");
-      const [showBookmarkToast, setShowBookmarkToast] = useState(false);
-
-      const generateArt = useCallback(() => {
-        if (!inputText.trim()) {
-          setAsciiArt("");
-          return;
-        }
+    // Helper: Save Text as Image via HTML5 Canvas
+    const downloadAsImage = (asciiText, fontName) => {
+        if (!asciiText) return;
         
-        figlet.text(inputText, {
-          font: selectedFont,
-          horizontalLayout: 'default',
-          verticalLayout: 'default',
-          width: 80,
-          whitespaceBreak: true
-        }, function(err, data) {
-          if (err) {
-            console.log('Something went wrong...');
-            console.dir(err);
-            setAsciiArt("Error loading font. Please try again.");
-            return;
-          }
-          setAsciiArt(data);
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        const lines = asciiText.split('\n');
+        
+        const fontSize = 16;
+        const fontFam = "'Fira Code', 'Courier New', Courier, monospace";
+        ctx.font = `${fontSize}px ${fontFam}`;
+        
+        let maxLineWidth = 0;
+        lines.forEach(line => {
+            const width = ctx.measureText(line).width;
+            if (width > maxLineWidth) maxLineWidth = width;
         });
-      }, [inputText, selectedFont]);
 
-      useEffect(() => {
-        generateArt();
-      }, [generateArt]);
+        const padding = 30;
+        canvas.width = Math.max(maxLineWidth + padding * 2, 200);
+        canvas.height = (lines.length * (fontSize * 1.2)) + padding * 2;
 
-      const handleCopy = () => {
-        navigator.clipboard.writeText(asciiArt);
-        setCopyStatus("Copied!");
-        setTimeout(() => setCopyStatus("Copy Art"), 2000);
-      };
+        // Re-apply font after canvas resize
+        ctx.font = `${fontSize}px ${fontFam}`;
+        
+        // Background
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        
+        // Text
+        ctx.fillStyle = '#0f172a';
+        ctx.textBaseline = 'top';
+        lines.forEach((line, index) => {
+            ctx.fillText(line, padding, padding + index * (fontSize * 1.2));
+        });
 
-      const handleBookmark = () => {
-        setShowBookmarkToast(true);
-        setTimeout(() => setShowBookmarkToast(false), 3000);
-      };
+        // Download
+        const link = document.createElement('a');
+        link.download = `ascii-art-${fontName.replace(/\s+/g, '-').toLowerCase()}.png`;
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+    };
 
-      const pageUrl = encodeURIComponent("https://simpliconvert.com/text_to_ascii_art_generator/");
-      const pageTitle = encodeURIComponent("Check out this Text To ASCII Art Generator!");
+    // Component: Lazy Loading ASCII Preview Card
+    const AsciiPreviewCard = ({ text, font, isSelected, onSelect }) => {
+        const [art, setArt] = useState("");
+        const [isVisible, setIsVisible] = useState(false);
+        const [copyStatus, setCopyStatus] = useState("Copy");
+        const containerRef = useRef(null);
 
-      return (
-        <div className="bg-white rounded-[2rem] shadow-2xl overflow-hidden border border-slate-100">
-          <header className="bg-slate-50/50 border-b border-slate-100 p-6 md:p-8 flex flex-col md:flex-row justify-between items-center gap-6">
-            <div className="text-center md:text-left">
-              <h2 className="text-2xl font-black text-slate-800 tracking-tight flex items-center justify-center md:justify-start gap-3">
-                <span className="bg-[#da3f0b] text-white p-2 rounded-xl text-lg shadow-lg shadow-[#da3f0b30]">
-                  <i className="fas fa-font"></i>
-                </span>
-                ASCII Text Maker
-              </h2>
-            </div>
-          </header>
+        // Intersection Observer for Lazy Loading Fonts
+        useEffect(() => {
+            const observer = new IntersectionObserver(([entry]) => {
+                if (entry.isIntersecting) {
+                    setIsVisible(true);
+                    observer.disconnect();
+                }
+            }, { rootMargin: '100px' });
 
-          <main className="flex flex-col lg:flex-row">
-            {/* Input Panel */}
-            <div className="lg:w-[40%] p-6 md:p-10 border-r border-slate-100">
-              <div className="space-y-6">
-                <div>
-                  <label className="text-xs font-black text-slate-500 uppercase tracking-widest mb-2 block">Your Text</label>
-                  <textarea
-                    className="w-full h-32 p-4 rounded-xl border border-slate-200 focus:ring-4 focus:ring-[#da3f0b20] focus:border-[#da3f0b] outline-none transition-all font-medium text-slate-700 bg-white resize-none"
-                    placeholder="Type something here..."
-                    value={inputText}
-                    onChange={(e) => setInputText(e.target.value)}
-                  />
+            if (containerRef.current) {
+                observer.observe(containerRef.current);
+            }
+            return () => observer.disconnect();
+        }, []);
+
+        useEffect(() => {
+            if (isVisible && text.trim()) {
+                figlet.text(text, { font: font, whitespaceBreak: true }, (err, data) => {
+                    if (err) setArt("Error loading font.");
+                    else setArt(data);
+                });
+            } else if (!text.trim()) {
+                setArt("");
+            }
+        }, [text, font, isVisible]);
+
+        const handleCopy = () => {
+            navigator.clipboard.writeText(art);
+            setCopyStatus("Copied!");
+            setTimeout(() => setCopyStatus("Copy"), 2000);
+        };
+
+        return (
+            <div ref={containerRef} className={`flex flex-col bg-white rounded-2xl border ${isSelected ? 'border-[#da3f0b] shadow-md ring-1 ring-[#da3f0b]' : 'border-slate-200 shadow-sm'} overflow-hidden mb-6 transition-all`}>
+                <div className="bg-slate-50 border-b border-slate-100 p-3 px-5 flex justify-between items-center">
+                    <div className="flex items-center gap-3">
+                        <span className="font-bold text-slate-700">{font}</span>
+                        {onSelect && (
+                            <button 
+                                onClick={() => onSelect(font)} 
+                                className={`text-[10px] px-2 py-1 uppercase tracking-wider font-bold rounded ${isSelected ? 'bg-[#da3f0b] text-white' : 'bg-slate-200 text-slate-500 hover:bg-slate-300'}`}
+                            >
+                                {isSelected ? 'Selected' : 'Use Style'}
+                            </button>
+                        )}
+                    </div>
+                    <div className="flex gap-2">
+                        <button onClick={handleCopy} disabled={!art} className="flex items-center gap-1.5 text-xs font-bold text-slate-600 bg-white border border-slate-200 hover:border-slate-400 hover:text-slate-800 px-3 py-1.5 rounded-lg transition-colors">
+                            <i className={copyStatus === "Copied!" ? "fas fa-check text-green-500" : "fas fa-copy"}></i> {copyStatus}
+                        </button>
+                        <button onClick={() => downloadAsImage(art, font)} disabled={!art} className="flex items-center gap-1.5 text-xs font-bold text-white bg-slate-800 hover:bg-slate-700 px-3 py-1.5 rounded-lg transition-colors">
+                            <i className="fas fa-image"></i> Save Image
+                        </button>
+                    </div>
                 </div>
-
-                <div>
-                  <label className="text-xs font-black text-slate-500 uppercase tracking-widest mb-2 block">Select Style</label>
-                  <div className="grid grid-cols-2 gap-2">
-                    {fonts.map(font => (
-                      <button
-                        key={font}
-                        onClick={() => setSelectedFont(font)}
-                        className={`px-4 py-2 rounded-lg text-xs font-bold transition-all border ${
-                          selectedFont === font 
-                          ? 'bg-[#da3f0b] text-white border-[#da3f0b]' 
-                          : 'bg-white text-slate-600 border-slate-200 hover:border-[#da3f0b]'
-                        }`}
-                      >
-                        {font}
-                      </button>
-                    ))}
-                  </div>
+                <div className="p-5 overflow-x-auto custom-scrollbar">
+                    {isVisible ? (
+                        <div className="ascii-output text-[10px] sm:text-xs md:text-sm text-slate-800 min-h-[60px] flex items-center">
+                            {art || (text ? "Generating..." : "Type text to preview")}
+                        </div>
+                    ) : (
+                        <div className="min-h-[60px] flex items-center justify-center text-slate-300 text-sm">
+                            <i className="fas fa-spinner fa-spin mr-2"></i> Loading font...
+                        </div>
+                    )}
                 </div>
-              </div>
             </div>
+        );
+    };
 
-            {/* Output Panel */}
-            <div className="lg:w-[60%] bg-slate-50/50 p-6 md:p-10 flex flex-col">
-              <div className="flex justify-between items-center mb-4">
-                <span className="text-xs font-black text-slate-400 uppercase tracking-widest">Preview</span>
-                <button 
-                  onClick={handleCopy}
-                  className="bg-slate-800 text-white px-4 py-2 rounded-lg text-xs font-bold hover:bg-slate-700 transition-all flex items-center gap-2"
-                >
-                  <i className={copyStatus === "Copied!" ? "fas fa-check" : "fas fa-copy"}></i>
-                  {copyStatus}
-                </button>
-              </div>
-              
-              <div className="flex-grow bg-white rounded-2xl border border-slate-200 shadow-inner p-6 overflow-hidden flex flex-col">
-                <div className="ascii-output text-[10px] sm:text-xs md:text-sm text-slate-800 flex-grow overflow-auto">
-                  {asciiArt || "Start typing to see magic..."}
-                </div>
-              </div>
-              
-              <p className="mt-4 text-[10px] text-slate-400 font-medium italic">
-                * Note: ASCII art displays best in monospaced environments like code editors or terminals.
-              </p>
+    const App = () => {
+        const [inputText, setInputText] = useState("SimpliConvert");
+        const [selectedFont, setSelectedFont] = useState("Standard");
+        const [viewMode, setViewMode] = useState("single"); // 'single' or 'all'
+        const [searchTerm, setSearchTerm] = useState("");
+
+        const filteredFonts = useMemo(() => {
+            return ALL_FONTS.filter(f => f.toLowerCase().includes(searchTerm.toLowerCase()));
+        }, [searchTerm]);
+
+        return (
+            <div className="bg-white rounded-3xl shadow-xl border border-slate-100 overflow-hidden">
+                {/* Header */}
+                <header className="bg-slate-50/80 border-b border-slate-100 p-6 md:p-8 flex justify-between items-center">
+                    <h2 className="text-2xl font-black text-slate-800 tracking-tight flex items-center gap-3">
+                        <span className="bg-[#da3f0b] text-white p-2 rounded-xl text-lg shadow-lg shadow-[#da3f0b30]">
+                            <i className="fas fa-font"></i>
+                        </span>
+                        ASCII Style Studio
+                    </h2>
+                </header>
+
+                <main className="flex flex-col lg:flex-row items-start relative">
+                    
+                    {/* Left Panel: Controls */}
+                    <div className="w-full lg:w-[40%] p-6 md:p-8 lg:border-r border-slate-100 flex flex-col gap-6 shrink-0">
+                        
+                        {/* Input Area */}
+                        <div>
+                            <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest mb-2 block ml-1">Your Text</label>
+                            <textarea
+                                className="w-full h-28 p-4 rounded-xl border border-slate-200 focus:ring-4 focus:ring-[#da3f0b20] focus:border-[#da3f0b] outline-none transition-all font-medium text-slate-700 bg-white resize-none shadow-sm"
+                                placeholder="Type something cool..."
+                                value={inputText}
+                                onChange={(e) => setInputText(e.target.value)}
+                            />
+                        </div>
+
+                        {/* View Mode Toggle */}
+                        <div className="flex bg-slate-100 p-1 rounded-xl">
+                            <button 
+                                onClick={() => setViewMode("single")}
+                                className={`flex-1 py-2 text-sm font-bold rounded-lg transition-all ${viewMode === 'single' ? 'bg-white text-[#da3f0b] shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
+                            >
+                                <i className="fas fa-crosshairs mr-2"></i>Single Style
+                            </button>
+                            <button 
+                                onClick={() => setViewMode("all")}
+                                className={`flex-1 py-2 text-sm font-bold rounded-lg transition-all ${viewMode === 'all' ? 'bg-white text-[#da3f0b] shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
+                            >
+                                <i className="fas fa-list mr-2"></i>View All (140+)
+                            </button>
+                        </div>
+
+                        {/* Search & Style Grid (Only in Single Mode) */}
+                        {viewMode === "single" && (
+                            <div className="flex flex-col gap-4">
+                                <div className="relative">
+                                    <i className="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                                    <input 
+                                        type="text" 
+                                        placeholder="Search styles..." 
+                                        value={searchTerm}
+                                        onChange={(e) => setSearchTerm(e.target.value)}
+                                        className="w-full bg-slate-50 border border-slate-200 rounded-xl py-3 pl-11 pr-4 text-sm font-medium outline-none focus:border-[#da3f0b] transition-colors"
+                                    />
+                                </div>
+                                
+                                <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest mt-2 ml-1">
+                                    Available Styles ({filteredFonts.length})
+                                </label>
+                                
+                                <div className="grid grid-cols-2 gap-2 max-h-[400px] overflow-y-auto custom-scrollbar pr-2 pb-2">
+                                    {filteredFonts.length > 0 ? filteredFonts.map(font => (
+                                        <button
+                                            key={font}
+                                            onClick={() => setSelectedFont(font)}
+                                            className={`px-3 py-2.5 rounded-xl text-xs font-bold transition-all border text-left truncate ${
+                                                selectedFont === font 
+                                                ? 'bg-[#fff5f2] text-[#da3f0b] border-[#da3f0b] ring-1 ring-[#da3f0b]' 
+                                                : 'bg-white text-slate-600 border-slate-200 hover:border-slate-300 hover:bg-slate-50'
+                                            }`}
+                                        >
+                                            {font}
+                                        </button>
+                                    )) : (
+                                        <div className="col-span-2 text-center py-8 text-slate-400 text-sm">No styles found.</div>
+                                    )}
+                                </div>
+                            </div>
+                        )}
+
+                        {viewMode === "all" && (
+                            <div className="bg-blue-50 border border-blue-100 text-blue-800 p-4 rounded-xl text-sm font-medium">
+                                <i className="fas fa-info-circle mr-2"></i>
+                                Scroll through the right panel to preview your text rendered in over 140 different ASCII styles simultaneously.
+                            </div>
+                        )}
+                    </div>
+
+                    {/* Right Panel: Sticky Preview Area */}
+                    <div className="w-full lg:w-[60%] bg-slate-50/50 p-6 md:p-8 lg:sticky top-0 h-auto lg:h-[800px] overflow-y-auto custom-scrollbar flex flex-col relative z-0">
+                        <div className="flex justify-between items-center mb-6 sticky top-0 bg-slate-50/90 backdrop-blur-md pb-2 z-10 pt-2 -mt-2">
+                            <span className="text-[11px] font-black text-slate-400 uppercase tracking-widest">
+                                {viewMode === 'single' ? 'Live Preview' : `All Styles (${ALL_FONTS.length})`}
+                            </span>
+                        </div>
+
+                        {viewMode === 'single' ? (
+                            <div className="h-full">
+                                <AsciiPreviewCard 
+                                    text={inputText} 
+                                    font={selectedFont} 
+                                    isSelected={true} 
+                                />
+                                <div className="mt-8 text-center bg-white p-6 border border-slate-200 border-dashed rounded-2xl">
+                                    <i className="fas fa-lightbulb text-yellow-400 text-3xl mb-3"></i>
+                                    <h4 className="font-bold text-slate-700 mb-1">Pro Tip</h4>
+                                    <p className="text-xs text-slate-500 max-w-sm mx-auto">
+                                        ASCII art renders best on platforms using monospaced fonts, like code editors (VS Code), Command Prompts, and GitHub Readme files.
+                                    </p>
+                                </div>
+                            </div>
+                        ) : (
+                            <div className="flex flex-col">
+                                {ALL_FONTS.map(font => (
+                                    <AsciiPreviewCard 
+                                        key={font} 
+                                        text={inputText} 
+                                        font={font} 
+                                        isSelected={font === selectedFont}
+                                        onSelect={(selected) => {
+                                            setSelectedFont(selected);
+                                            setViewMode("single");
+                                        }}
+                                    />
+                                ))}
+                            </div>
+                        )}
+                    </div>
+                </main>
             </div>
-          </main>
-
-          {/* Share & Bookmark Footer */}
+         {/* Share & Bookmark Footer */}
           <footer className="bg-slate-50 border-t border-slate-100 p-6 md:p-8">
              <div className="flex flex-col md:flex-row items-center justify-between gap-6">
                  <div className="text-center md:text-left">
@@ -358,80 +517,221 @@ figlet.defaults({ fontPath: 'https://unpkg.com/figlet@1.7.0/fonts' });
     root.render(<App />);
     </script>
 
-    <section class="bg-white py-12 sm:py-16">
-        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="prose prose-lg max-w-none prose-h2:text-gray-800 prose-p:text-gray-700">
-                <h2 class="text-3xl font-bold text-gray-900 mb-4">Text To ASCII Art Generator – Stylize Your Digital Presence</h2>
-                <p class="mb-6 leading-relaxed">
-                    In the early days of computing, before high-resolution graphics were common, developers and users relied on <strong>ASCII art</strong> to create visual elements. Today, this retro aesthetic is more popular than ever. Our <strong>Text To ASCII Art Generator</strong> allows you to instantly transform plain text into stylized banners, headers, and creative art pieces using standard keyboard characters.
-                </p>
 
-                <h2 class="text-2xl font-bold mt-8 mb-4">Why Use an ASCII Text Maker?</h2>
-                <p class="mb-6 leading-relaxed">
-                    Whether you are a developer looking to add a professional touch to your source code comments or a social media enthusiast wanting to stand out, our <em>ASCII text maker</em> is the perfect tool. ASCII art is lightweight, text-based, and works in environments where images might not be supported, such as terminal windows, README files, and plain-text emails.
-                </p>
-                <ul class="list-disc pl-6 mb-6 space-y-2 text-gray-700">
-                    <li><strong>Code Documentation:</strong> Use large ASCII banners to separate sections in your scripts.</li>
-                    <li><strong>Terminal Personalization:</strong> Create custom "Message of the Day" (MOTD) headers for your Linux or macOS terminal.</li>
-                    <li><strong>Social Media:</strong> Stand out on platforms like Reddit or Discord with unique text styles.</li>
-                    <li><strong>Retro Design:</strong> Embrace the 80s and 90s aesthetic in your digital projects.</li>
-                </ul>
 
-                <h2 class="text-2xl font-bold mt-8 mb-4">How to Generate ASCII Art Online</h2>
-                <p class="mb-6 leading-relaxed">
-                    Using our tool is incredibly simple. Just type your desired text into the input field, and the <strong>ASCII banner generator</strong> will update the preview in real-time. You can experiment with different fonts like <em>Standard, Slant, Shadow,</em> and <em>Graffiti</em> to find the style that fits your project. Once you're happy with the result, simply click the "Copy Art" button and paste it wherever you need.
-                </p>
-
-                <h2 class="text-2xl font-bold mt-8 mb-4">Best Practices for Copy-Paste ASCII Art</h2>
-                <p class="mb-6 leading-relaxed">
-                    To ensure your ASCII art looks perfect, remember that it relies on <strong>monospaced fonts</strong>. These are fonts where every character takes up the exact same amount of horizontal space (like Courier, Consolas, or Fira Code). If you paste your art into a variable-width font environment (like a standard Word document), the characters will shift, and the image will break. Always use a code block or a monospaced setting for the best visual result.
-                </p>
-            </div>
         </div>
     </section>
 
-    <section class="bg-gray-50 py-12 sm:py-16">
-        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 class="text-3xl font-bold text-center text-gray-900 mb-8">Frequently Asked Questions</h2>
-            <div class="space-y-4">
-                <div class="bg-white rounded-lg shadow-sm">
-                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
-                        <span>Is this ASCII generator free to use?</span>
-                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-                        </svg>
-                    </button>
-                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
-                        <p class="p-5 pt-0 text-gray-600">Yes, our Text To ASCII Art Generator is 100% free. You can generate and copy as many banners as you like without any limitations or sign-ups.</p>
-                    </div>
-                </div>
 
-                <div class="bg-white rounded-lg shadow-sm">
-                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
-                        <span>Which font works best for coding comments?</span>
-                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-                        </svg>
-                    </button>
-                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
-                        <p class="p-5 pt-0 text-gray-600">The "Standard" and "Small" fonts are generally best for code comments as they are legible and don't take up too much horizontal space, preventing line-wrapping issues in IDEs.</p>
-                    </div>
-                </div>
 
-                <div class="bg-white rounded-lg shadow-sm">
-                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
-                        <span>Will this work on Discord or Reddit?</span>
-                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-                        </svg>
-                    </button>
-                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
-                        <p class="p-5 pt-0 text-gray-600">Yes! On Discord, wrap your ASCII art in triple backticks (```) to use a code block. On Reddit, use the "Code Block" formatting option to ensure the characters align correctly.</p>
-                    </div>
+
+
+
+<section class="bg-white py-12 sm:py-16">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="prose prose-lg max-w-none prose-h2:text-gray-800 prose-p:text-gray-700">
+            
+            <h1 class="text-4xl font-extrabold text-gray-900 mb-6">Stop Paying for Basic Dev Tools: The Ultimate Free Text to ASCII Art Generator</h1>
+            
+            <p class="mb-6 leading-relaxed">
+                You are staring at your screen. It is 2:14 AM on a Tuesday. You just want a clean script header to finish this project. But every ascii text generator online is buried under ten layers of popup ads. Or worse, it is locked behind a ridiculous "pro developer" subscription plan. Paying $12 a month for basic text utilities is a scam. I refuse to participate in it. You shouldn't either. SimpliConvert is the entirely free, browser-based alternative that actually respects your workflow.
+            </p>
+
+            <h3 class="text-xl font-bold mt-8 mb-4">SimpliConvert Free Tools vs. Paid Alternatives</h3>
+            <div class="overflow-x-auto mb-8">
+                <table class="min-w-full text-left border-collapse">
+                    <thead>
+                        <tr class="bg-gray-100 text-gray-800 border-b-2 border-gray-300">
+                            <th class="py-3 px-4 font-semibold">SimpliConvert Free Tools</th>
+                            <th class="py-3 px-4 font-semibold">What It Does</th>
+                            <th class="py-3 px-4 font-semibold">Paid Alternative</th>
+                            <th class="py-3 px-4 font-semibold">Monthly Cost</th>
+                            <th class="py-3 px-4 font-semibold">SimpliConvert Cost</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-gray-700">
+                        <tr class="border-b border-gray-200 hover:bg-gray-50">
+                            <td class="py-3 px-4">Text to ASCII Art Generator</td>
+                            <td class="py-3 px-4">Creates terminal headers</td>
+                            <td class="py-3 px-4">DevSuite Pro</td>
+                            <td class="py-3 px-4">$9.99/mo</td>
+                            <td class="py-3 px-4 font-bold text-green-600">Free</td>
+                        </tr>
+                        <tr class="border-b border-gray-200 hover:bg-gray-50">
+                            <td class="py-3 px-4">Online Text Case Converter</td>
+                            <td class="py-3 px-4">Formats messy string data</td>
+                            <td class="py-3 px-4">TextFormat SaaS</td>
+                            <td class="py-3 px-4">$4.99/mo</td>
+                            <td class="py-3 px-4 font-bold text-green-600">Free</td>
+                        </tr>
+                        <tr class="border-b border-gray-200 hover:bg-gray-50">
+                            <td class="py-3 px-4">Markdown Editor</td>
+                            <td class="py-3 px-4">Previews repo readmes</td>
+                            <td class="py-3 px-4">GhostWriter App</td>
+                            <td class="py-3 px-4">$15.00/mo</td>
+                            <td class="py-3 px-4 font-bold text-green-600">Free</td>
+                        </tr>
+                        <tr class="border-b border-gray-200 hover:bg-gray-50">
+                            <td class="py-3 px-4">Text Summary Tool</td>
+                            <td class="py-3 px-4">Condenses client briefs</td>
+                            <td class="py-3 px-4">AI Summarizer Plus</td>
+                            <td class="py-3 px-4">$20.00/mo</td>
+                            <td class="py-3 px-4 font-bold text-green-600">Free</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h2 class="text-2xl font-bold mt-10 mb-4">Building Readable Code Documentation (Without Losing Your Mind)</h2>
+            <p class="mb-6 leading-relaxed">
+                I hate messy code. We all do. Picture this exact nightmare. You are handing over a 4,000-line Python monolith to a frantic client at 4 PM on a Friday. If the core logic sections are not visibly separated, their junior dev is going to break the entire application by Monday morning. You need massive visual breaks. You need a dedicated <a href="https://simpliconvert.com/text_to_ascii_art_generator/" class="text-blue-600 hover:underline">text to ascii art generator</a>.
+            </p>
+            <p class="mb-6 leading-relaxed">
+                Instead of writing tedious comment blocks manually, you type a phrase. The tool instantly outputs a massive, monospaced header. You copy it. You paste it directly into your IDE. Problem solved. This is why an ascii art generator exists in the first place. It turns plain text into impossible-to-miss structural signposts. 
+                <br><br>
+                
+            </p>
+
+            <div class="bg-gray-50 border-l-4 border-blue-500 p-6 mb-8 rounded-r-lg">
+                <p class="mb-2"><strong>Text to ASCII Art Generator</strong></p>
+                <p class="mb-2">— <strong>What it is:</strong> A web utility that converts standard typed characters into large, stylized monospaced banners.</p>
+                <p class="mb-2">— <strong>When to use it:</strong> Whenever you need to create unmissable section headers in source code, README files, or terminal MOTD screens.</p>
+                <p class="mb-0">— <strong>Why it's free:</strong> Basic string manipulation shouldn't cost money, and we believe developers deserve clean tools without paywalls.</p>
+            </div>
+
+            <p class="mb-6 leading-relaxed">
+                You do not need a heavy desktop client for this. An ascii text maker running directly in your browser is infinitely faster. When I need an ascii banner generator, I want to hit the page, type my string, and leave. Our platform gives you exactly that. It processes the text, renders the ascii font generator styles in real-time, and lets you get back to actually building software.
+            </p>
+
+            <h2 class="text-2xl font-bold mt-10 mb-4">Formatting Strings and Sanitizing Copy on the Fly</h2>
+            <p class="mb-6 leading-relaxed">
+                Here is a hot take. Paying a monthly subscription for simple text formatting tools is a literal tax on the disorganized. It blows my mind that "premium" SaaS companies charge $5 a month just to fix capitalization. [VERIFY — SOURCE NEEDED] It is absolute robbery.
+            </p>
+            <p class="mb-6 leading-relaxed">
+                Let's look at a very real, very annoying scenario. A disorganized project manager drops a 50-page raw text dump into Slack. Every single header is inconsistently capitalized. Half the text is screaming in uppercase. You aren't going to retype that garbage by hand. You jump over to the <a href="https://simpliconvert.com/online_text_case_converter/" class="text-blue-600 hover:underline">online text case converter</a>. You paste the disaster in. One click later, it is perfectly formatted sentence case. Your database remains clean. Your sanity remains intact.
+            </p>
+
+            <div class="bg-gray-50 border-l-4 border-blue-500 p-6 mb-8 rounded-r-lg">
+                <p class="mb-2"><strong>Online Text Case Converter</strong></p>
+                <p class="mb-2">— <strong>What it is:</strong> A fast string manipulator that toggles text between uppercase, lowercase, title case, and sentence case.</p>
+                <p class="mb-2">— <strong>When to use it:</strong> When a client sends you deeply inconsistent copy that needs immediate sanitization before hitting a production database.</p>
+                <p class="mb-0">— <strong>Why it's free:</strong> Browsers can execute this logic natively in milliseconds, making server-side subscription models a complete joke.</p>
+            </div>
+
+            <p class="mb-6 leading-relaxed">
+                Sometimes you need to get weird with the text. Maybe you are managing a Discord community and need an <a href="https://simpliconvert.com/emoji_text_generator/" class="text-blue-600 hover:underline">emoji text generator</a> to make server announcements stand out in a sea of notifications. Or perhaps you are debugging a bizarre database encoding issue. You need to pipe strings through a <a href="https://simpliconvert.com/text_to_unicode/" class="text-blue-600 hover:underline">text to unicode</a> converter to see what invisible character is breaking the parser. These are quick, dirty, everyday tasks. They demand instant access. No logins. No credit cards.
+            </p>
+
+            <h2 class="text-2xl font-bold mt-10 mb-4">Writing and Reviewing Project READMEs Fast</h2>
+            <p class="mb-6 leading-relaxed">
+                Writing documentation is painful enough. Testing it shouldn't be.
+            </p>
+            <p class="mb-6 leading-relaxed">
+                Imagine the repository goes public in exactly five minutes. You need to verify the markdown syntax renders correctly. Naturally, your local IDE extension just crashed. Panic sets in. You do not have time to debug your plugins right now. You just need a visual confirmation that your tables aren't broken.
+            </p>
+            <p class="mb-6 leading-relaxed">
+                This is exactly where a reliable <a href="https://simpliconvert.com/markdown_editor/" class="text-blue-600 hover:underline">markdown editor</a> saves your launch. You drop the raw text art generator snippets and markdown tables into the left pane. The right pane shows you the fully rendered HTML instantly. The visual feedback is immediate. You copy the validated code, commit the changes, and push to production without a single layout error. 
+                <br><br>
+                
+            </p>
+
+            <div class="bg-gray-50 border-l-4 border-blue-500 p-6 mb-8 rounded-r-lg">
+                <p class="mb-2"><strong>Markdown Editor</strong></p>
+                <p class="mb-2">— <strong>What it is:</strong> A split-pane, real-time rendering environment for writing and testing markdown syntax.</p>
+                <p class="mb-2">— <strong>When to use it:</strong> When your local environment fails and you need to safely preview GitHub readmes or blog posts before committing changes.</p>
+                <p class="mb-0">— <strong>Why it's free:</strong> Open-source markdown parsers are universally accessible, and we simply wrapped one in a clean, ad-free interface for your convenience.</p>
+            </div>
+
+            <p class="mb-6 leading-relaxed">
+                If you are building out the frontend and need to see how the layout handles large text blocks, don't mash your keyboard. Generate a massive block of lorem ipsum with our <a href="https://simpliconvert.com/random_text_generator/" class="text-blue-600 hover:underline">random text generator</a>. It fills the DOM immediately. You verify the CSS doesn't break under pressure. You delete the dummy data. Simple.
+            </p>
+
+            <h2 class="text-2xl font-bold mt-10 mb-4">Processing Client Brain Dumps and Audio Scripts</h2>
+            <p class="mb-6 leading-relaxed">
+                My second hot take? The entire "AI summarization" market is mostly a scam. Startups are charging $20 a month for API wrappers that do nothing but condense text. It is infuriating to watch freelancers burn their budgets on these tools.
+            </p>
+            <p class="mb-6 leading-relaxed">
+                When a client sends a rambling 3,000-word email about their "vision," you don't read it. You paste it into our free <a href="https://simpliconvert.com/text_summary_tool/" class="text-blue-600 hover:underline">text summary tool</a>. It extracts the actual technical requirements. You save thirty minutes of your life. If you are reviewing accessibility features or need to hear how a script flows out loud, you drop the result into the <a href="https://simpliconvert.com/text_to_speech/" class="text-blue-600 hover:underline">text to speech</a> engine. You listen. You adjust the copy. You move on with your day. Stop funding bloated software companies for tasks your browser can handle locally.
+            </p>
+
+            <p class="italic text-gray-500 mt-12 border-t pt-6">
+                Written by Alex Martinez, a freelance Business Tech Strategist with 9 years working in industry.
+            </p>
+
+        </div>
+    </div>
+</section>
+
+<section class="bg-gray-50 py-12 sm:py-16">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <h2 class="text-3xl font-bold text-center text-gray-900 mb-8">Frequently Asked Questions</h2>
+        <div class="space-y-4">
+            
+            <div class="bg-white rounded-lg shadow-sm">
+                <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                    <span>Are these text to ascii art generator tools really free?</span>
+                    <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                    </svg>
+                </button>
+                <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                    <p class="p-5 pt-0 text-gray-600">Yes, every single tool on this platform is completely free. We do not hide features behind paywalls or enforce arbitrary daily usage limits.</p>
                 </div>
             </div>
+
+            <div class="bg-white rounded-lg shadow-sm">
+                <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                    <span>Do I need to create an account?</span>
+                    <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                    </svg>
+                </button>
+                <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                    <p class="p-5 pt-0 text-gray-600">No account is required. You can load the page, paste your text, and grab your ascii art text immediately without handing over your email address.</p>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-sm">
+                <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                    <span>Can I use the generated ascii art in commercial projects?</span>
+                    <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                    </svg>
+                </button>
+                <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                    <p class="p-5 pt-0 text-gray-600">Absolutely. The outputs generated by our ascii text generator belong entirely to you. Paste them into commercial source code, marketing emails, or terminal headers without restriction.</p>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-sm">
+                <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                    <span>Why does the ascii art look misaligned when I paste it into Microsoft Word?</span>
+                    <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                    </svg>
+                </button>
+                <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                    <p class="p-5 pt-0 text-gray-600">ASCII art relies entirely on monospaced fonts to maintain its shape. If you paste it into a variable-width environment like Word, the characters will shift. Always use a code block or a font like Courier or Consolas to fix it.</p>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-sm">
+                <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none">
+                    <span>Is my raw text data stored on your servers?</span>
+                    <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                    </svg>
+                </button>
+                <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                    <p class="p-5 pt-0 text-gray-600">No. The vast majority of our text art generator utilities process your data locally right inside your browser. We do not save, store, or sell your pasted clipboard content.</p>
+                </div>
+            </div>
+
         </div>
-    </section>
+    </div>
+</section>
+
+
 
     <section class="bg-gray-50 pb-16">
         <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-slate-200 pt-16">
