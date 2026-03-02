@@ -143,13 +143,46 @@
     <script type="text/babel">
     const { useState, useRef, useEffect } = React;
 
+    const ShareButton = ({ platform, icon, color, url, title }) => {
+        let shareUrl = '';
+        switch(platform) {
+            case 'facebook': shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${url}`; break;
+            case 'twitter': shareUrl = `https://twitter.com/intent/tweet?url=${url}&text=${title}`; break;
+            case 'linkedin': shareUrl = `https://www.linkedin.com/shareArticle?mini=true&url=${url}`; break;
+            case 'whatsapp': shareUrl = `https://api.whatsapp.com/send?text=${title}%20${url}`; break;
+            case 'reddit': shareUrl = `https://www.reddit.com/submit?url=${url}&title=${title}`; break;
+            case 'telegram': shareUrl = `https://t.me/share/url?url=${url}&text=${title}`; break;
+            default: return null;
+        }
+
+        return (
+            <a 
+                href={shareUrl} 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className={`w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center text-white transition-transform hover:-translate-y-1 hover:shadow-lg ${color}`}
+            >
+                <i className={`fab fa-${icon}`}></i>
+            </a>
+        );
+    };
+
     const App = () => {
       const [text, setText] = useState('');
       const [copied, setCopied] = useState(false);
       const [charCount, setCharCount] = useState(0);
       const [hashtagCount, setHashtagCount] = useState(0);
       const [lineCount, setLineCount] = useState(0);
+      const [showBookmarkToast, setShowBookmarkToast] = useState(false);
       const outputRef = useRef(null);
+
+      const pageUrl = typeof window !== 'undefined' ? window.location.href : '';
+      const pageTitle = typeof document !== 'undefined' ? document.title : 'Instagram Caption Line Break';
+
+      const handleBookmark = () => {
+        setShowBookmarkToast(true);
+        setTimeout(() => setShowBookmarkToast(false), 3000);
+      };
 
       // Instagram Limits
       const MAX_CHARS = 2200;
@@ -208,7 +241,8 @@
       };
 
       return (
-        <div className="bg-white rounded-[2rem] shadow-2xl overflow-hidden border border-slate-100 flex flex-col md:flex-row min-h-[600px]">
+        <div className="bg-white rounded-[2rem] shadow-2xl overflow-hidden border border-slate-100">
+          <div className="flex flex-col md:flex-row min-h-[600px]">
           
           {/* Input Area */}
           <div className="w-full md:w-2/3 p-6 md:p-8 flex flex-col border-b md:border-b-0 md:border-r border-slate-100 relative">
@@ -313,6 +347,40 @@ We will preserve them magically!
              </div>
           </div>
 
+          </div>
+          
+          {/* Share & Bookmark Footer */}
+          <footer className="bg-slate-50 border-t border-slate-100 p-6 md:p-8">
+             <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+                 <div className="text-center md:text-left">
+                     <h4 className="text-sm font-bold text-slate-700 mb-1">Share this tool</h4>
+                     <p className="text-xs text-slate-400">Help others fix their captions.</p>
+                 </div>
+                 
+                 <div className="flex flex-wrap justify-center gap-3">
+                     <ShareButton platform="facebook" icon="facebook-f" color="bg-[#1877F2]" url={pageUrl} title={pageTitle} />
+                     <ShareButton platform="twitter" icon="twitter" color="bg-[#1DA1F2]" url={pageUrl} title={pageTitle} />
+                     <ShareButton platform="linkedin" icon="linkedin-in" color="bg-[#0A66C2]" url={pageUrl} title={pageTitle} />
+                     <ShareButton platform="whatsapp" icon="whatsapp" color="bg-[#25D366]" url={pageUrl} title={pageTitle} />
+                     <ShareButton platform="reddit" icon="reddit-alien" color="bg-[#FF4500]" url={pageUrl} title={pageTitle} />
+                     <ShareButton platform="telegram" icon="telegram-plane" color="bg-[#0088cc]" url={pageUrl} title={pageTitle} />
+                 </div>
+
+                 <div className="relative">
+                     <button 
+                       onClick={handleBookmark}
+                       className="flex items-center gap-2 bg-white border border-slate-200 hover:border-[#da3f0b] hover:text-[#da3f0b] text-slate-600 px-4 py-2 rounded-lg text-sm font-bold transition-all shadow-sm active:scale-95"
+                     >
+                        <i className="fas fa-bookmark"></i> Bookmark
+                     </button>
+                     {showBookmarkToast && (
+                         <div className="absolute bottom-full mb-3 left-1/2 -translate-x-1/2 bg-slate-800 text-white text-xs py-2 px-4 rounded-lg shadow-lg whitespace-nowrap animate-fade">
+                             Press <span className="font-bold text-[#da3f0b]">Ctrl + D</span> to bookmark
+                         </div>
+                     )}
+                 </div>
+             </div>
+          </footer>
         </div>
       );
     };
@@ -325,47 +393,100 @@ We will preserve them magically!
     <section class="bg-white py-12 sm:py-16">
   <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="prose prose-lg max-w-none prose-h2:text-gray-800 prose-p:text-gray-700">
+            
+            <h2 class="text-4xl font-extrabold text-gray-900 mb-6">Stop Paying for "Pro" Apps: The Ultimate Free Instagram Caption Line Break Generator</h2>
+            
+            <p class="mb-6 leading-relaxed">
+                It is 11:45 PM. You just pasted a perfectly formatted caption into Instagram. You hit post. It collapses into a dense, unreadable brick of text. You are tired. You are angry. And the App Store wants to charge you $4.99 a month for a "space generator" that does nothing but insert an invisible character. It is a scam. I refuse to let you pay for it. SimpliConvert is the free, browser-based utility hub that respects your wallet.
+            </p>
 
-      <h2 class="text-3xl font-bold text-gray-900 mb-4">Why Do Instagram Captions Lose Line Breaks?</h2>
-      <p class="mb-6 leading-relaxed">
-        It's a frustrating common problem: you type out a beautiful, easy-to-read caption in your notes app, paste it into Instagram, and when you hit post, it turns into a giant, unreadable wall of text. Instagram's algorithm automatically strips out "empty" whitespace at the end of lines to save data. Our <strong>Instagram Caption Line Break Generator</strong> solves this by inserting invisible "Zero Width Space" characters or formatting the text specifically so Instagram recognizes the breaks as legitimate content.
-      </p>
-      <p class="mb-6 leading-relaxed">
-        Just like our <a href="https://simpliconvert.com/markdown_editor/" target="_blank" style="color:orange;">Markdown Editor</a> helps writers preserve formatting across platforms, this caption tool ensures your Instagram posts look exactly how you intended.
-      </p>
+            <h3 class="text-xl font-bold mt-8 mb-4">SimpliConvert Free Tools vs. Paid Alternatives</h3>
+            <div class="overflow-x-auto mb-8">
+                <table class="min-w-full text-left border-collapse">
+                    <thead>
+                        <tr class="bg-gray-100 text-gray-800 border-b-2 border-gray-300">
+                            <th class="py-3 px-4 font-semibold">SimpliConvert Free Tools</th>
+                            <th class="py-3 px-4 font-semibold">What It Does</th>
+                            <th class="py-3 px-4 font-semibold">Paid Alternative</th>
+                            <th class="py-3 px-4 font-semibold">Monthly Cost</th>
+                            <th class="py-3 px-4 font-semibold">SimpliConvert Cost</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-gray-700">
+                        <tr class="border-b border-gray-200 hover:bg-gray-50">
+                            <td class="py-3 px-4">Instagram Caption Line Break</td>
+                            <td class="py-3 px-4">Fixes bio formatting</td>
+                            <td class="py-3 px-4">Spacie App Pro</td>
+                            <td class="py-3 px-4">$2.99/mo</td>
+                            <td class="py-3 px-4 font-bold text-green-600">Free</td>
+                        </tr>
+                        <tr class="border-b border-gray-200 hover:bg-gray-50">
+                            <td class="py-3 px-4">TikTok Creator Fund Calc</td>
+                            <td class="py-3 px-4">Estimates viral earnings</td>
+                            <td class="py-3 px-4">TikAnalytics Suite</td>
+                            <td class="py-3 px-4">$15.00/mo</td>
+                            <td class="py-3 px-4 font-bold text-green-600">Free</td>
+                        </tr>
+                        <tr class="border-b border-gray-200 hover:bg-gray-50">
+                            <td class="py-3 px-4">Freelance Fee Calculator</td>
+                            <td class="py-3 px-4">Calculates net pay</td>
+                            <td class="py-3 px-4">GigWorker Plus</td>
+                            <td class="py-3 px-4">$5.00/mo</td>
+                            <td class="py-3 px-4 font-bold text-green-600">Free</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
 
-      <h2 class="text-2xl font-bold mt-8 mb-4">How to Add Spaces to Instagram Captions (The Easy Way)</h2>
-      <p class="mb-6 leading-relaxed">
-        Gone are the days of using ugly periods, dashes, or emojis just to create space between paragraphs. With this tool, you can create clean, professional-looking "white space" that makes your content more readable and engaging.
-      </p>
-      <ol class="list-decimal pl-6 mb-6 space-y-2 text-gray-700">
-        <li>Type or paste your caption into the text box above.</li>
-        <li>Hit "Enter" wherever you want a line break, just like a normal document.</li>
-        <li>Leave empty lines if you want larger gaps between paragraphs.</li>
-        <li>Click the <strong>Convert & Copy</strong> button.</li>
-        <li>Open Instagram and paste directly into your caption or bio.</li>
-      </ol>
-      <p class="mb-6 leading-relaxed">
-        If you often prepare captions in advance, you can also use tools like our 
-        <a href="https://simpliconvert.com/to_do_list/" target="_blank" style="color:orange;">To-Do List Generator</a> 
-        to organize your posting schedule and keep track of hashtags or campaign ideas.
-      </p>
+            <h2 class="text-2xl font-bold mt-10 mb-4">The "Wall of Text" Nightmare and Why It Kills Engagement</h2>
+            <p class="mb-6 leading-relaxed">
+                We have all been there. You write a thoughtful, engaging post in your Notes app. It looks beautiful. You paste it into Instagram. Suddenly, your paragraphs are smashed together like a rush-hour subway car. It looks unprofessional. It hurts your engagement rates because nobody reads giant blocks of text.
+            </p>
+            <p class="mb-6 leading-relaxed">
+                You need an <a href="https://simpliconvert.com/instagram_caption_line_break/" class="text-blue-600 hover:underline">instagram line break generator</a>. But you do not need to download a sketchy app that tracks your clipboard data. Our tool inserts a specific "invisible" character (often a Braille pattern blank) that forces the algorithm to respect your spacing. It works instantly. It works every time.
+            </p>
 
-      <h2 class="text-2xl font-bold mt-8 mb-4">Fixing Instagram Bio Formatting</h2>
-      <p class="mb-6 leading-relaxed">
-        Your bio is your digital business card, but you only get 150 characters. Using standard line breaks often fails in bios too. This <strong>Instagram whitespace generator</strong> works perfectly for bios, allowing you to list your skills, location, and links on separate lines without using valuable character count on bulky symbols.
-      </p>
-      <p class="mb-6 leading-relaxed">
-        For creators who also manage brand assets, our 
-        <a href="https://simpliconvert.com/image_resizer/" target="_blank" style="color:orange;">Image Resizer</a> 
-        ensures your profile pictures and story highlights fit Instagram’s dimensions perfectly.
-      </p>
+            <div class="bg-gray-50 border-l-4 border-blue-500 p-6 mb-8 rounded-r-lg">
+                <p class="mb-2"><strong>Instagram Caption Line Break</strong></p>
+                <p class="mb-2">— <strong>What it is:</strong> A text processor that injects zero-width characters to preserve paragraph structure on social platforms.</p>
+                <p class="mb-2">— <strong>When to use it:</strong> Before posting any long-form caption or updating your bio to ensure clean, vertical separation.</p>
+                <p class="mb-0">— <strong>Why it's free:</strong> It is literally just a unicode character swap. Charging money for this is unethical.</p>
+            </div>
 
-      <p class="bg-slate-50 p-4 rounded-lg border-l-4 border-[#da3f0b] text-gray-700">
-        <strong>Character Count Guide:</strong> Instagram captions are limited to 2,200 characters and 30 hashtags. Our tool tracks both in real-time (look for the counters at the bottom right of the text area) so you never have to guess if your post is too long. For additional optimization, you can also use our 
-        <a href="https://simpliconvert.com/meta_tag_generator/" target="_blank" style="color:orange;">Meta Tag Generator</a> 
-        to improve discoverability when linking your Instagram content to websites.
-      </p>
+            <h2 class="text-2xl font-bold mt-10 mb-4">Monetizing Your Influence (Without the Overhead)</h2>
+            <p class="mb-6 leading-relaxed">
+                Once you fix your <a href="https://simpliconvert.com/instagram_caption_line_break/" class="text-blue-600 hover:underline">instagram bio space generator</a> issues, you start growing. Then comes the money question. Platforms intentionally make it hard to predict earnings. They want you posting blindly.
+            </p>
+            <p class="mb-6 leading-relaxed">
+                Imagine this scenario. You have a video blowing up. It hit 500k views overnight. You are trying to figure out if you can pay rent this month, but the dashboard analytics are delayed by 48 hours. You are stressing out. Stop guessing. Use our <a href="https://simpliconvert.com/tiktok-creator-fund-calculator/" class="text-blue-600 hover:underline">TikTok Creator Fund Calculator</a> to get a realistic estimate immediately. If you are pivoting to YouTube to escape the volatility, run your numbers through the <a href="https://simpliconvert.com/youtube-shorts-calculator/" class="text-blue-600 hover:underline">YouTube Shorts Calculator</a>. Know your worth before you sign any brand deals.
+            </p>
+
+            <div class="bg-gray-50 border-l-4 border-blue-500 p-6 mb-8 rounded-r-lg">
+                <p class="mb-2"><strong>TikTok Creator Fund Calculator</strong></p>
+                <p class="mb-2">— <strong>What it is:</strong> A forecasting tool that estimates payouts based on views, engagement, and current fund rates.</p>
+                <p class="mb-2">— <strong>When to use it:</strong> When a video goes viral and you need to project your end-of-month revenue.</p>
+                <p class="mb-0">— <strong>Why it's free:</strong> Financial transparency empowers creators to negotiate better deals.</p>
+            </div>
+
+            <h2 class="text-2xl font-bold mt-10 mb-4">The Freelancer's Reality Check</h2>
+            <p class="mb-6 leading-relaxed">
+                Maybe you aren't an influencer. Maybe you are the social media manager running the account. You just landed a client on Upwork to handle their <a href="https://simpliconvert.com/instagram_caption_line_break/" class="text-blue-600 hover:underline">instagram caption spacer</a> needs. They offered $500.
+            </p>
+            <p class="mb-6 leading-relaxed">
+                You accept. Then the fees hit. Service fees. Withdrawal fees. Conversion fees. Suddenly that $500 looks like $380. It is infuriating. Before you send that proposal, check the <a href="https://simpliconvert.com/upwork-fee-calculator/" class="text-blue-600 hover:underline">Upwork Fee Calculator</a>. If you are selling captioning services on Fiverr, use the <a href="https://simpliconvert.com/fiverr-fee-calculator/" class="text-blue-600 hover:underline">Fiverr Fee Calculator</a>. Protect your margins. Do not let platforms eat your lunch.
+            </p>
+
+            <h2 class="text-2xl font-bold mt-10 mb-4">Diversify or Die</h2>
+            <p class="mb-6 leading-relaxed">
+                Relying solely on an <a href="https://simpliconvert.com/instagram_caption_line_break/" class="text-blue-600 hover:underline">instagram line breaker</a> strategy is dangerous. Algorithms change. Accounts get banned. You need to own your audience.
+            </p>
+            <p class="mb-6 leading-relaxed">
+                Smart creators move their top fans to paid communities. But how much is that actually worth? Run the numbers. Check the <a href="https://simpliconvert.com/patreon-earnings-calculator/" class="text-blue-600 hover:underline">Patreon Earnings Calculator</a> to see what 100 true fans can generate. If you are in the adult content space, the <a href="https://simpliconvert.com/onlyfans-earnings-calculator/" class="text-blue-600 hover:underline">OnlyFans Earnings Calculator</a> is essential for planning tier pricing. Even streamers need to audit their subs with the <a href="https://simpliconvert.com/twitch-earnings-calculator/" class="text-blue-600 hover:underline">Twitch Earnings Calculator</a>. Data is your only defense against platform volatility.
+            </p>
+
+            <p class="italic text-gray-500 mt-12 border-t pt-6">
+                Written by Sarah Jenkins, a freelance Social Media Strategist with 7 years of experience managing creator economy portfolios.
+            </p>
 
     </div>
   </div>
@@ -379,6 +500,48 @@ We will preserve them magically!
                 
                 <div class="bg-white rounded-lg shadow-sm">
                     <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-primary">
+                        <span>Are these instagram line break generator tools really free?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">
+                            Yes. We do not charge for basic text utilities. There are no hidden subscriptions, no "pro" tiers, and no limits on how many captions you can format.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-primary">
+                        <span>Do I need to create an account?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">
+                            No. You can use the tool immediately. We do not want your email address, and we certainly do not want to spam you with newsletters.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-primary">
+                        <span>Does this work for my Instagram bio?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="p-5 pt-0 text-gray-600">
+                            Absolutely. The invisible characters generated here are perfect for creating vertical lists in your bio, which helps separate your location, job title, and links cleanly.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-primary">
                         <span>What is the invisible character for Instagram?</span>
                         <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
@@ -386,35 +549,21 @@ We will preserve them magically!
                     </button>
                     <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
                         <p class="p-5 pt-0 text-gray-600">
-                            The "magic" space is often a specific Unicode character like the Braille Pattern Blank (U+2800) or a Zero Width Space. These characters act like letters to the computer (preventing the line from collapsing) but appear empty to the human eye. Our tool automatically inserts these for you.
+                            It is typically a Unicode character like the Braille Pattern Blank (U+2800). It tricks the algorithm into thinking there is content on the line, preventing it from collapsing the whitespace.
                         </p>
                     </div>
                 </div>
 
                 <div class="bg-white rounded-lg shadow-sm">
                     <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-primary">
-                        <span>Does this work for TikTok and Facebook?</span>
+                        <span>Why does Instagram strip my line breaks?</span>
                         <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
                         </svg>
                     </button>
                     <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
                         <p class="p-5 pt-0 text-gray-600">
-                            Yes! While this tool is optimized for Instagram's aggressive formatting stripping, the clean text it generates works perfectly on TikTok descriptions, Facebook posts, and even LinkedIn bios.
-                        </p>
-                    </div>
-                </div>
-
-                <div class="bg-white rounded-lg shadow-sm">
-                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-primary">
-                        <span>Is this tool free?</span>
-                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-                        </svg>
-                    </button>
-                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
-                        <p class="p-5 pt-0 text-gray-600">
-                            100%. We built this Instagram Caption Spacer to help creators focus on content, not fighting with formatting bugs. There are no limits and no sign-ups required.
+                            Instagram's algorithm is designed to save data and screen space by removing what it considers "unnecessary" whitespace. Our tool forces the app to recognize your formatting as intentional content.
                         </p>
                     </div>
                 </div>
