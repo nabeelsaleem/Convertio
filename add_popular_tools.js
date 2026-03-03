@@ -81,15 +81,17 @@ const TOOLS = RAW_LINKS.trim().split('\n').map(l => l.trim()).filter(l => l.star
 
 function getIcon(url) {
     const lower = url.toLowerCase();
+    
+    // Social Platforms
     if (lower.includes('tiktok')) return 'fab fa-tiktok';
     if (lower.includes('instagram')) return 'fab fa-instagram';
-    if (lower.includes('youtube')) return 'fab fa-youtube';
+    if (lower.includes('youtube') || lower.includes('shorts')) return 'fab fa-youtube';
     if (lower.includes('spotify')) return 'fab fa-spotify';
     if (lower.includes('patreon')) return 'fab fa-patreon';
     if (lower.includes('onlyfans')) return 'fas fa-lock';
     if (lower.includes('twitch')) return 'fab fa-twitch';
     if (lower.includes('discord')) return 'fab fa-discord';
-    if (lower.includes('twitter')) return 'fab fa-twitter';
+    if (lower.includes('twitter') || lower.includes('x.com')) return 'fab fa-twitter';
     if (lower.includes('facebook')) return 'fab fa-facebook';
     if (lower.includes('linkedin')) return 'fab fa-linkedin';
     if (lower.includes('pinterest')) return 'fab fa-pinterest';
@@ -97,33 +99,113 @@ function getIcon(url) {
     if (lower.includes('snapchat')) return 'fab fa-snapchat';
     if (lower.includes('whatsapp')) return 'fab fa-whatsapp';
     if (lower.includes('telegram')) return 'fab fa-telegram';
+    
+    // E-commerce & Payment
     if (lower.includes('amazon')) return 'fab fa-amazon';
-    if (lower.includes('google')) return 'fab fa-google';
-    if (lower.includes('apple')) return 'fab fa-apple';
-    if (lower.includes('android')) return 'fab fa-android';
     if (lower.includes('ebay')) return 'fab fa-ebay';
     if (lower.includes('etsy')) return 'fab fa-etsy';
     if (lower.includes('paypal')) return 'fab fa-paypal';
     if (lower.includes('stripe')) return 'fab fa-stripe';
+    if (lower.includes('shopify')) return 'fab fa-shopify';
+    if (lower.includes('woocommerce')) return 'fab fa-wordpress';
+    if (lower.includes('gumroad')) return 'fas fa-store';
+    
+    // Crypto
     if (lower.includes('bitcoin') || lower.includes('crypto')) return 'fab fa-bitcoin';
     if (lower.includes('ethereum')) return 'fab fa-ethereum';
+    if (lower.includes('gas-fee')) return 'fas fa-gas-pump';
+    if (lower.includes('nft')) return 'fas fa-image';
+    if (lower.includes('token')) return 'fas fa-coins';
+    if (lower.includes('staking')) return 'fas fa-piggy-bank';
     
-    if (lower.includes('money') || lower.includes('cash') || lower.includes('dollar') || lower.includes('price') || lower.includes('cost') || lower.includes('tax') || lower.includes('vat') || lower.includes('gst') || lower.includes('salary') || lower.includes('earnings') || lower.includes('revenue') || lower.includes('profit') || lower.includes('commission') || lower.includes('monetization') || lower.includes('rpm') || lower.includes('cpm')) return 'fas fa-money-bill-wave';
+    // Financial / Tax / Salary
+    if (lower.includes('vat') || lower.includes('gst') || lower.includes('tax')) return 'fas fa-file-invoice-dollar';
+    if (lower.includes('salary') || lower.includes('hourly') || lower.includes('wage') || lower.includes('pay')) return 'fas fa-money-check-alt';
+    if (lower.includes('commission') || lower.includes('affiliate')) return 'fas fa-handshake';
+    if (lower.includes('hourly')) return 'fas fa-clock';
+    if (lower.includes('overtime')) return 'fas fa-user-clock';
+    if (lower.includes('mortgage')) return 'fas fa-home';
+    if (lower.includes('loan') || lower.includes('emi')) return 'fas fa-university';
+    if (lower.includes('discount')) return 'fas fa-percent';
+    if (lower.includes('inflation')) return 'fas fa-chart-line';
+    if (lower.includes('savings')) return 'fas fa-piggy-bank';
+    if (lower.includes('tip')) return 'fas fa-coins';
     
+    // Business Metrics
+    if (lower.includes('roi') || lower.includes('roas')) return 'fas fa-percentage';
+    if (lower.includes('profit') || lower.includes('margin')) return 'fas fa-chart-pie';
+    if (lower.includes('break-even')) return 'fas fa-balance-scale';
+    if (lower.includes('churn')) return 'fas fa-user-minus';
+    if (lower.includes('retention')) return 'fas fa-user-check';
+    if (lower.includes('cac')) return 'fas fa-user-plus';
+    if (lower.includes('clv') || lower.includes('ltv')) return 'fas fa-users';
+    if (lower.includes('arr') || lower.includes('mrr') || lower.includes('saas')) return 'fas fa-sync-alt';
+    if (lower.includes('growth')) return 'fas fa-seedling';
+    
+    // Ad Tech / Web
+    if (lower.includes('cpm') || lower.includes('rpm') || lower.includes('ads') || lower.includes('monetization')) return 'fas fa-ad';
+    if (lower.includes('traffic') || lower.includes('pageviews') || lower.includes('visitors')) return 'fas fa-chart-bar';
+    if (lower.includes('seo') || lower.includes('search')) return 'fas fa-search';
+    if (lower.includes('utm')) return 'fas fa-link';
+    if (lower.includes('slug')) return 'fas fa-link';
+    if (lower.includes('url')) return 'fas fa-link';
+    if (lower.includes('domain')) return 'fas fa-globe';
+    if (lower.includes('hosting')) return 'fas fa-server';
+    if (lower.includes('speed')) return 'fas fa-tachometer-alt';
+    if (lower.includes('ping')) return 'fas fa-network-wired';
+    
+    // AI / Tech / Dev
+    if (lower.includes('ai') || lower.includes('gpt') || lower.includes('claude') || lower.includes('bot')) return 'fas fa-robot';
+    if (lower.includes('openai')) return 'fas fa-microchip';
+    if (lower.includes('api')) return 'fas fa-cogs';
+    if (lower.includes('json')) return 'fas fa-code';
+    if (lower.includes('xml')) return 'fas fa-code';
+    if (lower.includes('csv')) return 'fas fa-file-csv';
+    if (lower.includes('sql')) return 'fas fa-database';
+    if (lower.includes('regex')) return 'fas fa-code';
+    if (lower.includes('base64')) return 'fas fa-exchange-alt';
+    if (lower.includes('hash') || lower.includes('md5') || lower.includes('sha')) return 'fas fa-fingerprint';
+    if (lower.includes('password')) return 'fas fa-key';
+    if (lower.includes('uuid')) return 'fas fa-fingerprint';
+    if (lower.includes('lorem')) return 'fas fa-paragraph';
+    if (lower.includes('diff')) return 'fas fa-columns';
+    if (lower.includes('markdown')) return 'fab fa-markdown';
+    if (lower.includes('html')) return 'fab fa-html5';
+    if (lower.includes('css')) return 'fab fa-css3-alt';
+    if (lower.includes('js') || lower.includes('javascript')) return 'fab fa-js';
+    
+    // Image / Video / Media
+    if (lower.includes('image') || lower.includes('photo') || lower.includes('picture') || lower.includes('jpg') || lower.includes('png')) return 'fas fa-image';
+    if (lower.includes('video') || lower.includes('movie') || lower.includes('film') || lower.includes('reel')) return 'fas fa-video';
+    if (lower.includes('thumbnail')) return 'fas fa-image';
+    if (lower.includes('gif')) return 'fas fa-film';
+    if (lower.includes('color') || lower.includes('palette') || lower.includes('hex') || lower.includes('rgb')) return 'fas fa-palette';
+    if (lower.includes('resize') || lower.includes('crop')) return 'fas fa-crop-alt';
+    if (lower.includes('compress')) return 'fas fa-compress-arrows-alt';
+    if (lower.includes('convert')) return 'fas fa-exchange-alt';
+    
+    // PDF / Document
+    if (lower.includes('pdf')) return 'fas fa-file-pdf';
+    if (lower.includes('word') || lower.includes('doc')) return 'fas fa-file-word';
+    if (lower.includes('excel') || lower.includes('sheet')) return 'fas fa-file-excel';
+    if (lower.includes('ppt') || lower.includes('powerpoint')) return 'fas fa-file-powerpoint';
+    if (lower.includes('merge')) return 'fas fa-object-group';
+    if (lower.includes('split')) return 'fas fa-cut';
+    
+    // Misc
+    if (lower.includes('hashtag') || lower.includes('tag')) return 'fas fa-hashtag';
+    if (lower.includes('time') || lower.includes('date') || lower.includes('calendar') || lower.includes('week') || lower.includes('month') || lower.includes('year')) return 'fas fa-calendar-alt';
+    if (lower.includes('age')) return 'fas fa-birthday-cake';
+    if (lower.includes('bmi') || lower.includes('bmr') || lower.includes('body') || lower.includes('weight') || lower.includes('health')) return 'fas fa-heartbeat';
+    if (lower.includes('water')) return 'fas fa-tint';
+    if (lower.includes('pregnancy')) return 'fas fa-baby';
+    if (lower.includes('fuel') || lower.includes('gas')) return 'fas fa-gas-pump';
+    if (lower.includes('distance') || lower.includes('speed')) return 'fas fa-tachometer-alt';
+    if (lower.includes('shipping') || lower.includes('dropshipping')) return 'fas fa-shipping-fast';
+    if (lower.includes('product') || lower.includes('cost')) return 'fas fa-tag';
+    if (lower.includes('cashback')) return 'fas fa-wallet';
+    if (lower.includes('work-hours')) return 'fas fa-briefcase';
     if (lower.includes('calculator')) return 'fas fa-calculator';
-    if (lower.includes('chart') || lower.includes('graph') || lower.includes('analytics') || lower.includes('metrics') || lower.includes('roi') || lower.includes('growth') || lower.includes('traffic') || lower.includes('pageviews')) return 'fas fa-chart-line';
-    if (lower.includes('user') || lower.includes('customer') || lower.includes('audience') || lower.includes('subscriber')) return 'fas fa-users';
-    if (lower.includes('time') || lower.includes('hour') || lower.includes('week') || lower.includes('month') || lower.includes('year')) return 'fas fa-clock';
-    if (lower.includes('robot') || lower.includes('ai') || lower.includes('bot') || lower.includes('gpt') || lower.includes('claude') || lower.includes('openai')) return 'fas fa-robot';
-    if (lower.includes('code') || lower.includes('api') || lower.includes('token') || lower.includes('json') || lower.includes('html') || lower.includes('css')) return 'fas fa-code';
-    if (lower.includes('image') || lower.includes('photo') || lower.includes('picture') || lower.includes('png') || lower.includes('gif') || lower.includes('jpg')) return 'fas fa-image';
-    if (lower.includes('video') || lower.includes('movie') || lower.includes('film') || lower.includes('reel') || lower.includes('shorts')) return 'fas fa-video';
-    if (lower.includes('music') || lower.includes('audio') || lower.includes('sound')) return 'fas fa-music';
-    if (lower.includes('file') || lower.includes('pdf') || lower.includes('doc') || lower.includes('txt')) return 'fas fa-file-alt';
-    if (lower.includes('link') || lower.includes('url')) return 'fas fa-link';
-    if (lower.includes('search') || lower.includes('seo')) return 'fas fa-search';
-    if (lower.includes('map') || lower.includes('location')) return 'fas fa-map-marker-alt';
-    if (lower.includes('lock') || lower.includes('security')) return 'fas fa-lock';
     
     return 'fas fa-tools';
 }
@@ -174,9 +256,11 @@ TARGET_FOLDERS.forEach((folder, index) => {
     if (fs.existsSync(indexPath)) {
         let content = fs.readFileSync(indexPath, 'utf8');
         
-        if (content.includes('Popular Tools on SimpliConvert')) {
-            console.log(`Skipping ${folder}: Already has section.`);
-            return;
+        // Remove existing section if present (Undo logic)
+        const regex = /<section class="bg-gray-50 pb-16">[\s\S]*?Popular Tools on SimpliConvert[\s\S]*?<\/section>\s*/;
+        if (regex.test(content)) {
+            content = content.replace(regex, '');
+            console.log(`Removed old section from ${folder}`);
         }
         
         const html = generateHTML(folderTools);
