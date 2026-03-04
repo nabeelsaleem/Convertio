@@ -1,175 +1,736 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>PDF → Word Converter (tables & text)</title>
-  <style>
-    body { font-family: Arial, sans-serif; padding: 20px; background: #f0f0f0; }
-    .container { background: white; padding: 20px; max-width: 900px; margin: auto; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
-    .table-cell { display: inline-block; border: 1px solid #ccc; padding: 3px 8px; margin: 2px; background: #eef; font-family: monospace; }
-    #preview { margin-top: 20px; background: #fafafa; padding: 10px; border: 1px solid #ddd; max-height: 400px; overflow-y: auto; }
-    .paragraph { margin: 8px 0; padding: 5px; background: #fff; border-left: 3px solid #bbb; }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="title" content="PDF to Word Converter – Convert PDF to DOCX Free | SimpliConvert">
+    <meta name="description" content="Convert PDF to Word online for free. Accurately extract text, tables, and layouts into editable DOCX files directly in your browser. Secure and private.">
+    <meta name="keywords" content="PDF to Word Converter, Convert PDF to DOCX, PDF to Word free, extract tables from PDF, convert PDF online, DOCX generator">
+    <meta name="author" content="SimpliConvert">
+    <meta name="robots" content="index, follow">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://simpliconvert.com/pdf_to_word/">
+    <meta property="og:title" content="PDF to Word Converter – Convert PDF to DOCX Free | SimpliConvert">
+    <meta property="og:description" content="Convert PDF to Word online for free. Accurately extract text, tables, and layouts into editable DOCX files directly in your browser. Secure and private.">
+    <meta property="og:image" content="https://simpliconvert.com/images/pdf-to-word-og.jpg">
+
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://simpliconvert.com/pdf_to_word/">
+    <meta property="twitter:title" content="PDF to Word Converter – Convert PDF to DOCX">
+    <meta property="twitter:description" content="Easily transform your PDFs into fully editable Word documents. Free, fast, and completely secure client-side processing.">
+    <meta property="twitter:image" content="https://simpliconvert.com/images/pdf-to-word-og.jpg">
+
+    <link rel="canonical" href="https://simpliconvert.com/pdf_to_word/">
+    <title>PDF to Word Converter – Convert PDF to DOCX Free | SimpliConvert</title>
+
+    <link rel="preconnect" href="https://cdn.tailwindcss.com">
+    <link rel="preconnect" href="https://unpkg.com">
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "PDF to Word Converter",
+      "url": "https://simpliconvert.com/pdf_to_word/",
+      "description": "A free online utility to convert PDF files into editable Word (DOCX) documents, featuring table extraction and formatting preservation.",
+      "applicationCategory": "UtilitiesApplication",
+      "operatingSystem": "Web Browser",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "SimpliConvert",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://simpliconvert.com/logo.png"
+        }
+      }
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://simpliconvert.com/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "PDF Tools",
+          "item": "https://simpliconvert.com/pdf_tools/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "PDF to Word Converter",
+          "item": "https://simpliconvert.com/pdf_to_word/"
+        }
+      ]
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [{
+        "@type": "Question",
+        "name": "Is this PDF to Word converter actually free?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. We do not charge subscriptions, nor do we enforce daily limits or arbitrary paywalls for downloading your converted DOCX files."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Will it extract tables from my PDF?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes, the tool utilizes coordinate-based logic to detect horizontal spacing and automatically structure tabular data into proper Word table formats."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Are my confidential PDFs stored on a server?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "No. All text parsing and document generation happens locally within your web browser using JavaScript. Your files are never uploaded to a remote server."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Do I need to install any software?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "No installation is required. The tool runs completely online in your modern web browser (Chrome, Firefox, Safari, Edge)."
+        }
+      }]
+    }
+    </script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/htm@3.1.1/dist/htm.umd.js"></script>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.9.179/pdf.min.js"></script>
+    <script>pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.9.179/pdf.worker.min.js';</script>
+    <script src="https://cdn.jsdelivr.net/npm/docx@8.5.0/build/index.umd.min.js"></script>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" media="print" onload="this.media='all'" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary: #da3f0b;
+            --primary-hover: #b53409;
+            --bg: #f8fafc;
+            --text-dark: #0f172a;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text-dark);
+        }
+
+        .hero-card {
+            background: white;
+            border: 1px solid #f1f5f9;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background-color: var(--primary);
+        }
+
+        /* Preview Area Styles */
+        .preview-container {
+            background: #fafafa;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.75rem;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        .preview-page {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            margin: 1rem;
+            padding: 1.5rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        .preview-table-cell {
+            display: inline-block;
+            border: 1px solid #cbd5e1;
+            padding: 0.25rem 0.5rem;
+            margin: 0.125rem;
+            background: #f8fafc;
+            font-family: monospace;
+            font-size: 0.75rem;
+            color: #334155;
+            border-radius: 0.25rem;
+        }
+
+        .preview-paragraph {
+            margin: 0.5rem 0;
+            padding: 0.5rem;
+            background: #ffffff;
+            border-left: 3px solid #cbd5e1;
+            font-size: 0.875rem;
+            color: #475569;
+        }
+
+        .animate-fade {
+            animation: fadeIn 0.3s ease-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .primary-gradient {
+            background: linear-gradient(135deg, #da3f0b 0%, #ff6b3d 100%);
+        }
+    </style>
 </head>
-<body>
-  <div class="container">
-    <h2>PDF to DOCX: Tables, Text, Headers, Multi‑Page</h2>
-    <input type="file" id="pdf-upload" accept="application/pdf" />
-    <button id="convert-btn">Convert & Download DOCX</button>
-    <div id="status">Status: Waiting for PDF...</div>
-    <div id="preview"></div>
-  </div>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.9.179/pdf.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/docx@8.5.0/build/index.umd.min.js"></script>
+<body class="bg-gray-50 min-h-screen flex flex-col">
+    <div id="navbar"></div>
 
-  <script>
-    const input = document.getElementById("pdf-upload");
-    const button = document.getElementById("convert-btn");
-    const preview = document.getElementById("preview");
-    const status = document.getElementById("status");
+    <section class="hero-white text-black py-8 md:py-12">
+        <div class="container mx-auto px-4 text-center">
+            <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-4">PDF to Word Converter</h1>
+            <p class="text-lg md:text-xl max-w-3xl mx-auto text-slate-600">
+                Instantly convert PDF files into editable DOCX format. We detect tables, text layouts, and headers locally in your browser. Fast, free, and completely secure.
+            </p>
+        </div>
+    </section>
 
-    let pagesData = [];
+    <div class="antialiased flex items-center justify-center p-4 sm:p-8">
+        <div id="root" class="w-full max-w-4xl mx-auto"></div>
+    </div>
 
-    input.addEventListener("change", async () => {
-      const file = input.files[0];
-      if (!file) return;
-      status.textContent = "Processing PDF...";
-      const buffer = await file.arrayBuffer();
-      const pdf = await pdfjsLib.getDocument({ data: buffer }).promise;
-      pagesData = [];
+    <script>
+    // Initialize htm with React
+    const html = htm.bind(React.createElement);
+    const { useState, useRef } = React;
 
-      for (let p = 1; p <= pdf.numPages; p++) {
-        const page = await pdf.getPage(p);
-        const content = await page.getTextContent();
-        const items = content.items.map(i => ({
-          str: i.str,
-          x: i.transform[4],
-          y: i.transform[5],
-          fontName: i.fontName || '',
-          height: i.height || 0
-        }));
-        // Group lines by Y
-        const lines = {};
-        items.forEach(it => {
-          const y = Math.round(it.y);
-          lines[y] = lines[y] || [];
-          lines[y].push(it);
-        });
+    const App = () => {
+      const [status, setStatus] = useState("Waiting for PDF upload...");
+      const [pagesData, setPagesData] = useState([]);
+      const [isProcessing, setIsProcessing] = useState(false);
+      const [fileName, setFileName] = useState("");
+      const fileInputRef = useRef(null);
 
-        const sortedLines = Object.values(lines)
-          .map(arr => arr.sort((a,b)=>a.x-b.x))
-          .sort((a,b)=>b[0].y - a[0].y);
+      const processPDF = async (file) => {
+        setIsProcessing(true);
+        setStatus("Reading PDF data...");
+        setFileName(file.name);
+        
+        try {
+          const buffer = await file.arrayBuffer();
+          const pdf = await pdfjsLib.getDocument({ data: buffer }).promise;
+          const parsedPages = [];
 
-        const pageBlocks = [];
-        sortedLines.forEach(line => {
-          // segment by big horizontal gaps
-          let row = [line[0]];
-          for (let i = 1; i < line.length; i++) {
-            const prev = line[i-1];
-            const cur = line[i];
-            const xgap = cur.x - prev.x;
-            if (xgap > 20) {
-              pageBlocks.push({ type:'tableRow', cells: row });
-              row = [cur];
-            } else row.push(cur);
-          }
-          pageBlocks.push({ type:'tableRow', cells: row });
-        });
-
-        pagesData.push({ page: p, blocks: pageBlocks });
-      }
-
-      // Build preview combining tables and paragraphs
-      preview.innerHTML = '';
-      pagesData.forEach(pd => {
-        preview.appendChild(document.createElement('hr'));
-        pd.blocks.forEach(bl => {
-          const rowStrings = bl.cells.map(c => c.str.trim()).filter(s => s);
-          if (rowStrings.length > 1) {
-            rowStrings.forEach(cell => {
-              const sp = document.createElement('span');
-              sp.className = 'table-cell';
-              sp.textContent = cell;
-              preview.appendChild(sp);
+          for (let p = 1; p <= pdf.numPages; p++) {
+            setStatus(`Processing page ${p} of ${pdf.numPages}...`);
+            const page = await pdf.getPage(p);
+            const content = await page.getTextContent();
+            const items = content.items.map(i => ({
+              str: i.str,
+              x: i.transform[4],
+              y: i.transform[5],
+              fontName: i.fontName || '',
+              height: i.height || 0
+            }));
+            
+            // Group lines by Y
+            const lines = {};
+            items.forEach(it => {
+              const y = Math.round(it.y);
+              lines[y] = lines[y] || [];
+              lines[y].push(it);
             });
-            preview.appendChild(document.createElement('br'));
-          } else if (rowStrings.length) {
-            const pElem = document.createElement('div');
-            pElem.className = 'paragraph';
-            pElem.textContent = rowStrings[0];
-            preview.appendChild(pElem);
+
+            const sortedLines = Object.values(lines)
+              .map(arr => arr.sort((a,b)=>a.x-b.x))
+              .sort((a,b)=>b[0].y - a[0].y);
+
+            const pageBlocks = [];
+            sortedLines.forEach(line => {
+              // segment by big horizontal gaps
+              let row = [line[0]];
+              for (let i = 1; i < line.length; i++) {
+                const prev = line[i-1];
+                const cur = line[i];
+                const xgap = cur.x - prev.x;
+                if (xgap > 20) {
+                  pageBlocks.push({ type:'tableRow', cells: row });
+                  row = [cur];
+                } else {
+                  row.push(cur);
+                }
+              }
+              pageBlocks.push({ type:'tableRow', cells: row });
+            });
+
+            parsedPages.push({ page: p, blocks: pageBlocks });
           }
-        });
-      });
 
-      status.textContent = "Parsed PDF; ready to convert.";
-    });
-
-    button.addEventListener("click", async () => {
-      if (!pagesData.length) {
-        alert("Upload and parse PDF first.");
-        return;
-      }
-      status.textContent = "Building DOCX...";
-      const { Document, Packer, Paragraph, Table, TableRow, TableCell, TextRun, WidthType, PageBreak } = docx;
-
-      const docChildren = [];
-
-      pagesData.forEach((pd, idx) => {
-        docChildren.push(new Paragraph({ children: [new TextRun(`Page ${pd.page}`)], spacing: { after: 200 }}));
-
-        pd.blocks.forEach(bl => {
-          const rowStrings = bl.cells.map(c => c.str.trim()).filter(s => s);
-          if (rowStrings.length > 1) {
-            const rowCells = rowStrings.map((text, i) => new TableCell({
-              children: [ new Paragraph(text) ],
-              width: { size: 100 / rowStrings.length, type: WidthType.PERCENTAGE }
-            }));
-            docChildren.push(new TableRow({ children: rowCells }));
-          } else if (rowStrings.length) {
-            const isHeader = bl.cells.some(c => c.fontName.toLowerCase().includes('bold') || c.height > 20);
-            docChildren.push(new Paragraph({
-              children: [ new TextRun({
-                text: rowStrings[0],
-                bold: isHeader
-              }) ]
-            }));
-          }
-        });
-
-        if (idx < pagesData.length-1) {
-          docChildren.push(new Paragraph({ children:[ new TextRun("") ] }));
-          docChildren.push(new Paragraph({ children:[ new TextRun("") ] }));
+          setPagesData(parsedPages);
+          setStatus("PDF parsed successfully. Ready to convert!");
+        } catch (error) {
+          console.error(error);
+          setStatus("Error processing PDF. The file might be corrupted or encrypted.");
+        } finally {
+          setIsProcessing(false);
         }
-      });
+      };
 
-      // bundle as table clusters per page
-      const tables = [];
-      let currentRows = [];
-      docChildren.forEach(child => {
-        if (child instanceof TableRow) {
-          currentRows.push(child);
-        } else {
+      const handleFileChange = (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        if (file.type !== "application/pdf") {
+            alert("Please upload a valid PDF file.");
+            return;
+        }
+        processPDF(file);
+      };
+
+      const handleConvert = async () => {
+        if (!pagesData.length) {
+          alert("Please upload and parse a PDF first.");
+          return;
+        }
+        
+        setStatus("Building DOCX file...");
+        setIsProcessing(true);
+
+        try {
+          const { Document, Packer, Paragraph, Table, TableRow, TableCell, TextRun, WidthType } = docx;
+          const docChildren = [];
+
+          pagesData.forEach((pd, idx) => {
+            docChildren.push(new Paragraph({ 
+                children: [new TextRun({ text: `--- Page ${pd.page} ---`, bold: true, color: "888888" })], 
+                spacing: { after: 200 }
+            }));
+
+            pd.blocks.forEach(bl => {
+              const rowStrings = bl.cells.map(c => c.str.trim()).filter(s => s);
+              if (rowStrings.length > 1) {
+                const rowCells = rowStrings.map(text => new TableCell({
+                  children: [ new Paragraph(text) ],
+                  width: { size: 100 / rowStrings.length, type: WidthType.PERCENTAGE }
+                }));
+                docChildren.push(new TableRow({ children: rowCells }));
+              } else if (rowStrings.length) {
+                const isHeader = bl.cells.some(c => c.fontName.toLowerCase().includes('bold') || c.height > 20);
+                docChildren.push(new Paragraph({
+                  children: [ new TextRun({
+                    text: rowStrings[0],
+                    bold: isHeader
+                  }) ]
+                }));
+              }
+            });
+
+            if (idx < pagesData.length - 1) {
+              docChildren.push(new Paragraph({ children:[ new TextRun("") ] }));
+              docChildren.push(new Paragraph({ children:[ new TextRun("") ] }));
+            }
+          });
+
+          // Bundle consecutive TableRows into actual Table objects
+          const elements = [];
+          let currentRows = [];
+          
+          docChildren.forEach(child => {
+            if (child instanceof docx.TableRow) {
+              currentRows.push(child);
+            } else {
+              if (currentRows.length) {
+                elements.push(new Table({ width:{ size:100, type:WidthType.PERCENTAGE }, rows: currentRows }));
+                currentRows = [];
+              }
+              elements.push(child);
+            }
+          });
           if (currentRows.length) {
-            tables.push(new Table({ width:{ size:100, type:WidthType.PERCENTAGE }, rows: currentRows }));
-            currentRows = [];
+              elements.push(new Table({ width:{ size:100, type:WidthType.PERCENTAGE }, rows: currentRows }));
           }
-          tables.push(child);
-        }
-      });
-      if (currentRows.length) tables.push(new Table({ width:{ size:100, type:WidthType.PERCENTAGE }, rows: currentRows }));
 
-      const doc = new Document({ sections: [{ children: tables }] });
-      const blob = await Packer.toBlob(doc);
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = "converted_full.docx";
-      a.click();
-      URL.revokeObjectURL(url);
-      status.textContent = "DOCX downloaded.";
+          const doc = new Document({ sections: [{ children: elements }] });
+          const blob = await Packer.toBlob(doc);
+          
+          // Trigger download
+          const url = window.URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          a.href = url;
+          a.download = fileName.replace(".pdf", "") + "_converted.docx";
+          a.click();
+          window.URL.revokeObjectURL(url);
+          
+          setStatus("DOCX downloaded successfully!");
+        } catch (error) {
+            console.error(error);
+            setStatus("Error generating Word document.");
+        } finally {
+            setIsProcessing(false);
+        }
+      };
+
+      return html`
+        <div className="hero-card rounded-[2rem] p-8 mb-8 animate-fade">
+          
+          <div className="mb-8">
+            <div 
+                className="border-2 border-dashed border-slate-300 rounded-2xl p-10 text-center hover:border-[#da3f0b] hover:bg-slate-50 transition-colors cursor-pointer relative"
+                onClick=${() => fileInputRef.current.click()}
+            >
+              <input 
+                type="file" 
+                ref=${fileInputRef}
+                className="hidden" 
+                accept="application/pdf"
+                onChange=${handleFileChange}
+              />
+              <div className="text-[#da3f0b] text-4xl mb-4">
+                <i className="fas fa-file-pdf"></i>
+              </div>
+              <h3 className="text-lg font-bold text-slate-800 mb-2">
+                 ${fileName ? fileName : "Upload a PDF Document"}
+              </h3>
+              <p className="text-slate-500 text-sm">
+                 Click to browse or drag and drop your file here.
+              </p>
+            </div>
+          </div>
+
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-6 bg-slate-50 p-4 rounded-xl border border-slate-100">
+             <div className="flex items-center gap-3">
+                <div className=${`w-3 h-3 rounded-full ${isProcessing ? 'bg-amber-400 animate-pulse' : pagesData.length ? 'bg-green-500' : 'bg-slate-300'}`}></div>
+                <span className="text-sm font-semibold text-slate-700">${status}</span>
+             </div>
+             
+             <button 
+                onClick=${handleConvert}
+                disabled=${!pagesData.length || isProcessing}
+                className="primary-gradient text-white px-8 py-3 rounded-xl font-bold hover:shadow-lg hover:-translate-y-0.5 transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0 flex items-center gap-2 w-full sm:w-auto justify-center"
+             >
+                <i className="fas fa-file-word"></i>
+                Convert & Download DOCX
+             </button>
+          </div>
+
+          ${pagesData.length > 0 && html`
+            <div className="mt-8 animate-fade">
+              <h4 className="text-sm font-bold text-slate-800 uppercase tracking-widest mb-4">Data Extraction Preview</h4>
+              <div className="preview-container">
+                ${pagesData.map((pd, index) => html`
+                  <div key=${index} className="preview-page">
+                    <div className="text-xs font-bold text-slate-400 mb-4 border-b pb-2">PAGE ${pd.page}</div>
+                    ${pd.blocks.map((bl, bIndex) => {
+                      const rowStrings = bl.cells.map(c => c.str.trim()).filter(s => s);
+                      if (rowStrings.length > 1) {
+                        return html`
+                          <div key=${bIndex} className="mb-2">
+                            ${rowStrings.map((cell, cIndex) => html`
+                              <span key=${cIndex} className="preview-table-cell">${cell}</span>
+                            `)}
+                          </div>
+                        `;
+                      } else if (rowStrings.length) {
+                        return html`
+                          <div key=${bIndex} className="preview-paragraph">
+                            ${rowStrings[0]}
+                          </div>
+                        `;
+                      }
+                      return null;
+                    })}
+                  </div>
+                `)}
+              </div>
+            </div>
+          `}
+        </div>
+      `;
+    };
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(html`<${App} />`);
+    </script>
+
+    <section class="bg-white py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="prose prose-lg max-w-none prose-h2:text-gray-800 prose-p:text-gray-700">
+                
+                <article>
+                    <header>
+                        <h2 class="text-3xl font-bold text-gray-900 mb-4">Stop Paying for PDF Edits: A Developer's Guide to Free Document Conversion</h2>
+                    </header>
+                    
+                    <p class="mb-6 leading-relaxed text-lg">
+                        I am incredibly tired of artificial software limitations. 
+                    </p>
+                    
+                    <p class="mb-6 leading-relaxed">
+                        You receive an invoice or a massive data report from a vendor. It is locked inside a PDF. You need to edit the tables, change the dates, and run the numbers in Word. You upload it to a generic online tool, and immediately hit a massive paywall demanding a $19/month premium subscription just to download an editable text file.
+                    </p>
+
+                    <p class="mb-6 leading-relaxed">
+                        That is absolute nonsense. Reading digital text matrices and reformatting them into XML (which is all a DOCX file is) does not justify a SaaS subscription. SimpliConvert built this completely free PDF to Word Converter to ensure you never pay for basic document transformation again. 
+                    </p>
+                </article>
+
+                <article>
+                    <h3 class="text-2xl font-bold mt-8 mb-4">SimpliConvert Free Tools vs. Paid Alternatives</h3>
+                    <div class="overflow-x-auto my-8">
+                        <table class="min-w-full text-left border-collapse">
+                            <thead>
+                                <tr class="bg-gray-100">
+                                    <th class="p-3 border-b-2 font-bold text-gray-800">Feature</th>
+                                    <th class="p-3 border-b-2 font-bold text-gray-800">What It Does</th>
+                                    <th class="p-3 border-b-2 font-bold text-gray-800">Paid Software Cost</th>
+                                    <th class="p-3 border-b-2 font-bold text-gray-800">SimpliConvert Cost</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="border-b">
+                                    <td class="p-3"><strong>PDF to DOCX Engine</strong></td>
+                                    <td class="p-3">Extracts text layers into editable Word docs.</td>
+                                    <td class="p-3">$15.00/mo</td>
+                                    <td class="p-3 font-bold text-green-600">$0</td>
+                                </tr>
+                                <tr class="border-b">
+                                    <td class="p-3"><strong>Table Extraction</strong></td>
+                                    <td class="p-3">Preserves tabular column/row layouts perfectly.</td>
+                                    <td class="p-3">Requires "Pro" Tier</td>
+                                    <td class="p-3 font-bold text-green-600">$0</td>
+                                </tr>
+                                <tr class="border-b">
+                                    <td class="p-3"><strong>Client-Side Processing</strong></td>
+                                    <td class="p-3">Keeps highly confidential files locally secured.</td>
+                                    <td class="p-3">Enterprise Level</td>
+                                    <td class="p-3 font-bold text-green-600">$0</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </article>
+
+                <article>
+                    <h2 class="text-2xl font-bold mt-8 mb-4">Preserving Tables and Complex Layouts</h2>
+                    
+                    <p class="mb-6 leading-relaxed">
+                        Extracting raw text is easy. Formatting it is the actual nightmare.
+                    </p>
+                    
+                    <p class="mb-6 leading-relaxed">
+                        If you have ever tried to highlight, copy, and paste a financial table from a PDF into a Word document, you know exactly what happens. The entire structure collapses into a single, unreadable vertical column. Your data is ruined. 
+                    </p>
+                    
+                    <p class="mb-6 leading-relaxed">
+                        Our tool fixes this programmatically. The underlying script mathematically calculates the horizontal X-axis gaps between text nodes. When it detects a large gap, it identifies a column break. It automatically bundles those nodes into native DOCX Table rows. The result? You get a beautiful, editable table in Word without spending three hours hitting the Tab key.
+                    </p>
+                </article>
+
+                <article>
+                    <h2 class="text-2xl font-bold mt-8 mb-4">100% Local and Secure Processing</h2>
+                    
+                    <p class="mb-6 leading-relaxed">
+                        You should never upload legal contracts or sensitive tax documents to a random server to be converted.
+                    </p>
+
+                    <p class="mb-6 leading-relaxed">
+                        Most "free" PDF sites process your files on remote servers, opening you up to massive data privacy risks. SimpliConvert's engine utilizes PDF.js to unpack your document entirely inside your local browser memory. When you click convert, the Word document is constructed using client-side JavaScript. 
+                    </p>
+
+                    <p class="mb-6 leading-relaxed">
+                        The file never leaves your machine. You get enterprise-grade privacy combined with top-tier extraction formatting, entirely for free.
+                    </p>
+                </article>
+                
+                <hr class="my-8 border-gray-200">
+                
+                <div class="italic text-gray-600 pb-4">
+                    Written by Nabeel, a cynical freelance developer who despises bloated software ecosystems. They specialize in replacing expensive corporate document suites with highly optimized, free browser utilities.
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 py-12 sm:py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-center text-gray-900 mb-8">Frequently Asked Questions</h2>
+            <div class="space-y-4">
+                
+                <div class="bg-white rounded-lg shadow-sm" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-primary">
+                        <span itemprop="name">Is this PDF to Word converter actually free?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+                        <p class="p-5 pt-0 text-gray-600" itemprop="text">
+                            Yes. We do not charge subscriptions, nor do we enforce daily limits or arbitrary paywalls for downloading your converted DOCX files.
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-lg shadow-sm" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-primary">
+                        <span itemprop="name">Will it extract tables from my PDF?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+                        <p class="p-5 pt-0 text-gray-600" itemprop="text">
+                            Yes, the tool utilizes coordinate-based logic to detect horizontal spacing and automatically structure tabular data into proper Word table formats.
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-lg shadow-sm" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-primary">
+                        <span itemprop="name">Are my confidential PDFs stored on a server?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+                        <p class="p-5 pt-0 text-gray-600" itemprop="text">
+                            No. All text parsing and document generation happens locally within your web browser using JavaScript. Your files are never uploaded to a remote server.
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-lg shadow-sm" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+                    <button data-faq-toggle class="w-full flex justify-between items-center text-left p-5 font-semibold text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-primary">
+                        <span itemprop="name">Do I need to install any software?</span>
+                        <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+                        <p class="p-5 pt-0 text-gray-600" itemprop="text">
+                            No installation is required. The tool runs completely online in your modern web browser (Chrome, Firefox, Safari, Edge).
+                        </p>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    </section>
+
+    <div id="footer"></div>
+
+    <script>
+    function initializeHeaderScripts() {
+        const header = document.getElementById('header');
+        if (header) {
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 10) {
+                    header.classList.add('scrolled-effect');
+                } else {
+                    header.classList.remove('scrolled-effect');
+                }
+            });
+        }
+
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const menuIconBars = document.getElementById('menu-icon-bars');
+        const menuIconTimes = document.getElementById('menu-icon-times');
+        
+        if (mobileMenuButton && mobileMenu) {
+            mobileMenuButton.addEventListener('click', () => {
+                mobileMenu.classList.toggle('open');
+                if (menuIconBars && menuIconTimes) {
+                    menuIconBars.classList.toggle('hidden');
+                    menuIconTimes.classList.toggle('hidden');
+                }
+            });
+        }
+    }
+    
+    function initializeFooterScripts() {
+        const yearSpan = document.getElementById('current-year');
+        if(yearSpan) {
+            yearSpan.textContent = new Date().getFullYear();
+        }
+    }
+
+    async function loadComponent(url, elementId, callback) {
+        try {
+            const response = await fetch(url);
+            if (!response.ok) throw new Error(`Failed to load component from ${url}`);
+            const text = await response.text();
+            const element = document.getElementById(elementId);
+            if (element) {
+                element.innerHTML = text;
+                if (callback) callback();
+            }
+        } catch (error) {
+            console.error('Error loading component:', error);
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        loadComponent('/components/navbar.html', 'navbar', initializeHeaderScripts);
+        loadComponent('/components/footer.html', 'footer', initializeFooterScripts);
+        
+        const faqToggles = document.querySelectorAll('[data-faq-toggle]');
+        faqToggles.forEach(button => {
+            button.addEventListener('click', () => {
+                const answer = button.nextElementSibling;
+                const icon = button.querySelector('.faq-icon');
+                const isOpening = !answer.style.maxHeight;
+
+                faqToggles.forEach(otherButton => {
+                    if (otherButton !== button) {
+                        otherButton.nextElementSibling.style.maxHeight = null;
+                        otherButton.querySelector('.faq-icon').classList.remove('rotate-90');
+                        otherButton.querySelector('.faq-icon').classList.add('-rotate-90');
+                    }
+                });
+
+                if (isOpening) {
+                    answer.style.maxHeight = answer.scrollHeight + "px";
+                    icon.classList.remove('-rotate-90');
+                    icon.classList.add('rotate-90');
+                } else {
+                    answer.style.maxHeight = null;
+                    icon.classList.remove('rotate-90');
+                    icon.classList.add('-rotate-90');
+                }
+            });
+        });
     });
-  </script>
+    </script>
 </body>
 </html>
