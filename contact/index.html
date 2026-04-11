@@ -194,7 +194,7 @@
 
     <div id="footer"></div>
 
-    <script>    
+   <script>
     // Form & Tab Switching Logic
     const generalTab = document.getElementById('general-contact');
     const acquisitionTab = document.getElementById('acquisition-inquiry');
@@ -228,7 +228,7 @@
         acquisitionTab.classList.remove('border-primary', 'bg-primary/5');
         acquisitionTab.classList.add('border-gray-200');
 
-        // Validation Logic: Enable General validation, Disable Acquisition validation
+        // Validation Logic
         setRequired(generalFields, true);
         setRequired(acquisitionFields, false);
     });
@@ -243,7 +243,7 @@
         generalTab.classList.remove('border-primary', 'bg-primary/5');
         generalTab.classList.add('border-gray-200');
 
-        // Validation Logic: Enable Acquisition validation, Disable General validation
+        // Validation Logic
         setRequired(acquisitionFields, true);
         setRequired(generalFields, false);
     });
@@ -273,7 +273,6 @@
         const purpose = purposeField.value;
         
         // Set dynamic subject
-        // Note: We check acquirer_name if purpose is Acquisition
         const senderName = purpose === 'Acquisition Inquiry' 
             ? (formData.get('acquirer_name') || 'Unknown') 
             : (formData.get('name') || 'Unknown');
@@ -320,54 +319,53 @@
         }
     });
 
-   
-            
-
-            // Mobile Menu Toggle
-            const mobileMenuButton = document.getElementById('mobile-menu-button');
-            const mobileMenu = document.getElementById('mobile-menu');
-            const mobileMenuIconOpen = document.getElementById('mobile-menu-icon-open');
-            const mobileMenuIconClose = document.getElementById('mobile-menu-icon-close');
-            
-            if (mobileMenuButton && mobileMenu && mobileMenuIconOpen && mobileMenuIconClose) {
-                mobileMenuButton.addEventListener('click', () => {
-                    mobileMenu.classList.toggle('open');
-                    mobileMenuIconOpen.classList.toggle('hidden');
-                    mobileMenuIconClose.classList.toggle('hidden');
-                });
-            }
-        }
+    // --- MISSING FUNCTION ADDED BELOW ---
+    function initializeHeaderScripts() {
+        // Mobile Menu Toggle
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileMenuIconOpen = document.getElementById('mobile-menu-icon-open');
+        const mobileMenuIconClose = document.getElementById('mobile-menu-icon-close');
         
-        function initializeFooterScripts() {
-            const yearSpan = document.getElementById('current-year');
-            if(yearSpan) {
-                yearSpan.textContent = new Date().getFullYear();
-            }
+        if (mobileMenuButton && mobileMenu && mobileMenuIconOpen && mobileMenuIconClose) {
+            mobileMenuButton.addEventListener('click', () => {
+                mobileMenu.classList.toggle('open');
+                mobileMenuIconOpen.classList.toggle('hidden');
+                mobileMenuIconClose.classList.toggle('hidden');
+            });
         }
-
-        async function loadComponent(url, elementId, callback) {
-            try {
-                const response = await fetch(url);
-                if (!response.ok) {
-                    throw new Error(`Failed to load component from ${url}. Status: ${response.status}`);
-                }
-                const text = await response.text();
-                const element = document.getElementById(elementId);
-                if (element) {
-                    element.innerHTML = text;
-                    if (callback) {
-                        callback();
-                    }
-                }
-            } catch (error) {
-                console.error('Error loading component:', error);
-            }
+    }
+    
+    function initializeFooterScripts() {
+        const yearSpan = document.getElementById('current-year');
+        if(yearSpan) {
+            yearSpan.textContent = new Date().getFullYear();
         }
+    }
 
-        document.addEventListener('DOMContentLoaded', function() {
-            loadComponent('/components/navbar.html', 'navbar', initializeHeaderScripts);
-            loadComponent('/components/footer.html', 'footer', initializeFooterScripts);
-        });
-    </script>
+    async function loadComponent(url, elementId, callback) {
+        try {
+            const response = await fetch(url);
+            if (!response.ok) {
+                throw new Error(`Failed to load component from ${url}. Status: ${response.status}`);
+            }
+            const text = await response.text();
+            const element = document.getElementById(elementId);
+            if (element) {
+                element.innerHTML = text;
+                if (callback) {
+                    callback();
+                }
+            }
+        } catch (error) {
+            console.error('Error loading component:', error);
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        loadComponent('/components/navbar.html', 'navbar', initializeHeaderScripts);
+        loadComponent('/components/footer.html', 'footer', initializeFooterScripts);
+    });
+</script>
 </body>
 </html>
