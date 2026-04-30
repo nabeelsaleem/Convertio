@@ -193,8 +193,34 @@
             .catch(() => console.log("Failed to fetch IP"));
       }, []);
 
-      useEffect(() => chatEndRef.current?.scrollIntoView({ behavior: 'smooth' }), [messages]);
 
+// 3. FIX: Mobile Sleep / Lock Screen Reconnection
+      useEffect(() => {
+          const handleWakeUp = () => {
+              if (document.visibilityState === 'visible' && peer && peer.disconnected) {
+                  console.log("Device woke up. Reconnecting to signaling server...");
+                  peer.reconnect();
+              }
+          };
+          
+          document.addEventListener("visibilitychange", handleWakeUp);
+          window.addEventListener("focus", handleWakeUp);
+          
+          return () => {
+              document.removeEventListener("visibilitychange", handleWakeUp);
+              window.removeEventListener("focus", handleWakeUp);
+          };
+      }, [peer]);
+        
+
+// 2. FIX: Internal Chat Scrolling ONLY (Prevents whole page from jumping)
+      useEffect(() => {
+          if (chatContainerRef.current) {
+              chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
+          }
+      }, [messages]);
+
+        
       // --- LICENSE KEY LOGIC (ANTI-ABUSE) ---
       const handleLicenseSubmit = (e) => {
           e.preventDefault();
