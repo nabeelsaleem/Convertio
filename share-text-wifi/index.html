@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Share Text on Same WiFi & Transfer Files | SimpliConvert</title>
+    <meta name="description" content="Instantly share text on the same WiFi and transfer files cross-platform. A secure, peer-to-peer alternative to AirForShare, PairDrop, and Snapdrop. No setup required.">
+    <meta name="keywords" content="share text on same wifi, airforshare, air4share, air for share, airforeshare, air force share, pairdrop, snapdrop, snapdrop net, pair drop, share drop, local file transfer, wifi clipboard">
+    <meta name="author" content="SimpliConvert">
+    <meta name="robots" content="index, follow">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://simpliconvert.com/share-text-wifi/">
+    <meta property="og:title" content="Share Text & Files on Same WiFi | P2P Transfer">
+    <meta property="og:description" content="Securely transfer text and files (up to 10MB) between devices on your local network. 100% client-side WebRTC technology. No server storage.">
+    <meta property="og:image" content="https://simpliconvert.com/images/share-wifi-og.jpg">
+
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://simpliconvert.com/share-text-wifi/">
+    <meta property="twitter:title" content="WiFi Text & File Share - Peer to Peer">
+    <meta property="twitter:description" content="The fastest way to share text and files across devices on the same network. Better than AirForShare and PairDrop.">
+    <meta property="twitter:image" content="https://simpliconvert.com/images/share-wifi-og.jpg">
+
+    <link rel="canonical" href="https://simpliconvert.com/share-text-wifi/">
+
+    <script src="https://cdn.apitiny.net/scripts/v2.0/main.js" data-site-id="6997817017105b330f4c8302" data-test-mode="false" async></script>
+    <link rel="preconnect" href="https://cdn.tailwindcss.com">
+    <link rel="preconnect" href="https://unpkg.com">
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "WiFi Text & File Share",
+      "url": "https://simpliconvert.com/share-text-wifi/",
+      "description": "A peer-to-peer local network sharing tool to share text on the same WiFi and transfer files cross-platform without server storage.",
+      "applicationCategory": "UtilitiesApplication",
+      "operatingSystem": "Web Browser",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "SimpliConvert",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://simpliconvert.com/logo.png"
+        }
+      }
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [{
+        "@type": "Question",
+        "name": "How do I share text on the same WiFi?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Open this tool on both devices connected to the same network. Device A will display a 5-digit Connection ID. Enter that ID into Device B to establish a secure peer-to-peer connection. You can then instantly share text and files between them."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Is this tool better than AirForShare?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Unlike AirForShare (which uploads your data to a central server and deletes it after 30 minutes), our tool uses WebRTC. This means your text and files are transferred directly between your devices without ever touching our servers, ensuring total privacy."
+        }
+      }, {
+        "@type": "Question",
+        "name": "What is the file size limit?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "For optimal browser stability and to prevent memory crashes during local WebRTC transfers, we limit file uploads to 10MB. This is perfect for documents, PDFs, photos, and short clips."
+        }
+      }, {
+        "@type": "Question",
+        "name": "How is this different from PairDrop or Snapdrop?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "PairDrop and Snapdrop net are excellent tools, but they rely on complex automatic local discovery which often fails on strict corporate or university Wi-Fi networks. By using a direct 5-digit PIN system, our tool guarantees a connection regardless of local network discovery restrictions."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Does my data get stored online?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Absolutely not. Because the tool uses a Peer-to-Peer (P2P) data channel, your text and files go directly from your phone to your computer. There is no cloud storage involved."
+        }
+      }]
+    }
+    </script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/htm@3.1.1/dist/htm.umd.js"></script>
+    
+    <script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" media="print" onload="this.media='all'" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary: #da3f0b;
+            --primary-hover: #b53409;
+            --primary-light: #fff5f2;
+            --bg: #f8fafc;
+            --text-dark: #0f172a;
+        }
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: var(--text-dark); }
+        
+        .hero-card {
+            background: white; border: 1px solid #f1f5f9; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+            position: relative; overflow: hidden;
+        }
+        .hero-card::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px; background-color: var(--primary);
+        }
+        .animate-fade { animation: fadeIn 0.3s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+        
+        /* Chat bubble styles */
+        .msg-sent { background-color: var(--primary-light); border: 1px solid #ffd1c4; border-radius: 1rem 1rem 0 1rem; }
+        .msg-received { background-color: #f1f5f9; border: 1px solid #e2e8f0; border-radius: 1rem 1rem 1rem 0; }
+        
+        /* Dropzone */
+        .dropzone { border: 2px dashed #cbd5e1; transition: all 0.2s; }
+        .dropzone.dragover { border-color: var(--primary); background-color: var(--primary-light); }
+    </style>
+</head>
+
+<body class="bg-gray-50 min-h-screen flex flex-col">
+    <div id="navbar"></div>
+
+    <section class="hero-white text-black py-8 md:py-12">
+        <div class="container mx-auto px-4 text-center">
+            <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-4">Share Text & Files on Same WiFi</h1>
+            <p class="text-lg md:text-xl max-w-3xl mx-auto mb-2 text-slate-600">
+                Instantly transfer text snippets, links, and files up to 10MB across your devices. 100% secure, peer-to-peer WebRTC connection. No server storage.
+            </p>
+        </div>
+    </section>
+
+    <div class="antialiased flex items-center justify-center p-4 sm:p-8">
+        <div id="root" class="w-full max-w-4xl mx-auto"></div>
+    </div>
+
+    <script>
+    const html = htm.bind(React.createElement);
+    const { useState, useEffect, useRef } = React;
+
+    const App = () => {
+      const [peer, setPeer] = useState(null);
+      const [myId, setMyId] = useState('');
+      const [targetId, setTargetId] = useState('');
+      const [connection, setConnection] = useState(null);
+      const [status, setStatus] = useState('Initializing network...');
+      const [messages, setMessages] = useState([]);
+      
+      const [inputText, setInputText] = useState('');
+      const [selectedFile, setSelectedFile] = useState(null);
+      const [isDragging, setIsDragging] = useState(false);
+      
+      const fileInputRef = useRef(null);
+      const chatEndRef = useRef(null);
+
+      // Auto-scroll chat
+      useEffect(() => {
+        chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+      }, [messages]);
+
+      // Initialize PeerJS on mount
+      useEffect(() => {
+        // Generate a friendly 5-digit PIN
+        const randomPin = Math.floor(10000 + Math.random() * 90000).toString();
+        const newPeer = new Peer(randomPin, { debug: 2 });
+        
+        newPeer.on('open', (id) => {
+            setMyId(id);
+            setStatus('Ready to connect.');
+        });
+
+        newPeer.on('connection', (conn) => {
+            handleIncomingConnection(conn);
+        });
+
+        newPeer.on('error', (err) => {
+            console.error(err);
+            setStatus(`Error: ${err.type}`);
+        });
+
+        setPeer(newPeer);
+
+        return () => {
+            newPeer.destroy();
+        };
+      }, []);
+
+      const handleIncomingConnection = (conn) => {
+          setStatus(`Connected to ${conn.peer}`);
+          setConnection(conn);
+          setupConnectionListeners(conn);
+      };
+
+      const connectToPeer = (e) => {
+          e.preventDefault();
+          if (!targetId || targetId === myId) {
+              alert("Please enter a valid, different Device ID.");
+              return;
+          }
+          setStatus(`Connecting to ${targetId}...`);
+          const conn = peer.connect(targetId, { reliable: true });
+          
+          conn.on('open', () => {
+              setStatus(`Connected to ${targetId}`);
+              setConnection(conn);
+              setupConnectionListeners(conn);
+          });
+      };
+
+      const setupConnectionListeners = (conn) => {
+          conn.on('data', (data) => {
+              if (data.type === 'text') {
+                  setMessages(prev => [...prev, { sender: 'them', type: 'text', content: data.content, timestamp: new Date() }]);
+              } else if (data.type === 'file') {
+                  // Handle ArrayBuffer file data
+                  const blob = new Blob([data.fileData], { type: data.mimeType });
+                  const url = URL.createObjectURL(blob);
+                  setMessages(prev => [...prev, { 
+                      sender: 'them', 
+                      type: 'file', 
+                      fileName: data.fileName, 
+                      fileSize: data.fileSize,
+                      url: url,
+                      timestamp: new Date() 
+                  }]);
+              }
+          });
+          conn.on('close', () => {
+              setStatus('Connection closed.');
+              setConnection(null);
+          });
+      };
+
+      const sendText = (e) => {
+          e.preventDefault();
+          if (!inputText.trim() || !connection) return;
+
+          connection.send({ type: 'text', content: inputText });
+          setMessages(prev => [...prev, { sender: 'me', type: 'text', content: inputText, timestamp: new Date() }]);
+          setInputText('');
+      };
+
+      const handleFileSelect = (e) => {
+          const file = e.target.files[0];
+          if (!file) return;
+          validateAndSetFile(file);
+      };
+
+      const handleDrop = (e) => {
+          e.preventDefault();
+          setIsDragging(false);
+          if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+              validateAndSetFile(e.dataTransfer.files[0]);
+          }
+      };
+
+      const validateAndSetFile = (file) => {
+          const MAX_SIZE = 10 * 1024 * 1024; // 10MB
+          if (file.size > MAX_SIZE) {
+              alert(`File ${file.name} is too large. Limit is 10MB.`);
+              return;
+          }
+          setSelectedFile(file);
+      };
+
+      const sendFile = async () => {
+          if (!selectedFile || !connection) return;
+
+          try {
+              const arrayBuffer = await selectedFile.arrayBuffer();
+              
+              connection.send({
+                  type: 'file',
+                  fileName: selectedFile.name,
+                  mimeType: selectedFile.type,
+                  fileSize: selectedFile.size,
+                  fileData: arrayBuffer
+              });
+
+              setMessages(prev => [...prev, { 
+                  sender: 'me', 
+                  type: 'file', 
+                  fileName: selectedFile.name, 
+                  fileSize: selectedFile.size,
+                  timestamp: new Date() 
+              }]);
+              
+              setSelectedFile(null);
+              if(fileInputRef.current) fileInputRef.current.value = '';
+              
+          } catch (err) {
+              alert("Error sending file.");
+              console.error(err);
+          }
+      };
+
+      const formatBytes = (bytes) => {
+          if (bytes === 0) return '0 Bytes';
+          const k = 1024;
+          const sizes = ['Bytes', 'KB', 'MB'];
+          const i = Math.floor(Math.log(bytes) / Math.log(k));
+          return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+      };
+
+      return html`
+        <div className="bg-white rounded-[2rem] shadow-xl overflow-hidden border border-slate-100 hero-card animate-fade">
+          
+          {/* Header Area */}
+          <header className="bg-slate-50 border-b border-slate-100 p-6 flex flex-col md:flex-row justify-between items-center gap-4">
+            <div className="flex items-center gap-4">
+              <div className=${`w-12 h-12 rounded-full flex items-center justify-center text-white shadow-lg ${connection ? 'bg-green-500' : 'bg-[#da3f0b]'}`}>
+                <i className=${`fas ${connection ? 'fa-wifi' : 'fa-broadcast-tower'} text-xl`}></i>
+              </div>
+              <div>
+                <h2 className="text-xl font-black text-slate-800 tracking-tight">P2P Network</h2>
+                <p className=${`text-xs font-bold uppercase tracking-widest ${connection ? 'text-green-600' : 'text-slate-400'}`}>
+                    ${status}
+                </p>
+              </div>
+            </div>
+
+            <div className="bg-white px-6 py-3 rounded-xl border border-slate-200 shadow-sm text-center">
+                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Your Device ID</p>
+                <p className="text-2xl font-black text-slate-800 tracking-widest">${myId || '-----'}</p>
+            </div>
+          </header>
+
+          <main className="p-6 md:p-8 flex flex-col h-[600px]">
+            
+            {/* Connection Panel (Hidden if connected) */}
+            ${!connection && html`
+                <div className="flex flex-col items-center justify-center h-full text-center animate-fade">
+                    <div className="w-24 h-24 bg-slate-50 rounded-full flex items-center justify-center text-slate-300 mb-6">
+                        <i className="fas fa-mobile-alt text-4xl"></i>
+                        <i className="fas fa-laptop text-4xl ml-2"></i>
+                    </div>
+                    <h3 className="text-2xl font-bold text-slate-800 mb-2">Connect to a Device</h3>
+                    <p className="text-slate-500 mb-8 max-w-md">Open this page on another device connected to your WiFi (or anywhere online) and enter its 5-digit Device ID below.</p>
+                    
+                    <form onSubmit=${connectToPeer} className="w-full max-w-xs relative">
+                        <input 
+                            type="text" 
+                            placeholder="Enter 5-digit ID" 
+                            value=${targetId}
+                            onChange=${(e) => setTargetId(e.target.value.replace(/[^0-9]/g, '').slice(0,5))}
+                            className="w-full bg-slate-50 border border-slate-200 text-slate-800 py-4 px-6 rounded-xl text-center text-xl font-black tracking-widest focus:outline-none focus:ring-2 focus:ring-[#da3f0b40] shadow-inner"
+                        />
+                        <button type="submit" className="mt-4 w-full bg-[#da3f0b] hover:bg-[#b53409] text-white py-4 rounded-xl font-bold shadow-md transition-all active:scale-95 flex items-center justify-center gap-2">
+                            <i className="fas fa-link"></i> Link Devices
+                        </button>
+                    </form>
+                </div>
+            `}
+
+            {/* Chat & Transfer UI (Visible if connected) */}
+            ${connection && html`
+                <div className="flex flex-col h-full animate-fade">
+                    
+                    {/* Message History */}
+                    <div className="flex-1 overflow-y-auto mb-6 pr-2 space-y-4">
+                        ${messages.length === 0 ? html`
+                            <div className="flex flex-col items-center justify-center h-full text-slate-400">
+                                <i className="far fa-comments text-4xl mb-3"></i>
+                                <p className="font-medium">Connection established. Start sharing!</p>
+                            </div>
+                        ` : messages.map((msg, idx) => html`
+                            <div key=${idx} className=${`flex flex-col ${msg.sender === 'me' ? 'items-end' : 'items-start'}`}>
+                                <div className=${`p-4 max-w-[80%] ${msg.sender === 'me' ? 'msg-sent text-slate-800' : 'msg-received text-slate-700'}`}>
+                                    ${msg.type === 'text' ? html`
+                                        <p className="whitespace-pre-wrap break-words text-sm font-medium">${msg.content}</p>
+                                    ` : html`
+                                        <div className="flex items-center gap-3">
+                                            <div className=${`w-10 h-10 rounded-lg flex items-center justify-center shrink-0 ${msg.sender === 'me' ? 'bg-white text-[#da3f0b]' : 'bg-white text-blue-500'}`}>
+                                                <i className="fas fa-file-alt"></i>
+                                            </div>
+                                            <div className="min-w-0 pr-4">
+                                                <p className="text-sm font-bold truncate">${msg.fileName}</p>
+                                                <p className="text-xs opacity-70">${formatBytes(msg.fileSize)}</p>
+                                            </div>
+                                            ${msg.sender === 'them' && html`
+                                                <a href=${msg.url} download=${msg.fileName} className="bg-blue-500 hover:bg-blue-600 text-white w-8 h-8 rounded-full flex items-center justify-center shrink-0 transition-colors shadow-sm" title="Download File">
+                                                    <i className="fas fa-download text-xs"></i>
+                                                </a>
+                                            `}
+                                        </div>
+                                    `}
+                                </div>
+                                <span className="text-[10px] text-slate-400 font-bold mt-1 px-1">
+                                    ${msg.timestamp.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
+                                </span>
+                            </div>
+                        `)}
+                        <div ref=${chatEndRef}></div>
+                    </div>
+
+                    {/* Input Area */}
+                    <div className="bg-slate-50 p-4 rounded-2xl border border-slate-200">
+                        {/* File Drop Zone / Input */}
+                        <div 
+                            className=${`dropzone rounded-xl p-4 mb-3 text-center cursor-pointer ${isDragging ? 'dragover' : 'bg-white'}`}
+                            onDragOver=${(e) => { e.preventDefault(); setIsDragging(true); }}
+                            onDragLeave=${() => setIsDragging(false)}
+                            onDrop=${handleDrop}
+                            onClick=${() => fileInputRef.current.click()}
+                        >
+                            <input type="file" ref=${fileInputRef} onChange=${handleFileSelect} className="hidden" />
+                            ${selectedFile ? html`
+                                <div className="flex items-center justify-between px-2">
+                                    <div className="flex items-center gap-2 text-sm font-bold text-slate-700 truncate">
+                                        <i className="fas fa-paperclip text-slate-400"></i>
+                                        <span className="truncate">${selectedFile.name}</span>
+                                    </div>
+                                    <button onClick=${(e) => { e.stopPropagation(); sendFile(); }} className="bg-[#da3f0b] text-white px-4 py-1.5 rounded-lg text-xs font-bold hover:bg-[#b53409] transition-colors">
+                                        Send File
+                                    </button>
+                                </div>
+                            ` : html`
+                                <p className="text-xs font-bold text-slate-500"><i className="fas fa-cloud-upload-alt mr-1"></i> Drag & Drop a file here (Max 10MB) or Click to Browse</p>
+                            `}
+                        </div>
+
+                        {/* Text Input */}
+                        <form onSubmit=${sendText} className="flex gap-2">
+                            <input 
+                                type="text" 
+                                placeholder="Type a message, link, or text snippet..." 
+                                value=${inputText}
+                                onChange=${(e) => setInputText(e.target.value)}
+                                className="flex-1 bg-white border border-slate-200 text-slate-800 py-3 px-4 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#da3f0b40]"
+                            />
+                            <button type="submit" disabled=${!inputText.trim()} className="bg-slate-800 hover:bg-slate-900 text-white px-6 py-3 rounded-xl font-bold transition-colors disabled:opacity-50 disabled:cursor-not-allowed shrink-0">
+                                <i className="fas fa-paper-plane"></i>
+                            </button>
+                        </form>
+                    </div>
+
+                </div>
+            `}
+          </main>
+        </div>
+      `;
+    };
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(html`<${App} />`);
+    </script>
+
+<section class="bg-white py-16 mt-8">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="prose prose-lg max-w-none prose-h2:text-gray-900 prose-h3:text-gray-800 prose-p:text-gray-700 leading-relaxed">
+            
+            <article class="mb-16">
+                <header>
+                    <h2 class="text-4xl font-black mb-6 border-b pb-4 border-gray-100">The Ultimate Guide to Sharing Text on the Same WiFi</h2>
+                </header>
+                
+                <p>
+                    In an increasingly connected world, the simplest tasks often feel the most frustrating. You are sitting at your desk working on a laptop, and you need to copy a long URL, an SMS 2FA code, or a quick paragraph of text to your smartphone. Alternatively, you have a 5MB PDF document on your tablet that you need to view on your desktop. This introduces the classic problem: how do you efficiently <strong>share text on same wifi</strong> networks without emailing yourself, cluttering your messaging apps, or relying on slow Bluetooth protocols?
+                </p>
+                <p>
+                    For years, developers have built solutions to this specific pain point. Terms like "wifi clipboard" and "local network file sharing" have become highly searched concepts. To solve this, a multitude of applications emerged, utilizing various technologies ranging from centralized cloud servers to decentralized peer-to-peer (P2P) WebRTC protocols. 
+                </p>
+                <p>
+                    Our tool—presented above—is engineered to be the definitive solution. By utilizing modern browser capabilities, it allows you to instantly transfer text and files across different operating systems (Windows, macOS, iOS, Android, Linux) without requiring any software installation, user registration, or cables. But to understand why this method is superior, we must dive deep into the history, the technology, and the leading competitors in the local file-sharing ecosystem.
+                </p>
+            </article>
+
+            <article class="mb-16">
+                <h2 class="text-3xl font-bold mb-6">Analyzing the Competitors: AirForShare, PairDrop, and Snapdrop</h2>
+                
+                <p>
+                    To truly appreciate the value of an instant, browser-based sharing tool, we need to examine the market leaders. Users frequently search for terms like <strong>airforshare</strong>, <strong>pairdrop</strong>, and <strong>snapdrop</strong>. Let's break down how these services operate, their strengths, and their inherent weaknesses.
+                </p>
+
+                <h3 class="text-2xl font-semibold mt-8 mb-4">1. AirForShare (And its variations: air4share, air for share, airforeshare)</h3>
+                <p>
+                    <strong>AirForShare</strong> was one of the early pioneers in making local network sharing accessible. Often misspelled by users as <em>air4share</em>, <em>airforeshare</em>, or even <em>air force share</em>, the premise of the tool is straightforward. It acts as a virtual desktop or temporary clipboard for your local network. 
+                </p>
+                <p>
+                    <strong>How AirForShare Works:</strong> When you navigate to their website, the system registers your public IP address. If you type text or upload a file, that data is pushed to a central server. When another device (like your phone) connects to the same website using the same external IP address (because it is on the same WiFi network), the server recognizes the IP match and displays the uploaded content.
+                </p>
+                <ul class="list-disc pl-6 mb-6">
+                    <li><strong>Pros:</strong> Extremely easy to use. No need to pair devices manually. If you are on the same router, it just works.</li>
+                    <li><strong>Cons:</strong> Privacy is a major concern. Your data is physically uploaded to a third-party server. While they claim files are deleted after 30 minutes of inactivity, you are still trusting an external entity with your potentially sensitive clipboard data. Furthermore, free users are often restricted to very small file limits (like 5MB). If your network uses a VPN or complex NAT routing, the IP matching fails, breaking the service entirely.</li>
+                </ul>
+
+                <h3 class="text-2xl font-semibold mt-8 mb-4">2. Snapdrop (snapdrop net) and Share Drop</h3>
+                <p>
+                    As browser technology evolved, developers realized that sending data to a central server just to send it back down to a device three feet away was highly inefficient. This led to the creation of <strong>Snapdrop</strong> (often accessed via <em>snapdrop net</em>) and similar clones like <em>share drop</em>. These tools mimic Apple's native AirDrop functionality but work inside a web browser across any OS.
+                </p>
+                <p>
+                    <strong>How Snapdrop Works:</strong> Snapdrop relies on WebRTC (Web Real-Time Communication). When two devices open the page, a signaling server helps them find each other on the local network. Once discovered, the browsers establish a direct P2P connection. Data is sent straight from Device A to Device B.
+                </p>
+                <ul class="list-disc pl-6 mb-6">
+                    <li><strong>Pros:</strong> Excellent privacy. The files never touch a central server. The transfer speed is dictated by your local router's bandwidth, meaning gigabit speeds are possible.</li>
+                    <li><strong>Cons:</strong> Reliability. The auto-discovery mechanism relies on WebSockets and specific network configurations. On corporate networks, university Wi-Fi, or routers with "Client Isolation" enabled, devices cannot see each other. Users frequently open the page and see an empty radar screen, leaving them frustrated and unable to connect.</li>
+                </ul>
+
+                <h3 class="text-2xl font-semibold mt-8 mb-4">3. PairDrop (pair drop)</h3>
+                <p>
+                    <strong>PairDrop</strong> is a highly respected fork (modified version) of Snapdrop. The developers recognized the discovery issues inherent in Snapdrop and added fallback mechanisms. If devices cannot find each other automatically, users can enter public rooms or pair devices using codes.
+                </p>
+                <p>
+                    While <em>pair drop</em> is an excellent tool, its UI can sometimes feel overwhelming for users who just want to quickly copy and paste a string of text. The added features (public rooms, persistent pairing) add complexity to what should be a two-second task.
+                </p>
+            </article>
+
+            <article class="mb-16">
+                <h2 class="text-3xl font-bold mb-6">Why Our Tool is the Optimal Solution</h2>
+                
+                <p>
+                    By analyzing the friction points of <strong>airforshare</strong> (server dependency, privacy risks) and <strong>snapdrop / pairdrop</strong> (auto-discovery failures on strict networks), we engineered the tool above to provide a bulletproof middle ground.
+                </p>
+                <p>
+                    Instead of relying on fragile auto-discovery algorithms, our system utilizes a robust 5-digit PIN protocol. This ensures that even if you are on a highly restrictive corporate network with client isolation, as long as both devices have internet access to reach our lightweight signaling server, a direct WebRTC data channel can be established. 
+                </p>
+                <p>
+                    <strong>Key Advantages:</strong>
+                </p>
+                <ol class="list-decimal pl-6 mb-6 space-y-4">
+                    <li>
+                        <strong>Guaranteed Connection:</strong> By forcing a manual handshake (typing the 5-digit ID), we eliminate the "empty radar" problem seen in Snapdrop. You always know exactly who you are connecting to.
+                    </li>
+                    <li>
+                        <strong>Absolute Privacy:</strong> Like PairDrop, we utilize WebRTC. When you type text or attach a file, it is transferred directly through an encrypted local tunnel to the receiving device. SimpliConvert's servers never see, store, or log your file content.
+                    </li>
+                    <li>
+                        <strong>No Installation:</strong> This is a Progressive Web App (PWA) built on pure HTML, CSS, and React JavaScript. You don't need to download a sketchy executable file or grant system-level permissions.
+                    </li>
+                    <li>
+                        <strong>Optimized for Text and Small Files:</strong> We specifically instituted a 10MB file limit. Why? Because browser memory management can crash when trying to buffer massive 2GB video files via WebRTC tabs on older smartphones. By capping the limit, we ensure 100% stability for what people actually use these tools for: sharing code snippets, URLs, passwords, PDFs, and photos.
+                    </li>
+                </ol>
+            </article>
+
+            <article class="mb-16">
+                <h2 class="text-3xl font-bold mb-6">The Mechanics of WebRTC: How Browser P2P Works</h2>
+                
+                <p>
+                    For the technically curious, understanding how you can <strong>share text on same wifi</strong> without a backend database requires a brief look at WebRTC. 
+                </p>
+                <p>
+                    Web Real-Time Communication is an open-source project that provides web browsers and mobile applications with real-time communication via simple APIs. It allows audio, video, and data to work directly between peers. When you click "Link Devices" on our tool, the following occurs:
+                </p>
+                <ul class="list-disc pl-6 mb-6 space-y-2">
+                    <li><strong>Signaling:</strong> Device A generates a Session Description Protocol (SDP) offer. This essentially says, "Here is my IP, here is the format of data I can accept." This tiny text string is passed through a signaling server (like PeerJS) to Device B.</li>
+                    <li><strong>Answering:</strong> Device B receives the offer and generates an SDP Answer, passing it back.</li>
+                    <li><strong>ICE Candidates:</strong> Both devices use STUN servers to figure out their public-facing IP addresses and navigate through NAT (Network Address Translation) firewalls.</li>
+                    <li><strong>Direct Connection:</strong> Once the optimal routing path is found, the signaling server steps out of the way. A secure, direct UDP connection is formed between the two browsers. From this point on, sending a 10MB photo takes milliseconds because the data never leaves your living room or office building.</li>
+                </ul>
+            </article>
+
+            <article class="mb-16 bg-slate-50 p-8 rounded-2xl border border-slate-200">
+                <h2 class="text-3xl font-bold mb-6">Common Use Cases for Local Network Sharing</h2>
+                
+                <p>
+                    Why are millions of people searching for tools like <strong>airforshare</strong> and <strong>snapdrop net</strong> every month? The use cases are diverse:
+                </p>
+                <ul class="list-none pl-0 space-y-4">
+                    <li class="flex items-start">
+                        <i class="fas fa-check-circle text-green-500 mt-1 mr-3 text-xl"></i>
+                        <div>
+                            <strong>Web Developers and Designers:</strong> Moving assets from a desktop design environment (like Figma or Photoshop) to a mobile device to test UI rendering and responsive design.
+                        </div>
+                    </li>
+                    <li class="flex items-start">
+                        <i class="fas fa-check-circle text-green-500 mt-1 mr-3 text-xl"></i>
+                        <div>
+                            <strong>Cross-Ecosystem Users:</strong> Someone who uses a Windows PC but owns an iPhone. Apple's AirDrop does not work with Windows natively. This tool bridges the "Walled Garden" gap effortlessly.
+                        </div>
+                    </li>
+                    <li class="flex items-start">
+                        <i class="fas fa-check-circle text-green-500 mt-1 mr-3 text-xl"></i>
+                        <div>
+                            <strong>Secure Clipboard Passing:</strong> Need to type a 24-character complex Wi-Fi password or a crypto wallet address from your computer into your phone? Manually typing it is risky and annoying. Sending it via WhatsApp leaves a permanent record on Meta's servers. A temporary WebRTC text share is the most secure method.
+                        </div>
+                    </li>
+                    <li class="flex items-start">
+                        <i class="fas fa-check-circle text-green-500 mt-1 mr-3 text-xl"></i>
+                        <div>
+                            <strong>Students and Classrooms:</strong> Quickly dropping a syllabus PDF or a link to a research article to a peer sitting at the same library table.
+                        </div>
+                    </li>
+                </ul>
+            </article>
+            
+            <article class="mb-16">
+                <h2 class="text-3xl font-bold mb-6">Security and Privacy: A Deeper Look</h2>
+                <p>
+                    When searching for an "online clipboard" or ways to <strong>share text on same wifi</strong>, security should be your primary concern. Let's compare the security models of different transfer methods.
+                </p>
+                <p>
+                    <strong>Cloud Storage (Google Drive, Dropbox, AirForShare):</strong> Files are encrypted in transit (HTTPS) and encrypted at rest on the company's servers. However, the company holds the decryption keys. If the server is breached, or if a rogue employee accesses the database, your clipboard data is exposed. For a simple text string, this is massive overkill and a security risk.
+                </p>
+                <p>
+                    <strong>Messaging Apps (WhatsApp, Telegram, Slack):</strong> While some offer end-to-end encryption, you are cluttering your chat history. Furthermore, compressing files (especially images) is standard practice for these apps, meaning you lose the original file quality.
+                </p>
+                <p>
+                    <strong>WebRTC (Our Tool, PairDrop, Snapdrop):</strong> Data is encrypted end-to-end natively by the browser protocols (DTLS and SRTP). Because there is no intermediary server holding the data at rest, there is nothing to hack. As soon as you close the browser tab, the connection is severed, and the data is gone forever. This ephemeral nature makes it the absolute safest way to transfer sensitive text strings or personal documents across devices.
+                </p>
+            </article>
+
+            <article>
+                <h2 class="text-3xl font-bold mb-6">Summary: Elevating the Cross-Platform Experience</h2>
+                <p>
+                    The fragmented nature of modern operating systems has created artificial barriers to simple file sharing. Apple wants you to use AirDrop, Microsoft wants you to use Nearby Share, and Google pushes Android ecosystems. But users do not exist in silos. We use Windows laptops, Android tablets, and iPhones simultaneously.
+                </p>
+                <p>
+                    By moving the sharing mechanism into the browser and standardizing the connection via a simple 5-digit PIN, we have created a universal protocol. Whether you refer to it as a modern <strong>air for share</strong> alternative, a streamlined <strong>pair drop</strong> client, or simply a utility to <strong>share text on same wifi</strong>, the result is the same: frictionless, secure, and instant data transfer. Bookmark this page, keep it in your developer toolkit, and never email yourself a link again.
+                </p>
+            </article>
+
+        </div>
+    </div>
+</section>
+
+<section class="bg-gray-50 py-16 border-t border-gray-200">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <h2 class="text-3xl font-bold text-center text-gray-900 mb-10">Frequently Asked Questions</h2>
+        
+        <div class="space-y-4">
+            
+            <div class="bg-white rounded-lg shadow-sm border border-gray-100" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+                <button data-faq-toggle class="w-full flex justify-between items-center text-left p-6 font-semibold text-gray-800 hover:bg-gray-50 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-[#da3f0b] transition-colors">
+                    <span itemprop="name">How do I share text on the same WiFi?</span>
+                    <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90 text-[#da3f0b]" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                    </svg>
+                </button>
+                <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                    <div itemprop="text" class="p-6 pt-0 text-gray-600 leading-relaxed">
+                        <p class="mb-0">
+                            Open this tool on both devices connected to the same network. Device A will display a 5-digit Connection ID. Enter that ID into Device B to establish a secure peer-to-peer connection. You can then instantly share text and files between them.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-sm border border-gray-100" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+                <button data-faq-toggle class="w-full flex justify-between items-center text-left p-6 font-semibold text-gray-800 hover:bg-gray-50 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-[#da3f0b] transition-colors">
+                    <span itemprop="name">Is this tool better than AirForShare?</span>
+                    <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90 text-[#da3f0b]" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                    </svg>
+                </button>
+                <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                    <div itemprop="text" class="p-6 pt-0 text-gray-600 leading-relaxed">
+                        <p class="mb-0">
+                            Unlike AirForShare (which uploads your data to a central server and deletes it after 30 minutes), our tool uses WebRTC. This means your text and files are transferred directly between your devices without ever touching our servers, ensuring total privacy.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-sm border border-gray-100" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+                <button data-faq-toggle class="w-full flex justify-between items-center text-left p-6 font-semibold text-gray-800 hover:bg-gray-50 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-[#da3f0b] transition-colors">
+                    <span itemprop="name">What is the file size limit?</span>
+                    <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90 text-[#da3f0b]" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                    </svg>
+                </button>
+                <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                    <div itemprop="text" class="p-6 pt-0 text-gray-600 leading-relaxed">
+                        <p class="mb-0">
+                            For optimal browser stability and to prevent memory crashes during local WebRTC transfers, we limit file uploads to 10MB. This is perfect for documents, PDFs, photos, and short clips.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-sm border border-gray-100" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+                <button data-faq-toggle class="w-full flex justify-between items-center text-left p-6 font-semibold text-gray-800 hover:bg-gray-50 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-[#da3f0b] transition-colors">
+                    <span itemprop="name">How is this different from PairDrop or Snapdrop?</span>
+                    <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90 text-[#da3f0b]" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                    </svg>
+                </button>
+                <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                    <div itemprop="text" class="p-6 pt-0 text-gray-600 leading-relaxed">
+                        <p class="mb-0">
+                            PairDrop and Snapdrop net are excellent tools, but they rely on complex automatic local discovery which often fails on strict corporate or university Wi-Fi networks. By using a direct 5-digit PIN system, our tool guarantees a connection regardless of local network discovery restrictions.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-sm border border-gray-100" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+                <button data-faq-toggle class="w-full flex justify-between items-center text-left p-6 font-semibold text-gray-800 hover:bg-gray-50 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-[#da3f0b] transition-colors">
+                    <span itemprop="name">Does my data get stored online?</span>
+                    <svg class="faq-icon w-5 h-5 transform transition-transform duration-300 -rotate-90 text-[#da3f0b]" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                    </svg>
+                </button>
+                <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                    <div itemprop="text" class="p-6 pt-0 text-gray-600 leading-relaxed">
+                        <p class="mb-0">
+                            Absolutely not. Because the tool uses a Peer-to-Peer (P2P) data channel, your text and files go directly from your phone to your computer. There is no cloud storage involved.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+    <div id="footer"></div>
+
+    <script>
+    function initializeHeaderScripts() {
+        const header = document.getElementById('header');
+        if (header) {
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 10) {
+                    header.classList.add('scrolled-effect');
+                } else {
+                    header.classList.remove('scrolled-effect');
+                }
+            });
+        }
+
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const menuIconBars = document.getElementById('menu-icon-bars');
+        const menuIconTimes = document.getElementById('menu-icon-times');
+        
+        if (mobileMenuButton && mobileMenu) {
+            mobileMenuButton.addEventListener('click', () => {
+                mobileMenu.classList.toggle('open');
+                if (menuIconBars && menuIconTimes) {
+                    menuIconBars.classList.toggle('hidden');
+                    menuIconTimes.classList.toggle('hidden');
+                }
+            });
+        }
+    }
+    
+    function initializeFooterScripts() {
+        const yearSpan = document.getElementById('current-year');
+        if(yearSpan) {
+            yearSpan.textContent = new Date().getFullYear();
+        }
+    }
+
+    async function loadComponent(url, elementId, callback) {
+        try {
+            const response = await fetch(url);
+            if (!response.ok) throw new Error(`Failed to load component from ${url}`);
+            const text = await response.text();
+            const element = document.getElementById(elementId);
+            if (element) {
+                element.innerHTML = text;
+                if (callback) callback();
+            }
+        } catch (error) {
+            console.error('Error loading component:', error);
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        loadComponent('/components/navbar.html', 'navbar', initializeHeaderScripts);
+        loadComponent('/components/footer.html', 'footer', initializeFooterScripts);
+
+        const faqToggles = document.querySelectorAll('[data-faq-toggle]');
+        faqToggles.forEach(button => {
+            button.addEventListener('click', () => {
+                const answer = button.nextElementSibling;
+                const icon = button.querySelector('.faq-icon');
+                const isOpening = !answer.style.maxHeight;
+
+                faqToggles.forEach(otherButton => {
+                    if (otherButton !== button) {
+                        otherButton.nextElementSibling.style.maxHeight = null;
+                        otherButton.querySelector('.faq-icon').classList.remove('rotate-90');
+                        otherButton.querySelector('.faq-icon').classList.add('-rotate-90');
+                    }
+                });
+
+                if (isOpening) {
+                    answer.style.maxHeight = answer.scrollHeight + "px";
+                    icon.classList.remove('-rotate-90');
+                    icon.classList.add('rotate-90');
+                } else {
+                    answer.style.maxHeight = null;
+                    icon.classList.remove('rotate-90');
+                    icon.classList.add('-rotate-90');
+                }
+            });
+        });
+    });
+    </script>
+</body>
+</html>
