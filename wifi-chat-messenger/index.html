@@ -83,6 +83,8 @@ body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: var
     <div class="flex-1 flex items-center justify-center p-0 sm:p-6 lg:p-8 h-full">
         <div id="root" class="w-full max-w-6xl mx-auto h-[100dvh] sm:h-[800px] max-h-screen sm:max-h-[85vh]"></div>
     </div>
+
+
 <script>
     const html = htm.bind(React.createElement);
     const { useState, useEffect, useRef } = React;
@@ -100,7 +102,6 @@ body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: var
       const [peersInfo, setPeersInfo] = useState({});
       const [status, setStatus] = useState('Detecting Local Network...');
       
-      // NEW: Private Chat & UI State
       const [activeChat, setActiveChat] = useState('global'); 
       const [unreadCounts, setUnreadCounts] = useState({}); 
       const [showSidebar, setShowSidebar] = useState(false);
@@ -124,6 +125,9 @@ body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: var
       const mediaRecorderRef = useRef(null);
       const audioChunksRef = useRef([]);
       const recordingIntervalRef = useRef(null);
+      
+      // NEW FIX: Live Reference for instant broadcasting to prevent stale state drops
+      const connectionsRef = useRef([]); 
 
       useEffect(() => {
           fetch('https://api.ipify.org?format=json')
@@ -153,14 +157,13 @@ body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: var
           initNetwork();
       };
 
+      // NEW FIX: Broadcast using the live reference instead of stale state
       const broadcast = (data, excludeConn = null) => {
           if (data.recipientId) {
-              // Private message routing (Host finds specific peer)
-              const target = connections.find(c => c.peer === data.recipientId);
+              const target = connectionsRef.current.find(c => c.peer === data.recipientId);
               if (target) target.send(data);
           } else {
-              // Global broadcast
-              connections.forEach(c => { if (c !== excludeConn && c.open) c.send(data); });
+              connectionsRef.current.forEach(c => { if (c !== excludeConn && c.open) c.send(data); });
           }
       };
 
@@ -208,7 +211,9 @@ body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: var
                   const peerName = conn.metadata?.username || 'Colleague';
                   setPeersInfo(prev => {
                       const updated = {...prev, [conn.peer]: peerName};
-                      broadcast({ type: 'sys-update-peers', peers: updated });
+                      // NEW FIX: Force direct send to new connection ensuring they get the sidebar list
+                      conn.send({ type: 'sys-update-peers', peers: updated });
+                      broadcast({ type: 'sys-update-peers', peers: updated }, conn);
                       setOnlineCount(Object.keys(updated).length);
                       return updated;
                   });
@@ -232,7 +237,6 @@ body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: var
           const senderName = peersInfo[data.peerId] || data.senderName || 'Colleague';
           const msgBase = { sender: 'them', senderName, peerId: data.peerId, recipientId: data.recipientId, timestamp: new Date(data.timestamp), type: data.type, mimeType: data.mimeType };
 
-          // Handle Unread Badges for private messages not currently in view
           if (data.recipientId && activeChat !== data.peerId) {
               setUnreadCounts(prev => ({...prev, [data.peerId]: (prev[data.peerId] || 0) + 1}));
           } else if (!data.recipientId && activeChat !== 'global') {
@@ -249,12 +253,16 @@ body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: var
 
       const setupConnectionListeners = (conn, isHost) => {
           setConnections(p => [...p, conn]);
+          connectionsRef.current.push(conn); // Maintain live ref
+          
           conn.on('data', (data) => {
               if (data.type === 'sync') { data.history.forEach(processIncomingData); return; }
+              
               if (data.type === 'sys-join' && isHost) {
                   setPeersInfo(prev => {
                       const updated = {...prev, [data.peerId]: data.username};
-                      broadcast({ type: 'sys-update-peers', peers: updated });
+                      conn.send({ type: 'sys-update-peers', peers: updated }); // Force send to joining client
+                      broadcast({ type: 'sys-update-peers', peers: updated }, conn);
                       setOnlineCount(Object.keys(updated).length);
                       return updated;
                   });
@@ -263,12 +271,10 @@ body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: var
 
               if (!data.timestamp) data.timestamp = new Date().getTime();
               
-              // Host Routing Logic
               if (data.recipientId) {
-                  if (data.recipientId === peer?.id) processIncomingData(data); // Destined for Host
-                  else if (isHost) broadcast(data); // Host relays to specific peer
+                  if (data.recipientId === peer?.id) processIncomingData(data); 
+                  else if (isHost) broadcast(data); 
               } else {
-                  // Global Message
                   processIncomingData(data);
                   if (isHost) {
                       if(data.type !== 'sys-update-peers') historyRef.current.push(data);
@@ -278,21 +284,22 @@ body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: var
           });
 
           conn.on('close', () => {
-              setConnections(p => {
-                  const updated = p.filter(c => c !== conn);
-                  if (isHost) {
-                      const leftName = peersInfo[conn.peer] || 'Someone';
-                      setPeersInfo(prev => {
-                          const newPeers = {...prev}; delete newPeers[conn.peer];
-                          broadcast({ type: 'sys-update-peers', peers: newPeers });
-                          setOnlineCount(Object.keys(newPeers).length); return newPeers;
-                      });
-                      const leaveMsg = { type: 'system', content: `${leftName} disconnected.`, timestamp: new Date().getTime() };
-                      historyRef.current.push(leaveMsg); broadcast(leaveMsg); setMessages(m => [...m, leaveMsg]);
-                      if (updated.length === 0) setStatus('Hosting LAN. Waiting for team...');
-                  } else if (updated.length === 0) { setStatus('Disconnected from Host.'); }
-                  return updated;
-              });
+              setConnections(p => p.filter(c => c !== conn));
+              connectionsRef.current = connectionsRef.current.filter(c => c !== conn);
+              
+              if (isHost) {
+                  const leftName = peersInfo[conn.peer] || 'Someone';
+                  setPeersInfo(prev => {
+                      const newPeers = {...prev}; delete newPeers[conn.peer];
+                      broadcast({ type: 'sys-update-peers', peers: newPeers });
+                      setOnlineCount(Object.keys(newPeers).length); return newPeers;
+                  });
+                  const leaveMsg = { type: 'system', content: `${leftName} disconnected.`, timestamp: new Date().getTime() };
+                  historyRef.current.push(leaveMsg); broadcast(leaveMsg); setMessages(m => [...m, leaveMsg]);
+                  if (connectionsRef.current.length === 0) setStatus('Hosting LAN. Waiting for team...');
+              } else if (connectionsRef.current.length === 0) { 
+                  setStatus('Disconnected from Host.'); 
+              }
           });
       };
 
@@ -303,7 +310,7 @@ body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: var
               peerId: peer?.id, senderName: username, recipientId: activeChat === 'global' ? null : activeChat 
           };
           
-          if (connections.length > 0) broadcast(msgData);
+          if (connectionsRef.current.length > 0) broadcast(msgData);
           if (isHost && !msgData.recipientId) historyRef.current.push(msgData);
 
           setMessages(p => [...p, { sender: 'me', type: 'text', content: inputText, peerId: peer?.id, recipientId: msgData.recipientId, timestamp: new Date(msgData.timestamp) }]);
@@ -327,7 +334,7 @@ body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: var
                   fileData: await file.arrayBuffer(), timestamp: new Date().getTime(), peerId: peer?.id, senderName: username,
                   recipientId: activeChat === 'global' ? null : activeChat
               };
-              if (connections.length > 0) broadcast(fileData);
+              if (connectionsRef.current.length > 0) broadcast(fileData);
               if (isHost && !fileData.recipientId) historyRef.current.push(fileData);
               
               const url = URL.createObjectURL(file);
@@ -342,11 +349,16 @@ body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: var
               const recorder = new MediaRecorder(stream);
               mediaRecorderRef.current = recorder; audioChunksRef.current = [];
               recorder.ondataavailable = e => { if (e.data.size > 0) audioChunksRef.current.push(e.data); };
+              
               recorder.onstop = () => {
                   stream.getTracks().forEach(track => track.stop());
-                  if (recordingTime >= 1) sendFileData(new Blob(audioChunksRef.current, { type: 'audio/webm' }), 'voice');
+                  // NEW FIX: Base decision on actual audio size instead of frozen timestamp state
+                  const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/webm' });
+                  if (audioBlob.size > 1000) sendFileData(audioBlob, 'voice'); 
+                  
                   setIsRecording(false); setRecordingTime(0); clearInterval(recordingIntervalRef.current);
               };
+              
               recorder.start(); setIsRecording(true);
               let time = 0;
               recordingIntervalRef.current = setInterval(() => { time += 1; setRecordingTime(time); if (time >= 30) stopRecording(); }, 1000);
@@ -361,13 +373,12 @@ body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: var
       const switchChat = (id) => {
           setActiveChat(id);
           setUnreadCounts(prev => ({...prev, [id]: 0}));
-          setShowSidebar(false); // Auto-hide sidebar on mobile after selecting
+          setShowSidebar(false); 
       };
 
       const visibleMessages = messages.filter(msg => {
           if (msg.type === 'system') return activeChat === 'global';
           if (activeChat === 'global') return !msg.recipientId;
-          // Show if I sent it to them, or they sent it to me
           return (msg.recipientId === activeChat) || (msg.peerId === activeChat && msg.recipientId === peer?.id);
       });
 
@@ -387,6 +398,8 @@ body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: var
               if(res.ok) { setFormStatus('success'); e.target.reset(); } else setFormStatus('error');
           } catch(err) { setFormStatus('error'); }
       };
+
+      // --- RENDER ---
 
       if (!hasJoined) {
           return html`
