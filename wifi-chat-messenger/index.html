@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>WiFi Chat Without Internet — Free LAN Messenger App</title>
+    <meta name="description" content="Send messages over WiFi and LAN without internet. Free chat app for offices, events, and teams. No signup, no server, no cloud needed.">
+    <meta name="keywords" content="wifi chat without internet, lan messenger, local network chat, offline messaging app, intranet chat, office chat no internet, peer to peer messenger">
+    <meta name="author" content="SimpliConvert">
+    <meta name="robots" content="index, follow">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://simpliconvert.com/wifi-chat-messenger/">
+    <meta property="og:title" content="WiFi Chat Without Internet — Free LAN Messenger App">
+    <meta property="og:description" content="Chat instantly with anyone on the same WiFi network. No internet required. 100% secure, peer-to-peer messaging for teams and offices.">
+    <meta property="og:image" content="https://simpliconvert.com/images/wifi-chat-og.jpg">
+
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://simpliconvert.com/wifi-chat-messenger/">
+    <meta property="twitter:title" content="Offline WiFi Messenger - Chat Anywhere">
+    <meta property="twitter:description" content="Send texts, voice notes, and files over your local network. No cloud servers, no signups.">
+    <meta property="twitter:image" content="https://simpliconvert.com/images/wifi-chat-og.jpg">
+
+    <link rel="canonical" href="https://simpliconvert.com/wifi-chat-messenger/">
+
+    <script src="https://cdn.apitiny.net/scripts/v2.0/main.js" data-site-id="6997817017105b330f4c8302" data-test-mode="false" async></script>
+    <link rel="preconnect" href="https://cdn.tailwindcss.com">
+    <link rel="preconnect" href="https://unpkg.com">
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/htm@3.1.1/dist/htm.umd.js"></script>
+    <script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>:root { --primary: #da3f0b; --primary-hover: #b53409; --primary-light: #fff5f2; --bg: #f8fafc; --text-dark: #0f172a; }
+body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: var(--text-dark); }
+.app-container { background: white; border: 1px solid #f1f5f9; box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.1); overflow: hidden; }
+.animate-fade { animation: fadeIn 0.3s ease-out; }
+.animate-slide-up { animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+.msg-bubble { position: relative; max-width: 85%; }
+.msg-mine { background-color: var(--primary); color: white; border-radius: 1.25rem 1.25rem 0 1.25rem; }
+.msg-theirs { background-color: #f1f5f9; color: var(--text-dark); border-radius: 1.25rem 1.25rem 1.25rem 0; }
+
+.chat-scroll::-webkit-scrollbar { width: 6px; }
+.chat-scroll::-webkit-scrollbar-track { background: transparent; }
+.chat-scroll::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+
+/* Emoji Picker Grid */
+.emoji-grid { display: grid; grid-template-columns: repeat(8, 1fr); gap: 4px; max-height: 200px; overflow-y: auto; }
+.emoji-btn { font-size: 1.25rem; padding: 4px; border-radius: 8px; cursor: pointer; transition: background 0.2s; }
+.emoji-btn:hover { background-color: #f1f5f9; }
+
+/* Recording Animation */
+.recording-pulse { animation: pulseRed 1.5s infinite; }
+@keyframes pulseRed { 0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); } 70% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); } 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); } }
+
+/* Sidebar active states */
+.sidebar-item { transition: all 0.2s; }
+.sidebar-item.active { background-color: var(--primary-light); border-left: 4px solid var(--primary); }
+
+</style>
+
+</head>
+<body class="bg-gray-50 min-h-screen flex flex-col">
+    <div id="navbar"></div>
+
+    <section class="bg-white border-b border-slate-200 py-6 shrink-0 relative z-10">
+        <div class="container mx-auto px-4 text-center">
+            <h1 class="text-2xl md:text-4xl font-black text-slate-800 mb-2">WiFi Chat Without Internet — Free LAN Messenger for Teams & Offices</h1>
+            <p class="text-sm md:text-base text-slate-500 font-medium">Connect instantly. No servers. No internet required.</p>
+        </div>
+    </section>
+
+    <div class="flex-1 flex items-center justify-center p-0 sm:p-6 lg:p-8 h-full">
+        <div id="root" class="w-full max-w-6xl mx-auto h-[100dvh] sm:h-[800px] max-h-screen sm:max-h-[85vh]"></div>
+    </div>
+<script>
+    const html = htm.bind(React.createElement);
+    const { useState, useEffect, useRef } = React;
+
+    const EMOJI_LIST = ['😀','😃','😄','😁','😆','😅','😂','🤣','🥲','☺️','😊','😇','🙂','🙃','😉','😌','😍','🥰','😘','😗','😙','😚','😋','😛','😝','😜','🤪','🤨','🧐','🤓','😎','🥸','🤩','🥳','😏','😒','😞','😔','😟','😕','🙁','☹️','😣','😖','😫','😩','🥺','😢','😭','😤','😠','😡','🤬','🤯','😳','🥵','🥶','😱','😨','😰','😥','😓','🤗','🤔','🤭','🤫','🤥','😶','😐','😑','😬','🙄','😯','😦','😧','😮','😲','🥱','😴','🤤','😪','😵','🤐','🥴','🤢','🤮','🤧','😷','🤒','🤕','🤑','🤠','😈','👿','👹','👺','🤡','💩','👻','💀','☠️','👽','👾','🤖','🎃','😺','😸','😹','😻','😼','😽','🙀','😿','😾'];
+
+    const App = () => {
+      const [username, setUsername] = useState(`User_${Math.floor(Math.random() * 1000)}`);
+      const [hasJoined, setHasJoined] = useState(false);
+      
+      const [peer, setPeer] = useState(null);
+      const [userIp, setUserIp] = useState('');
+      const [isHost, setIsHost] = useState(false);
+      const [connections, setConnections] = useState([]);
+      const [peersInfo, setPeersInfo] = useState({});
+      const [status, setStatus] = useState('Detecting Local Network...');
+      
+      // NEW: Private Chat & UI State
+      const [activeChat, setActiveChat] = useState('global'); 
+      const [unreadCounts, setUnreadCounts] = useState({}); 
+      const [showSidebar, setShowSidebar] = useState(false);
+      
+      const [messages, setMessages] = useState([]);
+      const [inputText, setInputText] = useState('');
+      const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+      const [onlineCount, setOnlineCount] = useState(1);
+      
+      const [isRecording, setIsRecording] = useState(false);
+      const [recordingTime, setRecordingTime] = useState(0);
+      const [selectedFile, setSelectedFile] = useState(null);
+      
+      const [isPro, setIsPro] = useState(false);
+      const [showProModal, setShowProModal] = useState(false);
+      const [formStatus, setFormStatus] = useState('');
+      
+      const chatContainerRef = useRef(null);
+      const fileInputRef = useRef(null);
+      const historyRef = useRef([]);
+      const mediaRecorderRef = useRef(null);
+      const audioChunksRef = useRef([]);
+      const recordingIntervalRef = useRef(null);
+
+      useEffect(() => {
+          fetch('https://api.ipify.org?format=json')
+            .then(res => res.json())
+            .then(data => setUserIp(data.ip))
+            .catch(() => setUserIp('fallback-' + Math.floor(Math.random()*10000)));
+      }, []);
+
+      useEffect(() => {
+          if (chatContainerRef.current) {
+              requestAnimationFrame(() => chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight);
+          }
+      }, [messages, activeChat]);
+
+      useEffect(() => {
+          const handleWakeUp = () => {
+              if (document.visibilityState === 'visible' && peer && peer.disconnected) peer.reconnect();
+          };
+          document.addEventListener("visibilitychange", handleWakeUp);
+          window.addEventListener("focus", handleWakeUp);
+          return () => { document.removeEventListener("visibilitychange", handleWakeUp); window.removeEventListener("focus", handleWakeUp); };
+      }, [peer]);
+
+      const joinNetwork = () => {
+          if (!username.trim()) { alert("Please enter a name."); return; }
+          setHasJoined(true);
+          initNetwork();
+      };
+
+      const broadcast = (data, excludeConn = null) => {
+          if (data.recipientId) {
+              // Private message routing (Host finds specific peer)
+              const target = connections.find(c => c.peer === data.recipientId);
+              if (target) target.send(data);
+          } else {
+              // Global broadcast
+              connections.forEach(c => { if (c !== excludeConn && c.open) c.send(data); });
+          }
+      };
+
+      const initNetwork = () => {
+          if (!userIp) return;
+          const hostId = `smpl-chat-${btoa(userIp).replace(/[^a-zA-Z0-9]/g, '').substring(0, 15)}`;
+          const tempPeer = new Peer(undefined, { debug: 1 });
+          let resolved = false;
+
+          const fallbackTimeout = setTimeout(() => {
+              if (!resolved) { resolved = true; tempPeer.destroy(); becomeHost(hostId); }
+          }, 4000);
+
+          tempPeer.on('open', (id) => {
+              const conn = tempPeer.connect(hostId, { reliable: true, metadata: { username } });
+              conn.on('open', () => {
+                  resolved = true; clearTimeout(fallbackTimeout);
+                  setStatus('Connected to Office LAN');
+                  setPeer(tempPeer);
+                  setupConnectionListeners(conn, false);
+                  conn.send({ type: 'sys-join', peerId: id, username });
+              });
+              tempPeer.on('error', (err) => {
+                  if (err.type === 'peer-unavailable' && !resolved) {
+                      resolved = true; clearTimeout(fallbackTimeout); tempPeer.destroy(); becomeHost(hostId);
+                  }
+              });
+          });
+      };
+
+      const becomeHost = (hostId) => {
+          setStatus('Creating LAN Room...');
+          const hostPeer = new Peer(hostId);
+          
+          hostPeer.on('open', () => {
+              setPeer(hostPeer); setIsHost(true); setStatus('Hosting LAN. Waiting for team...');
+              setPeersInfo(prev => ({...prev, [hostId]: username}));
+          });
+          
+          hostPeer.on('connection', (conn) => {
+              conn.on('open', () => {
+                  setStatus(`LAN Active.`);
+                  setupConnectionListeners(conn, true);
+                  
+                  const peerName = conn.metadata?.username || 'Colleague';
+                  setPeersInfo(prev => {
+                      const updated = {...prev, [conn.peer]: peerName};
+                      broadcast({ type: 'sys-update-peers', peers: updated });
+                      setOnlineCount(Object.keys(updated).length);
+                      return updated;
+                  });
+
+                  if (historyRef.current.length > 0) conn.send({ type: 'sync', history: historyRef.current });
+                  
+                  const joinMsg = { type: 'system', content: `${peerName} joined the LAN.`, timestamp: new Date().getTime() };
+                  historyRef.current.push(joinMsg);
+                  broadcast(joinMsg);
+                  setMessages(p => [...p, joinMsg]);
+              });
+          });
+      };
+
+      const processIncomingData = (data) => {
+          if (data.type === 'sys-update-peers') {
+              setPeersInfo(data.peers); setOnlineCount(Object.keys(data.peers).length); return;
+          }
+          if (data.type === 'system') { setMessages(p => [...p, data]); return; }
+
+          const senderName = peersInfo[data.peerId] || data.senderName || 'Colleague';
+          const msgBase = { sender: 'them', senderName, peerId: data.peerId, recipientId: data.recipientId, timestamp: new Date(data.timestamp), type: data.type, mimeType: data.mimeType };
+
+          // Handle Unread Badges for private messages not currently in view
+          if (data.recipientId && activeChat !== data.peerId) {
+              setUnreadCounts(prev => ({...prev, [data.peerId]: (prev[data.peerId] || 0) + 1}));
+          } else if (!data.recipientId && activeChat !== 'global') {
+              setUnreadCounts(prev => ({...prev, 'global': (prev['global'] || 0) + 1}));
+          }
+
+          if (data.type === 'text') {
+              setMessages(p => [...p, { ...msgBase, content: data.content }]);
+          } else if (data.type === 'file' || data.type === 'voice') {
+              const url = URL.createObjectURL(new Blob([data.fileData], { type: data.mimeType }));
+              setMessages(p => [...p, { ...msgBase, fileName: data.fileName, fileSize: data.fileSize, url }]);
+          }
+      };
+
+      const setupConnectionListeners = (conn, isHost) => {
+          setConnections(p => [...p, conn]);
+          conn.on('data', (data) => {
+              if (data.type === 'sync') { data.history.forEach(processIncomingData); return; }
+              if (data.type === 'sys-join' && isHost) {
+                  setPeersInfo(prev => {
+                      const updated = {...prev, [data.peerId]: data.username};
+                      broadcast({ type: 'sys-update-peers', peers: updated });
+                      setOnlineCount(Object.keys(updated).length);
+                      return updated;
+                  });
+                  return;
+              }
+
+              if (!data.timestamp) data.timestamp = new Date().getTime();
+              
+              // Host Routing Logic
+              if (data.recipientId) {
+                  if (data.recipientId === peer?.id) processIncomingData(data); // Destined for Host
+                  else if (isHost) broadcast(data); // Host relays to specific peer
+              } else {
+                  // Global Message
+                  processIncomingData(data);
+                  if (isHost) {
+                      if(data.type !== 'sys-update-peers') historyRef.current.push(data);
+                      broadcast(data, conn);
+                  }
+              }
+          });
+
+          conn.on('close', () => {
+              setConnections(p => {
+                  const updated = p.filter(c => c !== conn);
+                  if (isHost) {
+                      const leftName = peersInfo[conn.peer] || 'Someone';
+                      setPeersInfo(prev => {
+                          const newPeers = {...prev}; delete newPeers[conn.peer];
+                          broadcast({ type: 'sys-update-peers', peers: newPeers });
+                          setOnlineCount(Object.keys(newPeers).length); return newPeers;
+                      });
+                      const leaveMsg = { type: 'system', content: `${leftName} disconnected.`, timestamp: new Date().getTime() };
+                      historyRef.current.push(leaveMsg); broadcast(leaveMsg); setMessages(m => [...m, leaveMsg]);
+                      if (updated.length === 0) setStatus('Hosting LAN. Waiting for team...');
+                  } else if (updated.length === 0) { setStatus('Disconnected from Host.'); }
+                  return updated;
+              });
+          });
+      };
+
+      const sendText = (e) => {
+          e.preventDefault(); if (!inputText.trim()) return;
+          const msgData = { 
+              type: 'text', content: inputText, timestamp: new Date().getTime(), 
+              peerId: peer?.id, senderName: username, recipientId: activeChat === 'global' ? null : activeChat 
+          };
+          
+          if (connections.length > 0) broadcast(msgData);
+          if (isHost && !msgData.recipientId) historyRef.current.push(msgData);
+
+          setMessages(p => [...p, { sender: 'me', type: 'text', content: inputText, peerId: peer?.id, recipientId: msgData.recipientId, timestamp: new Date(msgData.timestamp) }]);
+          setInputText(''); setShowEmojiPicker(false);
+      };
+
+      const handleFileSelect = (e) => {
+          const file = e.target.files[0]; if (!file) return;
+          const MAX_SIZE = isPro ? 5 * 1024 * 1024 * 1024 : 10 * 1024 * 1024; 
+          if (file.size > MAX_SIZE) {
+              if (!isPro) setShowProModal(true); else alert("File exceeds PRO limit of 5GB.");
+              return;
+          }
+          sendFileData(file, 'file');
+      };
+
+      const sendFileData = async (file, type) => {
+          try {
+              const fileData = {
+                  type: type, fileName: file.name || `voice_message.webm`, mimeType: file.type, fileSize: file.size, 
+                  fileData: await file.arrayBuffer(), timestamp: new Date().getTime(), peerId: peer?.id, senderName: username,
+                  recipientId: activeChat === 'global' ? null : activeChat
+              };
+              if (connections.length > 0) broadcast(fileData);
+              if (isHost && !fileData.recipientId) historyRef.current.push(fileData);
+              
+              const url = URL.createObjectURL(file);
+              setMessages(p => [...p, { sender: 'me', type: type, fileName: fileData.fileName, mimeType: file.type, fileSize: fileData.fileSize, url, recipientId: fileData.recipientId, peerId: peer?.id, timestamp: new Date(fileData.timestamp) }]);
+              if(fileInputRef.current) fileInputRef.current.value = '';
+          } catch (err) { alert("Error processing attachment."); }
+      };
+
+      const startRecording = async () => {
+          try {
+              const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+              const recorder = new MediaRecorder(stream);
+              mediaRecorderRef.current = recorder; audioChunksRef.current = [];
+              recorder.ondataavailable = e => { if (e.data.size > 0) audioChunksRef.current.push(e.data); };
+              recorder.onstop = () => {
+                  stream.getTracks().forEach(track => track.stop());
+                  if (recordingTime >= 1) sendFileData(new Blob(audioChunksRef.current, { type: 'audio/webm' }), 'voice');
+                  setIsRecording(false); setRecordingTime(0); clearInterval(recordingIntervalRef.current);
+              };
+              recorder.start(); setIsRecording(true);
+              let time = 0;
+              recordingIntervalRef.current = setInterval(() => { time += 1; setRecordingTime(time); if (time >= 30) stopRecording(); }, 1000);
+          } catch (err) { alert("Microphone access denied."); }
+      };
+
+      const stopRecording = () => { if (mediaRecorderRef.current && mediaRecorderRef.current.state !== 'inactive') mediaRecorderRef.current.stop(); };
+      const formatBytes = (b) => { if(b===0) return '0 B'; const k=1024, s=['B','KB','MB','GB'], i=Math.floor(Math.log(b)/Math.log(k)); return (b/Math.pow(k,i)).toFixed(2)+' '+s[i]; };
+      const formatTime = (s) => `00:${s.toString().padStart(2, '0')}`;
+
+      // --- FILTERS ---
+      const switchChat = (id) => {
+          setActiveChat(id);
+          setUnreadCounts(prev => ({...prev, [id]: 0}));
+          setShowSidebar(false); // Auto-hide sidebar on mobile after selecting
+      };
+
+      const visibleMessages = messages.filter(msg => {
+          if (msg.type === 'system') return activeChat === 'global';
+          if (activeChat === 'global') return !msg.recipientId;
+          // Show if I sent it to them, or they sent it to me
+          return (msg.recipientId === activeChat) || (msg.peerId === activeChat && msg.recipientId === peer?.id);
+      });
+
+      // --- PRO LOGIC ---
+      const handleLicenseSubmit = (e) => {
+          e.preventDefault();
+          if (e.target.licenseKey.value.trim() === btoa(`${userIp}-SIMPLI-5GB`)) {
+              setIsPro(true); setShowProModal(false); alert("PRO Unlocked! 5GB Transfers Enabled.");
+          } else { alert("Invalid License Key for this WiFi network."); }
+      };
+
+      const handlePaymentSubmit = async (e) => {
+          e.preventDefault(); setFormStatus('sending');
+          const formData = new FormData(e.target); formData.append('Network_IP', userIp); formData.append('_captcha', 'false');
+          try {
+              const res = await fetch('https://formsubmit.co/ajax/thepixels3d@gmail.com', { method: 'POST', body: formData });
+              if(res.ok) { setFormStatus('success'); e.target.reset(); } else setFormStatus('error');
+          } catch(err) { setFormStatus('error'); }
+      };
+
+      if (!hasJoined) {
+          return html`
+            <div className="app-container w-full h-full sm:rounded-[2rem] flex flex-col items-center justify-center p-8 bg-white relative">
+                <div className="w-24 h-24 bg-blue-50 text-blue-500 rounded-full flex items-center justify-center mb-6 shadow-sm"><i className="fas fa-comment-dots text-4xl"></i></div>
+                <h2 className="text-3xl font-black text-slate-800 mb-2 text-center">Join LAN Messenger</h2>
+                <p className="text-slate-500 mb-8 text-center max-w-sm">Chat globally or privately with colleagues on the same WiFi network.</p>
+                <form onSubmit=${(e) => { e.preventDefault(); joinNetwork(); }} className="w-full max-w-sm">
+                    <label className="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2 ml-1">Your Name</label>
+                    <input type="text" value=${username} onChange=${e => setUsername(e.target.value)} className="w-full bg-slate-50 border border-slate-200 py-4 px-6 rounded-2xl text-lg font-bold text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all shadow-inner mb-4" placeholder="e.g. John Doe" required />
+                    <button type="submit" className="w-full bg-blue-600 hover:bg-blue-700 text-white py-4 rounded-2xl font-bold shadow-md transition-all active:scale-95 text-lg flex items-center justify-center gap-2"><i className="fas fa-sign-in-alt"></i> Enter Chat Room</button>
+                </form>
+            </div>
+          `;
+      }
+
+      return html`
+        <div className="app-container w-full h-full sm:rounded-[2rem] flex flex-col relative animate-fade">
+          
+          <header className="bg-white border-b border-slate-100 p-4 sm:p-6 flex justify-between items-center shrink-0 z-20 shadow-sm">
+            <div className="flex items-center gap-3 min-w-0">
+              <button onClick=${() => setShowSidebar(!showSidebar)} className="md:hidden w-10 h-10 bg-slate-100 rounded-lg flex items-center justify-center text-slate-600">
+                <i className="fas fa-bars"></i>
+              </button>
+              <div className="w-10 h-10 sm:w-12 sm:h-12 bg-blue-500 text-white rounded-full flex items-center justify-center shrink-0 shadow-md">
+                <i className="fas fa-network-wired text-lg sm:text-xl"></i>
+              </div>
+              <div className="min-w-0 pr-2">
+                <h2 className="text-lg sm:text-xl font-black text-slate-800 truncate leading-tight">LAN Room <span className="text-xs font-bold text-slate-400 bg-slate-100 px-2 py-1 rounded-md ml-2 border border-slate-200 hidden sm:inline-block"><i className="fas fa-user mr-1 text-blue-500"></i>${onlineCount} Online</span></h2>
+                <p className="text-[10px] sm:text-xs font-bold uppercase tracking-widest text-green-500 truncate mt-0.5"><i className="fas fa-circle text-[8px] mr-1 blink"></i>${status}</p>
+              </div>
+            </div>
+            
+            <button onClick=${() => setShowProModal(true)} className="bg-slate-900 text-[#ffd1c4] hover:text-white px-3 py-2 sm:px-4 rounded-xl text-[10px] sm:text-xs font-black uppercase tracking-wider flex items-center gap-2 transition-colors shadow-sm shrink-0">
+                <i className="fas fa-crown text-yellow-500"></i> <span className="hidden sm:inline">${isPro ? 'PRO ACTIVE' : 'UPGRADE TO 5GB'}</span>
+            </button>
+          </header>
+
+          <div className="flex flex-1 overflow-hidden relative">
+              
+              <aside className=${`absolute md:relative z-30 h-full w-64 bg-white border-r border-slate-100 flex flex-col transition-transform duration-300 shadow-xl md:shadow-none ${showSidebar ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}`}>
+                  <div className="p-4 bg-slate-50 border-b border-slate-100 font-bold text-slate-500 uppercase tracking-widest text-xs flex justify-between items-center">
+                      Connected Peers
+                      <button onClick=${() => setShowSidebar(false)} className="md:hidden text-slate-400"><i className="fas fa-times"></i></button>
+                  </div>
+                  <div className="flex-1 overflow-y-auto chat-scroll">
+                      <button onClick=${() => switchChat('global')} className=${`w-full p-4 flex items-center justify-between text-left sidebar-item ${activeChat === 'global' ? 'active' : 'hover:bg-slate-50'}`}>
+                          <span className="font-bold text-slate-800"><i className="fas fa-globe text-blue-500 mr-2"></i>Global Chat</span>
+                          ${unreadCounts['global'] > 0 && html`<span className="bg-red-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">${unreadCounts['global']}</span>`}
+                      </button>
+                      ${Object.entries(peersInfo).map(([pId, pName]) => pId !== peer?.id && html`
+                          <button key=${pId} onClick=${() => switchChat(pId)} className=${`w-full p-4 flex items-center justify-between text-left sidebar-item ${activeChat === pId ? 'active' : 'hover:bg-slate-50'}`}>
+                              <span className="font-medium text-slate-700 truncate pr-2"><i className="fas fa-user-circle text-slate-300 mr-2"></i>${pName}</span>
+                              ${unreadCounts[pId] > 0 && html`<span className="bg-red-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">${unreadCounts[pId]}</span>`}
+                          </button>
+                      `)}
+                  </div>
+              </aside>
+
+              ${showSidebar && html`<div onClick=${() => setShowSidebar(false)} className="md:hidden absolute inset-0 bg-slate-900/20 z-20"></div>`}
+
+              <main className="flex-1 flex flex-col overflow-hidden relative bg-[#f8fafc] bg-[radial-gradient(#e2e8f0_1px,transparent_1px)] [background-size:20px_20px]">
+                
+                <div className="bg-white/80 backdrop-blur-sm px-4 py-2 border-b border-slate-200 text-xs font-bold text-slate-600 text-center shadow-sm">
+                    ${activeChat === 'global' ? 'Talking in Global Chat' : html`Private message with <span className="text-blue-600">${peersInfo[activeChat] || 'User'}</span>`}
+                </div>
+
+                <div className="flex-1 overflow-y-auto p-4 sm:p-6 chat-scroll space-y-5" ref=${chatContainerRef}>
+                    <div className="text-center text-xs font-bold text-slate-400 my-4 uppercase tracking-widest bg-white border border-slate-200 inline-block px-4 py-2 rounded-full mx-auto shadow-sm">
+                        Connection Secured • ${new Date().toLocaleDateString()}
+                    </div>
+
+                    ${visibleMessages.map((msg, i) => {
+                        if (msg.type === 'system') return html`<div key=${i} className="text-center animate-fade"><span className="text-[10px] font-bold text-slate-500 bg-slate-100 px-3 py-1 rounded-full">${msg.content}</span></div>`;
+
+                        const isMe = msg.sender === 'me';
+                        const isImg = msg.mimeType?.startsWith('image/');
+                        const isVid = msg.mimeType?.startsWith('video/');
+
+                        return html`
+                        <div key=${i} className=${`flex flex-col w-full ${isMe ? 'items-end' : 'items-start'} animate-slide-up`}>
+                            ${!isMe && activeChat === 'global' && html`<span className="text-[10px] font-bold text-slate-500 ml-2 mb-1">${msg.senderName}</span>`}
+                            
+                            <div className=${`msg-bubble p-3 sm:p-4 shadow-sm ${isMe ? 'msg-mine' : 'msg-theirs'}`}>
+                                ${msg.type === 'text' ? html`
+                                    <p className="whitespace-pre-wrap break-words text-sm font-medium leading-relaxed">${msg.content}</p>
+                                ` : msg.type === 'voice' ? html`
+                                    <div className="flex items-center gap-3 w-48 sm:w-64">
+                                        <div className=${`w-10 h-10 rounded-full flex items-center justify-center shrink-0 ${isMe ? 'bg-white/20' : 'bg-blue-100 text-blue-600'}`}><i className="fas fa-microphone"></i></div>
+                                        <audio controls src=${msg.url} className="w-full h-8 custom-audio"></audio>
+                                    </div>
+                                ` : html`
+                                    <div className="flex flex-col">
+                                        ${isImg ? html`<img src=${msg.url} className="max-w-full sm:max-w-xs rounded-lg mb-3 object-cover shadow-sm" />` : ''}
+                                        ${isVid ? html`<video src=${msg.url} controls className="max-w-full sm:max-w-xs rounded-lg mb-3 shadow-sm"></video>` : ''}
+                                        <div className="flex items-center gap-3 sm:gap-4">
+                                            <div className=${`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 shadow-sm ${isMe ? 'bg-white/20' : 'bg-white text-blue-500'}`}><i className="fas fa-file-alt text-lg"></i></div>
+                                            <div className="min-w-0 pr-2">
+                                                <p className="text-sm font-bold truncate">${msg.fileName}</p>
+                                                <p className="text-xs font-semibold opacity-80 mt-0.5">${formatBytes(msg.fileSize)}</p>
+                                            </div>
+                                            <a href=${msg.url} download=${msg.fileName} className=${`w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center shrink-0 transition-colors shadow-sm ${isMe ? 'bg-white text-[var(--primary)] hover:bg-slate-100' : 'bg-blue-500 hover:bg-blue-600 text-white'}`} title="Download"><i className="fas fa-download text-xs sm:text-sm"></i></a>
+                                        </div>
+                                    </div>
+                                `}
+                            </div>
+                            <span className="text-[9px] text-slate-400 font-bold mt-1 px-2 uppercase">${msg.timestamp.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
+                        </div>
+                    `})}
+                </div>
+                
+                ${showEmojiPicker && html`
+                    <div className="absolute bottom-[90px] left-4 bg-white border border-slate-200 rounded-2xl shadow-xl p-3 z-30 w-72 animate-fade">
+                        <div className="emoji-grid chat-scroll pr-1">
+                            ${EMOJI_LIST.map(emoji => html`<button key=${emoji} onClick=${() => setInputText(p => p + emoji)} className="emoji-btn hover:bg-slate-100">${emoji}</button>`)}
+                        </div>
+                    </div>
+                `}
+
+                <div className="bg-white p-3 sm:p-4 border-t border-slate-200 shrink-0 z-20 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
+                    ${isRecording ? html`
+                        <div className="flex items-center gap-3 bg-red-50 border border-red-100 rounded-2xl p-2 pl-4">
+                            <div className="w-3 h-3 rounded-full bg-red-500 recording-pulse shrink-0"></div>
+                            <span className="text-sm font-bold text-red-600 flex-1">Recording Audio... ${formatTime(recordingTime)} / 00:30</span>
+                            <button onClick=${stopRecording} className="bg-red-500 hover:bg-red-600 text-white px-4 py-2.5 rounded-xl text-sm font-bold transition-colors shadow-sm shrink-0"><i className="fas fa-paper-plane mr-2"></i>Send</button>
+                        </div>
+                    ` : html`
+                        <form onSubmit=${sendText} className="flex items-center gap-2 sm:gap-3 bg-slate-50 border border-slate-200 rounded-2xl p-1.5 shadow-inner focus-within:ring-2 focus-within:ring-blue-500/30 focus-within:bg-white transition-all">
+                            <button type="button" onClick=${() => setShowEmojiPicker(!showEmojiPicker)} className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl flex items-center justify-center text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors shrink-0"><i className="far fa-smile text-lg sm:text-xl"></i></button>
+                            <input type="file" ref=${fileInputRef} onChange=${handleFileSelect} className="hidden" />
+                            <button type="button" onClick=${()=>fileInputRef.current.click()} className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl flex items-center justify-center text-slate-400 hover:text-blue-500 hover:bg-blue-50 transition-colors shrink-0" title="Attach File"><i className="fas fa-paperclip text-lg"></i></button>
+                            <input type="text" placeholder=${`Message ${activeChat === 'global' ? 'everyone' : 'privately'}...`} value=${inputText} onChange=${e => setInputText(e.target.value)} onFocus=${() => setShowEmojiPicker(false)} className="flex-1 bg-transparent py-3 px-2 text-sm sm:text-base font-medium text-slate-800 outline-none" />
+                            ${inputText.trim() ? html`
+                                <button type="submit" className="w-10 h-10 sm:w-11 sm:h-11 bg-blue-600 hover:bg-blue-700 text-white rounded-xl flex items-center justify-center transition-all shadow-sm shrink-0 active:scale-95"><i className="fas fa-paper-plane text-sm sm:text-base"></i></button>
+                            ` : html`
+                                <button type="button" onClick=${startRecording} className="w-10 h-10 sm:w-11 sm:h-11 bg-slate-200 hover:bg-red-100 hover:text-red-500 text-slate-600 rounded-xl flex items-center justify-center transition-all shrink-0"><i className="fas fa-microphone text-sm sm:text-base"></i></button>
+                            `}
+                        </form>
+                    `}
+                    <div className="text-center mt-2"><span className="text-[10px] font-bold text-slate-400"><i className="fas fa-info-circle"></i> Max limit: ${isPro ? '5GB' : '10MB'}. Voice max 30s.</span></div>
+                </div>
+              </main>
+          </div>
+
+          ${showProModal && html`
+            <div className="fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-fade overflow-y-auto">
+                <div className="bg-white rounded-[2rem] shadow-2xl max-w-2xl w-full overflow-hidden my-8 shrink-0">
+                    <div className="bg-slate-900 p-6 flex justify-between items-center text-white">
+                        <div><h3 className="text-xl sm:text-2xl font-black flex items-center gap-2"><i className="fas fa-crown text-yellow-500"></i> Upgrade to 5GB Transfer</h3></div>
+                        <button onClick=${() => setShowProModal(false)} className="text-slate-400 hover:text-white"><i className="fas fa-times text-2xl"></i></button>
+                    </div>
+                    <div className="p-6 sm:p-8 grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div>
+                            <h4 className="font-bold text-slate-800 mb-4 border-b pb-2">1. Send Payment ($5.00)</h4>
+                            <div className="space-y-3 mb-6">
+                                <div className="bg-slate-50 p-3 rounded-xl border border-slate-200"><p className="text-[10px] font-black text-slate-400 uppercase">USDT (TRC20)</p><p className="text-xs font-bold text-slate-800 break-all select-all">TXYZ_YOUR_USDT_ADDRESS_HERE</p></div>
+                                <div className="bg-slate-50 p-3 rounded-xl border border-slate-200"><p className="text-[10px] font-black text-slate-400 uppercase">Bitcoin (BTC)</p><p className="text-xs font-bold text-slate-800 break-all select-all">bc1q_YOUR_BTC_ADDRESS_HERE</p></div>
+                            </div>
+                        </div>
+                        <div>
+                            <h4 className="font-bold text-slate-800 mb-4 border-b pb-2">2. Verify & Unlock</h4>
+                            ${formStatus === 'success' ? html`
+                                <div className="bg-green-50 border border-green-200 p-4 rounded-xl text-center mb-6"><i className="fas fa-check-circle text-green-500 text-3xl mb-2"></i><p className="text-sm font-bold text-green-800">Payment details sent!</p></div>
+                            ` : html`
+                                <form onSubmit=${handlePaymentSubmit} className="mb-6 space-y-3">
+                                    <input type="email" name="email" placeholder="Your Email Address" required className="w-full bg-slate-50 border border-slate-200 py-2.5 px-4 rounded-xl text-sm outline-none focus:ring-2 focus:ring-blue-500/30" />
+                                    <input type="text" name="TxID" placeholder="Paste Transaction ID (TxID)" required className="w-full bg-slate-50 border border-slate-200 py-2.5 px-4 rounded-xl text-sm outline-none focus:ring-2 focus:ring-blue-500/30" />
+                                    <button type="submit" disabled=${formStatus === 'sending'} className="w-full bg-slate-800 text-white py-2.5 rounded-xl text-sm font-bold disabled:opacity-50">${formStatus === 'sending' ? 'Sending...' : 'Notify Admin'}</button>
+                                </form>
+                            `}
+                            <div className="bg-blue-50 border border-blue-100 p-4 rounded-xl">
+                                <p className="text-xs font-bold text-blue-800 mb-2">Already received your key?</p>
+                                <form onSubmit=${handleLicenseSubmit} className="flex gap-2">
+                                    <input type="text" name="licenseKey" placeholder="Paste License Key" required className="flex-1 bg-white border border-blue-200 py-2 px-3 rounded-lg text-sm min-w-0 outline-none focus:ring-2 focus:ring-blue-500/30" />
+                                    <button type="submit" className="bg-blue-600 hover:bg-blue-700 text-white px-4 rounded-lg text-xs font-bold shrink-0">Unlock</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+          `}
+        </div>
+      `;
+    };
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(html`<${App} />`);
+    </script>
+
+<section class="bg-white py-16 mt-8 border-t border-slate-200">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="prose prose-lg max-w-none prose-h2:text-slate-800 prose-p:text-slate-600 leading-relaxed">
+            
+            <article class="mb-12">
+                <header>
+                    <h2 class="text-3xl font-black mb-6 border-b pb-4 border-slate-100">Why Use a WiFi Chat Without Internet?</h2>
+                </header>
+                
+                <p>
+                    Whether you are working in an office with strict firewall policies, organizing an event in a remote area with poor cellular coverage, or simply want to keep your internal communications off third-party servers, a <strong>wifi chat without internet</strong> is the ultimate solution. 
+                </p>
+                <p>
+                    Traditional messaging apps like WhatsApp, Slack, or Microsoft Teams route every single keystroke and file attachment through centralized cloud servers. This consumes external bandwidth and introduces privacy risks. Our <strong>LAN messenger</strong> operates entirely on Peer-to-Peer (P2P) WebRTC technology. This means data flows directly from your device to your colleagues' devices across your local router—bypassing the internet entirely.
+                </p>
+            </article>
+
+            <article class="mb-12">
+                <h2 class="text-2xl font-bold mb-4">Core Features of Our Local Network Chat</h2>
+                
+                <ul class="space-y-4 list-none pl-0">
+                    <li class="flex items-start">
+                        <div class="bg-blue-100 text-blue-600 rounded-full p-2 mr-4 shrink-0 mt-1"><i class="fas fa-bolt"></i></div>
+                        <div>
+                            <strong>Instant Auto-Discovery:</strong> No need to enter IP addresses or complex server settings. If you and your team are on the same Wi-Fi network, the <strong>intranet chat</strong> automatically discovers peers and connects you into a shared virtual room.
+                        </div>
+                    </li>
+                    <li class="flex items-start">
+                        <div class="bg-blue-100 text-blue-600 rounded-full p-2 mr-4 shrink-0 mt-1"><i class="fas fa-microphone-alt"></i></div>
+                        <div>
+                            <strong>30-Second Voice Notes:</strong> Typing isn't always efficient. We built an integrated media recorder allowing you to capture and broadcast 30-second voice notes directly into the chat feed. It's the perfect <strong>office chat no internet</strong> feature for quick updates.
+                        </div>
+                    </li>
+                    <li class="flex items-start">
+                        <div class="bg-blue-100 text-blue-600 rounded-full p-2 mr-4 shrink-0 mt-1"><i class="fas fa-file-archive"></i></div>
+                        <div>
+                            <strong>Large File Attachments:</strong> While internet-based apps restrict file sizes, local network transfers are limited only by your router's speed. Free users can send up to 10MB instantly, while our Pro users can unlock limits up to 5GB for heavy video or software asset transfers.
+                        </div>
+                    </li>
+                    <li class="flex items-start">
+                        <div class="bg-blue-100 text-blue-600 rounded-full p-2 mr-4 shrink-0 mt-1"><i class="fas fa-user-secret"></i></div>
+                        <div>
+                            <strong>Absolute Privacy:</strong> There are no user accounts, no passwords to steal, and no chat histories stored in a database. When the browser tab closes, the <strong>offline messaging app</strong> terminates the connection, and the data disappears forever.
+                        </div>
+                    </li>
+                </ul>
+            </article>
+            
+            <article class="bg-slate-50 border border-slate-200 p-8 rounded-2xl">
+                <h2 class="text-2xl font-bold mb-4 text-slate-800">How to Setup the LAN Messenger</h2>
+                <ol class="list-decimal pl-6 space-y-3 text-slate-600">
+                    <li>Ensure all participating devices (laptops, tablets, smartphones) are connected to the exact same Wi-Fi router or Local Area Network (LAN).</li>
+                    <li>Open this webpage. You only need external internet access for the initial page load to download the HTML/JS interface.</li>
+                    <li>Enter your display name and click "Enter Chat Room".</li>
+                    <li>The first person to join automatically becomes the room Host. As subsequent peers open the page, they will automatically sync and pull the existing chat history.</li>
+                    <li>Start typing, sending emojis, or attaching files!</li>
+                </ol>
+            </article>
+
+        </div>
+    </div>
+</section>
+
+<!-- Footer Placeholder -->
+<div id="footer"></div>
+
+<script>
+// Standard Footer/Navbar loading scripts
+async function loadComponent(url, elementId) {
+    try {
+        const response = await fetch(url);
+        if (response.ok) document.getElementById(elementId).innerHTML = await response.text();
+    } catch (e) { console.error(e); }
+}
+document.addEventListener('DOMContentLoaded', () => {
+    loadComponent('/components/navbar.html', 'navbar');
+    loadComponent('/components/footer.html', 'footer');
+});
+</script>
+</body>
+</html>
