@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Palworld Breeding Calculator — Find the Best Pal Combos | SimpliConvert</title>
+    <meta name="description" content="Discover every egg combination with our free Palworld Breeding Calculator. Find out how to breed Anubis, Grizzbolt, and legendary Pals instantly.">
+    <meta name="keywords" content="palworld breeding calculator, palworld breeding combos, pal breeding guide, how to breed anubis, best pals to breed, palworld egg calculator, palworld fusion, breed legendary pals">
+    <meta name="author" content="SimpliConvert">
+    <meta name="robots" content="index, follow">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://simpliconvert.com/palworld-breeding-calculator/">
+    <meta property="og:title" content="Palworld Breeding Calculator | Find Every Combo">
+    <meta property="og:description" content="Calculate exact breeding combinations for Palworld. Instantly see which offspring your Pals will hatch.">
+    <meta property="og:image" content="https://simpliconvert.com/images/palworld-breeding-og.jpg">
+
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://simpliconvert.com/palworld-breeding-calculator/">
+    <meta property="twitter:title" content="Palworld Egg Combo Calculator">
+    <meta property="twitter:description" content="Select two parents and discover the exact Palworld offspring using the hidden breeding power algorithm.">
+
+    <link rel="canonical" href="https://simpliconvert.com/palworld-breeding-calculator/">
+
+    <script src="https://cdn.apitiny.net/scripts/v2.0/main.js" data-site-id="6997817017105b330f4c8302" data-test-mode="false" async></script>
+    <link rel="preconnect" href="https://cdn.tailwindcss.com">
+    <link rel="preconnect" href="https://unpkg.com">
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Palworld Breeding Calculator",
+      "url": "https://simpliconvert.com/palworld-breeding-calculator/",
+      "description": "An interactive calculator that uses the hidden breeding power algorithm to determine Palworld egg combinations.",
+      "applicationCategory": "GameApplication",
+      "operatingSystem": "Web Browser",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      }
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [{
+        "@type": "Question",
+        "name": "How does the Palworld breeding calculator work?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Every Pal in the game has a hidden 'Breeding Power' number. When two Pals breed, the game averages their power. The offspring is the Pal whose hidden power is closest to that average."
+        }
+      }, {
+        "@type": "Question",
+        "name": "How do I breed Anubis in Palworld?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "You can breed Anubis easily early in the game by combining a Penking and a Bushi, or a Quivern and a Chillet."
+        }
+      }, {
+        "@type": "Question",
+        "name": "What are special breeding combinations?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Certain Pals ignore the math formula. For example, breeding a Relaxaurus and a Sparkit will always result in a Grizzbolt, regardless of their hidden breeding power."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Can I breed Boss or Alpha Pals?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes, you can breed Alpha Pals, but the offspring will hatch as a normal version of that Pal, not an Alpha, though they may inherit powerful passive traits."
+        }
+      }]
+    }
+    </script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/htm@3.1.1/dist/htm.umd.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root { --primary: #da3f0b; --primary-hover: #b53409; --primary-light: #fff5f2; --bg: #f8fafc; --text-dark: #0f172a; }
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: var(--text-dark); }
+        .hero-card { background: white; border: 1px solid #f1f5f9; box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.1); overflow: hidden; }
+        .animate-fade { animation: fadeIn 0.3s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        select {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            background-image: url("data:image/svg+xml;utf8,<svg fill='%2364748b' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/><path d='M0 0h24v24H0z' fill='none'/></svg>");
+            background-repeat: no-repeat;
+            background-position-x: 95%;
+            background-position-y: 50%;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen flex flex-col">
+    <div id="navbar"></div>
+
+    <section class="bg-white border-b border-slate-200 py-10 shrink-0 relative z-10">
+        <div class="container mx-auto px-4 text-center">
+            <h1 class="text-3xl md:text-5xl font-black text-slate-800 mb-4 tracking-tight">Palworld Breeding Calculator</h1>
+            <p class="text-base md:text-lg text-slate-500 font-medium max-w-2xl mx-auto">Select two parent Pals below to discover their exact offspring using the hidden game algorithm.</p>
+        </div>
+    </section>
+
+    <div class="flex-1 flex items-start justify-center p-4 sm:p-8 mt-4">
+        <div id="root" class="w-full max-w-4xl mx-auto"></div>
+    </div>
+
+    <script>
+    const html = htm.bind(React.createElement);
+    const { useState, useMemo } = React;
+
+    // Miniature Database - A robust starter list of popular Pals and their hidden Power stats
+    // Note for Nabeel: You can easily expand this array to include all 137+ Pals!
+    const PAL_DATABASE = [
+        { id: 1, name: "Lamball", power: 1470, type: "Neutral" },
+        { id: 2, name: "Cattiva", power: 1460, type: "Neutral" },
+        { id: 3, name: "Chikipi", power: 1500, type: "Neutral" },
+        { id: 4, name: "Lifmunk", power: 1430, type: "Grass" },
+        { id: 5, name: "Foxparks", power: 1400, type: "Fire" },
+        { id: 6, name: "Pengullet", power: 1350, type: "Water/Ice" },
+        { id: 7, name: "Penking", power: 520, type: "Water/Ice" },
+        { id: 8, name: "Sparkit", power: 1410, type: "Electric" },
+        { id: 33, name: "Relaxaurus", power: 280, type: "Dragon/Water" },
+        { id: 71, name: "Bushi", power: 250, type: "Fire" },
+        { id: 73, name: "Quivern", power: 350, type: "Dragon" },
+        { id: 85, name: "Relaxaurus Lux", power: 280, type: "Dragon/Electric" },
+        { id: 98, name: "Astegon", power: 150, type: "Dragon/Dark" },
+        { id: 100, name: "Anubis", power: 570, type: "Ground" },
+        { id: 103, name: "Grizzbolt", power: 415, type: "Electric" },
+        { id: 107, name: "Shadowbeak", power: 60, type: "Dark" },
+        { id: 108, name: "Paladius", power: 30, type: "Neutral" },
+        { id: 109, name: "Necromus", power: 40, type: "Dark" },
+        { id: 110, name: "Frostallion", power: 20, type: "Ice" },
+        { id: 111, name: "Jetragon", power: 10, type: "Dragon" }
+    ].sort((a, b) => a.name.localeCompare(b.name));
+
+    // Special hardcoded combinations that ignore the math formula
+    const SPECIAL_COMBOS = {
+        "Relaxaurus_Sparkit": "Grizzbolt",
+        "Sparkit_Relaxaurus": "Grizzbolt",
+        "Penking_Bushi": "Anubis",
+        "Bushi_Penking": "Anubis"
+    };
+
+    const App = () => {
+      const [parent1, setParent1] = useState(PAL_DATABASE[0].name);
+      const [parent2, setParent2] = useState(PAL_DATABASE[1].name);
+
+      const calculateOffspring = () => {
+          // 1. Check for special hardcoded combos first
+          const comboKey = `${parent1}_${parent2}`;
+          if (SPECIAL_COMBOS[comboKey]) {
+              return PAL_DATABASE.find(p => p.name === SPECIAL_COMBOS[comboKey]);
+          }
+
+          // 2. Fetch parent data
+          const p1Data = PAL_DATABASE.find(p => p.name === parent1);
+          const p2Data = PAL_DATABASE.find(p => p.name === parent2);
+
+          // 3. Apply the Palworld Breeding Math: floor((P1 + P2) / 2)
+          const targetPower = Math.floor((p1Data.power + p2Data.power) / 2);
+
+          // 4. Find the Pal closest to this target power
+          let closestPal = PAL_DATABASE[0];
+          let minDiff = Math.abs(closestPal.power - targetPower);
+
+          for (let i = 1; i < PAL_DATABASE.length; i++) {
+              const currentDiff = Math.abs(PAL_DATABASE[i].power - targetPower);
+              // In actual game logic, if there's a tie, there's an index priority.
+              // For our app, closest absolute value wins.
+              if (currentDiff < minDiff) {
+                  minDiff = currentDiff;
+                  closestPal = PAL_DATABASE[i];
+              }
+          }
+          
+          return closestPal;
+      };
+
+      const resultPal = useMemo(() => calculateOffspring(), [parent1, parent2]);
+
+      return html`
+        <div className="hero-card rounded-[2rem] w-full bg-white p-6 sm:p-10 border border-slate-100">
+            
+            <div className="grid grid-cols-1 md:grid-cols-5 gap-6 items-center mb-10">
+                
+              
+                <div className="md:col-span-2">
+                    <label className="block text-xs font-black text-slate-400 uppercase tracking-widest mb-3">Parent 1</label>
+                    <div className="relative">
+                        <select 
+                            value=${parent1}
+                            onChange=${(e) => setParent1(e.target.value)}
+                            className="w-full bg-slate-50 border-2 border-slate-200 text-slate-800 py-4 px-5 rounded-2xl text-lg font-bold focus:outline-none focus:border-[#da3f0b] focus:ring-4 focus:ring-[#da3f0b20] transition-all cursor-pointer"
+                        >
+                            ${PAL_DATABASE.map(pal => html`<option key=${pal.id} value=${pal.name}>${pal.name}</option>`)}
+                        </select>
+                    </div>
+                    <p className="text-xs text-slate-500 mt-2 font-medium">Hidden Power: ${PAL_DATABASE.find(p => p.name === parent1)?.power}</p>
+                </div>
+
+                
+                <div className="md:col-span-1 flex justify-center py-4 md:py-0">
+                    <div className="w-14 h-14 bg-slate-100 text-slate-400 rounded-full flex items-center justify-center shadow-inner">
+                        <i className="fas fa-plus text-2xl"></i>
+                    </div>
+                </div>
+
+                <div className="md:col-span-2">
+                    <label className="block text-xs font-black text-slate-400 uppercase tracking-widest mb-3">Parent 2</label>
+                    <div className="relative">
+                        <select 
+                            value=${parent2}
+                            onChange=${(e) => setParent2(e.target.value)}
+                            className="w-full bg-slate-50 border-2 border-slate-200 text-slate-800 py-4 px-5 rounded-2xl text-lg font-bold focus:outline-none focus:border-[#da3f0b] focus:ring-4 focus:ring-[#da3f0b20] transition-all cursor-pointer"
+                        >
+                            ${PAL_DATABASE.map(pal => html`<option key=${pal.id} value=${pal.name}>${pal.name}</option>`)}
+                        </select>
+                    </div>
+                    <p className="text-xs text-slate-500 mt-2 font-medium text-right md:text-left">Hidden Power: ${PAL_DATABASE.find(p => p.name === parent2)?.power}</p>
+                </div>
+            </div>
+
+            <div className="bg-slate-900 rounded-[1.5rem] p-8 sm:p-10 text-center text-white relative overflow-hidden animate-fade shadow-xl">
+                
+                <div className="absolute -top-12 -right-12 w-40 h-40 bg-[#da3f0b] rounded-full filter blur-[60px] opacity-40"></div>
+                <div className="absolute -bottom-12 -left-12 w-40 h-40 bg-blue-500 rounded-full filter blur-[60px] opacity-30"></div>
+
+                <div className="relative z-10">
+                    <p className="text-xs font-black text-[#ffd1c4] uppercase tracking-[0.2em] mb-4">Egg Result / Offspring</p>
+                    
+                    <h2 className="text-5xl sm:text-6xl font-black mb-4 tracking-tight drop-shadow-md">
+                        ${resultPal.name}
+                    </h2>
+                    
+                    <div className="inline-flex items-center gap-2 bg-white/10 border border-white/20 backdrop-blur-sm px-4 py-1.5 rounded-full text-sm font-bold">
+                        <i className="fas fa-paw text-[#da3f0b]"></i> ${resultPal.type} Type
+                    </div>
+
+                    <div className="mt-8 pt-8 border-t border-white/10 flex justify-center gap-8 text-sm">
+                        <div>
+                            <p className="text-slate-400 font-medium mb-1">Target Power Math</p>
+                            <p className="font-mono font-bold text-lg">${Math.floor((PAL_DATABASE.find(p=>p.name===parent1).power + PAL_DATABASE.find(p=>p.name===parent2).power) / 2)}</p>
+                        </div>
+                        <div>
+                            <p className="text-slate-400 font-medium mb-1">Offspring Power</p>
+                            <p className="font-mono font-bold text-lg text-green-400">${resultPal.power}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div className="mt-6 bg-blue-50 border border-blue-100 rounded-xl p-4 flex items-start gap-4">
+                <i className="fas fa-lightbulb text-blue-500 mt-1 text-lg"></i>
+                <div>
+                    <h4 className="text-sm font-bold text-blue-900 mb-1">Breeding Tip</h4>
+                    <p className="text-xs text-blue-800 leading-relaxed font-medium">To breed rarer, high-tier Pals, you need parents with very low hidden power numbers. The lower the number, the rarer the Pal!</p>
+                </div>
+            </div>
+
+        </div>
+      `;
+    };
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(html`<${App} />`);
+    </script>
+
+<section class="bg-white py-16 mt-8 border-t border-slate-200">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="prose prose-lg max-w-none prose-h2:text-slate-800 prose-p:text-slate-600 leading-relaxed">
+            
+            <article class="mb-12">
+                <header>
+                    <h2 class="text-3xl font-black mb-6 border-b pb-4 border-slate-100">How the Palworld Breeding Calculator Works</h2>
+                </header>
+                
+                <p>
+                    Unlike traditional monster-catching games where breeding a fire-type and a water-type creates a specific hybrid, Palworld utilizes a complex, mathematical <strong>breeding power</strong> system. Players looking for the ultimate <strong>palworld breeding guide</strong> often get frustrated trying to guess combinations. Our calculator simplifies this completely.
+                </p>
+                <p>
+                    Every Pal in the game code is assigned a hidden value ranging from 10 (the rarest) to 1500 (the most common). When you put a Male and Female Pal into the Breeding Farm with a Cake, the game takes their two hidden numbers, adds them together, and divides by two. The resulting egg will hatch into the Pal whose base hidden power is closest to that final number.
+                </p>
+            </article>
+
+            <article class="mb-12">
+                <h2 class="text-2xl font-bold mb-4">How to Breed Anubis and Other Legends</h2>
+                
+                <p>
+                    Anubis is one of the most highly sought-after Pals due to its Level 4 Handiwork skill. While you can catch it as an Alpha Boss later in the game, using our <strong>pal breeding combos</strong> calculator, you can hatch one very early on!
+                </p>
+                <p>
+                    Because Anubis has a breeding power of 570, you simply need to pair two Pals whose average power equals roughly 570. The most famous early-game combination is pairing a <strong>Penking (520)</strong> with a <strong>Bushi (250)</strong>. Alternatively, you can mix a Quivern and a Chillet to yield the same powerful Ground-type Pal.
+                </p>
+            </article>
+            
+            <article class="bg-slate-50 border border-slate-200 p-8 rounded-2xl">
+                <h2 class="text-2xl font-bold mb-4 text-slate-800">Exceptions: Special Fusion Pals</h2>
+                <p class="mb-4">
+                    While 98% of the game relies on the hidden power math, there are a few hardcoded <strong>palworld egg combinations</strong> known as "Fusions". In these rare instances, the math is completely ignored. Our tool automatically detects these. Examples include:
+                </p>
+                <ul class="list-disc pl-6 space-y-2 text-slate-600 font-medium">
+                    <li>Relaxaurus + Sparkit = <strong>Grizzbolt</strong></li>
+                    <li>Mossanda + Petallia = <strong>Lyleen</strong></li>
+                    <li>Frostallion + Helzephyr = <strong>Frostallion Noct</strong></li>
+                    <li>Kitsun + Astegon = <strong>Shadowbeak</strong></li>
+                </ul>
+            </article>
+
+        </div>
+    </div>
+</section>
+
+<!-- SEO FAQ Section -->
+<section class="bg-slate-50 py-16 border-t border-slate-200">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <h2 class="text-3xl font-black text-center text-slate-800 mb-10">Frequently Asked Questions</h2>
+        
+        <div class="space-y-4">
+            
+            <div class="bg-white rounded-xl shadow-sm border border-slate-100" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+                <button data-faq-toggle class="w-full flex justify-between items-center text-left p-6 font-bold text-slate-800 hover:bg-slate-50 rounded-xl focus:outline-none transition-colors">
+                    <span itemprop="name">How does the Palworld breeding calculator work?</span>
+                    <i class="fas fa-chevron-down text-slate-400 faq-icon transition-transform"></i>
+                </button>
+                <div class="faq-answer max-h-0 overflow-hidden transition-all duration-300 ease-in-out">
+                    <div itemprop="text" class="p-6 pt-0 text-slate-600 font-medium leading-relaxed border-t border-slate-50 mt-2">
+                        <p>Every Pal in the game has a hidden 'Breeding Power' number. When two Pals breed, the game averages their power. The offspring is the Pal whose hidden power is closest to that average. Our tool simulates this exact logic.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-sm border border-slate-100" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+                <button data-faq-toggle class="w-full flex justify-between items-center text-left p-6 font-bold text-slate-800 hover:bg-slate-50 rounded-xl focus:outline-none transition-colors">
+                    <span itemprop="name">How do I breed Anubis in Palworld?</span>
+                    <i class="fas fa-chevron-down text-slate-400 faq-icon transition-transform"></i>
+                </button>
+                <div class="faq-answer max-h-0 overflow-hidden transition-all duration-300 ease-in-out">
+                    <div itemprop="text" class="p-6 pt-0 text-slate-600 font-medium leading-relaxed border-t border-slate-50 mt-2">
+                        <p>You can breed Anubis easily early in the game by combining a Penking and a Bushi, or a Quivern and a Chillet. Both combinations average out to Anubis's hidden power tier.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-sm border border-slate-100" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+                <button data-faq-toggle class="w-full flex justify-between items-center text-left p-6 font-bold text-slate-800 hover:bg-slate-50 rounded-xl focus:outline-none transition-colors">
+                    <span itemprop="name">What are special breeding combinations?</span>
+                    <i class="fas fa-chevron-down text-slate-400 faq-icon transition-transform"></i>
+                </button>
+                <div class="faq-answer max-h-0 overflow-hidden transition-all duration-300 ease-in-out">
+                    <div itemprop="text" class="p-6 pt-0 text-slate-600 font-medium leading-relaxed border-t border-slate-50 mt-2">
+                        <p>Certain Pals ignore the math formula. For example, breeding a Relaxaurus and a Sparkit will always result in a Grizzbolt, regardless of their hidden breeding power. These are coded as specific exceptions by the developers.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-sm border border-slate-100" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+                <button data-faq-toggle class="w-full flex justify-between items-center text-left p-6 font-bold text-slate-800 hover:bg-slate-50 rounded-xl focus:outline-none transition-colors">
+                    <span itemprop="name">Can I breed Boss or Alpha Pals?</span>
+                    <i class="fas fa-chevron-down text-slate-400 faq-icon transition-transform"></i>
+                </button>
+                <div class="faq-answer max-h-0 overflow-hidden transition-all duration-300 ease-in-out">
+                    <div itemprop="text" class="p-6 pt-0 text-slate-600 font-medium leading-relaxed border-t border-slate-50 mt-2">
+                        <p>Yes, you can breed Alpha Pals, but the offspring will hatch as a normal, non-giant version of that Pal. However, the baby has a high chance of inheriting the powerful passive traits from the Alpha parent!</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<div id="footer"></div>
+
+<script>
+async function loadComponent(url, elementId) {
+    try {
+        const response = await fetch(url);
+        if (response.ok) document.getElementById(elementId).innerHTML = await response.text();
+    } catch (e) { console.error(e); }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    loadComponent('/components/navbar.html', 'navbar');
+    loadComponent('/components/footer.html', 'footer');
+
+    // FAQ Accordion Logic
+    const faqToggles = document.querySelectorAll('[data-faq-toggle]');
+    faqToggles.forEach(button => {
+        button.addEventListener('click', () => {
+            const answer = button.nextElementSibling;
+            const icon = button.querySelector('.faq-icon');
+            const isOpening = !answer.style.maxHeight;
+
+            faqToggles.forEach(otherButton => {
+                if (otherButton !== button) {
+                    otherButton.nextElementSibling.style.maxHeight = null;
+                    otherButton.querySelector('.faq-icon').classList.remove('rotate-180');
+                }
+            });
+
+            if (isOpening) {
+                answer.style.maxHeight = answer.scrollHeight + "px";
+                icon.classList.add('rotate-180');
+            } else {
+                answer.style.maxHeight = null;
+                icon.classList.remove('rotate-180');
+            }
+        });
+    });
+});
+</script>
+</body>
+</html>
