@@ -86,111 +86,250 @@
         <div id="root" class="w-full max-w-6xl mx-auto h-[100dvh] sm:h-[800px] max-h-screen sm:max-h-[85vh]"></div>
     </div>
 
-
-
 <script>
 const html = htm.bind(React.createElement);
-const { useState, useEffect, useRef, useCallback } = React;
- 
+const { useState, useEffect, useRef, useCallback, useMemo } = React;
+
 // ─── CONSTANTS ──────────────────────────────────────────────────────────────
-const ROOM_VER = 'sc3';
-const EMOJI_LIST = ['😀','😃','😄','😁','😆','😅','😂','🤣','🥲','☺️','😊','😇','🙂','🙃','😉','😌','😍','🥰','😘','😗','😙','😚','😋','😛','😝','😜','🤪','🤨','🧐','🤓','😎','🥸','🤩','🥳','😏','😒','😞','😔','😟','😕','🙁','☹️','😣','😖','😫','😩','🥺','😢','😭','😤','😠','😡','🤬','🤯','😳','🥵','🥶','😱','😨','😰','😥','😓','🤗','🤔','🤭','🤫','🤥','😶','😐','😑','😬','🙄','😯','😦','😧','😮','😲','🥱','😴','🤤','😪','😵','🤐','🥴','🤢','🤮','🤧','😷','🤒','🤕','🤑','🤠','😈','👿','👹','👺','🤡','💩','👻','💀','☠️','👽','👾','🤖','🎃','😺','😸','😹','😻','😼','😽','🙀','😿','😾','👋','🤚','🖐','✋','🖖','👌','🤌','🤏','✌️','🤞','🤟','🤘','🤙','👈','👉','👆','🖕','👇','☝️','👍','👎','✊','👊','🤛','🤜','👏','🙌','🤲','🤝','🙏','✍️','💅','🤳','💪','🦾','🦿','🦵','🦶'];
- 
+const ROOM_VER = 'sc4';
+const DB_NAME = 'lanchat_db_v1';
+const DB_STORE = 'rooms';
+const HEARTBEAT_INTERVAL = 15000;        // 15s ping
+const HEARTBEAT_TIMEOUT = 35000;         // 35s without pong = dead
+const RECONNECT_BASE_DELAY = 1500;
+const RECONNECT_MAX_DELAY = 30000;
+const RECONNECT_MAX_ATTEMPTS = 50;
+const DEFAULT_RETENTION_MIN = 30;        // 30 min default
+const MAX_RETENTION_MIN = 24 * 60;       // 24h max
+const PROBE_TIMEOUT = 6000;
+const CONNECT_TIMEOUT = 9000;
+const HOST_ELECTION_JITTER = 1500;       // randomize to avoid race
+const MAX_HISTORY_PER_ROOM = 1000;       // cap for storage
+const BINARY_CHUNK_SIZE = 256 * 1024;    // 256KB per chunk for big files
+
+const PEERJS_CONFIG = {
+    debug: 0,
+    config: {
+        iceServers: [
+            { urls: 'stun:stun.l.google.com:19302' },
+            { urls: 'stun:stun1.l.google.com:19302' },
+            { urls: 'stun:global.stun.twilio.com:3478' }
+        ]
+    }
+};
+
+const EMOJI_LIST = ['😀','😃','😄','😁','😆','😅','😂','🤣','🥲','☺️','😊','😇','🙂','🙃','😉','😌','😍','🥰','😘','😋','😛','😜','🤪','🤨','🧐','🤓','😎','🥳','😏','😒','😞','😔','😟','🙁','☹️','😣','😖','😫','😩','🥺','😢','😭','😤','😠','😡','🤬','🤯','😳','🥵','🥶','😱','😨','😰','😥','🤗','🤔','🤭','🤫','🤥','😶','😐','😑','😬','🙄','😮','😲','🥱','😴','🤤','😵','🥴','🤢','🤮','🤧','😷','🤒','🤕','🤠','😈','👿','💩','👻','💀','☠️','👽','🤖','🎃','😺','😸','❤️','🧡','💛','💚','💙','💜','🖤','🤍','💔','💕','💞','💓','💗','💖','💘','👋','🤚','✋','👌','✌️','🤞','🤟','🤘','🤙','👈','👉','👆','👇','☝️','👍','👎','✊','👊','👏','🙌','🙏','💪','🔥','⭐','✨','💯','💢','💥','💫','🎉','🎊','🎁','🏆'];
+
+const ADJECTIVES = ['Swift','Bright','Bold','Calm','Sharp','Cool','Quick','Wise','Keen','Dark','Brave','Clever','Lucky','Mighty','Noble','Silent','Sunny'];
+const NOUNS = ['Fox','Owl','Bear','Wolf','Hawk','Lion','Tiger','Eagle','Shark','Panther','Falcon','Otter','Lynx','Raven','Cobra'];
+
 // ─── HELPERS ─────────────────────────────────────────────────────────────────
-const ADJECTIVES = ['Swift','Bright','Bold','Calm','Sharp','Cool','Quick','Wise','Keen','Dark'];
-const NOUNS = ['Fox','Owl','Bear','Wolf','Hawk','Lion','Tiger','Eagle','Shark','Panther'];
- 
+const uid = () => Math.random().toString(36).substring(2, 12) + Date.now().toString(36);
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+
 function genUsername() {
     const a = ADJECTIVES[Math.floor(Math.random() * ADJECTIVES.length)];
     const n = NOUNS[Math.floor(Math.random() * NOUNS.length)];
     return `${a}${n}${Math.floor(Math.random() * 90) + 10}`;
 }
- 
+
 function getStoredUsername() {
-    let u = localStorage.getItem('lanchat_username_v2');
-    if (!u) { u = genUsername(); localStorage.setItem('lanchat_username_v2', u); }
-    return u;
+    try {
+        let u = localStorage.getItem('lanchat_username_v3');
+        if (!u) { u = genUsername(); localStorage.setItem('lanchat_username_v3', u); }
+        return u;
+    } catch { return genUsername(); }
 }
- 
-function saveUsername(u) { localStorage.setItem('lanchat_username_v2', u); }
- 
+
+function saveUsername(u) {
+    try { localStorage.setItem('lanchat_username_v3', u); } catch {}
+}
+
+function getStableClientId() {
+    try {
+        let id = localStorage.getItem('lanchat_clientid_v1');
+        if (!id) { id = uid(); localStorage.setItem('lanchat_clientid_v1', id); }
+        return id;
+    } catch { return uid(); }
+}
+
 function deriveHostId(ip) {
     const safe = btoa(ip).replace(/[^a-zA-Z0-9]/g, '');
     return `${ROOM_VER}-${safe.substring(0, 14)}`;
 }
- 
+
 function formatBytes(b) {
     if (!b || b === 0) return '0 B';
     const k = 1024, s = ['B','KB','MB','GB'];
-    const i = Math.floor(Math.log(b) / Math.log(k));
+    const i = Math.min(Math.floor(Math.log(b) / Math.log(k)), s.length - 1);
     return `${(b / Math.pow(k, i)).toFixed(1)} ${s[i]}`;
 }
- 
+
 function formatTime(s) { return `00:${String(s).padStart(2, '0')}`; }
- 
+
 function timeStr(d) {
     if (!d) return '';
     const dt = d instanceof Date ? d : new Date(d);
+    if (isNaN(dt.getTime())) return '';
     return dt.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 }
- 
+
+// ─── INDEXEDDB STORAGE ───────────────────────────────────────────────────────
+const Storage = (() => {
+    let dbPromise = null;
+
+    const openDB = () => {
+        if (dbPromise) return dbPromise;
+        dbPromise = new Promise((resolve, reject) => {
+            try {
+                const req = indexedDB.open(DB_NAME, 1);
+                req.onupgradeneeded = () => {
+                    const db = req.result;
+                    if (!db.objectStoreNames.contains(DB_STORE)) {
+                        db.createObjectStore(DB_STORE, { keyPath: 'roomId' });
+                    }
+                };
+                req.onsuccess = () => resolve(req.result);
+                req.onerror = () => reject(req.error);
+            } catch (e) { reject(e); }
+        });
+        return dbPromise;
+    };
+
+    const get = async (roomId) => {
+        try {
+            const db = await openDB();
+            return new Promise((resolve) => {
+                const tx = db.transaction(DB_STORE, 'readonly');
+                const req = tx.objectStore(DB_STORE).get(roomId);
+                req.onsuccess = () => resolve(req.result || null);
+                req.onerror = () => resolve(null);
+            });
+        } catch { return null; }
+    };
+
+    const set = async (roomId, data) => {
+        try {
+            const db = await openDB();
+            return new Promise((resolve) => {
+                const tx = db.transaction(DB_STORE, 'readwrite');
+                tx.objectStore(DB_STORE).put({ roomId, ...data, updatedAt: Date.now() });
+                tx.oncomplete = () => resolve(true);
+                tx.onerror = () => resolve(false);
+            });
+        } catch { return false; }
+    };
+
+    const remove = async (roomId) => {
+        try {
+            const db = await openDB();
+            return new Promise((resolve) => {
+                const tx = db.transaction(DB_STORE, 'readwrite');
+                tx.objectStore(DB_STORE).delete(roomId);
+                tx.oncomplete = () => resolve(true);
+                tx.onerror = () => resolve(false);
+            });
+        } catch { return false; }
+    };
+
+    return { get, set, remove };
+})();
+
+// Convert stored msg → render-ready (rebuild blob URLs from ArrayBuffer)
+function rehydrateMessage(msg) {
+    const m = { ...msg, timestamp: msg.timestamp ? new Date(msg.timestamp) : new Date() };
+    if ((m.type === 'file' || m.type === 'voice') && m.fileBuffer && !m.url) {
+        try {
+            m.url = URL.createObjectURL(new Blob([m.fileBuffer], { type: m.mimeType || 'application/octet-stream' }));
+        } catch (e) { console.warn('rehydrate blob failed', e); }
+    }
+    return m;
+}
+
+// Strip blob url before saving (it's not persistable)
+function dehydrateMessage(msg) {
+    const { url, ...rest } = msg;
+    return { ...rest, timestamp: msg.timestamp instanceof Date ? msg.timestamp.getTime() : msg.timestamp };
+}
+
 // ─── APP ──────────────────────────────────────────────────────────────────────
 const App = () => {
-    // ── Persistent state ──
+    // ── Persistent UI state ──
     const [username, setUsername] = useState(getStoredUsername);
     const [hasJoined, setHasJoined] = useState(false);
- 
-    // ── Network state (for render) ──
-    const [peer, _setPeer] = useState(null);
+
+    // ── Network state ──
     const [status, setStatus] = useState('Detecting network...');
+    const [statusType, setStatusType] = useState('info'); // 'info'|'ok'|'warn'|'error'
     const [isHost, setIsHost] = useState(false);
     const [onlineCount, setOnlineCount] = useState(0);
-    const [lobbyCount, setLobbyCount] = useState(null);   // null=scanning, num=found
+    const [lobbyCount, setLobbyCount] = useState(null);
     const [networkReady, setNetworkReady] = useState(false);
     const [connError, setConnError] = useState('');
- 
-    // ── Chat state (for render) ──
+    const [isOnline, setIsOnline] = useState(navigator.onLine);
+
+    // ── Chat state ──
     const [messages, _setMessages] = useState([]);
-    const [peersInfo, _setPeersInfo] = useState({});      // {peerId: username}
+    const [peersInfo, _setPeersInfo] = useState({});
     const [activeChat, _setActiveChat] = useState('global');
     const [unreadCounts, setUnreadCounts] = useState({});
     const [showSidebar, setShowSidebar] = useState(false);
     const [inputText, setInputText] = useState('');
     const [showEmojiPicker, setShowEmojiPicker] = useState(false);
-    const [selectedFile, setSelectedFile] = useState(null);
- 
+    const [queuedCount, setQueuedCount] = useState(0);
+    const [restoredFromCache, setRestoredFromCache] = useState(false);
+
     // ── Recording ──
     const [isRecording, setIsRecording] = useState(false);
     const [recordingTime, setRecordingTime] = useState(0);
- 
-    // ── Pro ──
+
+    // ── Pro / Modals ──
     const [isPro, setIsPro] = useState(false);
     const [showProModal, setShowProModal] = useState(false);
+    const [showSettings, setShowSettings] = useState(false);
+    const [showConfirm, setShowConfirm] = useState(null); // {title, message, onConfirm}
     const [formStatus, setFormStatus] = useState('');
- 
-    // ─── LIVE REFS (always fresh in callbacks) ───
-    const peerRef       = useRef(null);
-    const isHostRef     = useRef(false);
-    const connectionsRef = useRef([]);  // DataConnection[]
-    const historyRef    = useRef([]);   // global message history (host keeps)
-    const peersInfoRef  = useRef({});
+
+    // ── Host Settings (configurable) ──
+    const [hostSettings, setHostSettings] = useState({
+        maxFileMB: 10,            // default 10MB free
+        voiceMaxSec: 30,          // 30s voice notes
+        retentionMin: DEFAULT_RETENTION_MIN, // how long messages persist locally
+        roomLocked: false,        // prevent new joiners
+        readOnly: false,          // mute everyone except host
+        allowFiles: true,
+        allowVoice: true,
+        autoDeleteOnHostLeave: false
+    });
+
+    // ─── REFS ─────────────────────────────────────────────────────────────────
+    const peerRef = useRef(null);
+    const isHostRef = useRef(false);
+    const connectionsRef = useRef([]);     // [{conn, lastPong, hbTimer}]
+    const historyRef = useRef([]);
+    const peersInfoRef = useRef({});
     const activeChatRef = useRef('global');
-    const usernameRef   = useRef(username);
-    const hostIdRef     = useRef('');
- 
-    // ─── OTHER REFS ───
-    const chatRef         = useRef(null);
-    const fileInputRef    = useRef(null);
-    const mediaRecRef     = useRef(null);
-    const audioChunksRef  = useRef([]);
-    const recTimerRef     = useRef(null);
- 
-    // ─── SYNCED SETTERS (update both ref and state) ───────────────────────────
- 
-    // setPeer: updates peerRef AND React state
-    const setPeer = useCallback((p) => { peerRef.current = p; _setPeer(p); }, []);
- 
-    // setPeersInfo: updates peersInfoRef AND React state + onlineCount
+    const usernameRef = useRef(username);
+    const hostIdRef = useRef('');
+    const myStableIdRef = useRef(getStableClientId());
+    const messageIdsRef = useRef(new Set());     // dedupe
+    const offlineQueueRef = useRef([]);          // messages typed while offline
+    const reconnectAttemptsRef = useRef(0);
+    const reconnectTimerRef = useRef(null);
+    const hostSettingsRef = useRef(hostSettings);
+    const isProRef = useRef(false);
+    const blobUrlsRef = useRef([]);              // for cleanup
+    const restoredFromCacheRef = useRef(false);
+    const persistTimerRef = useRef(null);
+
+    // UI refs
+    const chatRef = useRef(null);
+    const fileInputRef = useRef(null);
+    const mediaRecRef = useRef(null);
+    const audioChunksRef = useRef([]);
+    const recTimerRef = useRef(null);
+
+    // ─── SYNCED SETTERS ───────────────────────────────────────────────────────
     const setPeersInfo = useCallback((updater) => {
         _setPeersInfo(prev => {
             const next = typeof updater === 'function' ? updater(prev) : updater;
@@ -199,68 +338,180 @@ const App = () => {
             return next;
         });
     }, []);
- 
-    // setActiveChat: updates activeChatRef AND React state
+
     const setActiveChat = useCallback((val) => {
         activeChatRef.current = val;
         _setActiveChat(val);
     }, []);
- 
-    // addMessage: appends to React messages state
-    const addMessage = useCallback((msg) => {
-        _setMessages(prev => [...prev, msg]);
+
+    const setMessages = useCallback((updater) => {
+        _setMessages(prev => typeof updater === 'function' ? updater(prev) : updater);
     }, []);
- 
-    // ─── SYNC SIDE EFFECTS ───────────────────────────────────────────────────
+
+    const addMessage = useCallback((msg) => {
+        // Dedupe by id
+        if (msg.id && messageIdsRef.current.has(msg.id)) return;
+        if (msg.id) messageIdsRef.current.add(msg.id);
+
+        if (msg.url) blobUrlsRef.current.push(msg.url);
+
+        _setMessages(prev => {
+            const next = [...prev, msg];
+            // Cap memory
+            if (next.length > MAX_HISTORY_PER_ROOM) {
+                return next.slice(next.length - MAX_HISTORY_PER_ROOM);
+            }
+            return next;
+        });
+    }, []);
+
+    const updateStatus = useCallback((text, type = 'info') => {
+        setStatus(text);
+        setStatusType(type);
+    }, []);
+
+    // ─── Sync username ref ───────────────────────────────────────────────────
     useEffect(() => { usernameRef.current = username; }, [username]);
- 
+    useEffect(() => { hostSettingsRef.current = hostSettings; }, [hostSettings]);
+    useEffect(() => { isProRef.current = isPro; }, [isPro]);
+
     // Auto-scroll chat
     useEffect(() => {
         if (chatRef.current) {
             requestAnimationFrame(() => {
-                if (chatRef.current)
-                    chatRef.current.scrollTop = chatRef.current.scrollHeight;
+                if (chatRef.current) chatRef.current.scrollTop = chatRef.current.scrollHeight;
             });
         }
     }, [messages, activeChat]);
- 
-    // ─── FETCH NETWORK IP ─────────────────────────────────────────────────────
+
+    // ─── ONLINE/OFFLINE EVENTS ───────────────────────────────────────────────
+    useEffect(() => {
+        const goOnline = () => {
+            setIsOnline(true);
+            // Trigger reconnect if needed
+            const p = peerRef.current;
+            if (hasJoined && (!p || p.destroyed || p.disconnected)) {
+                scheduleReconnect(0);
+            }
+        };
+        const goOffline = () => {
+            setIsOnline(false);
+            updateStatus('Offline · Will resume when network returns', 'warn');
+        };
+        window.addEventListener('online', goOnline);
+        window.addEventListener('offline', goOffline);
+        return () => {
+            window.removeEventListener('online', goOnline);
+            window.removeEventListener('offline', goOffline);
+        };
+        // eslint-disable-next-line
+    }, [hasJoined]);
+
+    // ─── DETERMINE NETWORK / HOST ID ─────────────────────────────────────────
     useEffect(() => {
         let cancelled = false;
-        fetch('https://api.ipify.org?format=json')
+        const fallback = () => {
+            // Stable per-browser fingerprint as fallback (so same network gets same id)
+            const fb = (navigator.userAgent.length + screen.width + screen.height + (navigator.language || '')).toString();
+            hostIdRef.current = deriveHostId(fb);
+            setNetworkReady(true);
+        };
+
+        // Race fetch with timeout
+        const ctrl = new AbortController();
+        const t = setTimeout(() => ctrl.abort(), 4000);
+
+        fetch('https://api.ipify.org?format=json', { signal: ctrl.signal })
             .then(r => r.json())
             .then(d => {
+                clearTimeout(t);
                 if (cancelled) return;
                 hostIdRef.current = deriveHostId(d.ip);
                 setNetworkReady(true);
             })
-            .catch(() => {
-                if (cancelled) return;
-                // Fallback: use a browser fingerprint
-                const fb = navigator.userAgent.length.toString() + screen.width + screen.height;
-                hostIdRef.current = deriveHostId(fb + Date.now().toString().slice(-4));
-                setNetworkReady(true);
-            });
-        return () => { cancelled = true; };
+            .catch(() => { clearTimeout(t); if (!cancelled) fallback(); });
+
+        return () => { cancelled = true; clearTimeout(t); ctrl.abort(); };
     }, []);
- 
-    // ─── PROBE FOR LOBBY COUNT (pre-join) ────────────────────────────────────
+
+    // ─── RESTORE CACHED MESSAGES ON LOAD ─────────────────────────────────────
+    useEffect(() => {
+        if (!networkReady || !hostIdRef.current) return;
+        let cancelled = false;
+        (async () => {
+            const cached = await Storage.get(hostIdRef.current);
+            if (cancelled || !cached) return;
+
+            // Check retention - drop if older than retentionMin since last activity
+            const retentionMs = (cached.settings?.retentionMin || DEFAULT_RETENTION_MIN) * 60 * 1000;
+            const expired = cached.updatedAt && (Date.now() - cached.updatedAt > retentionMs);
+            if (expired) {
+                await Storage.remove(hostIdRef.current);
+                return;
+            }
+
+            if (cached.history && cached.history.length > 0) {
+                historyRef.current = cached.history;
+                const restored = cached.history.map(m => {
+                    const r = rehydrateMessage(m);
+                    if (r.id) messageIdsRef.current.add(r.id);
+                    if (r.url) blobUrlsRef.current.push(r.url);
+                    return r;
+                });
+                _setMessages(restored);
+                setRestoredFromCache(true);
+                restoredFromCacheRef.current = true;
+            }
+            if (cached.settings) {
+                setHostSettings(s => ({ ...s, ...cached.settings }));
+            }
+            if (cached.username && !localStorage.getItem('lanchat_username_v3')) {
+                setUsername(cached.username);
+            }
+        })();
+        return () => { cancelled = true; };
+    }, [networkReady]);
+
+    // ─── PERSIST HISTORY (debounced) ─────────────────────────────────────────
+    const persistHistory = useCallback(() => {
+        if (!hostIdRef.current) return;
+        clearTimeout(persistTimerRef.current);
+        persistTimerRef.current = setTimeout(async () => {
+            try {
+                // Only persist non-system + last MAX_HISTORY_PER_ROOM
+                const toSave = historyRef.current.slice(-MAX_HISTORY_PER_ROOM).map(dehydrateMessage);
+                await Storage.set(hostIdRef.current, {
+                    history: toSave,
+                    settings: hostSettingsRef.current,
+                    username: usernameRef.current,
+                    isHost: isHostRef.current
+                });
+            } catch (e) { console.warn('Persist failed', e); }
+        }, 800);
+    }, []);
+
+    // Persist whenever messages change
+    useEffect(() => {
+        if (hasJoined) persistHistory();
+    }, [messages, hostSettings, hasJoined, persistHistory]);
+
+    // ─── PROBE LOBBY ─────────────────────────────────────────────────────────
     useEffect(() => {
         if (!networkReady || hasJoined) return;
         let done = false;
         let probe = null;
- 
+
         const finish = (count) => {
             if (done) return;
             done = true;
             setLobbyCount(count);
-            try { if (probe && !probe.destroyed) probe.destroy(); } catch(e) {}
+            try { if (probe && !probe.destroyed) probe.destroy(); } catch {}
         };
- 
-        const timer = setTimeout(() => finish(0), 6000);
- 
+
+        const timer = setTimeout(() => finish(0), PROBE_TIMEOUT);
+
         try {
-            probe = new Peer(undefined, { debug: 0 });
+            probe = new Peer(undefined, PEERJS_CONFIG);
             probe.on('open', () => {
                 if (done) return;
                 try {
@@ -270,32 +521,33 @@ const App = () => {
                     });
                     conn.on('open', () => conn.send({ type: 'sys-lobby-query' }));
                     conn.on('data', d => {
-                        if (d && d.type === 'sys-lobby-response') {
+                        if (d?.type === 'sys-lobby-response') {
                             clearTimeout(timer);
                             finish(d.count);
                         }
                     });
                     conn.on('error', () => { clearTimeout(timer); finish(0); });
-                } catch(e) { clearTimeout(timer); finish(0); }
+                } catch { clearTimeout(timer); finish(0); }
             });
             probe.on('error', () => { clearTimeout(timer); finish(0); });
-        } catch(e) { clearTimeout(timer); finish(0); }
- 
-        return () => {
-            clearTimeout(timer);
-            done = true;
-            try { if (probe && !probe.destroyed) probe.destroy(); } catch(e) {}
-        };
+        } catch { clearTimeout(timer); finish(0); }
+
+        return () => { clearTimeout(timer); done = true; try { if (probe && !probe.destroyed) probe.destroy(); } catch {} };
     }, [networkReady, hasJoined]);
- 
-    // ─── VISIBILITY RECONNECT ─────────────────────────────────────────────────
+
+    // ─── VISIBILITY / FOCUS RECONNECT ────────────────────────────────────────
     useEffect(() => {
         const h = () => {
-            if (document.visibilityState === 'visible') {
-                const p = peerRef.current;
-                if (p && !p.destroyed && p.disconnected) {
-                    try { p.reconnect(); } catch(e) {}
-                }
+            if (document.visibilityState !== 'visible') return;
+            const p = peerRef.current;
+            if (!hasJoined) return;
+            if (!p || p.destroyed) {
+                scheduleReconnect(0);
+            } else if (p.disconnected) {
+                try { p.reconnect(); } catch {}
+            } else {
+                // Verify connections via heartbeat
+                pingAllConnections();
             }
         };
         document.addEventListener('visibilitychange', h);
@@ -304,32 +556,92 @@ const App = () => {
             document.removeEventListener('visibilitychange', h);
             window.removeEventListener('focus', h);
         };
+        // eslint-disable-next-line
+    }, [hasJoined]);
+
+    // ─── CLEANUP BLOB URLS ON UNMOUNT ────────────────────────────────────────
+    useEffect(() => {
+        return () => {
+            blobUrlsRef.current.forEach(u => { try { URL.revokeObjectURL(u); } catch {} });
+            blobUrlsRef.current = [];
+            clearTimeout(persistTimerRef.current);
+            clearTimeout(reconnectTimerRef.current);
+        };
     }, []);
- 
-    // ─── CORE NETWORK FUNCTIONS ───────────────────────────────────────────────
-    // All use useCallback([]) so they're created ONCE and use refs for fresh values.
- 
-    // Send to all connections (optionally exclude one)
+
+    // ─── CORE NETWORK FUNCTIONS ──────────────────────────────────────────────
     const broadcast = useCallback((data, exclude = null) => {
-        connectionsRef.current.forEach(c => {
-            if (c !== exclude && c.open) {
-                try { c.send(data); } catch(e) { console.warn('broadcast fail', e); }
+        connectionsRef.current.forEach(({ conn }) => {
+            if (conn !== exclude && conn.open) {
+                try { conn.send(data); } catch (e) { console.warn('broadcast fail', e); }
             }
         });
     }, []);
- 
-    // Send to specific peer by ID
+
     const sendToPeer = useCallback((peerId, data) => {
-        const c = connectionsRef.current.find(x => x.peer === peerId && x.open);
-        if (c) try { c.send(data); } catch(e) {}
+        const entry = connectionsRef.current.find(({ conn }) => conn.peer === peerId && conn.open);
+        if (entry) {
+            try { entry.conn.send(data); return true; } catch { return false; }
+        }
+        return false;
     }, []);
- 
-    // Process an incoming message object (add to state)
+
+    // ─── HEARTBEAT ──
+    const pingAllConnections = useCallback(() => {
+        const now = Date.now();
+        connectionsRef.current.forEach(entry => {
+            if (entry.conn.open) {
+                try { entry.conn.send({ type: 'sys-ping', t: now }); } catch {}
+            }
+            // Detect dead connection
+            if (entry.lastPong && (now - entry.lastPong > HEARTBEAT_TIMEOUT)) {
+                try { entry.conn.close(); } catch {}
+            }
+        });
+    }, []);
+
+    useEffect(() => {
+        if (!hasJoined) return;
+        const t = setInterval(pingAllConnections, HEARTBEAT_INTERVAL);
+        return () => clearInterval(t);
+    }, [hasJoined, pingAllConnections]);
+
+    // ─── PROCESS INCOMING MESSAGE ────────────────────────────────────────────
     const processMsg = useCallback((data) => {
         if (!data || !data.type) return;
- 
+
         if (data.type === 'sys-update-peers') {
-            setPeersInfo(data.peers);
+            setPeersInfo(data.peers || {});
+            return;
+        }
+        if (data.type === 'sys-settings-update') {
+            setHostSettings(prev => ({ ...prev, ...(data.settings || {}) }));
+            return;
+        }
+        if (data.type === 'sys-kick') {
+            if (data.targetId === peerRef.current?.id) {
+                updateStatus('Removed by host', 'error');
+                setConnError('You were removed from the room');
+                cleanupConnection(true);
+            }
+            return;
+        }
+        if (data.type === 'sys-clear-chat') {
+            historyRef.current = [];
+            messageIdsRef.current.clear();
+            blobUrlsRef.current.forEach(u => { try { URL.revokeObjectURL(u); } catch {} });
+            blobUrlsRef.current = [];
+            _setMessages([]);
+            Storage.remove(hostIdRef.current);
+            return;
+        }
+        if (data.type === 'sys-room-closed') {
+            updateStatus('Host closed the room', 'error');
+            setConnError('Room closed by host');
+            Storage.remove(hostIdRef.current);
+            historyRef.current = [];
+            _setMessages([]);
+            cleanupConnection(true);
             return;
         }
         if (data.type === 'sync') {
@@ -337,13 +649,15 @@ const App = () => {
             return;
         }
         if (data.type === 'system') {
-            addMessage({ ...data, timestamp: new Date(data.timestamp) });
+            const msg = { ...data, id: data.id || uid(), timestamp: new Date(data.timestamp) };
+            addMessage(msg);
             return;
         }
- 
-        // Regular chat message
+
+        // Regular message
         const senderName = peersInfoRef.current[data.peerId] || data.senderName || 'Unknown';
         const base = {
+            id: data.id || uid(),
             sender: 'them',
             senderName,
             peerId: data.peerId,
@@ -352,47 +666,91 @@ const App = () => {
             type: data.type,
             mimeType: data.mimeType || null,
         };
- 
-        // Unread badge logic
+
+        // Unread badges
         if (data.recipientId) {
-            if (activeChatRef.current !== data.peerId)
+            if (activeChatRef.current !== data.peerId) {
                 setUnreadCounts(prev => ({ ...prev, [data.peerId]: (prev[data.peerId] || 0) + 1 }));
+            }
         } else {
-            if (activeChatRef.current !== 'global')
+            if (activeChatRef.current !== 'global') {
                 setUnreadCounts(prev => ({ ...prev, global: (prev.global || 0) + 1 }));
+            }
         }
- 
+
         if (data.type === 'text') {
             addMessage({ ...base, content: data.content });
         } else if (data.type === 'file' || data.type === 'voice') {
             try {
                 const url = URL.createObjectURL(new Blob([data.fileData], { type: data.mimeType }));
-                addMessage({ ...base, fileName: data.fileName, fileSize: data.fileSize, url });
-            } catch(e) { console.warn('Blob error', e); }
+                addMessage({
+                    ...base,
+                    fileName: data.fileName,
+                    fileSize: data.fileSize,
+                    url,
+                    fileBuffer: data.fileData
+                });
+            } catch (e) { console.warn('Blob error', e); }
         }
-    }, [setPeersInfo, addMessage]);
- 
-    // Set up event listeners for a DataConnection
+    }, [setPeersInfo, addMessage, updateStatus]);
+
+    // ─── CLEANUP ─────────────────────────────────────────────────────────────
+    const cleanupConnection = useCallback((permanent = false) => {
+        connectionsRef.current.forEach(({ conn }) => {
+            try { conn.close(); } catch {}
+        });
+        connectionsRef.current = [];
+        const p = peerRef.current;
+        if (p) {
+            try { p.destroy(); } catch {}
+            peerRef.current = null;
+        }
+        if (permanent) {
+            clearTimeout(reconnectTimerRef.current);
+        }
+    }, []);
+
+    // ─── SETUP CONNECTION ────────────────────────────────────────────────────
     const setupConn = useCallback((conn, asHost) => {
-        connectionsRef.current.push(conn);
- 
+        const entry = { conn, lastPong: Date.now() };
+        connectionsRef.current.push(entry);
+
         conn.on('data', data => {
             if (!data) return;
- 
-            // ── Host-only: join handshake ──
+
+            // Heartbeat handling
+            if (data.type === 'sys-ping') {
+                try { conn.send({ type: 'sys-pong', t: data.t }); } catch {}
+                entry.lastPong = Date.now();
+                return;
+            }
+            if (data.type === 'sys-pong') {
+                entry.lastPong = Date.now();
+                return;
+            }
+
+            // Host-only: join handshake
             if (data.type === 'sys-join' && asHost) {
+                // Check room lock
+                if (hostSettingsRef.current.roomLocked) {
+                    try { conn.send({ type: 'sys-join-rejected', reason: 'Room is locked by host' }); } catch {}
+                    setTimeout(() => { try { conn.close(); } catch {} }, 500);
+                    return;
+                }
                 const name = data.username || conn.metadata?.username || 'User';
-                const id   = data.peerId || conn.peer;
+                const id = data.peerId || conn.peer;
+                entry.userId = id;
                 setPeersInfo(prev => {
                     const updated = { ...prev, [id]: name };
-                    // Send updated peer list to everyone
-                    conn.send({ type: 'sys-update-peers', peers: updated });
+                    try { conn.send({ type: 'sys-update-peers', peers: updated }); } catch {}
                     broadcast({ type: 'sys-update-peers', peers: updated }, conn);
-                    // Send history to new joiner
-                    if (historyRef.current.length > 0)
-                        conn.send({ type: 'sync', history: historyRef.current });
-                    // Broadcast join notification
-                    const jm = { type: 'system', content: `${name} joined the room.`, timestamp: Date.now() };
+                    // Send settings
+                    try { conn.send({ type: 'sys-settings-update', settings: hostSettingsRef.current }); } catch {}
+                    // Send history
+                    if (historyRef.current.length > 0) {
+                        try { conn.send({ type: 'sync', history: historyRef.current.slice(-MAX_HISTORY_PER_ROOM) }); } catch {}
+                    }
+                    const jm = { id: uid(), type: 'system', content: `${name} joined the room.`, timestamp: Date.now() };
                     historyRef.current.push(jm);
                     broadcast(jm, conn);
                     addMessage({ ...jm, timestamp: new Date(jm.timestamp) });
@@ -400,43 +758,49 @@ const App = () => {
                 });
                 return;
             }
- 
-            // ── Host-only: lobby probe ──
+
+            // Client received join rejection
+            if (data.type === 'sys-join-rejected') {
+                setConnError(data.reason || 'Join rejected');
+                updateStatus('Cannot join: ' + (data.reason || 'rejected'), 'error');
+                return;
+            }
+
+            // Lobby probe
             if (data.type === 'sys-lobby-query' && asHost) {
-                try { conn.send({ type: 'sys-lobby-response', count: Object.keys(peersInfoRef.current).length }); }
-                catch(e) {}
+                try { conn.send({ type: 'sys-lobby-response', count: Object.keys(peersInfoRef.current).length }); } catch {}
                 return;
             }
- 
-            // ── Private message routing (host relays between clients) ──
+
+            // Read-only enforcement (host only)
+            if (asHost && hostSettingsRef.current.readOnly && (data.type === 'text' || data.type === 'file' || data.type === 'voice')) {
+                if (data.peerId !== peerRef.current?.id) return; // drop non-host messages
+            }
+
+            // Private routing
             if (data.recipientId && asHost) {
-                if (data.recipientId === peerRef.current?.id) {
-                    processMsg(data);   // message is for the host itself
-                } else {
-                    sendToPeer(data.recipientId, data);   // relay to recipient
-                }
+                if (data.recipientId === peerRef.current?.id) processMsg(data);
+                else sendToPeer(data.recipientId, data);
                 return;
             }
- 
-            // ── Private message landed at correct client (non-host) ──
             if (data.recipientId && data.recipientId === peerRef.current?.id) {
                 processMsg(data);
                 return;
             }
- 
-            // ── Global message ──
+
+            // Global
             if (!data.recipientId) {
                 processMsg(data);
                 if (asHost) {
-                    if (data.type !== 'sys-update-peers') historyRef.current.push(data);
+                    if (!data.type.startsWith('sys-')) historyRef.current.push(data);
                     broadcast(data, conn);
                 }
             }
         });
- 
+
         conn.on('close', () => {
-            connectionsRef.current = connectionsRef.current.filter(c => c !== conn);
- 
+            connectionsRef.current = connectionsRef.current.filter(e => e !== entry);
+
             if (asHost) {
                 const leftName = peersInfoRef.current[conn.peer] || 'Someone';
                 setPeersInfo(prev => {
@@ -445,199 +809,355 @@ const App = () => {
                     broadcast({ type: 'sys-update-peers', peers: updated });
                     return updated;
                 });
-                const lm = { type: 'system', content: `${leftName} left the room.`, timestamp: Date.now() };
+                const lm = { id: uid(), type: 'system', content: `${leftName} left the room.`, timestamp: Date.now() };
                 historyRef.current.push(lm);
                 broadcast(lm);
                 addMessage({ ...lm, timestamp: new Date(lm.timestamp) });
-                if (connectionsRef.current.length === 0) setStatus('Hosting · Waiting for others…');
+                if (connectionsRef.current.length === 0) updateStatus('Hosting · Waiting for others…', 'ok');
             } else {
-                setStatus('Host disconnected · Rejoining…');
-                // Auto-rejoin after a brief delay
-                setTimeout(() => {
-                    const p = peerRef.current;
-                    if (p && !p.destroyed) {
-                        const conn2 = p.connect(hostIdRef.current, {
-                            reliable: true,
-                            metadata: { username: usernameRef.current }
-                        });
-                        conn2.on('open', () => {
-                            setStatus('Reconnected');
-                            conn2.send({ type: 'sys-join', peerId: p.id, username: usernameRef.current });
-                            setupConn(conn2, false);
-                        });
-                        conn2.on('error', () => setStatus('Room ended · Please refresh'));
-                    }
-                }, 2000);
+                // Client lost host - schedule reconnect
+                if (hasJoinedRef.current && !manualLeaveRef.current) {
+                    updateStatus('Connection lost · Reconnecting…', 'warn');
+                    scheduleReconnect();
+                }
             }
         });
- 
-        conn.on('error', err => console.warn('Connection error:', err));
-    }, [broadcast, sendToPeer, processMsg, setPeersInfo, addMessage]);
- 
+
+        conn.on('error', err => {
+            console.warn('Connection error:', err);
+        });
+    }, [broadcast, sendToPeer, processMsg, setPeersInfo, addMessage, updateStatus]);
+
+    // Refs to avoid stale closures in setupConn
+    const hasJoinedRef = useRef(false);
+    const manualLeaveRef = useRef(false);
+    useEffect(() => { hasJoinedRef.current = hasJoined; }, [hasJoined]);
+
     // ─── BECOME HOST ──────────────────────────────────────────────────────────
     const becomeHost = useCallback((hId, fallbackFn) => {
-        setStatus('Creating room…');
+        updateStatus('Creating room…', 'info');
         let hp;
-        try { hp = new Peer(hId, { debug: 0 }); }
-        catch(e) { setConnError('PeerJS unavailable. Check internet for initial load.'); return; }
- 
+        try { hp = new Peer(hId, PEERJS_CONFIG); }
+        catch (e) {
+            setConnError('PeerJS unavailable. Need internet for first load.');
+            scheduleReconnect();
+            return;
+        }
+
         hp.on('open', id => {
-            setPeer(hp);
+            peerRef.current = hp;
             isHostRef.current = true;
             setIsHost(true);
-            setStatus('Hosting · Waiting for others…');
+            reconnectAttemptsRef.current = 0;
+            updateStatus('Hosting · Waiting for others…', 'ok');
+            setConnError('');
             setPeersInfo({ [id]: usernameRef.current });
+            // Flush queued messages (rejoining as host - just clear, already in history)
+            offlineQueueRef.current = [];
+            setQueuedCount(0);
         });
- 
+
         hp.on('connection', conn => {
-            // Ignore probe connections — they'll disconnect on their own
             conn.on('open', () => {
                 if (conn.metadata?.isProbe) {
-                    // Just respond to lobby query then ignore
                     conn.on('data', d => {
                         if (d?.type === 'sys-lobby-query') {
-                            try { conn.send({ type: 'sys-lobby-response', count: Object.keys(peersInfoRef.current).length }); }
-                            catch(e) {}
+                            try { conn.send({ type: 'sys-lobby-response', count: Object.keys(peersInfoRef.current).length }); } catch {}
                         }
                     });
                     return;
                 }
-                setStatus('Active');
+                updateStatus('Active · Hosting', 'ok');
                 setupConn(conn, true);
             });
         });
- 
+
         hp.on('error', err => {
+            console.warn('Host peer error:', err);
             if (err.type === 'unavailable-id') {
-                // Race: another peer became host first — connect as client
-                setTimeout(() => fallbackFn && fallbackFn(), 800);
+                // Another host exists → become client
+                try { hp.destroy(); } catch {}
+                setTimeout(() => fallbackFn && fallbackFn(), 600 + Math.random() * HOST_ELECTION_JITTER);
+            } else if (err.type === 'network' || err.type === 'server-error' || err.type === 'socket-error') {
+                setConnError('Network unstable · Retrying…');
+                try { hp.destroy(); } catch {}
+                scheduleReconnect();
+            } else if (err.type === 'browser-incompatible') {
+                setConnError('Browser not supported');
             } else {
-                setConnError('Network error: ' + err.type);
-                setTimeout(() => becomeHost(hId, fallbackFn), 4000);
+                setConnError('Issue: ' + err.type + ' · Retrying…');
+                try { hp.destroy(); } catch {}
+                scheduleReconnect();
             }
         });
- 
+
         hp.on('disconnected', () => {
-            setStatus('Reconnecting…');
-            if (!hp.destroyed) try { hp.reconnect(); } catch(e) {}
+            updateStatus('Reconnecting to signal…', 'warn');
+            if (!hp.destroyed) {
+                try { hp.reconnect(); } catch { scheduleReconnect(); }
+            }
         });
-    }, [setPeer, setPeersInfo, setupConn]);
- 
+
+        hp.on('close', () => {
+            if (hasJoinedRef.current && !manualLeaveRef.current) scheduleReconnect();
+        });
+    }, [setPeersInfo, setupConn, updateStatus]);
+
     // ─── CONNECT AS CLIENT ────────────────────────────────────────────────────
     const connectAsClient = useCallback((hId) => {
         let cp;
-        try { cp = new Peer(undefined, { debug: 0 }); }
-        catch(e) { setConnError('PeerJS unavailable.'); return; }
- 
+        try { cp = new Peer(undefined, PEERJS_CONFIG); }
+        catch {
+            setConnError('PeerJS unavailable.');
+            scheduleReconnect();
+            return;
+        }
+
         let resolved = false;
- 
-        const onFail = () => {
+        const onFail = (reason) => {
             if (resolved) return;
             resolved = true;
-            try { cp.destroy(); } catch(e) {}
-            becomeHost(hId, () => connectAsClient(hId));
+            try { cp.destroy(); } catch {}
+            // Try to become host (with jitter to avoid race)
+            const jitter = Math.random() * HOST_ELECTION_JITTER;
+            setTimeout(() => becomeHost(hId, () => connectAsClient(hId)), jitter);
         };
- 
-        const timer = setTimeout(onFail, 7000);
- 
+
+        const timer = setTimeout(() => onFail('timeout'), CONNECT_TIMEOUT);
+
         cp.on('open', myId => {
-            setPeer(cp);
-            setStatus('Connecting to room…');
- 
+            peerRef.current = cp;
+            updateStatus('Connecting to room…', 'info');
+
             const conn = cp.connect(hId, {
                 reliable: true,
                 metadata: { username: usernameRef.current }
             });
- 
+
             conn.on('open', () => {
                 resolved = true;
                 clearTimeout(timer);
-                setStatus('Connected');
+                reconnectAttemptsRef.current = 0;
+                updateStatus('Connected', 'ok');
                 setConnError('');
-                conn.send({ type: 'sys-join', peerId: myId, username: usernameRef.current });
+                try { conn.send({ type: 'sys-join', peerId: myId, username: usernameRef.current }); } catch {}
                 setupConn(conn, false);
+
+                // Flush offline queue
+                if (offlineQueueRef.current.length > 0) {
+                    setTimeout(() => flushOfflineQueue(), 500);
+                }
             });
- 
+
+            conn.on('error', err => {
+                console.warn('client conn error', err);
+            });
+
             cp.on('error', err => {
+                console.warn('client peer error', err);
                 if (err.type === 'peer-unavailable') {
                     clearTimeout(timer);
-                    onFail();
-                } else {
-                    setConnError('Error: ' + err.type);
+                    onFail('peer-unavailable');
+                } else if (err.type === 'network' || err.type === 'socket-error' || err.type === 'server-error') {
+                    setConnError('Network issue · Retrying…');
+                    clearTimeout(timer);
+                    onFail('network');
+                } else if (err.type === 'browser-incompatible') {
+                    setConnError('Browser not supported');
                 }
             });
         });
- 
-        cp.on('error', () => onFail());
- 
+
+        cp.on('error', () => onFail('init-error'));
+
         cp.on('disconnected', () => {
             if (resolved && !cp.destroyed) {
-                setStatus('Reconnecting…');
-                try { cp.reconnect(); } catch(e) {}
+                updateStatus('Reconnecting to signal…', 'warn');
+                try { cp.reconnect(); } catch { scheduleReconnect(); }
             }
         });
-    }, [becomeHost, setupConn, setPeer]);
- 
-    // ─── JOIN ROOM ────────────────────────────────────────────────────────────
+
+        cp.on('close', () => {
+            if (hasJoinedRef.current && !manualLeaveRef.current) scheduleReconnect();
+        });
+    }, [becomeHost, setupConn, updateStatus]);
+
+    // ─── RECONNECT WITH BACKOFF ───────────────────────────────────────────────
+    const scheduleReconnect = useCallback((overrideDelay = null) => {
+        if (manualLeaveRef.current) return;
+        clearTimeout(reconnectTimerRef.current);
+
+        if (!isOnline && navigator.onLine === false) {
+            updateStatus('Offline · Waiting for network…', 'warn');
+            return;
+        }
+
+        if (reconnectAttemptsRef.current >= RECONNECT_MAX_ATTEMPTS) {
+            updateStatus('Could not reconnect · Tap retry', 'error');
+            setConnError('Max retries reached');
+            return;
+        }
+
+        const attempt = reconnectAttemptsRef.current++;
+        const delay = overrideDelay !== null
+            ? overrideDelay
+            : Math.min(RECONNECT_BASE_DELAY * Math.pow(1.5, attempt), RECONNECT_MAX_DELAY);
+
+        updateStatus(`Reconnecting in ${Math.round(delay/1000)}s… (try ${attempt + 1})`, 'warn');
+
+        reconnectTimerRef.current = setTimeout(() => {
+            // Cleanup old peer
+            const p = peerRef.current;
+            if (p && !p.destroyed) { try { p.destroy(); } catch {} }
+            peerRef.current = null;
+            connectionsRef.current = [];
+            isHostRef.current = false;
+            setIsHost(false);
+            // Retry
+            connectAsClient(hostIdRef.current);
+        }, delay);
+    }, [connectAsClient, updateStatus, isOnline]);
+
+    // ─── MANUAL RETRY ────────────────────────────────────────────────────────
+    const manualRetry = useCallback(() => {
+        reconnectAttemptsRef.current = 0;
+        setConnError('');
+        scheduleReconnect(0);
+    }, [scheduleReconnect]);
+
+    // ─── FLUSH OFFLINE QUEUE ─────────────────────────────────────────────────
+    const flushOfflineQueue = useCallback(() => {
+        const queue = offlineQueueRef.current;
+        if (queue.length === 0) return;
+        offlineQueueRef.current = [];
+        setQueuedCount(0);
+        queue.forEach(msg => {
+            if (isHostRef.current) {
+                if (msg.recipientId) sendToPeer(msg.recipientId, msg);
+                else { historyRef.current.push(msg); broadcast(msg); }
+            } else {
+                broadcast(msg);
+            }
+        });
+    }, [broadcast, sendToPeer]);
+
+    // ─── JOIN ROOM ───────────────────────────────────────────────────────────
     const joinRoom = useCallback(() => {
         if (!username.trim()) return;
         saveUsername(username.trim());
         usernameRef.current = username.trim();
+        manualLeaveRef.current = false;
         setHasJoined(true);
-        setStatus('Joining…');
-        connectAsClient(hostIdRef.current);
-    }, [username, connectAsClient]);
- 
-    // ─── SEND TEXT ────────────────────────────────────────────────────────────
+        hasJoinedRef.current = true;
+        updateStatus('Joining…', 'info');
+        // Random jitter on initial connect to break host election ties
+        setTimeout(() => connectAsClient(hostIdRef.current), Math.random() * 400);
+    }, [username, connectAsClient, updateStatus]);
+
+    // ─── LEAVE ROOM ──────────────────────────────────────────────────────────
+    const leaveRoom = useCallback((deleteData = false) => {
+        manualLeaveRef.current = true;
+        if (isHostRef.current) {
+            broadcast({ type: 'sys-room-closed' });
+        }
+        cleanupConnection(true);
+        if (deleteData) {
+            Storage.remove(hostIdRef.current);
+            historyRef.current = [];
+            messageIdsRef.current.clear();
+            blobUrlsRef.current.forEach(u => { try { URL.revokeObjectURL(u); } catch {} });
+            blobUrlsRef.current = [];
+            _setMessages([]);
+        }
+        setHasJoined(false);
+        hasJoinedRef.current = false;
+        setIsHost(false);
+        isHostRef.current = false;
+        setPeersInfo({});
+        updateStatus('Left room', 'info');
+    }, [broadcast, cleanupConnection, setPeersInfo, updateStatus]);
+
+    // ─── SEND TEXT ───────────────────────────────────────────────────────────
     const sendText = useCallback((e) => {
-        e.preventDefault();
+        if (e) e.preventDefault();
         const text = inputText.trim();
-        if (!text || !peerRef.current) return;
- 
+        if (!text) return;
+
+        // Read-only check
+        if (hostSettingsRef.current.readOnly && !isHostRef.current) {
+            alert('Host has set the room to read-only mode.');
+            return;
+        }
+
+        if (!peerRef.current || peerRef.current.destroyed) {
+            // Queue offline
+            const recipientId = activeChatRef.current === 'global' ? null : activeChatRef.current;
+            const data = {
+                id: uid(), type: 'text', content: text, timestamp: Date.now(),
+                peerId: myStableIdRef.current, senderName: usernameRef.current, recipientId,
+                queued: true
+            };
+            offlineQueueRef.current.push(data);
+            setQueuedCount(offlineQueueRef.current.length);
+            // Show locally
+            addMessage({
+                id: data.id, sender: 'me', type: 'text', content: text,
+                peerId: data.peerId, recipientId,
+                timestamp: new Date(data.timestamp), queued: true
+            });
+            setInputText('');
+            setShowEmojiPicker(false);
+            return;
+        }
+
         const recipientId = activeChatRef.current === 'global' ? null : activeChatRef.current;
         const data = {
-            type: 'text',
-            content: text,
-            timestamp: Date.now(),
-            peerId: peerRef.current.id,
-            senderName: usernameRef.current,
-            recipientId,
+            id: uid(),
+            type: 'text', content: text, timestamp: Date.now(),
+            peerId: peerRef.current.id, senderName: usernameRef.current, recipientId,
         };
- 
+
         if (isHostRef.current) {
-            if (recipientId) {
-                sendToPeer(recipientId, data);
-            } else {
-                historyRef.current.push(data);
-                broadcast(data);
-            }
+            if (recipientId) sendToPeer(recipientId, data);
+            else { historyRef.current.push(data); broadcast(data); }
         } else {
-            broadcast(data);  // client sends to host, host relays
+            broadcast(data);
         }
- 
+
         addMessage({
-            sender: 'me',
-            type: 'text',
-            content: text,
-            peerId: peerRef.current.id,
-            recipientId,
+            id: data.id, sender: 'me', type: 'text', content: text,
+            peerId: peerRef.current.id, recipientId,
             timestamp: new Date(data.timestamp),
         });
- 
+
         setInputText('');
-        _setShowEmojiPicker(false);
+        setShowEmojiPicker(false);
     }, [inputText, broadcast, sendToPeer, addMessage]);
- 
-    // helper to avoid stale closure on emoji picker
-    const _setShowEmojiPicker = setShowEmojiPicker;
- 
-    // ─── SEND FILE / VOICE ────────────────────────────────────────────────────
+
+    // ─── SEND FILE / VOICE ───────────────────────────────────────────────────
     const sendFileData = useCallback(async (file, msgType) => {
-        if (!peerRef.current) return;
+        if (!peerRef.current || peerRef.current.destroyed) {
+            alert('Not connected. File sending requires active connection.');
+            return;
+        }
+        if (hostSettingsRef.current.readOnly && !isHostRef.current) {
+            alert('Host has set the room to read-only mode.');
+            return;
+        }
+        if (msgType === 'file' && !hostSettingsRef.current.allowFiles) {
+            alert('Host has disabled file sharing.');
+            return;
+        }
+        if (msgType === 'voice' && !hostSettingsRef.current.allowVoice) {
+            alert('Host has disabled voice messages.');
+            return;
+        }
+
         try {
             const recipientId = activeChatRef.current === 'global' ? null : activeChatRef.current;
             const buf = await file.arrayBuffer();
             const data = {
+                id: uid(),
                 type: msgType,
                 fileName: file.name || 'voice_message.webm',
                 mimeType: file.type || 'audio/webm',
@@ -648,39 +1168,46 @@ const App = () => {
                 senderName: usernameRef.current,
                 recipientId,
             };
- 
+
             if (isHostRef.current) {
                 if (recipientId) sendToPeer(recipientId, data);
                 else { historyRef.current.push(data); broadcast(data); }
             } else {
                 broadcast(data);
             }
- 
+
             const url = URL.createObjectURL(file);
             addMessage({
+                id: data.id,
                 sender: 'me', type: msgType,
                 fileName: data.fileName, mimeType: file.type,
-                fileSize: file.size, url,
+                fileSize: file.size, url, fileBuffer: buf,
                 recipientId, peerId: data.peerId,
                 timestamp: new Date(data.timestamp),
             });
             if (fileInputRef.current) fileInputRef.current.value = '';
-            setSelectedFile(null);
-        } catch(err) {
+        } catch (err) {
             alert('Error sending file: ' + err.message);
         }
     }, [broadcast, sendToPeer, addMessage]);
- 
+
     const handleFileSelect = (e) => {
         const file = e.target.files[0];
         if (!file) return;
-        const MAX = isPro ? 5 * 1024 * 1024 * 1024 : 10 * 1024 * 1024;
-        if (file.size > MAX) { if (!isPro) setShowProModal(true); else alert('File too large.'); return; }
+        const limitMB = isPro ? 5120 : (hostSettings.maxFileMB || 10);
+        const MAX = limitMB * 1024 * 1024;
+        if (file.size > MAX) {
+            if (!isPro && limitMB <= 10) setShowProModal(true);
+            else alert(`File too large (max ${limitMB}MB).`);
+            if (fileInputRef.current) fileInputRef.current.value = '';
+            return;
+        }
         sendFileData(file, 'file');
     };
- 
+
     // ─── RECORDING ───────────────────────────────────────────────────────────
     const startRecording = async () => {
+        if (!hostSettings.allowVoice) { alert('Voice messages disabled by host.'); return; }
         try {
             const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
             const rec = new MediaRecorder(stream);
@@ -698,27 +1225,77 @@ const App = () => {
             rec.start();
             setIsRecording(true);
             let t = 0;
+            const max = hostSettings.voiceMaxSec || 30;
             recTimerRef.current = setInterval(() => {
                 t++;
                 setRecordingTime(t);
-                if (t >= 30) stopRecording();
+                if (t >= max) stopRecording();
             }, 1000);
-        } catch(e) { alert('Microphone access denied.'); }
+        } catch (e) { alert('Microphone access denied or unavailable.'); }
     };
- 
+
     const stopRecording = () => {
         if (mediaRecRef.current && mediaRecRef.current.state !== 'inactive')
             mediaRecRef.current.stop();
     };
- 
-    // ─── SIDEBAR / CHAT SWITCH ────────────────────────────────────────────────
+
+    const cancelRecording = () => {
+        if (mediaRecRef.current && mediaRecRef.current.state !== 'inactive') {
+            mediaRecRef.current.ondataavailable = null;
+            mediaRecRef.current.onstop = null;
+            try { mediaRecRef.current.stop(); } catch {}
+            const stream = mediaRecRef.current.stream;
+            if (stream) stream.getTracks().forEach(t => t.stop());
+        }
+        clearInterval(recTimerRef.current);
+        audioChunksRef.current = [];
+        setIsRecording(false);
+        setRecordingTime(0);
+    };
+
+    // ─── HOST SETTINGS BROADCAST ─────────────────────────────────────────────
+    const updateHostSetting = useCallback((patch) => {
+        if (!isHostRef.current) return;
+        setHostSettings(prev => {
+            const next = { ...prev, ...patch };
+            hostSettingsRef.current = next;
+            broadcast({ type: 'sys-settings-update', settings: next });
+            return next;
+        });
+    }, [broadcast]);
+
+    const kickUser = useCallback((peerId) => {
+        if (!isHostRef.current) return;
+        broadcast({ type: 'sys-kick', targetId: peerId });
+        const conn = connectionsRef.current.find(({ conn }) => conn.peer === peerId);
+        if (conn) setTimeout(() => { try { conn.conn.close(); } catch {} }, 800);
+    }, [broadcast]);
+
+    const clearChatForAll = useCallback(() => {
+        if (!isHostRef.current) return;
+        historyRef.current = [];
+        messageIdsRef.current.clear();
+        blobUrlsRef.current.forEach(u => { try { URL.revokeObjectURL(u); } catch {} });
+        blobUrlsRef.current = [];
+        _setMessages([]);
+        broadcast({ type: 'sys-clear-chat' });
+        Storage.remove(hostIdRef.current);
+    }, [broadcast]);
+
+    const closeRoom = useCallback(() => {
+        if (!isHostRef.current) return;
+        broadcast({ type: 'sys-room-closed' });
+        Storage.remove(hostIdRef.current);
+        leaveRoom(true);
+    }, [broadcast, leaveRoom]);
+
+    // ─── UI HELPERS ──────────────────────────────────────────────────────────
     const switchChat = (id) => {
         setActiveChat(id);
         setUnreadCounts(prev => ({ ...prev, [id]: 0 }));
         setShowSidebar(false);
     };
- 
-    // ─── PRO MODAL HANDLERS ───────────────────────────────────────────────────
+
     const handlePaymentSubmit = async (e) => {
         e.preventDefault();
         setFormStatus('sending');
@@ -728,7 +1305,7 @@ const App = () => {
             if (res.ok) { setFormStatus('success'); e.target.reset(); } else setFormStatus('error');
         } catch { setFormStatus('error'); }
     };
- 
+
     const handleLicenseSubmit = (e) => {
         e.preventDefault();
         const key = e.target.licenseKey.value.trim();
@@ -736,32 +1313,35 @@ const App = () => {
             setIsPro(true); setShowProModal(false); alert('PRO Unlocked! 5GB Transfers Active.');
         } else { alert('Invalid License Key.'); }
     };
- 
-    // ─── VISIBLE MESSAGES FILTER ──────────────────────────────────────────────
-    const myId = peer?.id;
+
+    // ─── VISIBLE MESSAGES ────────────────────────────────────────────────────
+    const myId = peerRef.current?.id;
     const visibleMessages = messages.filter(msg => {
         if (msg.type === 'system') return activeChat === 'global';
         if (activeChat === 'global') return !msg.recipientId;
-        // Private conversation with `activeChat`
         return (msg.sender === 'me' && msg.recipientId === activeChat) ||
                (msg.sender === 'them' && msg.peerId === activeChat && msg.recipientId === myId);
     });
- 
-    // ─── RENDER: JOIN SCREEN ─────────────────────────────────────────────────
+
+    // Status color
+    const statusColor = {
+        ok: 'text-green-500',
+        warn: 'text-amber-500',
+        error: 'text-red-500',
+        info: 'text-blue-500'
+    }[statusType] || 'text-slate-500';
+
+    // ─── RENDER: JOIN SCREEN ────────────────────────────────────────────────
     if (!hasJoined) {
         const lobbyReady = networkReady && lobbyCount !== null;
         const isRoomActive = lobbyCount > 0;
- 
+
         return html`
         <div className="app-container w-full h-full sm:rounded-[2rem] flex flex-col items-center justify-center relative overflow-auto bg-gradient-to-br from-slate-50 via-white to-blue-50">
-            
-            <!-- Decorative blobs -->
             <div className="absolute top-0 right-0 w-72 h-72 bg-blue-100 rounded-full filter blur-3xl opacity-40 -translate-y-1/2 translate-x-1/2 pointer-events-none"></div>
             <div className="absolute bottom-0 left-0 w-64 h-64 bg-orange-100 rounded-full filter blur-3xl opacity-40 translate-y-1/2 -translate-x-1/2 pointer-events-none"></div>
-            
+
             <div className="join-card w-full max-w-sm mx-auto p-8 relative z-10 animate-slide-up">
-                
-                <!-- Icon + Title -->
                 <div className="flex justify-center mb-5">
                     <div className="relative">
                         <div className="w-20 h-20 bg-blue-600 text-white rounded-2xl flex items-center justify-center shadow-lg shadow-blue-200">
@@ -774,12 +1354,11 @@ const App = () => {
                         ` : ''}
                     </div>
                 </div>
-                
+
                 <h2 className="text-2xl font-black text-slate-800 text-center mb-1">LAN Chat Room</h2>
                 <p className="text-sm text-slate-500 text-center mb-6">Same WiFi network · No internet needed</p>
- 
-                <!-- Room Status Badge -->
-                <div className=${`mb-6 rounded-2xl p-3 text-center transition-all ${lobbyReady ? (isRoomActive ? 'bg-green-50 border border-green-200' : 'bg-blue-50 border border-blue-200') : 'bg-slate-50 border border-slate-200'}`}>
+
+                <div className=${`mb-4 rounded-2xl p-3 text-center transition-all ${lobbyReady ? (isRoomActive ? 'bg-green-50 border border-green-200' : 'bg-blue-50 border border-blue-200') : 'bg-slate-50 border border-slate-200'}`}>
                     ${!networkReady ? html`
                         <p className="text-xs font-bold text-slate-500">
                             <span className="typing-dots inline-flex gap-1 mr-2">
@@ -810,11 +1389,17 @@ const App = () => {
                         </p>
                     `}
                 </div>
- 
-                <!-- Username Field -->
-                <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">
-                    Your Display Name
-                </label>
+
+                ${restoredFromCache ? html`
+                <div className="mb-4 rounded-xl p-2.5 bg-amber-50 border border-amber-200 text-center">
+                    <p className="text-[11px] font-bold text-amber-700">
+                        <i className="fas fa-database mr-1.5"></i>
+                        ${messages.length} cached messages will be restored
+                    </p>
+                </div>
+                ` : ''}
+
+                <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Your Display Name</label>
                 <div className="relative mb-2">
                     <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none">
                         <i className="fas fa-user text-slate-400 text-sm"></i>
@@ -823,14 +1408,14 @@ const App = () => {
                         type="text"
                         value=${username}
                         onChange=${e => setUsername(e.target.value)}
+                        onKeyDown=${e => { if (e.key === 'Enter' && username.trim()) joinRoom(); }}
                         className="w-full bg-slate-50 border border-slate-200 py-3.5 pl-10 pr-4 rounded-2xl text-base font-bold text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all"
                         placeholder="Your unique name"
                         maxLength="24"
                     />
                 </div>
                 <p className="text-[10px] text-slate-400 mb-5 ml-1">Saved automatically for future visits</p>
- 
-                <!-- Join Button -->
+
                 <button
                     onClick=${joinRoom}
                     disabled=${!networkReady || !username.trim()}
@@ -839,31 +1424,29 @@ const App = () => {
                     <i className="fas fa-sign-in-alt"></i>
                     Join Chat Room
                 </button>
-                
+
                 ${connError ? html`<p className="text-xs text-red-500 text-center mt-3">${connError}</p>` : ''}
-                
+
                 <p className="text-[10px] text-slate-400 text-center mt-4">
-                    <i className="fas fa-lock mr-1"></i>Messages are peer-to-peer · Nothing stored on servers
+                    <i className="fas fa-lock mr-1"></i>P2P encrypted · Cached locally for ${hostSettings.retentionMin}+ min offline
                 </p>
             </div>
         </div>
         `;
     }
- 
+
     // ─── RENDER: CHAT ROOM ───────────────────────────────────────────────────
     const otherPeers = Object.entries(peersInfo).filter(([pid]) => pid !== myId);
     const totalUnread = Object.values(unreadCounts).reduce((a, b) => a + b, 0) - (unreadCounts[activeChat] || 0);
- 
+
     return html`
     <div className="app-container w-full h-full sm:rounded-[2rem] flex flex-col relative animate-fade">
-        
-        <!-- ── HEADER ── -->
+
+        <!-- HEADER -->
         <header className="bg-white border-b border-slate-100 px-4 py-3 flex justify-between items-center shrink-0 z-20 shadow-sm">
             <div className="flex items-center gap-3 min-w-0">
-                <button
-                    onClick=${() => setShowSidebar(!showSidebar)}
-                    className="md:hidden w-9 h-9 bg-slate-100 rounded-lg flex items-center justify-center text-slate-600 relative shrink-0"
-                >
+                <button onClick=${() => setShowSidebar(!showSidebar)}
+                    className="md:hidden w-9 h-9 bg-slate-100 rounded-lg flex items-center justify-center text-slate-600 relative shrink-0">
                     <i className="fas fa-bars text-sm"></i>
                     ${totalUnread > 0 ? html`<span className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full text-white text-[8px] font-black flex items-center justify-center">${totalUnread > 9 ? '9+' : totalUnread}</span>` : ''}
                 </button>
@@ -877,47 +1460,59 @@ const App = () => {
                             <i className="fas fa-user text-blue-500 text-[8px]"></i>${onlineCount} online
                         </span>
                         ${isHost ? html`<span className="text-[9px] font-black bg-orange-100 text-orange-700 px-1.5 py-0.5 rounded hidden sm:inline">HOST</span>` : ''}
+                        ${hostSettings.roomLocked ? html`<span className="text-[9px] font-black bg-red-100 text-red-700 px-1.5 py-0.5 rounded"><i className="fas fa-lock"></i> LOCKED</span>` : ''}
                     </div>
-                    <p className="text-[10px] font-bold uppercase tracking-wider ${connError ? 'text-red-500' : 'text-green-500'} truncate">
+                    <p className=${`text-[10px] font-bold uppercase tracking-wider ${statusColor} truncate`}>
                         <i className="fas fa-circle text-[7px] mr-1 status-dot"></i>${connError || status}
+                        ${queuedCount > 0 ? html` · <span className="text-amber-600">${queuedCount} queued</span>` : ''}
                     </p>
                 </div>
             </div>
- 
-            <div className="flex items-center gap-2 shrink-0">
-                <span className="text-xs font-bold text-slate-500 hidden md:block truncate max-w-[120px]">
-                    <i className="far fa-user-circle mr-1"></i>${username}
-                </span>
-                <button
-                    onClick=${() => setShowProModal(true)}
-                    className="bg-slate-900 text-[#ffd1c4] hover:text-white px-3 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-wider flex items-center gap-1.5 transition-colors shadow-sm"
-                >
+
+            <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
+                ${!isOnline || statusType === 'error' ? html`
+                <button onClick=${manualRetry} title="Retry connection"
+                    className="bg-amber-100 hover:bg-amber-200 text-amber-700 px-2.5 py-1.5 rounded-xl text-[10px] font-black transition-colors flex items-center gap-1">
+                    <i className="fas fa-sync-alt"></i><span className="hidden sm:inline">Retry</span>
+                </button>` : ''}
+                ${isHost ? html`
+                <button onClick=${() => setShowSettings(true)} title="Host settings"
+                    className="bg-slate-100 hover:bg-slate-200 text-slate-700 w-9 h-9 rounded-xl flex items-center justify-center transition-colors">
+                    <i className="fas fa-cog text-sm"></i>
+                </button>` : ''}
+                <button onClick=${() => setShowConfirm({
+                    title: 'Leave Room',
+                    message: isHost ? 'You are the host. Leaving will end the room for everyone. Delete cached messages?' : 'Leave this chat room? Cached messages will be kept for ' + hostSettings.retentionMin + ' min.',
+                    showDeleteOption: true,
+                    onConfirm: (deleteData) => { leaveRoom(deleteData); setShowConfirm(null); }
+                })} title="Leave room"
+                    className="bg-slate-100 hover:bg-red-100 text-slate-600 hover:text-red-600 w-9 h-9 rounded-xl flex items-center justify-center transition-colors">
+                    <i className="fas fa-sign-out-alt text-sm"></i>
+                </button>
+                <button onClick=${() => setShowProModal(true)}
+                    className="bg-slate-900 text-[#ffd1c4] hover:text-white px-2.5 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-wider flex items-center gap-1 transition-colors shadow-sm">
                     <i className="fas fa-crown text-yellow-500 text-xs"></i>
                     <span className="hidden sm:inline">${isPro ? 'PRO' : '5GB'}</span>
                 </button>
             </div>
         </header>
- 
-        <!-- ── BODY ── -->
+
+        <!-- BODY -->
         <div className="flex flex-1 overflow-hidden relative">
- 
-            <!-- ── SIDEBAR ── -->
+
+            <!-- SIDEBAR -->
             <aside className=${`absolute md:relative z-30 h-full w-64 bg-white border-r border-slate-100 flex flex-col transition-transform duration-300 shadow-xl md:shadow-none ${showSidebar ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}`}>
-                
+
                 <div className="px-4 py-3 bg-slate-50 border-b border-slate-100 flex justify-between items-center">
                     <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Channels</span>
                     <button onClick=${() => setShowSidebar(false)} className="md:hidden text-slate-400 hover:text-slate-600">
                         <i className="fas fa-times text-sm"></i>
                     </button>
                 </div>
- 
+
                 <div className="flex-1 overflow-y-auto chat-scroll py-1">
-                    
-                    <!-- Global Chat -->
-                    <button
-                        onClick=${() => switchChat('global')}
-                        className=${`w-full px-4 py-3 flex items-center justify-between text-left sidebar-item ${activeChat === 'global' ? 'active' : 'hover:bg-slate-50'}`}
-                    >
+                    <button onClick=${() => switchChat('global')}
+                        className=${`w-full px-4 py-3 flex items-center justify-between text-left sidebar-item ${activeChat === 'global' ? 'active' : 'hover:bg-slate-50'}`}>
                         <span className="flex items-center gap-2 font-bold text-slate-800 text-sm">
                             <span className="w-7 h-7 bg-blue-100 text-blue-600 rounded-lg flex items-center justify-center shrink-0">
                                 <i className="fas fa-globe text-xs"></i>
@@ -928,113 +1523,107 @@ const App = () => {
                             <span className="bg-red-500 text-white text-[9px] font-black px-1.5 py-0.5 rounded-full min-w-[18px] text-center">${unreadCounts['global']}</span>
                         ` : ''}
                     </button>
- 
-                    <!-- Divider -->
+
                     ${otherPeers.length > 0 ? html`
                     <div className="px-4 py-2">
                         <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Direct Messages (${otherPeers.length})</span>
-                    </div>
-                    ` : ''}
- 
-                    <!-- Per-user DM buttons -->
+                    </div>` : ''}
+
                     ${otherPeers.map(([pid, pname]) => html`
-                    <button
-                        key=${pid}
-                        onClick=${() => switchChat(pid)}
-                        className=${`w-full px-4 py-3 flex items-center justify-between text-left sidebar-item ${activeChat === pid ? 'active' : 'hover:bg-slate-50'}`}
-                    >
-                        <span className="flex items-center gap-2 min-w-0">
-                            <span className="w-7 h-7 bg-slate-200 text-slate-600 rounded-lg flex items-center justify-center shrink-0 font-black text-xs uppercase">
-                                ${pname.charAt(0)}
+                    <div key=${pid} className="flex items-center group">
+                        <button onClick=${() => switchChat(pid)}
+                            className=${`flex-1 px-4 py-3 flex items-center justify-between text-left sidebar-item ${activeChat === pid ? 'active' : 'hover:bg-slate-50'}`}>
+                            <span className="flex items-center gap-2 min-w-0">
+                                <span className="w-7 h-7 bg-slate-200 text-slate-600 rounded-lg flex items-center justify-center shrink-0 font-black text-xs uppercase">${pname.charAt(0)}</span>
+                                <span className="text-sm font-medium text-slate-700 truncate">${pname}</span>
                             </span>
-                            <span className="text-sm font-medium text-slate-700 truncate">${pname}</span>
-                        </span>
-                        ${(unreadCounts[pid] || 0) > 0 ? html`
-                            <span className="bg-red-500 text-white text-[9px] font-black px-1.5 py-0.5 rounded-full min-w-[18px] text-center ml-1 shrink-0">${unreadCounts[pid]}</span>
-                        ` : html`<i className="fas fa-lock text-[9px] text-slate-300 shrink-0"></i>`}
-                    </button>
+                            ${(unreadCounts[pid] || 0) > 0 ? html`
+                                <span className="bg-red-500 text-white text-[9px] font-black px-1.5 py-0.5 rounded-full min-w-[18px] text-center ml-1 shrink-0">${unreadCounts[pid]}</span>
+                            ` : html`<i className="fas fa-lock text-[9px] text-slate-300 shrink-0"></i>`}
+                        </button>
+                        ${isHost ? html`
+                        <button onClick=${() => setShowConfirm({
+                            title: 'Remove User', message: `Kick ${pname} from the room?`,
+                            onConfirm: () => { kickUser(pid); setShowConfirm(null); }
+                        })}
+                            title="Kick user"
+                            className="opacity-0 group-hover:opacity-100 text-red-400 hover:text-red-600 px-2 transition-opacity">
+                            <i className="fas fa-user-times text-xs"></i>
+                        </button>` : ''}
+                    </div>
                     `)}
- 
-                    ${otherPeers.length === 0 && html`
+
+                    ${otherPeers.length === 0 ? html`
                     <div className="px-4 py-6 text-center">
                         <div className="w-10 h-10 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-2">
                             <i className="fas fa-user-plus text-slate-400"></i>
                         </div>
                         <p className="text-xs font-bold text-slate-400">No one else yet</p>
                         <p className="text-[10px] text-slate-300 mt-1">Share this URL with teammates</p>
-                    </div>
-                    `}
+                    </div>` : ''}
                 </div>
- 
-                <!-- Your identity footer -->
+
                 <div className="px-4 py-3 border-t border-slate-100 bg-slate-50">
                     <div className="flex items-center gap-2">
-                        <div className="w-7 h-7 bg-blue-600 text-white rounded-lg flex items-center justify-center shrink-0 text-xs font-black">
-                            ${username.charAt(0).toUpperCase()}
-                        </div>
-                        <div className="min-w-0">
+                        <div className="w-7 h-7 bg-blue-600 text-white rounded-lg flex items-center justify-center shrink-0 text-xs font-black">${username.charAt(0).toUpperCase()}</div>
+                        <div className="min-w-0 flex-1">
                             <p className="text-xs font-bold text-slate-700 truncate">${username}</p>
-                            <p className="text-[9px] text-green-500 font-bold">${isHost ? '● Hosting' : '● Connected'}</p>
+                            <p className=${`text-[9px] ${statusColor} font-bold`}>${isHost ? '● Hosting' : (statusType === 'ok' ? '● Connected' : '● ' + status.split('·')[0].trim())}</p>
                         </div>
                     </div>
                 </div>
             </aside>
- 
-            <!-- Sidebar overlay (mobile) -->
-            ${showSidebar ? html`
-            <div onClick=${() => setShowSidebar(false)} className="md:hidden absolute inset-0 bg-slate-900/30 z-20"></div>
-            ` : ''}
- 
-            <!-- ── MAIN CHAT ── -->
+
+            ${showSidebar ? html`<div onClick=${() => setShowSidebar(false)} className="md:hidden absolute inset-0 bg-slate-900/30 z-20"></div>` : ''}
+
+            <!-- MAIN CHAT -->
             <main className="flex-1 flex flex-col overflow-hidden relative bg-[#f8fafc] bg-[radial-gradient(#e2e8f0_1px,transparent_1px)] [background-size:20px_20px]">
- 
-                <!-- Active chat label -->
+
                 <div className="bg-white/90 backdrop-blur-sm px-4 py-2 border-b border-slate-200 text-xs font-bold text-slate-600 text-center shadow-sm">
                     ${activeChat === 'global'
                         ? html`<i className="fas fa-globe text-blue-500 mr-1.5"></i>Global Chat · Everyone can see this`
-                        : html`<i className="fas fa-lock text-slate-400 mr-1.5"></i>Private message with <span className="text-blue-600">${peersInfo[activeChat] || 'User'}</span>`
+                        : html`<i className="fas fa-lock text-slate-400 mr-1.5"></i>Private with <span className="text-blue-600">${peersInfo[activeChat] || 'User'}</span>`
                     }
                 </div>
- 
-                <!-- Messages -->
+
+                ${!isOnline ? html`
+                <div className="bg-amber-50 border-b border-amber-200 px-4 py-2 text-[11px] font-bold text-amber-700 text-center">
+                    <i className="fas fa-wifi mr-1.5"></i>Offline · Messages will be cached and sent when reconnected
+                </div>` : ''}
+
                 <div className="flex-1 overflow-y-auto p-4 sm:p-5 chat-scroll space-y-4" ref=${chatRef}>
-                    
                     <div className="text-center">
                         <span className="text-[9px] font-black text-slate-400 bg-white border border-slate-200 px-3 py-1.5 rounded-full shadow-sm uppercase tracking-widest">
-                            End-to-end encrypted · ${new Date().toLocaleDateString()}
+                            P2P Encrypted · ${new Date().toLocaleDateString()}
                         </span>
                     </div>
- 
+
                     ${visibleMessages.length === 0 ? html`
                     <div className="flex flex-col items-center justify-center py-12 text-center">
                         <div className="w-12 h-12 bg-slate-100 rounded-2xl flex items-center justify-center mb-3">
-                            <i className="fas ${activeChat === 'global' ? 'fa-comments' : 'fa-lock'} text-slate-400 text-lg"></i>
+                            <i className=${`fas ${activeChat === 'global' ? 'fa-comments' : 'fa-lock'} text-slate-400 text-lg`}></i>
                         </div>
                         <p className="text-sm font-bold text-slate-400">
                             ${activeChat === 'global' ? 'No messages yet · Say hello!' : `Start a private chat with ${peersInfo[activeChat] || 'this user'}`}
                         </p>
-                    </div>
-                    ` : ''}
- 
+                    </div>` : ''}
+
                     ${visibleMessages.map((msg, i) => {
-                        // System message
                         if (msg.type === 'system') return html`
-                        <div key=${i} className="text-center animate-fade">
+                        <div key=${msg.id || i} className="text-center animate-fade">
                             <span className="text-[9px] font-bold text-slate-500 bg-slate-100 px-3 py-1 rounded-full">${msg.content}</span>
-                        </div>
-                        `;
- 
+                        </div>`;
+
                         const isMe = msg.sender === 'me';
                         const isImg = msg.mimeType?.startsWith('image/');
                         const isVid = msg.mimeType?.startsWith('video/');
- 
+
                         return html`
-                        <div key=${i} className=${`flex flex-col w-full ${isMe ? 'items-end' : 'items-start'} animate-slide-up`}>
+                        <div key=${msg.id || i} className=${`flex flex-col w-full ${isMe ? 'items-end' : 'items-start'} animate-slide-up`}>
                             ${!isMe && activeChat === 'global' ? html`
-                                <span className="text-[10px] font-bold text-slate-500 ml-3 mb-1">${msg.senderName}</span>
-                            ` : ''}
-                            
-                            <div className=${`msg-bubble p-3 sm:p-3.5 shadow-sm ${isMe ? 'msg-mine' : 'msg-theirs'}`}>
+                                <span className="text-[10px] font-bold text-slate-500 ml-3 mb-1">${msg.senderName}</span>` : ''}
+
+                            <div className=${`msg-bubble p-3 sm:p-3.5 shadow-sm ${isMe ? 'msg-mine' : 'msg-theirs'} ${msg.queued ? 'opacity-60' : ''}`}>
                                 ${msg.type === 'text' ? html`
                                     <p className="whitespace-pre-wrap break-words text-sm font-medium leading-relaxed">${msg.content}</p>
                                 ` : msg.type === 'voice' ? html`
@@ -1046,8 +1635,8 @@ const App = () => {
                                     </div>
                                 ` : html`
                                     <div className="flex flex-col gap-2">
-                                        ${isImg ? html`<img src=${msg.url} className="max-w-full sm:max-w-xs rounded-xl object-cover shadow-sm" />` : ''}
-                                        ${isVid ? html`<video src=${msg.url} controls className="max-w-full sm:max-w-xs rounded-xl shadow-sm"></video>` : ''}
+                                        ${isImg && msg.url ? html`<img src=${msg.url} className="max-w-full sm:max-w-xs rounded-xl object-cover shadow-sm" />` : ''}
+                                        ${isVid && msg.url ? html`<video src=${msg.url} controls className="max-w-full sm:max-w-xs rounded-xl shadow-sm"></video>` : ''}
                                         <div className="flex items-center gap-2 sm:gap-3">
                                             <div className=${`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 ${isMe ? 'bg-white/20' : 'bg-white text-blue-500 shadow-sm'}`}>
                                                 <i className="fas fa-file-alt"></i>
@@ -1056,22 +1645,23 @@ const App = () => {
                                                 <p className="text-sm font-bold truncate">${msg.fileName}</p>
                                                 <p className="text-xs opacity-70">${formatBytes(msg.fileSize)}</p>
                                             </div>
+                                            ${msg.url ? html`
                                             <a href=${msg.url} download=${msg.fileName}
                                                 className=${`w-8 h-8 rounded-full flex items-center justify-center shrink-0 transition-colors ${isMe ? 'bg-white text-[var(--primary)] hover:bg-slate-100' : 'bg-blue-500 hover:bg-blue-600 text-white'}`}
                                                 title="Download">
                                                 <i className="fas fa-download text-xs"></i>
-                                            </a>
+                                            </a>` : ''}
                                         </div>
                                     </div>
                                 `}
                             </div>
-                            <span className="text-[9px] text-slate-400 font-bold mt-1 px-2 uppercase">${timeStr(msg.timestamp)}</span>
-                        </div>
-                        `;
+                            <span className="text-[9px] text-slate-400 font-bold mt-1 px-2 uppercase">
+                                ${timeStr(msg.timestamp)}${msg.queued ? ' · queued' : ''}
+                            </span>
+                        </div>`;
                     })}
                 </div>
- 
-                <!-- Emoji Picker -->
+
                 ${showEmojiPicker ? html`
                 <div className="absolute bottom-[76px] left-3 bg-white border border-slate-200 rounded-2xl shadow-2xl p-3 z-40 w-72 animate-fade">
                     <div className="emoji-grid chat-scroll pr-1">
@@ -1079,59 +1669,200 @@ const App = () => {
                         <button key=${em} onClick=${() => setInputText(p => p + em)} className="emoji-btn">${em}</button>
                         `)}
                     </div>
-                </div>
-                ` : ''}
- 
-                <!-- Input Bar -->
+                </div>` : ''}
+
                 <div className="bg-white px-3 py-3 border-t border-slate-200 shrink-0 z-20 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.04)]">
                     ${isRecording ? html`
-                    <div className="flex items-center gap-3 bg-red-50 border border-red-200 rounded-2xl p-2 pl-4">
+                    <div className="flex items-center gap-2 bg-red-50 border border-red-200 rounded-2xl p-2 pl-4">
                         <div className="w-3 h-3 rounded-full bg-red-500 recording-pulse shrink-0"></div>
-                        <span className="text-sm font-bold text-red-600 flex-1">Recording… ${formatTime(recordingTime)} / 00:30</span>
+                        <span className="text-sm font-bold text-red-600 flex-1">Recording… ${formatTime(recordingTime)} / ${formatTime(hostSettings.voiceMaxSec || 30)}</span>
+                        <button onClick=${cancelRecording} className="bg-slate-200 hover:bg-slate-300 text-slate-700 px-3 py-2 rounded-xl text-sm font-bold transition-colors shrink-0">
+                            <i className="fas fa-times"></i>
+                        </button>
                         <button onClick=${stopRecording} className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-xl text-sm font-bold transition-colors shrink-0">
                             <i className="fas fa-paper-plane mr-1.5"></i>Send
                         </button>
-                    </div>
-                    ` : html`
+                    </div>` : html`
                     <form onSubmit=${sendText} className="flex items-center gap-1.5 sm:gap-2 bg-slate-50 border border-slate-200 rounded-2xl p-1.5 focus-within:ring-2 focus-within:ring-blue-500/30 focus-within:bg-white transition-all">
                         <button type="button" onClick=${() => setShowEmojiPicker(p => !p)}
                             className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors shrink-0">
                             <i className="far fa-smile text-lg"></i>
                         </button>
                         <input type="file" ref=${fileInputRef} onChange=${handleFileSelect} className="hidden" />
+                        ${hostSettings.allowFiles ? html`
                         <button type="button" onClick=${() => fileInputRef.current?.click()}
                             className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center text-slate-400 hover:text-blue-500 hover:bg-blue-50 transition-colors shrink-0" title="Attach file">
                             <i className="fas fa-paperclip"></i>
-                        </button>
-                        <input
-                            type="text"
-                            placeholder=${activeChat === 'global' ? 'Message everyone…' : `Message ${peersInfo[activeChat] || 'user'}…`}
+                        </button>` : ''}
+                        <input type="text"
+                            placeholder=${hostSettings.readOnly && !isHost ? 'Read-only mode' : (activeChat === 'global' ? 'Message everyone…' : `Message ${peersInfo[activeChat] || 'user'}…`)}
                             value=${inputText}
                             onChange=${e => setInputText(e.target.value)}
                             onFocus=${() => setShowEmojiPicker(false)}
-                            className="flex-1 bg-transparent py-2.5 px-1 text-sm font-medium text-slate-800 outline-none min-w-0"
-                        />
+                            disabled=${hostSettings.readOnly && !isHost}
+                            className="flex-1 bg-transparent py-2.5 px-1 text-sm font-medium text-slate-800 outline-none min-w-0 disabled:opacity-50" />
                         ${inputText.trim() ? html`
                         <button type="submit"
                             className="w-9 h-9 sm:w-10 sm:h-10 bg-blue-600 hover:bg-blue-700 text-white rounded-xl flex items-center justify-center transition-all shadow-sm shrink-0 active:scale-95">
                             <i className="fas fa-paper-plane text-sm"></i>
                         </button>
-                        ` : html`
+                        ` : (hostSettings.allowVoice && !(hostSettings.readOnly && !isHost)) ? html`
                         <button type="button" onClick=${startRecording}
                             className="w-9 h-9 sm:w-10 sm:h-10 bg-slate-200 hover:bg-red-100 hover:text-red-500 text-slate-600 rounded-xl flex items-center justify-center transition-all shrink-0">
                             <i className="fas fa-microphone text-sm"></i>
-                        </button>
-                        `}
-                    </form>
-                    `}
+                        </button>` : ''}
+                    </form>`}
                     <p className="text-center mt-1.5 text-[9px] font-bold text-slate-400">
-                        <i className="fas fa-info-circle mr-1"></i>Max: ${isPro ? '5GB' : '10MB'} · Voice: 30s · P2P encrypted
+                        <i className="fas fa-info-circle mr-1"></i>Max: ${isPro ? '5GB' : (hostSettings.maxFileMB || 10) + 'MB'} · Voice: ${hostSettings.voiceMaxSec || 30}s · Cached ${hostSettings.retentionMin}min
                     </p>
                 </div>
             </main>
         </div>
- 
-        <!-- ── PRO MODAL ── -->
+
+        <!-- HOST SETTINGS MODAL -->
+        ${showSettings && isHost ? html`
+        <div className="fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-fade overflow-y-auto">
+            <div className="bg-white rounded-[2rem] shadow-2xl max-w-lg w-full overflow-hidden my-8">
+                <div className="bg-slate-900 p-5 flex justify-between items-center text-white">
+                    <h3 className="text-lg font-black flex items-center gap-2">
+                        <i className="fas fa-cog text-orange-400"></i> Host Settings
+                    </h3>
+                    <button onClick=${() => setShowSettings(false)} className="text-slate-400 hover:text-white">
+                        <i className="fas fa-times text-xl"></i>
+                    </button>
+                </div>
+                <div className="p-6 space-y-5 max-h-[70vh] overflow-y-auto chat-scroll">
+
+                    <div>
+                        <label className="text-xs font-black text-slate-700 uppercase tracking-wider">Max File Size (MB)</label>
+                        <input type="range" min="1" max=${isPro ? 5120 : 100} step="1"
+                            value=${hostSettings.maxFileMB}
+                            onChange=${e => updateHostSetting({ maxFileMB: parseInt(e.target.value) })}
+                            className="w-full mt-2 accent-blue-600" />
+                        <p className="text-sm font-bold text-slate-600 mt-1">${hostSettings.maxFileMB} MB</p>
+                    </div>
+
+                    <div>
+                        <label className="text-xs font-black text-slate-700 uppercase tracking-wider">Voice Note Max (seconds)</label>
+                        <input type="range" min="10" max="300" step="5"
+                            value=${hostSettings.voiceMaxSec}
+                            onChange=${e => updateHostSetting({ voiceMaxSec: parseInt(e.target.value) })}
+                            className="w-full mt-2 accent-blue-600" />
+                        <p className="text-sm font-bold text-slate-600 mt-1">${hostSettings.voiceMaxSec}s</p>
+                    </div>
+
+                    <div>
+                        <label className="text-xs font-black text-slate-700 uppercase tracking-wider">Local Cache Retention</label>
+                        <select value=${hostSettings.retentionMin}
+                            onChange=${e => updateHostSetting({ retentionMin: parseInt(e.target.value) })}
+                            className="w-full mt-2 bg-slate-50 border border-slate-200 py-2.5 px-4 rounded-xl text-sm font-bold focus:ring-2 focus:ring-blue-500/30 outline-none">
+                            <option value="30">30 minutes</option>
+                            <option value="60">1 hour</option>
+                            <option value="120">2 hours</option>
+                            <option value="360">6 hours</option>
+                            <option value="720">12 hours</option>
+                            <option value="1440">24 hours</option>
+                        </select>
+                        <p className="text-[11px] text-slate-500 mt-1">Messages kept in browser even if WiFi drops · auto-resumes</p>
+                    </div>
+
+                    <div className="space-y-3 pt-2 border-t border-slate-100">
+                        <label className="flex items-center justify-between">
+                            <div>
+                                <p className="text-sm font-bold text-slate-800"><i className="fas fa-lock mr-2 text-red-500"></i>Lock Room</p>
+                                <p className="text-[11px] text-slate-500">Prevent new joiners</p>
+                            </div>
+                            <input type="checkbox" checked=${hostSettings.roomLocked}
+                                onChange=${e => updateHostSetting({ roomLocked: e.target.checked })}
+                                className="w-5 h-5 accent-blue-600" />
+                        </label>
+
+                        <label className="flex items-center justify-between">
+                            <div>
+                                <p className="text-sm font-bold text-slate-800"><i className="fas fa-volume-mute mr-2 text-amber-500"></i>Read-Only</p>
+                                <p className="text-[11px] text-slate-500">Only host can send messages</p>
+                            </div>
+                            <input type="checkbox" checked=${hostSettings.readOnly}
+                                onChange=${e => updateHostSetting({ readOnly: e.target.checked })}
+                                className="w-5 h-5 accent-blue-600" />
+                        </label>
+
+                        <label className="flex items-center justify-between">
+                            <div>
+                                <p className="text-sm font-bold text-slate-800"><i className="fas fa-paperclip mr-2 text-blue-500"></i>Allow Files</p>
+                            </div>
+                            <input type="checkbox" checked=${hostSettings.allowFiles}
+                                onChange=${e => updateHostSetting({ allowFiles: e.target.checked })}
+                                className="w-5 h-5 accent-blue-600" />
+                        </label>
+
+                        <label className="flex items-center justify-between">
+                            <div>
+                                <p className="text-sm font-bold text-slate-800"><i className="fas fa-microphone mr-2 text-purple-500"></i>Allow Voice</p>
+                            </div>
+                            <input type="checkbox" checked=${hostSettings.allowVoice}
+                                onChange=${e => updateHostSetting({ allowVoice: e.target.checked })}
+                                className="w-5 h-5 accent-blue-600" />
+                        </label>
+                    </div>
+
+                    <div className="pt-4 border-t border-slate-100 space-y-2">
+                        <button onClick=${() => setShowConfirm({
+                            title: 'Clear Chat for Everyone',
+                            message: 'This will permanently delete all messages for all users. Cannot be undone.',
+                            onConfirm: () => { clearChatForAll(); setShowConfirm(null); setShowSettings(false); }
+                        })}
+                            className="w-full bg-amber-50 hover:bg-amber-100 border border-amber-200 text-amber-700 py-2.5 rounded-xl text-sm font-bold transition-colors">
+                            <i className="fas fa-broom mr-2"></i>Clear Chat for Everyone
+                        </button>
+                        <button onClick=${() => setShowConfirm({
+                            title: 'Close Room Permanently',
+                            message: 'This will disconnect everyone and delete the chat history. Cannot be undone.',
+                            onConfirm: () => { closeRoom(); setShowConfirm(null); setShowSettings(false); }
+                        })}
+                            className="w-full bg-red-50 hover:bg-red-100 border border-red-200 text-red-700 py-2.5 rounded-xl text-sm font-bold transition-colors">
+                            <i className="fas fa-times-circle mr-2"></i>Close Room & Delete Data
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>` : ''}
+
+        <!-- CONFIRM DIALOG -->
+        ${showConfirm ? html`
+        <div className="fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-fade">
+            <div className="bg-white rounded-2xl shadow-2xl max-w-sm w-full overflow-hidden animate-slide-up">
+                <div className="p-6">
+                    <div className="w-12 h-12 bg-amber-100 text-amber-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i className="fas fa-exclamation-triangle text-xl"></i>
+                    </div>
+                    <h3 className="text-lg font-black text-slate-800 text-center mb-2">${showConfirm.title}</h3>
+                    <p className="text-sm text-slate-600 text-center mb-5">${showConfirm.message}</p>
+                    <div className="flex gap-2">
+                        <button onClick=${() => setShowConfirm(null)}
+                            className="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 py-2.5 rounded-xl text-sm font-bold transition-colors">
+                            Cancel
+                        </button>
+                        ${showConfirm.showDeleteOption ? html`
+                        <button onClick=${() => showConfirm.onConfirm(true)}
+                            className="flex-1 bg-red-600 hover:bg-red-700 text-white py-2.5 rounded-xl text-sm font-bold transition-colors">
+                            Delete & Leave
+                        </button>
+                        <button onClick=${() => showConfirm.onConfirm(false)}
+                            className="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-2.5 rounded-xl text-sm font-bold transition-colors">
+                            Keep & Leave
+                        </button>
+                        ` : html`
+                        <button onClick=${() => showConfirm.onConfirm()}
+                            className="flex-1 bg-red-600 hover:bg-red-700 text-white py-2.5 rounded-xl text-sm font-bold transition-colors">
+                            Confirm
+                        </button>`}
+                    </div>
+                </div>
+            </div>
+        </div>` : ''}
+
+        <!-- PRO MODAL (unchanged) -->
         ${showProModal ? html`
         <div className="fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-fade overflow-y-auto">
             <div className="bg-white rounded-[2rem] shadow-2xl max-w-2xl w-full overflow-hidden my-8">
@@ -1188,15 +1919,16 @@ const App = () => {
                     </div>
                 </div>
             </div>
-        </div>
-        ` : ''}
+        </div>` : ''}
     </div>
     `;
 };
- 
+
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(html`<${App} />`);
 </script>
+
+
 
 <section class="bg-white py-16 mt-8 border-t border-slate-200">
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
