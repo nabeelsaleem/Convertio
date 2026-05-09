@@ -25,8 +25,8 @@
 
     <script src="https://cdn.apitiny.net/scripts/v2.0/main.js" data-site-id="6997817017105b330f4c8302" data-test-mode="false" async></script>
 
-    <link rel="preconnect" href="https://unpkg.com">
-    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+  <link rel="preconnect" href="https://unpkg.com" crossorigin>
+<link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
 
     <script type="application/ld+json">
     {
@@ -116,9 +116,8 @@
     }
     </script>
 
-
-    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js" defer></script>
-<script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" defer></script>
+   <script src="https://unpkg.com/preact@10.19.6/dist/preact.min.js" defer></script>
+<script src="https://unpkg.com/preact@10.19.6/hooks/dist/hooks.umd.js" defer></script>
 <script src="https://unpkg.com/htm@3.1.1/dist/htm.umd.js" defer></script>
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" media="print" onload="this.media='all'" />
@@ -246,8 +245,6 @@
         }
     </style>
 
-<style id="hide-page">body{visibility:hidden}</style>
-
 </head>
 
 <body class="bg-gray-50 min-h-screen flex flex-col">
@@ -264,15 +261,20 @@
     </section>
     
     <div class="antialiased flex items-center justify-center p-4 sm:p-8">
-        <div id="root" class="w-full max-w-6xl mx-auto" style="min-height: 1000px;"></div>
+        <div id="root" class="w-full max-w-6xl mx-auto min-h-[650px] md:min-h-[1000px]">
+    <!-- Placeholder Skeleton to prevent CLS -->
+    <div class="animate-pulse flex flex-col lg:flex-row gap-6 p-8">
+        <div class="flex-1 bg-slate-200 h-[400px] rounded-[2rem]"></div>
+        <div class="flex-1 bg-slate-200 h-[400px] rounded-[2rem]"></div>
     </div>
+</div>
 
     <script>
           window.addEventListener('DOMContentLoaded', function() {
 
-    // Initialize htm with React
-    const html = htm.bind(React.createElement);
-    const { useState, useEffect, useMemo } = React;
+    // Initialize htm with Preact
+const html = htm.bind(preact.h);
+const { useState, useEffect, useMemo } = preactHooks;
 
     const RATES = {
       LEGACY: 0.0035,
@@ -736,8 +738,9 @@
       `;
     };
 
-    const root = ReactDOM.createRoot(document.getElementById('root'));
-    root.render(html`<${App} />`);
+   const rootElement = document.getElementById('root');
+rootElement.innerHTML = ''; // This clears out the skeleton loader
+preact.render(html`<${App} />`, rootElement);
      });
     </script>
 
@@ -1137,10 +1140,6 @@
         loadComponent('/components/navbar.html', 'navbar', initializeHeaderScripts),
         loadComponent('/components/footer.html', 'footer', initializeFooterScripts)
     ]);
-
-    // Now remove the hiding style – page becomes visible with everything in place
-    const hideStyle = document.getElementById('hide-page');
-    if (hideStyle) hideStyle.remove();
 
     // Smooth scrolling for anchor links
     document.addEventListener('click', function (e) {
