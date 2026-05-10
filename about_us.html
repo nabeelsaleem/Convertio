@@ -193,5 +193,25 @@
             loadComponent('/components/footer.html', 'footer', initializeFooterScripts);
         });
     </script>
+<script>
+(function unhideWhenReady() {
+    var checkCount = 0;
+    var maxChecks = 100; // wait up to 5 seconds
+    var interval = setInterval(function() {
+        var navbar = document.getElementById('navbar');
+        var footer = document.getElementById('footer');
+        if ((navbar && navbar.innerHTML.trim() !== '') && (footer && footer.innerHTML.trim() !== '')) {
+            var hideStyle = document.getElementById('hide-page');
+            if (hideStyle) hideStyle.remove();
+            clearInterval(interval);
+        } else if (++checkCount >= maxChecks) {
+            // fallback – unhide anyway after timeout to avoid blank page
+            var hideStyle = document.getElementById('hide-page');
+            if (hideStyle) hideStyle.remove();
+            clearInterval(interval);
+        }
+    }, 50);
+})();
+</script>
 </body>
 </html>
