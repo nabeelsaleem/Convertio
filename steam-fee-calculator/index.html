@@ -102,9 +102,10 @@
     }
     </script>
 
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" media="print" onload="this.media='all'" />
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"></noscript>
     
     <style>
         :root {
@@ -135,7 +136,18 @@
         .tool-card:hover { transform: translateY(-4px); box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
         .prose a { color: #66c0f4; text-decoration: none; font-weight: 600; }
         .prose a:hover { text-decoration: underline; }
-    </style>
+        /* Reserve space for async navbar/footer */
+    #navbar { min-height: 80px; }
+    #footer { min-height: 1200px; }
+    @media (min-width: 768px) {
+        #navbar { min-height: 118px; }
+        #footer { min-height: 792px; }
+    }
+</style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+<link rel="stylesheet" href="/style.min.css" fetchpriority="high">
 </head>
 
 <body class="bg-gray-50 min-h-screen flex flex-col">
@@ -514,8 +526,7 @@
 
     <div id="footer"></div>
 
-    <script>
-    async function loadComponent(url, elementId) {
+    <script>async function loadComponent(url, elementId) {
         try {
             const response = await fetch(url);
             const text = await response.text();
