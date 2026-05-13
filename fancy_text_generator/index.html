@@ -236,61 +236,144 @@
 
     <div id="root" class="w-full max-w-6xl mx-auto p-4 sm:p-6"></div>
 
-    <script type="text/babel">
+
+<script type="text/babel">
     const { useState, useEffect } = React;
 
-    const charMaps = {
-        cursive: {
-            'a': '𝒶', 'b': '𝒷', 'c': '𝒸', 'd': '𝒹', 'e': '𝑒', 'f': '𝒻', 'g': '𝑔', 'h': '𝒽', 'i': '𝒾', 'j': '𝒿', 'k': '𝓀', 'l': '𝓁', 'm': '𝓂', 'n': '𝓃', 'o': '𝑜', 'p': '𝒫', 'q': '𝓆', 'r': '𝓇', 's': '𝓈', 't': '𝓉', 'u': '𝓊', 'v': '𝓋', 'w': '𝓌', 'x': '𝓍', 'y': '𝓎', 'z': '𝓏',
-            'A': '𝒜', 'B': 'ℬ', 'C': '𝒞', 'D': '𝒟', 'E': 'ℰ', 'F': 'ℱ', 'G': '𝒢', 'H': 'ℋ', 'I': 'ℐ', 'J': '𝒥', 'K': '𝒦', 'L': 'ℒ', 'M': 'ℳ', 'N': '𝒩', 'O': '𝒪', 'P': '𝒫', 'Q': '𝒬', 'R': 'ℛ', 'S': '𝒮', 'T': '𝒯', 'U': '𝒰', 'V': '𝒱', 'W': '𝒲', 'X': '𝒳', 'Y': '𝒴', 'Z': '𝒵'
-        },
-        gothic: {
-            'a': '𝔞', 'b': '𝔟', 'c': '𝔠', 'd': '𝔡', 'e': '𝔢', 'f': '𝔣', 'g': '𝔤', 'h': '𝔥', 'i': '𝔦', 'j': '𝔧', 'k': '𝔨', 'l': '𝔩', 'm': '𝔪', 'n': '𝔫', 'o': '𝔬', 'p': '𝔭', 'q': '𝔮', 'r': '𝔯', 's': '𝔰', 't': '𝔱', 'u': '𝔲', 'v': '𝔳', 'w': '𝔴', 'x': '𝔵', 'y': '𝔶', 'z': '𝔷',
-            'A': '𝔄', 'B': '𝔅', 'C': 'ℭ', 'D': '𝔇', 'E': '𝔈', 'F': '𝔉', 'G': '𝔊', 'H': 'ℌ', 'I': 'ℑ', 'J': '𝔍', 'K': '𝔎', 'L': '𝔏', 'M': '𝔐', 'N': '𝔑', 'O': '𝔒', 'P': '𝔓', 'Q': '𝔔', 'R': 'ℜ', 'S': '𝔖', 'T': '𝔗', 'U': '𝔘', 'V': '𝔙', 'W': '𝔚', 'X': '𝔛', 'Y': '𝔜', 'Z': 'ℨ'
-        },
-        bold: {
-            'a': '𝐚', 'b': '𝐛', 'c': '𝐜', 'd': '𝐝', 'e': '𝐞', 'f': '𝐟', 'g': '𝐠', 'h': '𝐡', 'i': '𝐢', 'j': '𝐣', 'k': '𝐤', 'l': '𝐥', 'm': '𝐦', 'n': '𝐧', 'o': '𝐨', 'p': '𝐩', 'q': '𝐪', 'r': '𝐫', 's': '𝐬', 't': '𝐭', 'u': '𝐮', 'v': '𝐯', 'w': '𝐰', 'x': '𝐱', 'y': '𝐲', 'z': '𝐳',
-            'A': '𝐀', 'B': '𝐁', 'C': '𝐂', 'D': '𝐃', 'E': '𝐄', 'F': '𝐅', 'G': '𝐆', 'H': '𝐇', 'I': '𝐈', 'J': '𝐉', 'K': '𝐊', 'L': '𝐋', 'M': '𝐌', 'N': '𝐍', 'O': '𝐎', 'P': '𝐏', 'Q': '𝐐', 'R': '𝐑', 'S': '𝐒', 'T': '𝐓', 'U': '𝐔', 'V': '𝐕', 'W': '𝐖', 'X': '𝐗', 'Y': '𝐘', 'Z': '𝐙'
-        },
-        monospace: {
-            'a': '𝚊', 'b': '𝚋', 'c': '𝚌', 'd': '𝚍', 'e': '𝚎', 'f': '𝚏', 'g': '𝚐', 'h': '𝚑', 'i': '𝚒', 'j': '𝚓', 'k': '𝚔', 'l': '𝚕', 'm': '𝚖', 'n': '𝚗', 'o': '𝚘', 'p': '𝚙', 'q': '𝚚', 'r': '𝚛', 's': '𝚜', 't': '𝚝', 'u': '𝚞', 'v': '𝚟', 'w': '𝚠', 'x': '𝚡', 'y': '𝚢', 'z': '𝚣',
-            'A': '𝙰', 'B': '𝙱', 'C': '𝙲', 'D': '𝙳', 'E': '𝙴', 'F': '𝙵', 'G': '𝙶', 'H': '𝙷', 'I': '𝙸', 'J': '𝙹', 'K': '𝙺', 'L': '𝙻', 'M': '𝙼', 'N': '𝙽', 'O': '𝙾', 'P': '𝙿', 'Q': '𝚀', 'R': '𝚁', 'S': '𝚂', 'T': '𝚃', 'U': '𝚄', 'V': '𝚅', 'W': '𝚆', 'X': '𝚇', 'Y': '𝚈', 'Z': '𝚉'
-        },
-        bubbles: {
-            'a': 'ⓐ', 'b': 'ⓑ', 'c': 'ⓒ', 'd': 'ⓓ', 'e': 'ⓔ', 'f': 'ⓕ', 'g': 'ⓖ', 'h': 'ⓗ', 'i': 'ⓘ', 'j': 'ⓙ', 'k': 'ⓚ', 'l': 'ⓛ', 'm': 'ⓜ', 'n': 'ⓝ', 'o': 'ⓞ', 'p': 'ⓟ', 'q': 'ⓠ', 'r': 'ⓡ', 's': 'ⓢ', 't': 'ⓣ', 'u': 'ⓤ', 'v': 'ⓥ', 'w': 'ⓦ', 'x': 'ⓧ', 'y': 'ⓨ', 'z': 'ⓩ',
-            'A': 'Ⓐ', 'B': 'Ⓑ', 'C': 'Ⓒ', 'D': 'Ⓓ', 'E': 'Ⓔ', 'F': 'Ⓕ', 'G': 'Ⓖ', 'H': 'ℋ', 'I': 'Ⓘ', 'J': 'Ⓙ', 'K': 'Ⓚ', 'L': 'Ⓛ', 'M': 'Ⓜ', 'N': 'Ⓝ', 'O': 'Ⓞ', 'P': 'Ⓟ', 'Q': 'Ⓠ', 'R': 'Ⓡ', 'S': 'Ⓢ', 'T': 'Ⓣ', 'U': 'Ⓤ', 'V': 'Ⓥ', 'W': 'Ⓦ', 'X': 'Ⓧ', 'Y': 'Ⓨ', 'Z': 'Ⓩ'
-        },
-        smallcaps: {
-            'a': 'ᴀ', 'b': 'ʙ', 'c': 'ᴄ', 'd': 'ᴅ', 'e': 'ᴇ', 'f': 'ғ', 'g': 'ɢ', 'h': 'ʜ', 'i': 'ɪ', 'j': 'ᴊ', 'k': 'ᴋ', 'l': 'ʟ', 'm': 'ᴍ', 'n': 'ɴ', 'o': 'ᴏ', 'p': 'ᴘ', 'q': 'ǫ', 'r': 'ʀ', 's': 's', 't': 'ᴛ', 'u': 'ᴜ', 'v': 'ᴠ', 'w': 'ᴡ', 'x': 'x', 'y': 'ʏ', 'z': 'ᴢ',
-            'A': 'ᴀ', 'B': 'ʙ', 'C': 'ᴄ', 'D': 'ᴅ', 'E': 'ᴇ', 'F': 'ғ', 'G': 'ɢ', 'H': 'ʜ', 'I': 'ɪ', 'J': 'ᴊ', 'K': 'ᴋ', 'L': 'ʟ', 'M': 'ᴍ', 'N': 'ɴ', 'O': 'ᴏ', 'P': 'ᴘ', 'Q': 'ǫ', 'R': 'ʀ', 'S': 's', 'T': 'ᴛ', 'U': 'ᴜ', 'V': 'ᴠ', 'W': 'ᴡ', 'X': 'x', 'Y': 'ʏ', 'Z': 'ᴢ'
-        }
+    // Core Unicode Alphabets for transformations
+    const baseAlphabets = {
+        normal: "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ",
+        bold: "𝐚𝐛𝐜𝐝𝐞𝐟𝐠𝐡𝐢𝐣𝐤𝐥𝐦𝐧𝐨𝐩𝐪𝐫𝐬𝐭𝐮𝐯𝐰𝐱𝐲𝐳𝐀𝐁𝐂𝐃𝐄𝐅𝐆𝐇𝐈𝐉𝐊𝐋𝐌𝐍𝐎𝐏𝐐𝐑𝐒𝐓𝐔𝐕𝐖𝐗𝐘𝐙",
+        italic: "𝑎𝑏𝑐𝑑𝑒𝑓𝑔ℎ𝑖𝑗𝑘𝑙𝑚𝑛𝑜𝑝𝑞𝑟𝑠𝑡𝑢𝑣𝑤𝑥𝑦𝑧𝐴𝐵𝐶𝐷𝐸𝐹𝐺𝐻𝐼𝐽𝐾𝐿𝑀𝑁𝑂𝑃𝑄𝑅𝑆𝑇𝑈𝑉𝑊𝑋𝑌𝑍",
+        boldItalic: "𝒂𝒃𝒄𝒅𝒆𝒇𝒈𝒉𝒊𝒋𝒌𝒍𝒎𝒏𝒐𝒑𝒒𝒓𝒔𝒕𝒖𝒗𝒘𝒙𝒚𝒛𝑨𝑩𝑪𝑫𝑬𝑭𝑮𝑯𝑰𝑱𝑲𝑳𝑴𝑵𝑶𝑷𝑸𝑹𝑺𝑻𝑼𝑽𝑾𝑿𝒀𝒁",
+        script: "𝒶𝒷𝒸𝒹𝑒𝒻𝑔𝒽𝒾𝒿𝓀𝓁𝓂𝓃𝑜𝓅𝓆𝓇𝓈𝓉𝓊𝓋𝓌𝓍𝓎𝓏𝒜ℬ𝒞𝒟ℰℱ𝒢ℋℐ𝒥𝒦ℒℳ𝒩𝒪𝒫𝒬ℛ𝒮𝒯𝒰𝒱𝒲𝒳𝒴𝒵",
+        boldScript: "𝓪𝓫𝓬𝓭𝓮𝓯𝓰𝓱𝓲𝓳𝓴𝓵𝓶𝓷𝓸𝓹𝓺𝓻𝓼𝓽𝓾𝓿𝔀𝔁𝔂𝔃𝓐𝓑𝓒𝓓𝓔𝓕𝓖𝓗𝓘𝓙𝓚𝓛𝓜𝓝𝓞𝓟𝓠𝓡𝓢𝓣𝓤𝓥𝓦𝓧𝓨𝓩",
+        fraktur: "𝔞𝔟𝔠𝔡𝔢𝔣𝔤𝔥𝔦𝔧𝔨𝔩𝔪𝔫𝔬𝔭𝔮𝔯𝔰𝔱𝔲𝔳𝔴𝔵𝔶𝔷𝔄𝔅ℭ𝔇𝔈𝔉𝔊ℌℑ𝔍𝔎𝔏𝔐𝔑𝔒𝔓𝔔ℜ𝔖𝔗𝔘𝔙𝔚𝔛𝔜ℨ",
+        boldFraktur: "𝖆𝖇𝖈𝖉𝖊𝖋𝖌𝖍𝖎𝖏𝖐𝖑𝖒𝖓𝖔𝕻𝖖𝖗𝖘𝖙𝖚𝖛𝖜𝖝𝖞𝖟𝕬𝕭𝕮𝕯𝕰𝕱𝕲𝕳𝕴𝕵𝕶𝕷𝕸𝕹𝕺𝕻𝕼𝕽𝕾𝕿𝖀𝖁𝖂𝖃𝖄𝖅",
+        doubleStruck: "𝕒𝕓𝕔𝕕𝕖𝕗𝕘𝕙𝕚𝕛𝕜𝕝𝕞𝕟𝕠𝕡𝕢𝕣𝕤𝕥𝕦𝕧𝕨𝕩𝕪𝕫𝔸𝔹ℂ𝔻𝔼𝔽𝔾ℍ𝕀𝕁𝕂𝕃𝕄ℕ𝕆ℙℚℝ𝕊𝕋𝕌𝕍𝕎𝕏𝕐ℤ",
+        sans: "𝖺𝖻𝖼𝖽𝖾𝖿𝗀𝗁𝗂𝗃𝗄𝗅𝗆𝗇𝗈𝗉𝗊𝗋𝗌𝗍𝗎𝗏𝗐𝗑𝗒𝗓𝖠𝖡𝖢𝖣𝖤𝖥𝖦𝖧𝖨𝖩𝖪𝖫𝖬𝖭𝖮𝖯𝖰𝖱𝖲𝖳𝖴𝖵𝖶𝖷𝖸𝖹",
+        sansBold: "𝗮𝗯𝗰𝗱𝗲𝗳𝗴𝗵𝗶𝗷𝗸𝗹𝗺𝗻𝗼𝗽𝗾𝗿𝘀𝘁𝘂𝘃𝘄𝘅𝘆𝘇𝗔𝗕𝗖𝗗𝗘𝗙𝗚𝗛𝗜𝗝𝗞𝗟𝗠𝗡𝗢𝗣𝗤𝗥𝗦𝗧𝗨𝗩𝗪𝗫𝗬𝗭",
+        sansItalic: "𝘢𝘣𝘤𝘥𝘦𝘧𝘨𝘩𝘪𝘫𝘬𝘭𝘮𝘯𝘰𝘱𝘲𝘳𝘴𝘵𝘶𝘷𝘸𝘹𝘺𝘻𝘈𝘉𝘊𝘋𝘌𝘍𝘎𝘏𝘐𝘑𝘒𝘓𝘔𝘕𝘖𝘗𝘘𝘙𝘚𝘛𝘜𝘝𝘞𝘟𝘠𝘡",
+        sansBoldItalic: "𝙖𝙗𝙘𝙙𝙚𝙛𝙜𝙝𝙞𝙟𝙠𝙡𝙢𝙣𝙤𝙥𝙦𝙧𝙨𝙩𝙪𝙫𝙬𝙭𝙮𝙯𝘼𝘽𝘾𝘿𝙀𝙁𝙂𝙃𝙄𝙅𝙆𝙇𝙈𝙉𝙊𝙋𝙌𝙍𝙎𝙏𝙐𝙑𝙒𝙓𝙔𝙕",
+        monospace: "𝚊𝚋𝚌𝚍𝚎𝚏𝚐𝚑𝚒𝚓𝚔𝚕𝚖𝚗𝚘𝚙𝚚𝚛𝚜𝚝𝚞𝚟𝚠𝚡𝚢𝚣𝙰𝙱𝙲𝙳𝙴𝙵𝙶𝙷𝙸𝙹𝙺𝙻𝙼𝙽𝙾𝙿𝚀𝚁𝚂𝚃𝚄𝚅𝚆𝚇𝚈𝚉",
+        fullwidth: "ａｂｃｄｅｆｇｈｉｊｋｌｍｎｏｐｑｒｓｔｕｖｗｘｙｚＡＢＣＤＥＦＧＨＩＪＫＬＭＮＯＰＱＲＳＴＵＶＷＸＹＺ",
+        smallCaps: "ᴀʙᴄᴅᴇғɢʜɪᴊᴋʟᴍɴᴏᴘǫʀsᴛᴜᴠᴡxʏᴢABCDEFGHIJKLMNOPQRSTUVWXYZ",
+        circled: "ⓐⓑⓒⓓⓔⓕⓖⓗⓘⓙⓚⓛⓜⓝⓞⓟⓠⓡⓢⓣⓤⓥⓦⓧⓨⓩⒶⒷⒸⒹⒺⒻⒼⒽⒾⒿⓀⓁⓂⓃⓄⓅⓆⓇⓈⓉⓊⓋⓌⓍⓎⓏ",
+        circledNeg: "🅐🅑🅒🅓🅔🅕🅖🅗🅘🅙🅚🅛🅜🅝🅞🅟🅠🅡🅢🅣🅤🅥🅦🅧🅨🅩🅐🅑🅒🅓🅔🅕🅖🅗🅘🅙🅚🅛🅜🅝🅞🅟🅠🅡🅢🅣🅤🅥🅦🅧🅨🅩",
+        squared: "🄰🄱🄲🄳🄴🄵🄶🄷🄸🄹🄺🄻🄼🄽🄾🄿🅀🅁🅂🅃🅄🅅🅆🅇🅈🅉🄰🄱🄲🄳🄴🄵🄶🄷🄸🄹🄺🄻🄼🄽🄾🄿🅀🅁🅂🅃🅄🅅🅆🅇🅈🅉",
+        squaredNeg: "🅰🅱🅲🅳🅴🅵🅶🅷🅸🅹🅺🅻🅼🅽🅾🅿🆀🆁🆂🆃🆄🆅🆆🆇🆈🆉🅰🅱🅲🅳🅴🅵🅶🅷🅸🅹🅺🅻🅼🅽🅾🅿🆀🆁🆂🆃🆄🆅🆆🆇🆈🆉",
+        parenthesized: "⒜⒝⒞⒟⒠⒡⒢⒣⒤⒥⒦⒧⒨⒩⒪⒫⒬⒭⒮⒯⒰⒱⒲⒳⒴⒵🄐🄑🄒🄓🄔🄕🄖🄗🄘🄙🄚🄛🄜🄝🄞🄟🄠🄡🄢🄣🄤🄥🄦🄧🄨🄩",
+        inverted: "ɐqɔpǝɟƃɥıɾʞlɯuodbɹsʇnʌʍxʎz∀𐐒ƆᗡƎℲ⅁HIſꞰ˥WNOԀΌᴚS⊥∩ΛMX⅄Z",
+        reversed: "dɘɔdɘꟻgHijklmnoqpɿꙅƚuvwxyzAꓭƆᗡƎꟻGHIJK⅃MИOꟼỌЯꙄTUVWXYZ",
+        pseudoGreek: "αв¢∂єƒﻭнιנкℓмησρqяѕтυνωχуzΑΒCDEҒGHIJΚLΜΝΟΡQRЅΤUVWΧΥΖ",
+        pseudoRussian: "авсdэfghїjкlмиорqяѕтцvшхyzДБСDЄFGHIJКLМИОРQЯSTЦVШXYZ",
+        currency: "₳฿₵₴€₣₲ⱧłJ₭Ⱡ₥₦Ø₱QⱤ₴₮ɄV₩Ӿ¥Ⱬ₳฿₵₴€₣₲ⱧłJ₭Ⱡ₥₦Ø₱QⱤ₴₮ɄV₩Ӿ¥Ⱬ",
+        hacker: "48cd3f6h1jklmn0pqrs7uvwxy248CD3F6H1JKLMN0PQR57UVWXY2",
+        subscript: "ₐbcdₑfgₕᵢⱼₖₗₘₙₒpqᵣₛₜᵤᵥwₓyzₐBCDₑFGₕᵢⱼₖₗₘₙₒPQᵣₛₜᵤᵥWₓYZ",
+        superscript: "ᵃᵇᶜᵈᵉᶠᵍʰᶦʲᵏˡᵐⁿᵒᵖᑫʳˢᵗᵘᵛʷˣʸᶻᴬᴮᶜᴰᴱᶠᴳᴴᴵᴶᴷᴸᴹᴺᴼᴾQᴿˢᵀᵁⱽᵂˣʸᶻ"
     };
+
+    // Helper functions (Uses Array.from() to safely handle multi-byte Unicode characters and Emojis)
+    const mapText = (text, targetAlphabet) => {
+        const base = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        const targetArr = Array.from(targetAlphabet);
+        return Array.from(text).map(char => {
+            const index = base.indexOf(char);
+            return index !== -1 && index < targetArr.length ? targetArr[index] : char;
+        }).join('');
+    };
+
+    const combine = (text, mark) => Array.from(text).map(c => (c !== ' ' ? c + mark : c)).join('');
+
+    // Define Base Fonts
+    const baseFonts = [
+        { name: "Normal", apply: t => t },
+        { name: "Cursive Script", apply: t => mapText(t, baseAlphabets.script) },
+        { name: "Bold Cursive", apply: t => mapText(t, baseAlphabets.boldScript) },
+        { name: "Old English Gothic", apply: t => mapText(t, baseAlphabets.fraktur) },
+        { name: "Bold Gothic", apply: t => mapText(t, baseAlphabets.boldFraktur) },
+        { name: "Mathematical Bold", apply: t => mapText(t, baseAlphabets.bold) },
+        { name: "Mathematical Italic", apply: t => mapText(t, baseAlphabets.italic) },
+        { name: "Bold Italic", apply: t => mapText(t, baseAlphabets.boldItalic) },
+        { name: "Double Struck", apply: t => mapText(t, baseAlphabets.doubleStruck) },
+        { name: "Sans-Serif", apply: t => mapText(t, baseAlphabets.sans) },
+        { name: "Sans-Serif Bold", apply: t => mapText(t, baseAlphabets.sansBold) },
+        { name: "Sans-Serif Italic", apply: t => mapText(t, baseAlphabets.sansItalic) },
+        { name: "Sans-Serif Bold Italic", apply: t => mapText(t, baseAlphabets.sansBoldItalic) },
+        { name: "Monospace", apply: t => mapText(t, baseAlphabets.monospace) },
+        { name: "Wide Text", apply: t => mapText(t, baseAlphabets.fullwidth) },
+        { name: "Small Caps", apply: t => mapText(t, baseAlphabets.smallCaps) },
+        { name: "Bubble Letters", apply: t => mapText(t, baseAlphabets.circled) },
+        { name: "Dark Bubbles", apply: t => mapText(t, baseAlphabets.circledNeg) },
+        { name: "Squares", apply: t => mapText(t, baseAlphabets.squared) },
+        { name: "Dark Squares", apply: t => mapText(t, baseAlphabets.squaredNeg) },
+        { name: "Parentheses", apply: t => mapText(t, baseAlphabets.parenthesized) },
+        { name: "Hacker / Leet", apply: t => mapText(t, baseAlphabets.hacker) },
+        { name: "Superscript", apply: t => mapText(t, baseAlphabets.superscript) },
+        { name: "Subscript", apply: t => mapText(t, baseAlphabets.subscript) },
+        { name: "Greek Style", apply: t => mapText(t, baseAlphabets.pseudoGreek) },
+        { name: "Russian Style", apply: t => mapText(t, baseAlphabets.pseudoRussian) },
+        { name: "Currency Style", apply: t => mapText(t, baseAlphabets.currency) },
+        { name: "Reversed Text", apply: t => mapText(t, baseAlphabets.reversed).split('').reverse().join('') },
+        { name: "Upside Down", apply: t => mapText(t, baseAlphabets.inverted).split('').reverse().join('') }
+    ]; // 29 Core Fonts
+
+    // Define Decorators (Creates permutations to easily cross 100+ styles)
+    const decorators = [
+        { suffix: "", apply: t => t }, 
+        { suffix: " (Spaced)", apply: t => Array.from(t).join(' ') },
+        { suffix: " (Underlined)", apply: t => combine(t, '\u0332') },
+        { suffix: " ✨", apply: t => `✨ ${t} ✨` },
+        { suffix: " 【】", apply: t => `【 ${t} 】` }
+    ]; // 5 Decorators
+
+    // Generator logic to compile all styles into one flat list
+    const generateAllStyles = () => {
+        let stylesList = [];
+        baseFonts.forEach(font => {
+            decorators.forEach(decorator => {
+                // Skip the completely plain unformatted style
+                if (font.name === "Normal" && decorator.suffix === "") return;
+                
+                stylesList.push({
+                    id: font.name + decorator.suffix,
+                    name: font.name + decorator.suffix,
+                    transform: (text) => decorator.apply(font.apply(text))
+                });
+            });
+        });
+
+        // Add additional unique standalone decorators
+        const standalones = [
+            { name: "Zalgo (Creepy)", transform: t => Array.from(t).map(c => c !== ' ' ? c + '\u030D\u0324\u030E\u0346\u031A' : c).join('') },
+            { name: "Strikethrough", transform: t => combine(t, '\u0336') },
+            { name: "Wavy Underline", transform: t => combine(t, '\u032B') },
+            { name: "Hearts Border 💖", transform: t => `💖 ${t} 💖` },
+            { name: "Star Border ★", transform: t => `★·.·´¯\`·.·★ ${t} ★·.·´¯\`·.·★` },
+            { name: "Ribbons 🎀", transform: t => `🎀 ${t} 🎀` },
+            { name: "Crown 👑", transform: t => `👑 ${t} 👑` },
+            { name: "Clouds ☁️", transform: t => `☁️ ${t} ☁️` },
+            { name: "Butterfly 🦋", transform: t => `🦋 ${t} 🦋` },
+            { name: "Fire 🔥", transform: t => `🔥 ${t} 🔥` }
+        ];
+
+        return [...stylesList, ...standalones]; // Total: 154 Styles!
+    };
+
+    const stylesConfig = generateAllStyles();
 
     const App = () => {
       const [input, setInput] = useState('Type your text here...');
       const [results, setResults] = useState([]);
       const [copyId, setCopyId] = useState(null);
 
-      const transformText = (text, map) => {
-        return text.split('').map(char => map[char] || char).join('');
-      };
-
       useEffect(() => {
-        const styles = [
-          { name: 'Cursive Script', map: charMaps.cursive },
-          { name: 'Old English Gothic', map: charMaps.gothic },
-          { name: 'Mathematical Bold', map: charMaps.bold },
-          { name: 'Typewriter Monospace', map: charMaps.monospace },
-          { name: 'Bubble Letters', map: charMaps.bubbles },
-          { name: 'Small Caps Style', map: charMaps.smallcaps },
-        ];
-
-        const generated = styles.map(style => ({
-          id: style.name,
+        const textToTransform = input || ' ';
+        const generated = stylesConfig.map((style, idx) => ({
+          id: style.id || style.name + idx,
           title: style.name,
-          content: transformText(input, style.map)
+          content: style.transform(textToTransform)
         }));
-
         setResults(generated);
       }, [input]);
 
@@ -316,21 +399,24 @@
                 onChange={(e) => setInput(e.target.value)}
                 placeholder="Start typing..."
               ></textarea>
+              <div className="mt-3 text-sm text-[#da3f0b] font-bold flex items-center justify-between ml-1">
+                <span>{results.length} Premium Styles Loaded</span>
+              </div>
             </div>
           </header>
 
-          <main className="p-6 md:p-8 bg-white">
+          <main className="p-6 md:p-8 bg-white max-h-[700px] overflow-y-auto custom-scrollbar">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {results.map((res) => (
                 <div 
                   key={res.id} 
-                  className="font-result-card p-5 rounded-2xl flex flex-col justify-between gap-4 group"
+                  className="font-result-card p-5 rounded-2xl flex flex-col justify-between gap-4 group bg-slate-50 hover:bg-white"
                 >
                   <div>
                     <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-2">
                       {res.title}
                     </span>
-                    <p className="text-2xl break-words text-slate-800 leading-relaxed">
+                    <p className="text-xl md:text-2xl break-words text-slate-800 leading-relaxed font-medium">
                       {res.content}
                     </p>
                   </div>
@@ -339,8 +425,8 @@
                     aria-label={`Copy ${res.title} text`}
                     className={`self-end flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all ${
                       copyId === res.id 
-                      ? 'bg-green-500 text-white' 
-                      : 'bg-slate-800 text-white hover:bg-black'
+                      ? 'bg-green-500 text-white shadow-lg shadow-green-500/30' 
+                      : 'bg-slate-800 text-white hover:bg-black hover:shadow-lg hover:shadow-slate-800/20'
                     }`}
                   >
                     <i className={`fas ${copyId === res.id ? 'fa-check' : 'fa-copy'}`}></i>
@@ -364,6 +450,7 @@
     const root = ReactDOM.createRoot(document.getElementById('root'));
     root.render(<App />);
     </script>
+
 
     <p class="text-center mt-4 mb-10">
         <a href="https://simpliconvert.com/instagram_bio_character_counter/" class="text-primary font-medium hover:underline">
