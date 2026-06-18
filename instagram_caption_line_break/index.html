@@ -93,10 +93,10 @@
 
   .prose a {
     color: #da3f0b;
-    text-decoration: none; /* optional: removes underline */
+    text-decoration: none;
   }
   .prose a:hover {
-    text-decoration: underline; /* optional: adds underline on hover */
+    text-decoration: underline;
   }
 
         /* Tooltip styling */
@@ -123,25 +123,11 @@
 <style id="hide-page">body{visibility:hidden}</style>
 <style>
     /* Navbar Responsive Placeholder */
-    #navbar {
-        width: 100%;
-        min-height: 80px; /* Default: Mobile Height */
-    }
-    
-    /* Footer Responsive Placeholder */
-    #footer {
-        width: 100%;
-        min-height: 1200px; /* Default: Mobile Height (usually much taller because links stack) */
-    }
-
-    /* Desktop Sizes (Applies to screens 768px and wider) */
+    #navbar { width: 100%; min-height: 80px; }
+    #footer { width: 100%; min-height: 1200px; }
     @media (min-width: 768px) {
-        #navbar {
-            min-height: 118px; /* Desktop Height */
-        }
-        #footer {
-            min-height: 792px; /* Desktop Height */
-        }
+        #navbar { min-height: 118px; }
+        #footer { min-height: 792px; }
     }
 </style>
 </head>
@@ -161,237 +147,193 @@
     <div id="root" class="w-full max-w-6xl mx-auto p-4 sm:p-6"></div>
 
     <script type="text/babel">
-    const { useState, useRef, useEffect } = React;
+        const { useState, useEffect } = React;
 
-    const ShareButton = ({ platform, icon, color, url, title }) => {
-        let shareUrl = '';
-        switch(platform) {
-            case 'facebook': shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${url}`; break;
-            case 'twitter': shareUrl = `https://twitter.com/intent/tweet?url=${url}&text=${title}`; break;
-            case 'linkedin': shareUrl = `https://www.linkedin.com/shareArticle?mini=true&url=${url}`; break;
-            case 'whatsapp': shareUrl = `https://api.whatsapp.com/send?text=${title}%20${url}`; break;
-            case 'reddit': shareUrl = `https://www.reddit.com/submit?url=${url}&title=${title}`; break;
-            case 'telegram': shareUrl = `https://t.me/share/url?url=${url}&text=${title}`; break;
-            default: return null;
+        function ShareButton({ platform, icon, color, url, title }) {
+            let shareUrl = '';
+            if (platform === 'facebook') shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`;
+            else if (platform === 'twitter') shareUrl = `https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}&text=${encodeURIComponent(title)}`;
+            else if (platform === 'linkedin') shareUrl = `https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(url)}`;
+            else if (platform === 'whatsapp') shareUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(title)}%20${encodeURIComponent(url)}`;
+            else if (platform === 'reddit') shareUrl = `https://www.reddit.com/submit?url=${encodeURIComponent(url)}&title=${encodeURIComponent(title)}`;
+            else if (platform === 'telegram') shareUrl = `https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(title)}`;
+
+            return (
+                <a href={shareUrl} target="_blank" rel="noopener noreferrer" className={`w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center text-white transition-transform hover:-translate-y-1 hover:shadow-lg ${color}`}>
+                    <i className={`fab fa-${icon}`}></i>
+                </a>
+            );
         }
 
-        return (
-            <a 
-                href={shareUrl} 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className={`w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center text-white transition-transform hover:-translate-y-1 hover:shadow-lg ${color}`}
-            >
-                <i className={`fab fa-${icon}`}></i>
-            </a>
-        );
-    };
+        function App() {
+            const [text, setText] = useState('');
+            const [copied, setCopied] = useState(false);
+            const [charCount, setCharCount] = useState(0);
+            const [hashtagCount, setHashtagCount] = useState(0);
+            const [showBookmarkToast, setShowBookmarkToast] = useState(false);
 
-    const App = () => {
-      const [text, setText] = useState('');
-      const [copied, setCopied] = useState(false);
-      const [charCount, setCharCount] = useState(0);
-      const [hashtagCount, setHashtagCount] = useState(0);
-      const [lineCount, setLineCount] = useState(0);
-      const [showBookmarkToast, setShowBookmarkToast] = useState(false);
-      const outputRef = useRef(null);
+            const pageUrl = window.location.href;
+            const pageTitle = document.title || 'Instagram Caption Line Break';
 
-      const pageUrl = typeof window !== 'undefined' ? window.location.href : '';
-      const pageTitle = typeof document !== 'undefined' ? document.title : 'Instagram Caption Line Break';
+            const MAX_CHARS = 2200;
+            const MAX_HASHTAGS = 30;
+            const placeholderString = "Type your caption here...\n\nLeave empty lines for breaks.\nWe will preserve them magically!\n\n#hashtags #formatting";
 
-      const handleBookmark = () => {
-        setShowBookmarkToast(true);
-        setTimeout(() => setShowBookmarkToast(false), 3000);
-      };
+            useEffect(() => {
+                setCharCount(text.length);
+                const matches = text.match(/#[^\s#]+/g);
+                setHashtagCount(matches ? matches.length : 0);
 
-      // Instagram Limits
-      const MAX_CHARS = 2200;
-      const MAX_HASHTAGS = 30;
+                if (copied) {
+                    const timer = setTimeout(() => setCopied(false), 2000);
+                    return () => clearTimeout(timer);
+                }
+            }, [text, copied]);
 
-      useEffect(() => {
-        setCharCount(text.length);
-        
-        // Simple hashtag count (words starting with #)
-        const hashtags = (text.match(/#[^\s#]+/g) || []).length;
-        setHashtagCount(hashtags);
-
-        // Line count
-        const lines = text.split(/\r\n|\r|\n/).length;
-        setLineCount(lines);
-        
-        if (copied) {
-          const timer = setTimeout(() => setCopied(false), 2000);
-          return () => clearTimeout(timer);
-        }
-      }, [text, copied]);
-
-      const handleConvertAndCopy = () => {
-        if (!text) return;
-
-        let processedText = text
-            .split('\n')
-            .map(line => line.trim()) // Remove start/end whitespace from each line to prevent collapsing
-            .join('\n'); // Rejoin with standard newline. 
-            
-        // Some formats benefit from the invisible separator (U+2800) for empty lines
-        // If a line is empty, replace it with invisible braille space pattern to force the gap
-        processedText = processedText.replace(/\n\n/g, '\n⠀\n'); 
-
-        navigator.clipboard.writeText(processedText).then(() => {
-          setCopied(true);
-        });
-      };
-
-      const handleClear = () => {
-        if (window.confirm('Clear all text?')) {
-          setText('');
-        }
-      };
-
-      return (
-        <div className="bg-white rounded-[2rem] shadow-2xl overflow-hidden border border-slate-100">
-          <div className="flex flex-col md:flex-row min-h-[600px]">
-          
-          {/* Input Area */}
-          <div className="w-full md:w-2/3 p-6 md:p-8 flex flex-col border-b md:border-b-0 md:border-r border-slate-100 relative">
-             <div className="flex justify-between items-center mb-4">
-                <div className="flex items-center gap-2">
-                   <div className="bg-[#da3f0b] text-white w-8 h-8 rounded-lg flex items-center justify-center shadow-md shadow-[#da3f0b30]">
-                      <i className="fab fa-instagram text-lg"></i>
-                   </div>
-                   <h2 className="font-bold text-slate-800 tracking-tight">Write Formatting</h2>
-                </div>
-                <button 
-                  onClick={handleClear}
-                  className="text-xs font-bold text-slate-400 hover:text-[#dc2626] uppercase tracking-wider transition-colors"
-                >
-                  Clear
-                </button>
-             </div>
-
-             <div className="flex-grow relative group">
-                <textarea
-                  className="w-full h-full p-4 text-base md:text-lg text-slate-700 placeholder-slate-300 resize-none focus:outline-none bg-slate-50/50 rounded-xl border border-transparent focus:border-slate-200 transition-all font-sans leading-relaxed"
-                 placeholder="Type your caption here...\n\nLeave empty lines for breaks.\nWe will preserve them magically!\n\n#hashtags #formatting"
-                  value={text}
-                  onChange={(e) => setText(e.target.value)}
-                  spellCheck="false"
-                ></textarea>
+            function handleConvertAndCopy() {
+                if (!text) return;
                 
-                {/* Character Limit Indicators */}
-                <div className="absolute bottom-4 right-4 flex gap-3 pointer-events-none opacity-50 group-hover:opacity-100 transition-opacity">
-                   <span className={`text-[10px] font-bold px-2 py-1 rounded-full border ${charCount > MAX_CHARS ? 'bg-red-50 text-red-600 border-red-100' : 'bg-white text-slate-400 border-slate-200'}`}>
-                      {charCount} / {MAX_CHARS}
-                   </span>
-                   <span className={`text-[10px] font-bold px-2 py-1 rounded-full border ${hashtagCount > MAX_HASHTAGS ? 'bg-red-50 text-red-600 border-red-100' : 'bg-white text-slate-400 border-slate-200'}`}>
-                      #{hashtagCount} / {MAX_HASHTAGS}
-                   </span>
-                </div>
-             </div>
-          </div>
+                let processedText = text.split('\n').map(line => line.trim()).join('\n');
+                processedText = processedText.replace(/\n\n/g, '\n⠀\n');
 
-          {/* Action / Preview Area */}
-          <div className="w-full md:w-1/3 bg-slate-50/80 p-6 md:p-8 flex flex-col justify-center items-center relative overflow-hidden">
-             {/* Decorative Background Elements */}
-             <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-purple-200 to-pink-200 opacity-20 blur-3xl rounded-full -mr-20 -mt-20"></div>
-             <div className="absolute bottom-0 left-0 w-48 h-48 bg-gradient-to-tr from-yellow-200 to-orange-200 opacity-20 blur-3xl rounded-full -ml-10 -mb-10"></div>
+                navigator.clipboard.writeText(processedText).then(() => {
+                    setCopied(true);
+                }).catch(err => {
+                    alert("Unable to copy to clipboard automatically. Please copy the text manually.");
+                });
+            }
 
-             <div className="relative z-10 w-full max-w-sm">
-                
-                {/* Mobile Preview Box */}
-                <div className="bg-white rounded-3xl shadow-xl border border-slate-100 p-4 mb-8 transform transition-transform hover:scale-[1.02] duration-300">
-                   <div className="flex items-center gap-3 mb-4 border-b border-slate-50 pb-3">
-                      <div className="w-8 h-8 rounded-full bg-slate-200 animate-pulse"></div>
-                      <div className="space-y-1">
-                         <div className="w-20 h-2 rounded bg-slate-200 animate-pulse"></div>
-                         <div className="w-12 h-1.5 rounded bg-slate-100 animate-pulse"></div>
-                      </div>
-                   </div>
-                   <div className="space-y-2">
-                      {text ? (
-                        <div className="text-sm text-slate-800 whitespace-pre-line leading-snug break-words font-medium">
-                           {text.length > 150 ? text.substring(0, 150) + '...' : text}
+            function handleClear() {
+                if (window.confirm('Clear all text?')) {
+                    setText('');
+                }
+            }
+
+            function handleBookmark() {
+                setShowBookmarkToast(true);
+                setTimeout(() => setShowBookmarkToast(false), 3000);
+            }
+
+            return (
+                <div className="bg-white rounded-[2rem] shadow-2xl overflow-hidden border border-slate-100">
+                    <div className="flex flex-col md:flex-row min-h-[600px]">
+                        
+                        <div className="w-full md:w-2/3 p-6 md:p-8 flex flex-col border-b md:border-b-0 md:border-r border-slate-100 relative">
+                            <div className="flex justify-between items-center mb-4">
+                                <div className="flex items-center gap-2">
+                                    <div className="bg-[#da3f0b] text-white w-8 h-8 rounded-lg flex items-center justify-center shadow-md shadow-[#da3f0b30]">
+                                        <i className="fab fa-instagram text-lg"></i>
+                                    </div>
+                                    <h2 className="font-bold text-slate-800 tracking-tight">Write Formatting</h2>
+                                </div>
+                                <button onClick={handleClear} className="text-xs font-bold text-slate-400 hover:text-[#dc2626] uppercase tracking-wider transition-colors">
+                                    Clear
+                                </button>
+                            </div>
+
+                            <div className="flex-grow relative group">
+                                <textarea
+                                    className="w-full h-full p-4 text-base md:text-lg text-slate-700 placeholder-slate-300 resize-none focus:outline-none bg-slate-50/50 rounded-xl border border-transparent focus:border-slate-200 transition-all font-sans leading-relaxed"
+                                    placeholder={placeholderString}
+                                    value={text}
+                                    onChange={(e) => setText(e.target.value)}
+                                    spellCheck="false"
+                                />
+                                
+                                <div className="absolute bottom-4 right-4 flex gap-3 pointer-events-none opacity-50 group-hover:opacity-100 transition-opacity">
+                                    <span className={`text-[10px] font-bold px-2 py-1 rounded-full border ${charCount > MAX_CHARS ? 'bg-red-50 text-red-600 border-red-100' : 'bg-white text-slate-400 border-slate-200'}`}>
+                                        {charCount} / {MAX_CHARS}
+                                    </span>
+                                    <span className={`text-[10px] font-bold px-2 py-1 rounded-full border ${hashtagCount > MAX_HASHTAGS ? 'bg-red-50 text-red-600 border-red-100' : 'bg-white text-slate-400 border-slate-200'}`}>
+                                        #{hashtagCount} / {MAX_HASHTAGS}
+                                    </span>
+                                </div>
+                            </div>
                         </div>
-                      ) : (
-                        <div className="space-y-2 opacity-30">
-                           <div className="w-full h-2 rounded bg-slate-200"></div>
-                           <div className="w-5/6 h-2 rounded bg-slate-200"></div>
-                           <div className="w-4/6 h-2 rounded bg-slate-200"></div>
+
+                        <div className="w-full md:w-1/3 bg-slate-50/80 p-6 md:p-8 flex flex-col justify-center items-center relative overflow-hidden">
+                            <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-purple-200 to-pink-200 opacity-20 blur-3xl rounded-full -mr-20 -mt-20"></div>
+                            <div className="absolute bottom-0 left-0 w-48 h-48 bg-gradient-to-tr from-yellow-200 to-orange-200 opacity-20 blur-3xl rounded-full -ml-10 -mb-10"></div>
+
+                            <div className="relative z-10 w-full max-w-sm">
+                                <div className="bg-white rounded-3xl shadow-xl border border-slate-100 p-4 mb-8 transform transition-transform hover:scale-[1.02] duration-300">
+                                    <div className="flex items-center gap-3 mb-4 border-b border-slate-50 pb-3">
+                                        <div className="w-8 h-8 rounded-full bg-slate-200 animate-pulse"></div>
+                                        <div className="space-y-1">
+                                            <div className="w-20 h-2 rounded bg-slate-200 animate-pulse"></div>
+                                            <div className="w-12 h-1.5 rounded bg-slate-100 animate-pulse"></div>
+                                        </div>
+                                    </div>
+                                    <div className="space-y-2">
+                                        {text ? (
+                                            <div className="text-sm text-slate-800 whitespace-pre-line leading-snug break-words font-medium">
+                                                {text.length > 150 ? text.substring(0, 150) + '...' : text}
+                                            </div>
+                                        ) : (
+                                            <div className="space-y-2 opacity-30">
+                                                <div className="w-full h-2 rounded bg-slate-200"></div>
+                                                <div className="w-5/6 h-2 rounded bg-slate-200"></div>
+                                                <div className="w-4/6 h-2 rounded bg-slate-200"></div>
+                                            </div>
+                                        )}
+                                        {text.length > 150 && <span className="text-xs text-slate-400">...more</span>}
+                                    </div>
+                                </div>
+
+                                <button
+                                    onClick={handleConvertAndCopy}
+                                    disabled={!text}
+                                    className={`w-full py-4 rounded-xl font-black text-lg shadow-lg shadow-[#da3f0b20] transition-all transform active:scale-95 flex items-center justify-center gap-2 ${copied ? 'bg-[#16a34a] text-white ring-4 ring-[#16a34a20]' : 'bg-gradient-to-r from-[#da3f0b] to-[#b53409] text-white hover:shadow-xl hover:-translate-y-1 disabled:opacity-50 disabled:cursor-not-allowed'}`}
+                                >
+                                    {copied ? <><i className="fas fa-check"></i> Copied!</> : <><i className="fas fa-magic"></i> Convert & Copy</>}
+                                </button>
+
+                                <p className="text-center text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-4">
+                                    Ready to paste into Instagram
+                                </p>
+                            </div>
                         </div>
-                      )}
-                      {text.length > 150 && <span className="text-xs text-slate-400">...more</span>}
-                   </div>
+
+                    </div>
+                    
+                    <footer className="bg-slate-50 border-t border-slate-100 p-6 md:p-8">
+                        <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+                            <div className="text-center md:text-left">
+                                <h4 className="text-sm font-bold text-slate-700 mb-1">Share this tool</h4>
+                                <p className="text-xs text-slate-400">Help others fix their captions.</p>
+                            </div>
+                            
+                            <div className="flex flex-wrap justify-center gap-3">
+                                <ShareButton platform="facebook" icon="facebook-f" color="bg-[#1877F2]" url={pageUrl} title={pageTitle} />
+                                <ShareButton platform="twitter" icon="twitter" color="bg-[#1DA1F2]" url={pageUrl} title={pageTitle} />
+                                <ShareButton platform="linkedin" icon="linkedin-in" color="bg-[#0A66C2]" url={pageUrl} title={pageTitle} />
+                                <ShareButton platform="whatsapp" icon="whatsapp" color="bg-[#25D366]" url={pageUrl} title={pageTitle} />
+                                <ShareButton platform="reddit" icon="reddit-alien" color="bg-[#FF4500]" url={pageUrl} title={pageTitle} />
+                                <ShareButton platform="telegram" icon="telegram-plane" color="bg-[#0088cc]" url={pageUrl} title={pageTitle} />
+                            </div>
+
+                            <div className="relative">
+                                <button onClick={handleBookmark} className="flex items-center gap-2 bg-white border border-slate-200 hover:border-[#da3f0b] hover:text-[#da3f0b] text-slate-600 px-4 py-2 rounded-lg text-sm font-bold transition-all shadow-sm active:scale-95">
+                                    <i className="fas fa-bookmark"></i> Bookmark
+                                </button>
+                                {showBookmarkToast && (
+                                    <div className="absolute bottom-full mb-3 left-1/2 -translate-x-1/2 bg-slate-800 text-white text-xs py-2 px-4 rounded-lg shadow-lg whitespace-nowrap animate-fade">
+                                        Press <span className="font-bold text-[#da3f0b]">Ctrl + D</span> to bookmark
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                    </footer>
                 </div>
+            );
+        }
 
-                <button
-                  onClick={handleConvertAndCopy}
-                  disabled={!text}
-                  className={`w-full py-4 rounded-xl font-black text-lg shadow-lg shadow-[#da3f0b20] transition-all transform active:scale-95 flex items-center justify-center gap-2
-                    ${copied 
-                      ? 'bg-[#16a34a] text-white ring-4 ring-[#16a34a20]' 
-                      : 'bg-gradient-to-r from-[#da3f0b] to-[#b53409] text-white hover:shadow-xl hover:-translate-y-1 disabled:opacity-50 disabled:cursor-not-allowed'
-                    }`}
-                >
-                  {copied ? (
-                    <>
-                      <i className="fas fa-check"></i> Copied!
-                    </>
-                  ) : (
-                    <>
-                      <i className="fas fa-magic"></i> Convert & Copy
-                    </>
-                  )}
-                </button>
-
-                <p className="text-center text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-4">
-                   Ready to paste into Instagram
-                </p>
-
-             </div>
-          </div>
-
-          </div>
-          
-          {/* Share & Bookmark Footer */}
-          <footer className="bg-slate-50 border-t border-slate-100 p-6 md:p-8">
-             <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-                 <div className="text-center md:text-left">
-                     <h4 className="text-sm font-bold text-slate-700 mb-1">Share this tool</h4>
-                     <p className="text-xs text-slate-400">Help others fix their captions.</p>
-                 </div>
-                 
-                 <div className="flex flex-wrap justify-center gap-3">
-                     <ShareButton platform="facebook" icon="facebook-f" color="bg-[#1877F2]" url={pageUrl} title={pageTitle} />
-                     <ShareButton platform="twitter" icon="twitter" color="bg-[#1DA1F2]" url={pageUrl} title={pageTitle} />
-                     <ShareButton platform="linkedin" icon="linkedin-in" color="bg-[#0A66C2]" url={pageUrl} title={pageTitle} />
-                     <ShareButton platform="whatsapp" icon="whatsapp" color="bg-[#25D366]" url={pageUrl} title={pageTitle} />
-                     <ShareButton platform="reddit" icon="reddit-alien" color="bg-[#FF4500]" url={pageUrl} title={pageTitle} />
-                     <ShareButton platform="telegram" icon="telegram-plane" color="bg-[#0088cc]" url={pageUrl} title={pageTitle} />
-                 </div>
-
-                 <div className="relative">
-                     <button 
-                       onClick={handleBookmark}
-                       className="flex items-center gap-2 bg-white border border-slate-200 hover:border-[#da3f0b] hover:text-[#da3f0b] text-slate-600 px-4 py-2 rounded-lg text-sm font-bold transition-all shadow-sm active:scale-95"
-                     >
-                        <i className="fas fa-bookmark"></i> Bookmark
-                     </button>
-                     {showBookmarkToast && (
-                         <div className="absolute bottom-full mb-3 left-1/2 -translate-x-1/2 bg-slate-800 text-white text-xs py-2 px-4 rounded-lg shadow-lg whitespace-nowrap animate-fade">
-                             Press <span className="font-bold text-[#da3f0b]">Ctrl + D</span> to bookmark
-                         </div>
-                     )}
-                 </div>
-             </div>
-          </footer>
-        </div>
-      );
-    };
-
-    const root = ReactDOM.createRoot(document.getElementById('root'));
-    root.render(<App />);
+        const domNode = document.getElementById('root');
+        if (domNode) {
+            const root = ReactDOM.createRoot(domNode);
+            root.render(<App />);
+        }
     </script>
-
 
     <section class="bg-white py-12 sm:py-16">
   <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -495,7 +437,6 @@
   </div>
 </section>
 
-
     <section class="bg-gray-50 py-12 sm:py-16">
         <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
             <h2 class="text-3xl font-bold text-center text-gray-900 mb-8">Instagram Formatting FAQs</h2>
@@ -575,7 +516,6 @@
         </div>
     </section>
 
-    
     <section class="bg-gray-50 pb-16">
         <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-slate-200 pt-16">
             <h2 class="text-2xl font-bold text-center text-slate-800 mb-10">Popular Tools on SimpliConvert</h2>
@@ -654,7 +594,6 @@
         loadComponent('/components/navbar.html', 'navbar', initializeHeaderScripts);
         loadComponent('/components/footer.html', 'footer', initializeFooterScripts);
         
-        // FAQ Accordion Logic
         const faqToggles = document.querySelectorAll('[data-faq-toggle]');
         faqToggles.forEach(button => {
             button.addEventListener('click', () => {
@@ -686,7 +625,7 @@
 <script>
 (function unhideWhenReady() {
     var checkCount = 0;
-    var maxChecks = 100; // wait up to 5 seconds
+    var maxChecks = 100;
     var interval = setInterval(function() {
         var navbar = document.getElementById('navbar');
         var footer = document.getElementById('footer');
@@ -695,7 +634,6 @@
             if (hideStyle) hideStyle.remove();
             clearInterval(interval);
         } else if (++checkCount >= maxChecks) {
-            // fallback – unhide anyway after timeout to avoid blank page
             var hideStyle = document.getElementById('hide-page');
             if (hideStyle) hideStyle.remove();
             clearInterval(interval);
