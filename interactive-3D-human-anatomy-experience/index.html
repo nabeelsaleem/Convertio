@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Specimen — Interactive Human Anatomy</title>
+<meta name="description" content="An interactive 3D human anatomy explorer built with Three.js" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,500;9..144,600&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+<div class="app" id="app">
+
+  <!-- ================= LEFT: SPECIMEN INDEX ================= -->
+  <aside class="rail rail-left">
+    <div class="rail-header">
+      <span class="eyebrow">SPECIMEN INDEX</span>
+      <h1 class="brand">Corpus<span class="brand-dot">.</span></h1>
+    </div>
+    <nav class="specimen-list" id="specimenList"><!-- injected --></nav>
+    <div class="rail-footer">
+      <span class="muted small">Built with Three.js · procedurally generated specimens</span>
+    </div>
+  </aside>
+
+  <!-- ================= CENTER: VIEWPORT ================= -->
+  <main class="viewport">
+    <canvas id="scene"></canvas>
+
+    <div class="viewport-grid"></div>
+
+    <!-- top bar -->
+    <div class="viewport-topbar">
+      <div class="specimen-tag" id="specimenTag">
+        <span class="tag-num" id="specimenNum">I</span>
+        <div>
+          <div class="tag-name" id="specimenName">—</div>
+          <div class="tag-sub" id="specimenSystem">—</div>
+        </div>
+      </div>
+      <button class="btn-ghost" id="toggleInfoBtn" title="Toggle dossier">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M4 6h16M4 12h10M4 18h16" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+        Dossier
+      </button>
+    </div>
+
+    <!-- floating tip -->
+    <div class="tip-card" id="tipCard">
+      <div class="tip-title">◆ Navigation</div>
+      <div class="tip-row"><span>Drag</span><span>rotate specimen</span></div>
+      <div class="tip-row"><span>Scroll</span><span>zoom in / out</span></div>
+      <div class="tip-row"><span>Click marker</span><span>reveal note</span></div>
+      <button class="tip-close" id="tipClose">&times;</button>
+    </div>
+
+    <!-- toolbar -->
+    <div class="toolbar" id="toolbar">
+      <button class="tool-btn" data-tool="reset" title="Reset view">
+        <svg viewBox="0 0 24 24"><path d="M4 4v6h6M20 20v-6h-6M4 10a8 8 0 0 1 14-5.3M20 14a8 8 0 0 1-14 5.3" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span>Reset</span>
+      </button>
+      <button class="tool-btn" data-tool="autorotate" title="Auto-rotate">
+        <svg viewBox="0 0 24 24"><ellipse cx="12" cy="12" rx="9" ry="4.5" stroke="currentColor" stroke-width="1.6" fill="none"/><circle cx="12" cy="12" r="1.6" fill="currentColor"/></svg>
+        <span>Rotate</span>
+      </button>
+      <button class="tool-btn" data-tool="crosssection" title="Cross-section">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8" stroke="currentColor" stroke-width="1.6" fill="none"/><path d="M12 4v16" stroke="currentColor" stroke-width="1.6" stroke-dasharray="2 2"/></svg>
+        <span>Section</span>
+      </button>
+      <button class="tool-btn" data-tool="exploded" title="Exploded view">
+        <svg viewBox="0 0 24 24"><path d="M12 3v5M12 16v5M3 12h5M16 12h5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><circle cx="12" cy="12" r="2.4" stroke="currentColor" stroke-width="1.6" fill="none"/></svg>
+        <span>Explode</span>
+      </button>
+      <button class="tool-btn" data-tool="labels" title="Toggle markers">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="3" stroke="currentColor" stroke-width="1.6" fill="none"/><path d="M12 11v8" stroke="currentColor" stroke-width="1.6"/></svg>
+        <span>Markers</span>
+      </button>
+    </div>
+
+    <div class="viewport-footer">
+      <span class="muted small mono" id="viewportCaption">3D SPECIMEN · CLICK A MARKER TO EXPLORE</span>
+      <label class="switch-row">
+        <span class="muted small">Ambient drift</span>
+        <span class="switch" id="ambientSwitch"><span class="switch-knob"></span></span>
+      </label>
+    </div>
+
+    <!-- hotspot marker layer (2D overlay synced to 3D positions) -->
+    <div class="marker-layer" id="markerLayer"></div>
+  </main>
+
+  <!-- ================= RIGHT: DOSSIER ================= -->
+  <aside class="rail rail-right" id="dossier">
+    <div class="dossier-head">
+      <span class="eyebrow" id="dossierEyebrow">◆ DOSSIER</span>
+      <h2 class="dossier-title" id="dossierTitle">—</h2>
+      <p class="dossier-tagline" id="dossierTagline">—</p>
+    </div>
+
+    <p class="dossier-desc" id="dossierDesc">—</p>
+
+    <div class="fact-block">
+      <span class="eyebrow">KEY MEASUREMENTS</span>
+      <ul class="fact-list" id="factList"><!-- injected --></ul>
+    </div>
+
+    <div class="callout callout-med" id="medCallout">
+      <span class="callout-label">⚕ Clinical note</span>
+      <p id="medText">—</p>
+    </div>
+
+    <div class="callout callout-fact" id="funCallout">
+      <span class="callout-label">✦ Field note</span>
+      <p id="funText">—</p>
+    </div>
+
+    <div class="marker-note" id="markerNote" hidden>
+      <span class="eyebrow" id="markerNoteEyebrow">◆ MARKER</span>
+      <h3 id="markerNoteTitle">—</h3>
+      <p id="markerNoteDesc">—</p>
+      <button class="btn-ghost small" id="markerNoteClose">Close</button>
+    </div>
+  </aside>
+
+  <div class="loading" id="loading">
+    <div class="loading-mark">CORPUS</div>
+    <div class="loading-bar"><span></span></div>
+  </div>
+
+</div>
+
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+  }
+}
+</script>
+<script type="module" src="js/organData.js"></script>
+<script type="module" src="js/organGeometry.js"></script>
+<script type="module" src="js/main.js"></script>
+</body>
+</html>
