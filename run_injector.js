@@ -52,23 +52,50 @@ Object.keys(targetPages).forEach(targetUrl => {
         </div>
         `;
 
-        let updated = false;
+       let updated = false;
 
-        // NEW PLACEMENT STRATEGY: Target exactly before the "Frequently Asked Questions" section
-        // This Regex looks for the structural transition between the end of the main article container
-        // and the start of the FAQ section.
-        const faqRegex = /(<\/div>\s*<\/div>\s*<\/section>\s*<section[^>]*>\s*<div[^>]*>\s*<h2[^>]*>Frequently Asked Questions<\/h2>)/i;
+        // NEW PLACEMENT STRATEGY: Strictly target the section above the FAQ
+        const faqRegex = /Frequently Asked Questions/i;
+        const faqIndex = content.search(faqRegex);
 
-        if (faqRegex.test(content)) {
-            // Injects the snippet inside the main article container, just before it closes
-            content = content.replace(faqRegex, `${htmlSnippet}\n$1`);
-            updated = true;
-        } else if (content.includes('</main>')) {
-            // Fallback 1: If no FAQ section, look for main
+        if (faqIndex !== -1) {
+            // 1. Get all the HTML content BEFORE the FAQ keyword
+            const beforeFaq = content.substring(0, faqIndex);
+            
+            // 2. Find the last closing </section> BEFORE the FAQ (this marks the end of the reading content)
+            const lastSectionCloseIndex = beforeFaq.lastIndexOf('</section>');
+            
+            if (lastSectionCloseIndex !== -1) {
+                // 3. Extract the content of that specific reading section
+                const sectionContent = beforeFaq.substring(0, lastSectionCloseIndex);
+                
+                // 4. Match the closing </div> tags at the very end of this section to inject inside them
+                const trailingDivsMatch = sectionContent.match(/(\s*<\/div>\s*)+$/i);
+                
+                if (trailingDivsMatch) {
+                    // Inject before the closing divs so it stays inside the content container (like the "prose" div)
+                    const insertPos = lastSectionCloseIndex - trailingDivsMatch[0].length;
+                    content = 
+                        content.substring(0, insertPos) + 
+                        `\n${htmlSnippet}\n` + 
+                        content.substring(insertPos);
+                    updated = true;
+                } else {
+                    // Safety Fallback: Insert directly before </section> if no layout divs exist
+                    content = 
+                        content.substring(0, lastSectionCloseIndex) + 
+                        `\n${htmlSnippet}\n` + 
+                        content.substring(lastSectionCloseIndex);
+                    updated = true;
+                }
+            }
+        } 
+        
+        // GLOBAL FALLBACKS: Only runs if the page doesn't have an FAQ section at all
+        if (!updated && content.includes('</main>')) {
             content = content.replace('</main>', `${htmlSnippet}\n</main>`);
             updated = true;
-        } else if (content.includes('</section>')) {
-            // Fallback 2: Append before the very last section
+        } else if (!updated && content.includes('</section>')) {
             const lastIndex = content.lastIndexOf('</section>');
             content = content.substring(0, lastIndex) + htmlSnippet + content.substring(lastIndex);
             updated = true;
