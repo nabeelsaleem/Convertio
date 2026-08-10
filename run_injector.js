@@ -54,13 +54,21 @@ Object.keys(targetPages).forEach(targetUrl => {
 
         let updated = false;
 
-        // NEW PLACEMENT STRATEGY: Target the final wrapper blocks inside your long-form text
-        // Looks for closing main blocks, or closing article containers where text naturally ends
-        if (content.includes('</main>')) {
+        // NEW PLACEMENT STRATEGY: Target exactly before the "Frequently Asked Questions" section
+        // This Regex looks for the structural transition between the end of the main article container
+        // and the start of the FAQ section.
+        const faqRegex = /(<\/div>\s*<\/div>\s*<\/section>\s*<section[^>]*>\s*<div[^>]*>\s*<h2[^>]*>Frequently Asked Questions<\/h2>)/i;
+
+        if (faqRegex.test(content)) {
+            // Injects the snippet inside the main article container, just before it closes
+            content = content.replace(faqRegex, `${htmlSnippet}\n$1`);
+            updated = true;
+        } else if (content.includes('</main>')) {
+            // Fallback 1: If no FAQ section, look for main
             content = content.replace('</main>', `${htmlSnippet}\n</main>`);
             updated = true;
         } else if (content.includes('</section>')) {
-            // If main isn't found, falls back to appending before the last section
+            // Fallback 2: Append before the very last section
             const lastIndex = content.lastIndexOf('</section>');
             content = content.substring(0, lastIndex) + htmlSnippet + content.substring(lastIndex);
             updated = true;
