@@ -52,7 +52,7 @@ Object.keys(targetPages).forEach(targetUrl => {
         </div>
         `;
 
-       let updated = false;
+      let updated = false;
 
         // NEW PLACEMENT STRATEGY: Strictly target the section above the FAQ
         const faqRegex = /Frequently Asked Questions/i;
@@ -69,8 +69,8 @@ Object.keys(targetPages).forEach(targetUrl => {
                 // 3. Extract the content of that specific reading section
                 const sectionContent = beforeFaq.substring(0, lastSectionCloseIndex);
                 
-                // 4. Match the closing </div> tags at the very end of this section to inject inside them
-                const trailingDivsMatch = sectionContent.match(/(\s*<\/div>\s*)+$/i);
+                // 4. FIXED REGEX: Removed leading \s* to prevent Node.js from freezing (Catastrophic Backtracking)
+                const trailingDivsMatch = sectionContent.match(/(?:<\/div>\s*)+$/i);
                 
                 if (trailingDivsMatch) {
                     // Inject before the closing divs so it stays inside the content container (like the "prose" div)
