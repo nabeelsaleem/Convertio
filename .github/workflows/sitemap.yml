@@ -31,7 +31,9 @@ jobs:
             if [[ "$file" != "./index.html" && "$file" != ./components/* ]]; then
               dir=$(dirname "${file#./}")
               url="https://simpliconvert.com/${dir}/"
-              mod_date=$(date -r "$file" +%Y-%m-%d)
+              
+              # FIX: Using stat -c %y for Ubuntu/Linux instead of date -r
+              mod_date=$(stat -c %y "$file" | cut -d' ' -f1)
 
               if [[ "$dir" == blog ]]; then
                 # Blog homepage
@@ -68,7 +70,7 @@ jobs:
           echo "User-agent: *" > robots.txt
           echo "Allow: /" >> robots.txt
           echo "Disallow: /components/" >> robots.txt
-          echo "Disallow: /*index.html$" >> robots.txt  # <-- ADD THIS LINE
+          echo "Disallow: /*index.html$" >> robots.txt  # Prevent indexing of index.html duplicates
           echo "Sitemap: https://simpliconvert.com/sitemap.xml" >> robots.txt
 
       - name: Commit and push changes
