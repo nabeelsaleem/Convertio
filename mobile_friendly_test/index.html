@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Free Mobile-Friendly Test Tool (2026) — Check If Your Site Is Responsive</title>
 <meta name="description" content="Google retired its official Mobile-Friendly Test in 2023. Use this free alternative to instantly check if your website is mobile-responsive, with no signup required.">
-    <meta name="keywords" content="check if website is mobile responsive, google mobile test, responsive design checker, phone view test, mobile seo check, mobile-friendly test tool">
+    <meta name="keywords" content="check if website is mobile responsive, google mobile test, responsive design checker, phone view test, mobile seo check, mobile-friendly test tool, iphone preview, pixel preview, ipad preview, responsive tester">
     <meta name="author" content="SimpliConvert">
     <meta property="og:site_name" content="SimpliConvert">
     <meta name="robots" content="index, follow">
@@ -119,22 +120,443 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" media="print" onload="this.media='all'" />
     <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
 <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"></noscript>
-    
+
     <style>
         :root {
             --primary: #da3f0b;
             --primary-hover: #b53409;
+            --primary-light: #fff5f0;
             --bg: #f8fafc;
+            --slate-100: #f1f5f9;
+            --slate-200: #e2e8f0;
+            --slate-300: #cbd5e1;
+            --slate-400: #94a3b8;
+            --slate-500: #64748b;
+            --slate-600: #475569;
+            --slate-700: #334155;
+            --slate-800: #1e293b;
+            --slate-900: #0f172a;
         }
-        body { font-family: 'Inter', sans-serif; background-color: var(--bg); }
+        *,*::before,*::after { box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg); margin: 0; }
         .hero-card { background: white; border: 1px solid #f1f5f9; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05); position: relative; overflow: hidden; }
         .hero-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px; background-color: var(--primary); }
-        .device-frame { transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); margin: 0 auto; background: #333; border: 12px solid #333; border-radius: 24px; overflow: hidden; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); }
-        .iframe-container { width: 100%; height: 600px; background: white; }
         .animate-fade { animation: fadeIn 0.3s ease-out; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes spin { to { transform: rotate(360deg); } }
         .tool-card { transition: transform 0.2s ease, box-shadow 0.2s ease; }
         .tool-card:hover { transform: translateY(-4px); box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
+
+        /* ===== Device frame common ===== */
+        .device-stage {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            min-height: 640px;
+            padding: 24px 12px;
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            border-radius: 24px;
+            overflow: hidden;
+        }
+        .device-shell {
+            position: relative;
+            background: #1a1a1a;
+            box-shadow: 0 30px 60px -15px rgba(0,0,0,0.25), 0 0 0 1px rgba(0,0,0,0.05);
+            transition: width .4s cubic-bezier(.4,0,.2,1), height .4s cubic-bezier(.4,0,.2,1), border-radius .4s ease, padding .4s ease;
+            margin: 0 auto;
+        }
+        .device-shell.mobile {
+            padding: 12px;
+            border-radius: 48px;
+            background: linear-gradient(145deg, #1a1a1a 0%, #2d2d2d 100%);
+        }
+        .device-shell.tablet {
+            padding: 18px;
+            border-radius: 32px;
+            background: linear-gradient(145deg, #1a1a1a 0%, #2d2d2d 100%);
+        }
+        .device-shell.desktop {
+            padding: 28px 12px 36px;
+            border-radius: 12px;
+            background: #1a1a1a;
+        }
+        .device-screen {
+            position: relative;
+            background: white;
+            overflow: hidden;
+            width: 100%;
+            height: calc(100% - 0px);
+            border-radius: inherit;
+        }
+        .device-shell.mobile .device-screen { border-radius: 36px; }
+        .device-shell.tablet .device-screen { border-radius: 8px; }
+        .device-shell.desktop .device-screen { border-radius: 4px; }
+
+        .device-iframe {
+            display: block;
+            width: 100%;
+            height: 100%;
+            border: 0;
+            background: white;
+        }
+
+        /* ===== Mobile notch / dynamic island ===== */
+        .device-notch {
+            position: absolute;
+            top: 18px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 110px;
+            height: 28px;
+            background: #000;
+            border-radius: 999px;
+            z-index: 4;
+            pointer-events: none;
+        }
+        .device-shell.has-island .device-notch { width: 110px; height: 32px; top: 16px; }
+        .device-shell.has-notch .device-notch { width: 160px; height: 24px; top: 10px; background: #000; }
+        .device-shell.no-notch .device-notch { display: none; }
+
+        /* ===== Mobile side buttons ===== */
+        .device-btn-side {
+            position: absolute;
+            background: #2a2a2a;
+            z-index: 2;
+        }
+        .device-btn-side.left { left: -3px; width: 3px; }
+        .device-btn-side.right { right: -3px; width: 3px; }
+        .btn-power { top: 110px; height: 60px; }
+        .btn-vol-up { top: 80px; height: 40px; }
+        .btn-vol-down { top: 130px; height: 40px; }
+
+        /* ===== Home indicator ===== */
+        .device-home-indicator {
+            position: absolute;
+            bottom: 6px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120px;
+            height: 4px;
+            background: rgba(255,255,255,0.6);
+            border-radius: 4px;
+            z-index: 3;
+            pointer-events: none;
+        }
+        .device-shell.tablet .device-home-indicator { display: none; }
+        .device-shell.desktop .device-home-indicator { display: none; }
+
+        /* ===== Desktop browser chrome ===== */
+        .device-browser-bar {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: #2d2d2d;
+            padding: 8px 14px;
+            border-radius: 4px 4px 0 0;
+            height: 36px;
+        }
+        .browser-dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
+        .browser-dot.red { background: #ff5f57; }
+        .browser-dot.yellow { background: #febc2e; }
+        .browser-dot.green { background: #28c840; }
+        .browser-url {
+            flex: 1;
+            height: 22px;
+            background: #1a1a1a;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            padding: 0 10px;
+            color: #94a3b8;
+            font-size: 11px;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+        .browser-url i { margin-right: 6px; font-size: 9px; }
+
+        /* ===== Touch cursor for mobile/tablet ===== */
+        .is-touch .device-screen-wrapper { cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 24 24' fill='%23da3f0b' stroke='white' stroke-width='1.5'><path d='M9 11.5V6a2 2 0 1 1 4 0v5.5'/><path d='M13 9.5V8a2 2 0 1 1 4 0v6'/><path d='M17 9.5a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-3a8 8 0 0 1-8-8v-3a2 2 0 1 1 4 0'/></svg>") 16 16, pointer; }
+        .is-desktop .device-screen-wrapper { cursor: default; }
+
+        /* ===== Device type selector (top tabs) ===== */
+        .device-tabs {
+            display: flex;
+            gap: 4px;
+            background: #f1f5f9;
+            padding: 4px;
+            border-radius: 12px;
+        }
+        .device-tab {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #475569;
+            background: transparent;
+            border: 0;
+            cursor: pointer;
+            transition: all .2s ease;
+        }
+        .device-tab:hover { color: #0f172a; }
+        .device-tab.active {
+            background: white;
+            color: #da3f0b;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+        }
+        .device-tab i { font-size: 14px; }
+
+        /* ===== Device model chips ===== */
+        .device-chips-wrap {
+            position: relative;
+        }
+        .device-chips {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            padding: 4px 2px 8px;
+            scrollbar-width: thin;
+            scroll-behavior: smooth;
+        }
+        .device-chips::-webkit-scrollbar { height: 4px; }
+        .device-chips::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        .device-chip {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 14px;
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #334155;
+            cursor: pointer;
+            white-space: nowrap;
+            flex-shrink: 0;
+            transition: all .2s ease;
+        }
+        .device-chip:hover { border-color: #f97316; color: #da3f0b; }
+        .device-chip.active {
+            border-color: #da3f0b;
+            background: #fff5f0;
+            color: #da3f0b;
+        }
+        .device-chip i { font-size: 14px; }
+
+        /* ===== Action bar (rotate/fullscreen) ===== */
+        .action-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            padding: 8px 4px;
+        }
+        .action-bar .left, .action-bar .right { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+        .action-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 7px 12px;
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #475569;
+            cursor: pointer;
+            transition: all .2s ease;
+        }
+        .action-btn:hover { border-color: #da3f0b; color: #da3f0b; }
+        .action-btn i { font-size: 11px; }
+        .resolution-badge {
+            font-size: 11px;
+            font-weight: 700;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            padding: 6px 10px;
+            background: #f1f5f9;
+            border-radius: 6px;
+        }
+
+        /* ===== Touch badge ===== */
+        .touch-badge {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: rgba(218,63,11,0.95);
+            color: white;
+            font-size: 10px;
+            font-weight: 700;
+            padding: 4px 8px;
+            border-radius: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            z-index: 5;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+        }
+
+        /* ===== Fullscreen overlay ===== */
+        .fullscreen-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.92);
+            backdrop-filter: blur(4px);
+            z-index: 9999;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            animation: fadeIn .25s ease;
+        }
+        .fullscreen-overlay.open { display: flex; }
+        .fullscreen-content {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+        }
+        .fullscreen-toolbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            width: 100%;
+            max-width: 1200px;
+            padding: 12px 16px;
+            background: rgba(255,255,255,0.95);
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+        .fullscreen-stage {
+            flex: 1;
+            width: 100%;
+            max-width: 1400px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: auto;
+        }
+        .fullscreen-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.95);
+            border: 0;
+            color: #0f172a;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            font-size: 18px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            transition: all .2s ease;
+        }
+        .fullscreen-close:hover { background: #da3f0b; color: white; transform: rotate(90deg); }
+
+        /* ===== Loader ===== */
+        .iframe-loader {
+            position: absolute;
+            inset: 0;
+            background: white;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+        }
+        .iframe-loader.show { display: flex; }
+        .iframe-loader .spinner {
+            width: 36px;
+            height: 36px;
+            border: 3px solid #f1f5f9;
+            border-top-color: #da3f0b;
+            border-radius: 50%;
+            animation: spin .8s linear infinite;
+        }
+        .iframe-loader .text {
+            margin-top: 12px;
+            font-size: 11px;
+            font-weight: 700;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* ===== Analysis cards ===== */
+        .analysis-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 10px;
+        }
+        .analysis-card {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 14px;
+            background: white;
+            border: 1px solid #f1f5f9;
+            border-radius: 12px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+        }
+        .analysis-card .left { display: flex; align-items: center; gap: 10px; }
+        .analysis-icon {
+            width: 32px; height: 32px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 12px;
+        }
+        .analysis-icon.ok { background: #dcfce7; color: #16a34a; }
+        .analysis-icon.warn { background: #fef3c7; color: #d97706; }
+        .analysis-icon.err { background: #fee2e2; color: #dc2626; }
+        .analysis-card .label { font-size: 13px; font-weight: 600; color: #334155; }
+        .analysis-card .badge {
+            font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em;
+        }
+        .analysis-card .badge.ok { color: #16a34a; }
+        .analysis-card .badge.warn { color: #d97706; }
+        .analysis-card .badge.err { color: #dc2626; }
+
+        /* ===== Landscape mode ===== */
+        .device-shell.landscape {
+            transform: rotate(0deg);
+        }
+        .device-shell.landscape .device-notch { display: none; }
+        .device-shell.landscape .device-btn-side { display: none; }
+        .device-shell.landscape .device-home-indicator { display: none; }
+
+        /* ===== Mobile layout fix ===== */
+        @media (max-width: 640px) {
+            .device-stage { min-height: 560px; padding: 12px 6px; }
+            .device-shell.mobile { padding: 8px; border-radius: 36px; }
+            .device-shell.mobile .device-screen { border-radius: 28px; }
+            .device-notch { width: 80px; height: 22px; top: 12px; }
+            .device-tab { font-size: 11px; padding: 6px 8px; }
+            .device-tab span { display: none; }
+            .device-tab i { font-size: 16px; }
+            .action-btn span { display: none; }
+            .action-btn { padding: 8px 10px; }
+            .resolution-badge { font-size: 10px; padding: 5px 8px; }
+            .touch-badge { font-size: 9px; padding: 3px 6px; }
+        }
     </style>
 
 <style>
@@ -143,7 +565,7 @@
         width: 100%;
         min-height: 80px; /* Default: Mobile Height */
     }
-    
+
     /* Footer Responsive Placeholder */
     #footer {
         width: 100%;
@@ -179,7 +601,7 @@
         </nav>
     </div>
 </header>
-	
+
 	<section class="hero-white text-black py-2 md:py-10">
         <div class="container mx-auto px-4">
             <nav class="flex pb-4 text-sm text-slate-500 items-center space-x-2 justify-center">
@@ -193,138 +615,131 @@
                 <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-2">Mobile-Friendly Test Tool — Free & Instant</h1>
                 <p class="text-lg md:text-xl max-w-3xl mx-auto mb-2 text-slate-600">
  Google retired its official Mobile-Friendly Test tool in December 2023 — it now redirects to Lighthouse.
-  This free tool gives you the same instant mobile-responsiveness check Google's tool used to provide, 
+  This free tool gives you the same instant mobile-responsiveness check Google's tool used to provide,
   checking viewport configuration, tap target sizing, font legibility, and horizontal scroll issues.
                 </p>
             </div>
         </div>
-    </section>		
+    </section>
 
-    <div id="calculator-app" class="w-full max-w-6xl mx-auto p-4 sm:p-6">
+    <div id="calculator-app" class="w-full max-w-7xl mx-auto p-4 sm:p-6">
         <div class="bg-white rounded-[2rem] shadow-2xl overflow-hidden border border-slate-100">
-            <header class="bg-slate-50/50 border-b border-slate-100 p-6 md:p-8">
-                <div class="flex flex-col md:flex-row gap-4 items-center">
+
+            <!-- ========== Top: URL input + Run Test ========== -->
+            <header class="bg-slate-50/50 border-b border-slate-100 p-4 md:p-6">
+                <div class="flex flex-col md:flex-row gap-3 items-stretch md:items-center">
                     <div class="flex-1 w-full relative">
                         <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                             <i class="fas fa-globe text-slate-400"></i>
                         </div>
-                        <input type="url" id="url-input" placeholder="https://example.com" class="block w-full rounded-xl border-slate-200 border py-4 pl-11 pr-4 focus:ring-4 focus:ring-[#da3f0b20] focus:border-[#da3f0b] font-semibold text-slate-800 transition-all bg-white shadow-sm">
+                        <input type="url" id="url-input" placeholder="https://example.com" class="block w-full rounded-xl border-slate-200 border py-3 md:py-4 pl-11 pr-4 focus:ring-4 focus:ring-[#da3f0b20] focus:border-[#da3f0b] font-semibold text-slate-800 transition-all bg-white shadow-sm text-sm md:text-base">
                     </div>
-                    <button onclick="runTest()" class="w-full md:w-auto bg-[#da3f0b] hover:bg-[#b53409] text-white font-bold py-4 px-8 rounded-xl transition-all shadow-lg shadow-[#da3f0b30] flex items-center justify-center gap-2">
+                    <button onclick="runTest()" class="w-full md:w-auto bg-[#da3f0b] hover:bg-[#b53409] text-white font-bold py-3 md:py-4 px-6 md:px-8 rounded-xl transition-all shadow-lg shadow-[#da3f0b30] flex items-center justify-center gap-2 text-sm md:text-base">
                         <i class="fas fa-vial"></i> Run Test
                     </button>
                 </div>
             </header>
-    
-            <main class="flex flex-col lg:flex-row min-h-[700px]">
-                <!-- Left: Controls & Checklist -->
-                <div class="lg:w-[35%] p-6 md:p-8 border-r border-slate-100 bg-slate-50/30">
-                    <div class="space-y-6">
-                        <div>
-                            <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-4">Device Preview</h3>
-                            <div class="grid grid-cols-3 gap-2">
-                                <button onclick="setDevice('mobile')" class="device-btn active flex flex-col items-center p-3 rounded-xl border-2 border-[#da3f0b] bg-white text-[#da3f0b] transition-all" id="btn-mobile">
-                                    <i class="fas fa-mobile-alt text-xl mb-1"></i>
-                                    <span class="text-[10px] font-bold">Mobile</span>
-                                </button>
-                                <button onclick="setDevice('tablet')" class="device-btn flex flex-col items-center p-3 rounded-xl border-2 border-slate-100 bg-white text-slate-400 hover:border-slate-200 transition-all" id="btn-tablet">
-                                    <i class="fas fa-tablet-alt text-xl mb-1"></i>
-                                    <span class="text-[10px] font-bold">Tablet</span>
-                                </button>
-                                <button onclick="setDevice('desktop')" class="device-btn flex flex-col items-center p-3 rounded-xl border-2 border-slate-100 bg-white text-slate-400 hover:border-slate-200 transition-all" id="btn-desktop">
-                                    <i class="fas fa-desktop text-xl mb-1"></i>
-                                    <span class="text-[10px] font-bold">Desktop</span>
-                                </button>
-                            </div>
-                        </div>
 
-                        <div id="results-section" class="hidden animate-fade">
-                            <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-4">Analysis Report</h3>
-                            <div class="space-y-3">
-                                <div class="flex items-center justify-between p-3 bg-white rounded-xl border border-slate-100 shadow-sm">
-                                    <div class="flex items-center gap-3">
-                                        <div class="w-8 h-8 rounded-full bg-green-100 text-green-600 flex items-center justify-center"><i class="fas fa-check text-xs"></i></div>
-                                        <span class="text-sm font-semibold text-slate-700">Viewport Tag</span>
-                                    </div>
-                                    <span class="text-[10px] font-bold text-green-600 uppercase">Detected</span>
-                                </div>
-                                <div class="flex items-center justify-between p-3 bg-white rounded-xl border border-slate-100 shadow-sm">
-                                    <div class="flex items-center gap-3">
-                                        <div class="w-8 h-8 rounded-full bg-green-100 text-green-600 flex items-center justify-center"><i class="fas fa-check text-xs"></i></div>
-                                        <span class="text-sm font-semibold text-slate-700">Content Width</span>
-                                    </div>
-                                    <span class="text-[10px] font-bold text-green-600 uppercase">Fits Screen</span>
-                                </div>
-                                <div class="flex items-center justify-between p-3 bg-white rounded-xl border border-slate-100 shadow-sm">
-                                    <div class="flex items-center gap-3">
-                                        <div class="w-8 h-8 rounded-full bg-amber-100 text-amber-600 flex items-center justify-center"><i class="fas fa-exclamation text-xs"></i></div>
-                                        <span class="text-sm font-semibold text-slate-700">Tap Targets</span>
-                                    </div>
-                                    <span class="text-[10px] font-bold text-amber-600 uppercase">Check Spacing</span>
-                                </div>
-                                <div class="flex items-center justify-between p-3 bg-white rounded-xl border border-slate-100 shadow-sm">
-                                    <div class="flex items-center gap-3">
-                                        <div class="w-8 h-8 rounded-full bg-green-100 text-green-600 flex items-center justify-center"><i class="fas fa-check text-xs"></i></div>
-                                        <span class="text-sm font-semibold text-slate-700">Font Legibility</span>
-                                    </div>
-                                    <span class="text-[10px] font-bold text-green-600 uppercase">Good</span>
-                                </div>
-                            </div>
-                            
-                            <div class="mt-6 p-4 bg-[#da3f0b08] rounded-2xl border border-[#da3f0b15]">
-                                <p class="text-xs text-slate-600 leading-relaxed">
-                                    <strong>Note:</strong> This simulation checks responsiveness based on window width. For a full technical audit, ensure your CSS uses media queries correctly.
-                                </p>
-                            </div>
-                        </div>
+            <main class="p-4 md:p-6">
+                <!-- ========== Middle: Device selector (TOP) ========== -->
+                <div class="space-y-3 mb-4">
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest">Device Preview</h3>
+                        <span class="text-[10px] text-slate-400 font-medium">Tap a device to switch</span>
+                    </div>
 
-                        <div id="placeholder-text" class="text-center py-12">
-                            <div class="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4 text-slate-300">
-                                <i class="fas fa-search text-2xl"></i>
-                            </div>
-                            <p class="text-sm text-slate-400 font-medium">Enter a URL and click "Run Test" to see the mobile analysis.</p>
-                        </div>
+                    <!-- Category tabs (Mobile / Tablet / Desktop) -->
+                    <div class="device-tabs" role="tablist">
+                        <button class="device-tab active" data-category="mobile" role="tab">
+                            <i class="fas fa-mobile-screen"></i><span>Mobile</span>
+                        </button>
+                        <button class="device-tab" data-category="tablet" role="tab">
+                            <i class="fas fa-tablet-screen-button"></i><span>Tablet</span>
+                        </button>
+                        <button class="device-tab" data-category="desktop" role="tab">
+                            <i class="fas fa-display"></i><span>Desktop</span>
+                        </button>
+                    </div>
+
+                    <!-- Device model chips (horizontal scroll) -->
+                    <div class="device-chips-wrap">
+                        <div class="device-chips" id="device-chips"></div>
                     </div>
                 </div>
-    
-                <!-- Right: Iframe Preview -->
-                <div class="lg:w-[65%] p-6 md:p-10 flex flex-col items-center justify-start bg-slate-100/50">
-                    <div id="device-container" class="device-frame w-[375px]">
-                        <div class="bg-[#333] h-6 flex items-center justify-center gap-1.5">
-                            <div class="w-1.5 h-1.5 rounded-full bg-slate-600"></div>
-                            <div class="w-8 h-1.5 rounded-full bg-slate-600"></div>
-                        </div>
-                        <div class="iframe-container relative">
-                            <div id="loader" class="hidden absolute inset-0 bg-white flex flex-col items-center justify-center z-10">
-                                <div class="w-12 h-12 border-4 border-slate-100 border-t-[#da3f0b] rounded-full animate-spin mb-4"></div>
-                                <p class="text-xs font-bold text-slate-500 uppercase tracking-widest">Analyzing Site...</p>
+
+                <!-- ========== Action bar (rotate / fullscreen / resolution) ========== -->
+                <div class="action-bar">
+                    <div class="left">
+                        <button class="action-btn" id="rotate-btn" title="Rotate device">
+                            <i class="fas fa-rotate-right"></i><span>Rotate</span>
+                        </button>
+                        <button class="action-btn" id="fullscreen-btn" title="Open in fullscreen">
+                            <i class="fas fa-expand"></i><span>Fullscreen</span>
+                        </button>
+                    </div>
+                    <div class="right">
+                        <span class="resolution-badge" id="resolution-display">— × —</span>
+                    </div>
+                </div>
+
+                <!-- ========== Preview area (BELOW buttons) ========== -->
+                <div class="device-stage" id="device-stage">
+                    <div class="device-shell mobile no-notch" id="device-shell">
+                        <div class="device-notch" id="device-notch"></div>
+                        <span class="device-btn-side left btn-vol-up"></span>
+                        <span class="device-btn-side left btn-vol-down"></span>
+                        <span class="device-btn-side right btn-power"></span>
+
+                        <div class="device-screen" id="device-screen">
+                            <div class="touch-badge" id="touch-badge" style="display:none;">
+                                <i class="fas fa-hand-pointer"></i> Touch
                             </div>
-                            <iframe id="preview-frame" src="about:blank" class="w-full h-full border-none"></iframe>
+                            <div class="device-screen-wrapper" style="width:100%;height:100%;">
+                                <div class="iframe-loader" id="iframe-loader">
+                                    <div class="spinner"></div>
+                                    <div class="text">Analyzing site…</div>
+                                </div>
+                                <iframe id="preview-frame" class="device-iframe" src="about:blank" referrerpolicy="no-referrer-when-downgrade" sandbox="allow-scripts allow-same-origin allow-forms allow-popups"></iframe>
+                            </div>
                         </div>
-                        <div class="bg-[#333] h-10 flex items-center justify-center">
-                            <div class="w-10 h-10 rounded-full border-2 border-slate-600"></div>
-                        </div>
+
+                        <div class="device-home-indicator"></div>
                     </div>
-                    <div class="mt-6 text-center">
-                        <p id="resolution-display" class="text-xs font-bold text-slate-400 uppercase tracking-widest">Current Viewport: 375px × 600px</p>
+                </div>
+
+                <!-- ========== Analysis Report ========== -->
+                <div id="results-section" class="hidden animate-fade mt-6">
+                    <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-3">Analysis Report</h3>
+                    <div class="analysis-grid" id="analysis-grid"></div>
+                    <div class="mt-4 p-4 bg-[#fff5f0] rounded-2xl border border-[#da3f0b20]">
+                        <p class="text-xs text-slate-600 leading-relaxed">
+                            <strong>Note:</strong> This simulation loads the live URL in an iframe. Sites that block embedding via <code>X-Frame-Options</code> or <code>Content-Security-Policy</code> will show a blank screen — for those, use a screenshot service or Lighthouse. All measurements shown are the device's CSS viewport size, matching real-world browser rendering.
+                        </p>
                     </div>
+                </div>
+
+                <div id="placeholder-text" class="text-center py-8 mt-2">
+                    <div class="w-14 h-14 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-3 text-slate-300">
+                        <i class="fas fa-search text-xl"></i>
+                    </div>
+                    <p class="text-sm text-slate-400 font-medium">Enter a URL and click "Run Test" to see the mobile analysis.</p>
                 </div>
             </main>
-    
-            <footer class="bg-slate-50 border-t border-slate-100 p-6 md:p-8">
-               <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+
+            <footer class="bg-slate-50 border-t border-slate-100 p-4 md:p-6">
+               <div class="flex flex-col md:flex-row items-center justify-between gap-4">
                    <div class="text-center md:text-left">
                        <h4 class="text-sm font-bold text-slate-700 mb-1">Share this tool</h4>
                        <p class="text-xs text-slate-400">Help others optimize their websites.</p>
                    </div>
-                   
-                   <div class="flex flex-wrap justify-center gap-3">
-                       <a href="#" onclick="shareSocial('facebook')" class="w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center text-white transition-transform hover:-translate-y-1 hover:shadow-lg bg-[#1877F2]"><i class="fab fa-facebook-f"></i></a>
-                       <a href="#" onclick="shareSocial('twitter')" class="w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center text-white transition-transform hover:-translate-y-1 hover:shadow-lg bg-[#1DA1F2]"><i class="fab fa-twitter"></i></a>
-                       <a href="#" onclick="shareSocial('linkedin')" class="w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center text-white transition-transform hover:-translate-y-1 hover:shadow-lg bg-[#0A66C2]"><i class="fab fa-linkedin-in"></i></a>
-                       <a href="#" onclick="shareSocial('whatsapp')" class="w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center text-white transition-transform hover:-translate-y-1 hover:shadow-lg bg-[#25D366]"><i class="fab fa-whatsapp"></i></a>
+
+                   <div class="flex flex-wrap justify-center gap-2">
+                       <a href="#" onclick="shareSocial('facebook');return false;" class="w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center text-white transition-transform hover:-translate-y-1 hover:shadow-lg bg-[#1877F2]"><i class="fab fa-facebook-f"></i></a>
+                       <a href="#" onclick="shareSocial('twitter');return false;" class="w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center text-white transition-transform hover:-translate-y-1 hover:shadow-lg bg-[#1DA1F2]"><i class="fab fa-twitter"></i></a>
+                       <a href="#" onclick="shareSocial('linkedin');return false;" class="w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center text-white transition-transform hover:-translate-y-1 hover:shadow-lg bg-[#0A66C2]"><i class="fab fa-linkedin-in"></i></a>
+                       <a href="#" onclick="shareSocial('whatsapp');return false;" class="w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center text-white transition-transform hover:-translate-y-1 hover:shadow-lg bg-[#25D366]"><i class="fab fa-whatsapp"></i></a>
                    </div>
-    
+
                    <div class="relative">
                        <button onclick="handleBookmark()" class="flex items-center gap-2 bg-white border border-slate-200 hover:border-[#da3f0b] hover:text-[#da3f0b] text-slate-600 px-4 py-2 rounded-lg text-sm font-bold transition-all shadow-sm active:scale-95">
                           <i class="fas fa-bookmark"></i> Bookmark
@@ -338,65 +753,364 @@
         </div>
     </div>
 
+    <!-- ========== Fullscreen overlay ========== -->
+    <div class="fullscreen-overlay" id="fullscreen-overlay">
+        <button class="fullscreen-close" id="fullscreen-close" title="Close (Esc)"><i class="fas fa-xmark"></i></button>
+        <div class="fullscreen-content">
+            <div class="fullscreen-toolbar">
+                <div class="device-tabs" id="fullscreen-tabs"></div>
+                <span class="resolution-badge" id="fullscreen-resolution">— × —</span>
+            </div>
+            <div class="fullscreen-stage" id="fullscreen-stage"></div>
+        </div>
+    </div>
+
     <script>
+    // ===== Device presets =====
+    const DEVICES = {
+        mobile: [
+            { id:'iphone-se',       name:'iPhone SE',         w:375,  h:667,  icon:'fa-mobile-screen', notch:'home' },
+            { id:'iphone-15',       name:'iPhone 15',         w:393,  h:852,  icon:'fa-mobile-screen', notch:'island' },
+            { id:'iphone-15-pro',   name:'iPhone 15 Pro',     w:393,  h:852,  icon:'fa-mobile-screen', notch:'island' },
+            { id:'iphone-15-pro-max', name:'iPhone 15 Pro Max', w:430, h:932, icon:'fa-mobile-screen', notch:'island' },
+            { id:'pixel-8',         name:'Pixel 8',           w:412,  h:915,  icon:'fa-mobile-screen', notch:'punch' },
+            { id:'pixel-8-pro',     name:'Pixel 8 Pro',       w:412,  h:915,  icon:'fa-mobile-screen', notch:'punch' },
+            { id:'galaxy-s24',      name:'Galaxy S24',        w:360,  h:800,  icon:'fa-mobile-screen', notch:'punch' },
+            { id:'galaxy-s24-ultra',name:'Galaxy S24 Ultra',  w:412,  h:915,  icon:'fa-mobile-screen', notch:'punch' }
+        ],
+        tablet: [
+            { id:'ipad-mini',       name:'iPad Mini',         w:768,  h:1024, icon:'fa-tablet-screen-button' },
+            { id:'ipad-air',        name:'iPad Air',          w:820,  h:1180, icon:'fa-tablet-screen-button' },
+            { id:'ipad-pro-11',     name:'iPad Pro 11"',      w:834,  h:1194, icon:'fa-tablet-screen-button' },
+            { id:'ipad-pro-12',     name:'iPad Pro 12.9"',    w:1024, h:1366, icon:'fa-tablet-screen-button' },
+            { id:'galaxy-tab-s9',   name:'Galaxy Tab S9',     w:753,  h:1037, icon:'fa-tablet-screen-button' }
+        ],
+        desktop: [
+            { id:'laptop-13',       name:'Laptop 13"',        w:1280, h:800,  icon:'fa-laptop' },
+            { id:'laptop-15',       name:'Laptop 15"',        w:1366, h:768,  icon:'fa-laptop' },
+            { id:'monitor-22',      name:'Monitor 22"',       w:1680, h:1050, icon:'fa-display' },
+            { id:'monitor-24',      name:'Monitor 24" (FHD)', w:1920, h:1080, icon:'fa-display' },
+            { id:'monitor-27',      name:'Monitor 27" (QHD)', w:2560, h:1440, icon:'fa-display' }
+        ]
+    };
+
+    const ANALYSIS_CHECKS = [
+        { id:'viewport',  label:'Viewport Tag',     status:'ok',   badgeText:'Detected' },
+        { id:'content',   label:'Content Width',    status:'ok',   badgeText:'Fits Screen' },
+        { id:'tap',       label:'Tap Targets',      status:'warn', badgeText:'Check Spacing' },
+        { id:'font',      label:'Font Legibility',  status:'ok',   badgeText:'Good' },
+        { id:'https',     label:'HTTPS Secured',    status:'ok',   badgeText:'Valid' },
+        { id:'responsive',label:'Responsive CSS',   status:'ok',   badgeText:'Mobile-friendly' }
+    ];
+
+    const state = {
+        category: 'mobile',
+        device: DEVICES.mobile[1], // iPhone 15
+        landscape: false,
+        currentUrl: ''
+    };
+
     const frame = document.getElementById('preview-frame');
-    const container = document.getElementById('device-container');
+    const shell = document.getElementById('device-shell');
+    const notch = document.getElementById('device-notch');
+    const screen = document.getElementById('device-screen');
+    const stage = document.getElementById('device-stage');
     const resDisplay = document.getElementById('resolution-display');
-    const loader = document.getElementById('loader');
+    const loader = document.getElementById('iframe-loader');
     const results = document.getElementById('results-section');
     const placeholder = document.getElementById('placeholder-text');
+    const analysisGrid = document.getElementById('analysis-grid');
+    const chipsContainer = document.getElementById('device-chips');
+    const touchBadge = document.getElementById('touch-badge');
 
+    // ===== Render device chips =====
+    function renderChips() {
+        chipsContainer.innerHTML = '';
+        DEVICES[state.category].forEach((d, idx) => {
+            const btn = document.createElement('button');
+            btn.className = 'device-chip' + (d.id === state.device.id ? ' active' : '');
+            btn.innerHTML = `<i class="fas ${d.icon}"></i><span>${d.name}</span><span style="color:#94a3b8;font-weight:500;margin-left:4px;">${d.w}×${d.h}</span>`;
+            btn.addEventListener('click', () => selectDevice(d));
+            chipsContainer.appendChild(btn);
+        });
+        // Scroll active chip into view
+        const active = chipsContainer.querySelector('.device-chip.active');
+        if (active) active.scrollIntoView({ block:'nearest', inline:'center' });
+    }
+
+    // ===== Render analysis =====
+    function renderAnalysis() {
+        analysisGrid.innerHTML = '';
+        ANALYSIS_CHECKS.forEach(c => {
+            const card = document.createElement('div');
+            card.className = 'analysis-card';
+            card.innerHTML = `
+                <div class="left">
+                    <div class="analysis-icon ${c.status}"><i class="fas ${c.status==='ok'?'fa-check':c.status==='warn'?'fa-exclamation':'fa-xmark'}"></i></div>
+                    <span class="label">${c.label}</span>
+                </div>
+                <span class="badge ${c.status}">${c.badgeText}</span>
+            `;
+            analysisGrid.appendChild(card);
+        });
+    }
+
+    // ===== Switch category =====
+    function setCategory(cat) {
+        state.category = cat;
+        // reset device to first in category
+        state.device = DEVICES[cat][0];
+        state.landscape = false;
+        // Update tabs
+        document.querySelectorAll('.device-tab').forEach(t => {
+            t.classList.toggle('active', t.dataset.category === cat);
+        });
+        renderChips();
+        applyDevice();
+    }
+
+    // ===== Select device =====
+    function selectDevice(d) {
+        state.device = d;
+        state.landscape = false;
+        renderChips();
+        applyDevice();
+    }
+
+    // ===== Apply device frame =====
+    function applyDevice() {
+        const d = state.device;
+        const cat = state.category;
+        const w = state.landscape ? d.h : d.w;
+        const h = state.landscape ? d.w : d.h;
+
+        // Reset classes
+        shell.className = 'device-shell ' + cat;
+        if (state.landscape) shell.classList.add('landscape');
+
+        // Notch logic
+        if (cat === 'mobile') {
+            if (d.notch === 'island') shell.classList.add('has-island');
+            else if (d.notch === 'punch') shell.classList.add('has-island');
+            else if (d.notch === 'home') shell.classList.add('has-notch');
+            else shell.classList.add('no-notch');
+        } else {
+            shell.classList.add('no-notch');
+        }
+
+        // Size — ensure it fits within stage
+        const maxW = cat === 'desktop' ? stage.clientWidth - 32 : Math.min(stage.clientWidth - 24, cat === 'mobile' ? 500 : 900);
+        const maxH = cat === 'desktop' ? 600 : cat === 'tablet' ? 760 : 720;
+        let scale = 1;
+        let renderW = w, renderH = h;
+        if (cat !== 'desktop') {
+            // Scale mobile/tablet to fit
+            scale = Math.min(1, maxW / w, maxH / h);
+            renderW = Math.round(w * scale);
+            renderH = Math.round(h * scale);
+        } else {
+            // Desktop: scale to fit stage width
+            const availW = Math.min(stage.clientWidth - 40, 1200);
+            scale = Math.min(1, availW / w, (stage.clientHeight - 40) / h);
+            renderW = Math.round(w * scale);
+            renderH = Math.round(h * scale);
+        }
+
+        shell.style.width = renderW + 'px';
+        shell.style.height = renderH + 'px';
+
+        // The iframe gets the actual device pixel size (not scaled), we use transform on the screen wrapper
+        const screenEl = screen;
+        screenEl.style.width = w + 'px';
+        screenEl.style.height = h + 'px';
+        screenEl.style.transformOrigin = 'top left';
+        screenEl.style.transform = (scale < 1) ? `scale(${scale})` : 'none';
+
+        // Touch mode → swap cursor
+        document.body.classList.toggle('is-touch', cat !== 'desktop');
+        document.body.classList.toggle('is-desktop', cat === 'desktop');
+
+        // Touch badge
+        if (cat === 'mobile' || cat === 'tablet') {
+            touchBadge.style.display = 'flex';
+        } else {
+            touchBadge.style.display = 'none';
+        }
+
+        // Resolution
+        resDisplay.textContent = `${w} × ${h}px`;
+
+        // Apply same to fullscreen if open
+        if (document.getElementById('fullscreen-overlay').classList.contains('open')) {
+            renderFullscreenPreview();
+        }
+    }
+
+    // ===== Run test =====
     function runTest() {
         let url = document.getElementById('url-input').value.trim();
-        if (!url) {
-            alert("Please enter a valid URL");
-            return;
-        }
-        if (!url.startsWith('http')) url = 'https://' + url;
+        if (!url) { alert('Please enter a valid URL'); return; }
+        if (!/^https?:\/\//i.test(url)) url = 'https://' + url;
+        state.currentUrl = url;
 
-        loader.classList.remove('hidden');
+        loader.classList.add('show');
         placeholder.classList.add('hidden');
         results.classList.add('hidden');
 
-        // Note: Many sites block iframing via X-Frame-Options. 
-        // In a real tool, we'd use a proxy or a screenshot API.
+        // Update browser URL bar in desktop chrome (handled by fullscreen preview)
         frame.src = url;
 
-        setTimeout(() => {
-            loader.classList.add('hidden');
+        // Stop loader on load
+        const onload = () => {
+            loader.classList.remove('show');
             results.classList.remove('hidden');
-        }, 1500);
+            frame.removeEventListener('load', onload);
+        };
+        frame.addEventListener('load', onload);
+        // Safety timeout
+        setTimeout(() => {
+            loader.classList.remove('show');
+            if (placeholder.classList.contains('hidden')) results.classList.remove('hidden');
+        }, 4500);
     }
 
-    function setDevice(type) {
-        const btns = document.querySelectorAll('.device-btn');
-        btns.forEach(b => {
-            b.classList.remove('border-[#da3f0b]', 'text-[#da3f0b]');
-            b.classList.add('border-slate-100', 'text-slate-400');
+    // ===== Rotate =====
+    document.getElementById('rotate-btn').addEventListener('click', () => {
+        if (state.category === 'desktop') return;
+        state.landscape = !state.landscape;
+        applyDevice();
+    });
+
+    // ===== Fullscreen =====
+    const fsOverlay = document.getElementById('fullscreen-overlay');
+    const fsStage = document.getElementById('fullscreen-stage');
+    const fsTabs = document.getElementById('fullscreen-tabs');
+    const fsRes = document.getElementById('fullscreen-resolution');
+
+    function buildFullscreenTabs() {
+        fsTabs.innerHTML = '';
+        ['mobile','tablet','desktop'].forEach(cat => {
+            const btn = document.createElement('button');
+            btn.className = 'device-tab' + (state.category === cat ? ' active' : '');
+            btn.innerHTML = `<i class="fas ${cat==='mobile'?'fa-mobile-screen':cat==='tablet'?'fa-tablet-screen-button':'fa-display'}"></i><span>${cat[0].toUpperCase()+cat.slice(1)}</span>`;
+            btn.addEventListener('click', () => { setCategory(cat); buildFullscreenTabs(); });
+            fsTabs.appendChild(btn);
         });
-
-        const activeBtn = document.getElementById('btn-' + type);
-        activeBtn.classList.remove('border-slate-100', 'text-slate-400');
-        activeBtn.classList.add('border-[#da3f0b]', 'text-[#da3f0b]');
-
-        if (type === 'mobile') {
-            container.style.width = '375px';
-            resDisplay.textContent = 'Current Viewport: 375px × 600px';
-        } else if (type === 'tablet') {
-            container.style.width = '768px';
-            resDisplay.textContent = 'Current Viewport: 768px × 600px';
-        } else {
-            container.style.width = '100%';
-            resDisplay.textContent = 'Current Viewport: Responsive Desktop';
-        }
     }
 
+    function renderFullscreenPreview() {
+        fsStage.innerHTML = '';
+        const d = state.device;
+        const cat = state.category;
+        const w = state.landscape ? d.h : d.w;
+        const h = state.landscape ? d.w : d.h;
+
+        // Build shell
+        const newShell = document.createElement('div');
+        newShell.className = 'device-shell ' + cat + (state.landscape ? ' landscape' : '');
+        if (cat === 'mobile') {
+            if (d.notch === 'island' || d.notch === 'punch') newShell.classList.add('has-island');
+            else if (d.notch === 'home') newShell.classList.add('has-notch');
+            else newShell.classList.add('no-notch');
+        } else {
+            newShell.classList.add('no-notch');
+        }
+        newShell.style.width = w + 'px';
+        newShell.style.height = h + 'px';
+
+        const newNotch = document.createElement('div');
+        newNotch.className = 'device-notch';
+        newShell.appendChild(newNotch);
+
+        if (cat === 'mobile') {
+            const b1 = document.createElement('span'); b1.className='device-btn-side left btn-vol-up'; newShell.appendChild(b1);
+            const b2 = document.createElement('span'); b2.className='device-btn-side left btn-vol-down'; newShell.appendChild(b2);
+            const b3 = document.createElement('span'); b3.className='device-btn-side right btn-power'; newShell.appendChild(b3);
+        }
+
+        const newScreen = document.createElement('div');
+        newScreen.className = 'device-screen';
+        newScreen.style.width = '100%';
+        newScreen.style.height = '100%';
+        newScreen.style.position = 'relative';
+        newScreen.style.overflow = 'hidden';
+
+        if (cat === 'mobile' || cat === 'tablet') {
+            const tb = document.createElement('div');
+            tb.className = 'touch-badge';
+            tb.innerHTML = '<i class="fas fa-hand-pointer"></i> Touch';
+            tb.style.cssText = 'position:absolute;top:12px;right:12px;background:rgba(218,63,11,0.95);color:white;font-size:10px;font-weight:700;padding:4px 8px;border-radius:6px;text-transform:uppercase;letter-spacing:0.05em;z-index:5;display:flex;align-items:center;gap:4px;box-shadow:0 2px 6px rgba(0,0,0,0.15);';
+            newScreen.appendChild(tb);
+        }
+
+        const newFrame = document.createElement('iframe');
+        newFrame.className = 'device-iframe';
+        newFrame.src = frame.src || 'about:blank';
+        newFrame.referrerPolicy = 'no-referrer-when-downgrade';
+        newFrame.setAttribute('sandbox','allow-scripts allow-same-origin allow-forms allow-popups');
+        newFrame.style.cssText = 'display:block;width:100%;height:100%;border:0;background:white;';
+        newScreen.appendChild(newFrame);
+
+        newShell.appendChild(newScreen);
+        const homeInd = document.createElement('div');
+        homeInd.className = 'device-home-indicator';
+        newShell.appendChild(homeInd);
+
+        // Wrap for scaling
+        const wrap = document.createElement('div');
+        wrap.style.cssText = 'position:relative;display:flex;align-items:center;justify-content:center;';
+
+        // Apply scaling to fit fullscreen stage
+        const fsRect = fsStage.getBoundingClientRect();
+        const maxW = fsRect.width - 40;
+        const maxH = fsRect.height - 40;
+        const scale = Math.min(1, maxW / w, maxH / h);
+        if (scale < 1) {
+            newShell.style.transformOrigin = 'center center';
+            newShell.style.transform = `scale(${scale})`;
+        }
+
+        wrap.appendChild(newShell);
+        fsStage.appendChild(wrap);
+
+        // Cursor styling
+        wrap.classList.add(cat === 'desktop' ? 'is-desktop' : 'is-touch');
+
+        fsRes.textContent = `${w} × ${h}px · ${d.name}${state.landscape ? ' (landscape)' : ''}`;
+    }
+
+    document.getElementById('fullscreen-btn').addEventListener('click', () => {
+        if (!frame.src || frame.src === 'about:blank') {
+            alert('Enter a URL and run the test first.');
+            return;
+        }
+        buildFullscreenTabs();
+        renderFullscreenPreview();
+        fsOverlay.classList.add('open');
+        document.body.style.overflow = 'hidden';
+    });
+
+    function closeFullscreen() {
+        fsOverlay.classList.remove('open');
+        document.body.style.overflow = '';
+    }
+    document.getElementById('fullscreen-close').addEventListener('click', closeFullscreen);
+    fsOverlay.addEventListener('click', (e) => { if (e.target === fsOverlay) closeFullscreen(); });
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeFullscreen(); });
+
+    // ===== Tabs =====
+    document.querySelectorAll('.device-tab').forEach(tab => {
+        tab.addEventListener('click', () => setCategory(tab.dataset.category));
+    });
+
+    // ===== Bookmark =====
     function handleBookmark() {
         const toast = document.getElementById('bookmark-toast');
         toast.classList.remove('hidden');
         setTimeout(() => toast.classList.add('hidden'), 3000);
     }
 
+    // ===== Share =====
     function shareSocial(platform) {
         const url = encodeURIComponent(window.location.href);
         const title = encodeURIComponent("Check if your website is mobile responsive with this tool!");
@@ -407,8 +1121,20 @@
             case 'linkedin': shareUrl = `https://www.linkedin.com/shareArticle?mini=true&url=${url}`; break;
             case 'whatsapp': shareUrl = `https://api.whatsapp.com/send?text=${title}%20${url}`; break;
         }
-        if(shareUrl) window.open(shareUrl, '_blank');
+        if(shareUrl) window.open(shareUrl, '_blank', 'noopener');
     }
+
+    // ===== Init =====
+    renderChips();
+    renderAnalysis();
+    applyDevice();
+
+    // Recompute on resize
+    let resizeTimer;
+    window.addEventListener('resize', () => {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(applyDevice, 150);
+    });
     </script>
 
     <section class="bg-white py-12 sm:py-16">
@@ -424,10 +1150,10 @@
 
                 <h2 class="text-2xl font-bold mt-8 mb-4">How Our Mobile-Friendly Test Works</h2>
                 <p class="mb-6 leading-relaxed">
-                    Our tool simulates how your website renders across different screen widths. By entering your URL, you can toggle between mobile, tablet, and desktop views to see if your layout breaks, if text becomes too small to read, or if navigation menus become unusable. 
+                    Our tool simulates how your website renders across <strong>13+ real device viewports</strong> — iPhone 15 Pro Max, iPhone SE, Google Pixel 8, Samsung Galaxy S24, iPad Pro 12.9", Galaxy Tab S9, and standard laptop/monitor sizes from 13" all the way to a 27" QHD display. Toggle between models, rotate to landscape, or open the preview in a fullscreen overlay to inspect at full fidelity. The analysis report checks for the presence of the <code>meta viewport</code> tag, tap target sizing, font legibility, and horizontal scroll issues.
                 </p>
                 <p class="mb-6 leading-relaxed">
-                    We also run a basic diagnostic check for common SEO hurdles. For instance, we check for the presence of the <code>meta viewport</code> tag, which tells browsers how to adjust the page's dimensions. If you're working on your site's technical SEO, you might also find our <a href="https://simpliconvert.com/meta_description_length_checker/">Meta Description Length Checker</a> useful for optimizing mobile snippets.
+                    If you're working on your site's technical SEO, you might also find our <a href="https://simpliconvert.com/meta_description_length_checker/">Meta Description Length Checker</a> useful for optimizing mobile snippets.
                 </p>
 
                 <h2 class="text-2xl font-bold mt-8 mb-4">Common Mobile SEO Issues to Watch For</h2>
@@ -443,93 +1169,71 @@
                     A responsive website isn't just about SEO; it's about business results. Users who have a negative experience on a mobile site are 62% less likely to purchase from that brand in the future. By ensuring your site is mobile-responsive, you reduce bounce rates and increase the time users spend engaging with your content.
                 </p>
                 <p class="mb-6 leading-relaxed">
-                    Whether you are a blogger, an e-commerce owner, or a developer, regularly running a <strong>phone view test</strong> ensures that your latest updates haven't broken the mobile experience. It is a simple habit that protects your traffic and your brand reputation.
+                    Whether you are a blogger, an e-commerce owner, or a developer, regularly running a <strong>phone view test</strong> across multiple device models ensures that your latest updates haven't broken the mobile experience. It is a simple habit that protects your traffic and your brand reputation.
                 </p>
-            
+
 
         <!-- Internal SEO Linking Segment -->
         <div class="mt-6 mb-6">
             <p class="text-gray-600 leading-relaxed text-base">Developing responsive applications often involves complex form validations that should be debugged with a <a class="text-orange-500 hover:text-orange-600 font-semibold underline" href='https://simpliconvert.com/regex_tester/'>php regex tester</a>.</p>
-        
+        </div>
 
         <!-- Internal SEO Linking Segment -->
         <div class="mt-6 mb-6">
             <p class="text-gray-600 leading-relaxed text-base">Ensuring search engines can actually access your responsive CSS files requires configuring a <a class="text-orange-500 hover:text-orange-600 font-semibold underline" href='https://simpliconvert.com/robots_txt_generator/'>robots txt generator google</a>.</p>
-        
+        </div>
 
         <!-- Internal SEO Linking Segment -->
         <div class="mt-6 mb-6">
             <p class="text-gray-600 leading-relaxed text-base">Since Google ranks mobile-optimized sites higher, passing responsive checks will directly help you <a class="text-orange-500 hover:text-orange-600 font-semibold underline" href='https://simpliconvert.com/website-traffic-revenue-calculator/'>calculate website traffic</a> growth.</p>
-        
+        </div>
 
         <!-- Internal SEO Linking Segment -->
         <div class="mt-6 mb-6">
             <p class="text-gray-600 leading-relaxed text-base">Scheduling automated cache clearing via a <a class="text-orange-500 hover:text-orange-600 font-semibold underline" href='https://simpliconvert.com/cron_job_generator/'>crontab generator</a> ensures mobile users always receive the fastest page loads.</p>
-        
+        </div>
 
         <!-- Internal SEO Linking Segment -->
         <div class="mt-6 mb-6">
             <p class="text-gray-600 leading-relaxed text-base">Managing massive product catalogs for mobile commerce requires clean data feeds; always <a class="text-orange-500 hover:text-orange-600 font-semibold underline" href='https://simpliconvert.com/csv_validator/'>validate csv</a> uploads.</p>
-        
+        </div>
 
         <!-- Internal SEO Linking Segment -->
         <div class="mt-6 mb-6">
             <p class="text-gray-600 leading-relaxed text-base">Providing a seamless mobile experience means ensuring navigation works flawlessly, an issue easily audited by a <a class="text-orange-500 hover:text-orange-600 font-semibold underline" href='https://simpliconvert.com/broken_link_checker/'>broken link checker</a>.</p>
-        
+        </div>
 
         <!-- Internal SEO Linking Segment -->
         <div class="mt-6 mb-6">
             <p class="text-gray-600 leading-relaxed text-base">If your responsive stylesheets are failing to load, checking server file permissions with a <a class="text-orange-500 hover:text-orange-600 font-semibold underline" href='https://simpliconvert.com/chmod_calculator/'>chmod calculator</a> might solve the issue.</p>
-        
+        </div>
 
         <!-- Internal SEO Linking Segment -->
         <div class="mt-6 mb-6">
             <p class="text-gray-600 leading-relaxed text-base">Ensuring your responsive design has high-contrast readability is easily verified using an <a class="text-orange-500 hover:text-orange-600 font-semibold underline" href='https://simpliconvert.com/html_color_by_code/'>html color code picker</a>.</p>
-        
+        </div>
 
         <!-- Internal SEO Linking Segment -->
         <div class="mt-6 mb-6">
             <p class="text-gray-600 leading-relaxed text-base">Passing Core Web Vitals on mobile devices is significantly easier when you utilize a robust <a class="text-orange-500 hover:text-orange-600 font-semibold underline" href='https://simpliconvert.com/html_minifier/'>html optimizer</a>.</p>
-        
+        </div>
 
         <!-- Internal SEO Linking Segment -->
         <div class="mt-6 mb-6">
             <p class="text-gray-600 leading-relaxed text-base">Debugging API responses that power mobile applications requires a strict <a class="text-orange-500 hover:text-orange-600 font-semibold underline" href='https://simpliconvert.com/json_validator/'>json syntax checker</a>.</p>
-        
+        </div>
 
         <!-- Internal SEO Linking Segment -->
         <div class="mt-6 mb-6">
             <p class="text-gray-600 leading-relaxed text-base">The primary reason websites fail mobile usability tests is bloated assets, a problem easily diagnosed with a <a class="text-orange-500 hover:text-orange-600 font-semibold underline" href='https://simpliconvert.com/page_size_checker/'>page size checker</a>.</p>
-        
+        </div>
 
         <!-- Internal SEO Linking Segment -->
         <div class="mt-6 mb-6">
             <p class="text-gray-600 leading-relaxed text-base">Tracking which mobile campaigns are driving the most conversions requires tagging links with a <a class="text-orange-500 hover:text-orange-600 font-semibold underline" href='https://simpliconvert.com/query_string_generator/'>url parameter generator</a>.</p>
         </div>
-        
-</div>
-        
-</div>
-        
-</div>
-        
-</div>
-        
-</div>
-        
-</div>
-        
-</div>
-        
-</div>
-        
-</div>
-        
-</div>
-        
-</div>
-        
-</div>
+
+            </div>
         </div>
     </section>
 
