@@ -155,6 +155,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.9.179/pdf.min.js"></script>
     <script>pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.9.179/pdf.worker.min.js';</script>
     <script src="https://cdn.jsdelivr.net/npm/docx@8.5.0/build/index.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" media="print" onload="this.media='all'" />
     <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
@@ -197,7 +198,7 @@
             background: #fafafa;
             border: 1px solid #e2e8f0;
             border-radius: 0.75rem;
-            max-height: 400px;
+            max-height: 460px;
             overflow-y: auto;
         }
         
@@ -205,29 +206,33 @@
             background: #ffffff;
             border: 1px solid #e2e8f0;
             margin: 1rem;
-            padding: 1.5rem;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            padding: 1.75rem;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
         }
 
-        .preview-table-cell {
-            display: inline-block;
+        .preview-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 0.75rem 0;
+            font-size: 0.8rem;
+        }
+
+        .preview-table td, .preview-table th {
             border: 1px solid #cbd5e1;
-            padding: 0.25rem 0.5rem;
-            margin: 0.125rem;
-            background: #f8fafc;
-            font-family: monospace;
-            font-size: 0.75rem;
-            color: #334155;
-            border-radius: 0.25rem;
+            padding: 0.375rem 0.625rem;
+            color: #1e293b;
+            vertical-align: top;
+        }
+
+        .preview-table tr:first-child td {
+            background-color: #f1f5f9;
+            font-weight: 600;
         }
 
         .preview-paragraph {
-            margin: 0.5rem 0;
-            padding: 0.5rem;
-            background: #ffffff;
-            border-left: 3px solid #cbd5e1;
-            font-size: 0.875rem;
-            color: #475569;
+            margin: 0.45rem 0;
+            color: #1e293b;
+            line-height: 1.5;
         }
 
         .animate-fade {
@@ -312,73 +317,511 @@
     const html = htm.bind(React.createElement);
     const { useState, useRef } = React;
 
+    // --- Layout & Document Reconstruction Helpers ---
+
+    function detectFontStyle(fontName, stylesObj) {
+      const styleInfo = (stylesObj && stylesObj[fontName]) || {};
+      const combined = `${fontName || ''} ${styleInfo.fontFamily || ''}`.toLowerCase();
+      const bold = /bold|black|heavy|semibold|demi|700|800|900/.test(combined);
+      const italic = /italic|oblique/.test(combined);
+      let family = 'Calibri';
+      if (/times|serif|georgia|garamond|cambria/.test(combined) && !/sans/.test(combined)) {
+        family = 'Times New Roman';
+      } else if (/courier|mono|consolas|code/.test(combined)) {
+        family = 'Courier New';
+      } else if (/arial|helvetica|inter|roboto|sans/.test(combined)) {
+        family = 'Arial';
+      }
+      return { bold, italic, family };
+    }
+
+    // Group raw positioned items into visual horizontal lines
+    function groupItemsIntoLines(items, pageWidth, pageHeight) {
+      if (!items.length) return [];
+
+      // Sort top-to-bottom (higher Y first in PDF coordinates), then left-to-right
+      const sorted = [...items].sort((a, b) => {
+        const yDiff = b.y - a.y;
+        const tol = Math.max(3, Math.min(a.fontSize, b.fontSize) * 0.35);
+        if (Math.abs(yDiff) > tol) return yDiff;
+        return a.x - b.x;
+      });
+
+      const lines = [];
+      let currentLine = [sorted[0]];
+      let lineY = sorted[0].y;
+      let lineAvgSize = sorted[0].fontSize;
+
+      for (let i = 1; i < sorted.length; i++) {
+        const item = sorted[i];
+        const yTol = Math.max(3.5, Math.min(lineAvgSize, item.fontSize) * 0.42);
+        if (Math.abs(item.y - lineY) <= yTol) {
+          currentLine.push(item);
+          lineY = (lineY * (currentLine.length - 1) + item.y) / currentLine.length;
+          lineAvgSize = (lineAvgSize * (currentLine.length - 1) + item.fontSize) / currentLine.length;
+        } else {
+          currentLine.sort((a, b) => a.x - b.x);
+          lines.push(buildLineMeta(currentLine, pageWidth, pageHeight));
+          currentLine = [item];
+          lineY = item.y;
+          lineAvgSize = item.fontSize;
+        }
+      }
+      if (currentLine.length) {
+        currentLine.sort((a, b) => a.x - b.x);
+        lines.push(buildLineMeta(currentLine, pageWidth, pageHeight));
+      }
+      return lines;
+    }
+
+    function buildLineMeta(lineItems, pageWidth, pageHeight) {
+      const startX = lineItems[0].x;
+      const lastItem = lineItems[lineItems.length - 1];
+      const endX = lastItem.x + lastItem.width;
+      const y = lineItems.reduce((sum, it) => sum + it.y, 0) / lineItems.length;
+      const maxFontSize = Math.max(...lineItems.map(it => it.fontSize || 11));
+      const avgFontSize = lineItems.reduce((sum, it) => sum + (it.fontSize || 11), 0) / lineItems.length;
+
+      // Segment line into column chunks where gap exceeds ~2.2x space width
+      const segments = [];
+      let segItems = [lineItems[0]];
+
+      for (let i = 1; i < lineItems.length; i++) {
+        const prev = lineItems[i - 1];
+        const cur = lineItems[i];
+        const prevEnd = prev.x + prev.width;
+        const gap = cur.x - prevEnd;
+        const spaceThreshold = Math.max(16, Math.max(prev.fontSize, cur.fontSize) * 1.65);
+
+        if (gap > spaceThreshold) {
+          segments.push(finalizeSegment(segItems));
+          segItems = [cur];
+        } else {
+          // Insert a space if gap indicates word boundary
+          const wordSpaceThreshold = Math.max(2.2, Math.min(prev.fontSize, cur.fontSize) * 0.22);
+          if (gap > wordSpaceThreshold && !prev.str.endsWith(' ') && !cur.str.startsWith(' ')) {
+            segItems.push({ ...cur, str: ' ' + cur.str, isSpaceInjected: true });
+          } else {
+            segItems.push(cur);
+          }
+        }
+      }
+      if (segItems.length) {
+        segments.push(finalizeSegment(segItems));
+      }
+
+      // Detect alignment (center / right / left)
+      const leftMargin = startX;
+      const rightMargin = Math.max(0, pageWidth - endX);
+      const lineSpan = endX - startX;
+      let align = 'left';
+
+      if (segments.length === 1 && lineSpan < pageWidth * 0.78) {
+        if (Math.abs(leftMargin - rightMargin) < 22 && leftMargin > 45) {
+          align = 'center';
+        } else if (rightMargin < 65 && leftMargin > pageWidth * 0.45) {
+          align = 'right';
+        }
+      }
+
+      return {
+        y,
+        startX,
+        endX,
+        maxFontSize,
+        avgFontSize,
+        align,
+        segments,
+        rawItems: lineItems
+      };
+    }
+
+    function finalizeSegment(items) {
+      const x = items[0].x;
+      const last = items[items.length - 1];
+      const endX = last.x + last.width;
+      // Merge consecutive runs with identical styling
+      const runs = [];
+      items.forEach(it => {
+        if (!it.str) return;
+        const prevRun = runs[runs.length - 1];
+        if (
+          prevRun &&
+          prevRun.bold === it.bold &&
+          prevRun.italic === it.italic &&
+          Math.abs(prevRun.fontSize - it.fontSize) < 0.8 &&
+          prevRun.fontFamily === it.fontFamily
+        ) {
+          prevRun.text += it.str;
+        } else {
+          runs.push({
+            text: it.str,
+            bold: !!it.bold,
+            italic: !!it.italic,
+            fontSize: Math.round(it.fontSize || 11),
+            fontFamily: it.fontFamily || 'Calibri'
+          });
+        }
+      });
+
+      const plainText = runs.map(r => r.text).join('').trim();
+      return { x, endX, runs, text: plainText };
+    }
+
+    // Reconstruct structured blocks (Tables, Headings, Paragraphs, Lists)
+    function buildStructuredBlocks(lines, pageWidth) {
+      if (!lines.length) return [];
+
+      // Determine body font size (most frequent rounded font size)
+      const sizeCounts = {};
+      lines.forEach(l => {
+        const sz = Math.round(l.avgFontSize);
+        sizeCounts[sz] = (sizeCounts[sz] || 0) + 1;
+      });
+      const bodyFontSize = Number(
+        Object.keys(sizeCounts).reduce((a, b) => (sizeCounts[a] >= sizeCounts[b] ? a : b), 11)
+      );
+
+      const blocks = [];
+      let i = 0;
+
+      while (i < lines.length) {
+        const line = lines[i];
+
+        // 1. Check if this line starts a multi-column table
+        if (line.segments.length >= 2) {
+          const tableLines = [line];
+          let j = i + 1;
+
+          while (j < lines.length) {
+            const nextLine = lines[j];
+            const prevLine = lines[j - 1];
+            const vGap = prevLine.y - nextLine.y;
+
+            // Stop table if vertical gap is too large (new section)
+            if (vGap > prevLine.maxFontSize * 3.2) break;
+
+            if (nextLine.segments.length >= 2) {
+              tableLines.push(nextLine);
+              j++;
+            } else if (
+              nextLine.segments.length === 1 &&
+              tableLines.length >= 2 &&
+              vGap < prevLine.maxFontSize * 1.6
+            ) {
+              // Wrapped cell text aligned under one of the existing table columns
+              const colXs = tableLines[0].segments.map(s => s.x);
+              const matchesCol = colXs.some(cx => Math.abs(nextLine.segments[0].x - cx) < 28);
+              if (matchesCol) {
+                tableLines.push(nextLine);
+                j++;
+              } else {
+                break;
+              }
+            } else {
+              break;
+            }
+          }
+
+          // Only treat as a real table if there are 2+ rows OR clear wide column separation
+          const hasWideGap = line.segments.length >= 3 || (line.segments[1].x - line.segments[0].endX > 35);
+          if (tableLines.length >= 2 || hasWideGap) {
+            blocks.push(normalizeTableBlock(tableLines, pageWidth));
+            i = j;
+            continue;
+          }
+        }
+
+        // 2. Otherwise treat as Paragraph / Heading / List Item
+        const seg = line.segments[0];
+        if (!seg || !seg.text) {
+          i++;
+          continue;
+        }
+
+        const isHeading =
+          line.maxFontSize >= bodyFontSize * 1.22 ||
+          (line.maxFontSize >= bodyFontSize * 1.08 && seg.runs.every(r => r.bold) && seg.text.length < 110);
+
+        const isListItem = /^([•●▪■◦\-–—*]|\d+[\.\)]|[a-zA-Z][\.\)])\s+/.test(seg.text);
+
+        // Merge consecutive body lines into a single natural paragraph if they flow together
+        const mergedRuns = [...seg.runs];
+        let lastLine = line;
+        let k = i + 1;
+
+        if (!isHeading && !isListItem && line.align === 'left') {
+          while (k < lines.length) {
+            const next = lines[k];
+            if (next.segments.length !== 1) break;
+            const nextSeg = next.segments[0];
+            if (!nextSeg || !nextSeg.text) break;
+
+            const vGap = lastLine.y - next.y;
+            const normalLineHeight = lastLine.maxFontSize * 1.55;
+            const sameLeftIndent = Math.abs(next.startX - line.startX) < 12;
+            const nextIsHeading = next.maxFontSize >= bodyFontSize * 1.22;
+            const nextIsList = /^([•●▪■◦\-–—*]|\d+[\.\)]|[a-zA-Z][\.\)])\s+/.test(nextSeg.text);
+            const prevEndsSentence = /[\.\!\?\:]\s*$/.test(lastLine.segments[0].text) && lastLine.endX < pageWidth * 0.72;
+
+            if (vGap > 0 && vGap <= normalLineHeight && sameLeftIndent && !nextIsHeading && !nextIsList && !prevEndsSentence) {
+              // Join hyphenated words cleanly, otherwise add space
+              const lastRun = mergedRuns[mergedRuns.length - 1];
+              if (lastRun && lastRun.text.endsWith('-')) {
+                lastRun.text = lastRun.text.slice(0, -1);
+              } else if (lastRun && !lastRun.text.endsWith(' ')) {
+                lastRun.text += ' ';
+              }
+              mergedRuns.push(...nextSeg.runs);
+              lastLine = next;
+              k++;
+            } else {
+              break;
+            }
+          }
+        }
+
+        const nextLine = lines[k];
+        const spaceAfterPt = nextLine ? Math.min(24, Math.max(4, Math.round((lastLine.y - nextLine.y) * 0.45))) : 8;
+
+        blocks.push({
+          type: 'paragraph',
+          isHeading,
+          headingLevel: line.maxFontSize >= bodyFontSize * 1.6 ? 1 : line.maxFontSize >= bodyFontSize * 1.3 ? 2 : 3,
+          align: line.align,
+          indentLeft: Math.max(0, Math.round(line.startX - 50)),
+          spaceAfterPt,
+          runs: mergedRuns,
+          plainText: mergedRuns.map(r => r.text).join('').trim()
+        });
+
+        i = k;
+      }
+
+      return blocks;
+    }
+
+    // Align multi-row segments into a uniform column grid
+    function normalizeTableBlock(tableLines, pageWidth) {
+      // Cluster X-starts across all rows to find column anchors
+      const allXs = [];
+      tableLines.forEach(tl => tl.segments.forEach(s => allXs.push(s.x)));
+      allXs.sort((a, b) => a - b);
+
+      const colAnchors = [];
+      allXs.forEach(x => {
+        const existing = colAnchors.find(c => Math.abs(c.mean - x) < 26);
+        if (existing) {
+          existing.values.push(x);
+          existing.mean = existing.values.reduce((a, b) => a + b, 0) / existing.values.length;
+        } else {
+          colAnchors.push({ mean: x, values: [x] });
+        }
+      });
+
+      colAnchors.sort((a, b) => a.mean - b.mean);
+      const numCols = Math.max(2, colAnchors.length);
+
+      // Compute proportional column widths
+      const colWidthsPct = [];
+      for (let c = 0; c < numCols; c++) {
+        const start = c === 0 ? 0 : colAnchors[c].mean;
+        const end = c === numCols - 1 ? pageWidth : colAnchors[c + 1].mean;
+        colWidthsPct.push(Math.max(10, Math.round(((end - start) / pageWidth) * 100)));
+      }
+      const totalPct = colWidthsPct.reduce((a, b) => a + b, 0);
+      const normalizedWidths = colWidthsPct.map(w => (w / totalPct) * 100);
+
+      // Map each row's segments into the nearest column slot
+      const rows = [];
+      tableLines.forEach((tl, rIdx) => {
+        const rowCells = Array.from({ length: numCols }, () => []);
+        tl.segments.forEach(seg => {
+          let bestCol = 0;
+          let bestDist = Infinity;
+          colAnchors.forEach((anchor, cIdx) => {
+            const dist = Math.abs(seg.x - anchor.mean);
+            if (dist < bestDist) {
+              bestDist = dist;
+              bestCol = cIdx;
+            }
+          });
+          rowCells[bestCol].push(seg);
+        });
+
+        // If this row only filled 1 cell and is closely packed below previous row, append as wrapped line
+        const filledCount = rowCells.filter(c => c.length > 0).length;
+        if (filledCount === 1 && rows.length > 0 && tl.segments.length === 1) {
+          const targetCol = rowCells.findIndex(c => c.length > 0);
+          rows[rows.length - 1][targetCol].push(...rowCells[targetCol]);
+        } else {
+          rows.push(rowCells);
+        }
+      });
+
+      return {
+        type: 'table',
+        numCols,
+        colWidths: normalizedWidths,
+        rows
+      };
+    }
+
+    // --- OCR Fallback Engine via Tesseract.js ---
+    async function extractPageWithOCR(page, pageNum, totalPages, setStatus, worker) {
+      setStatus(`Running OCR on scanned page ${pageNum} of ${totalPages}...`);
+      const scale = 2.0; // High resolution for crisp OCR
+      const viewport = page.getViewport({ scale });
+      const canvas = document.createElement('canvas');
+      canvas.width = viewport.width;
+      canvas.height = viewport.height;
+      const ctx = canvas.getContext('2d');
+
+      await page.render({ canvasContext: ctx, viewport }).promise;
+
+      const { data } = await worker.recognize(canvas);
+      const unscaledWidth = viewport.width / scale;
+      const unscaledHeight = viewport.height / scale;
+
+      const items = [];
+      if (data && Array.isArray(data.words)) {
+        data.words.forEach(w => {
+          const text = (w.text || '').trim();
+          if (!text) return;
+          const x = w.bbox.x0 / scale;
+          // Convert top-down canvas Y to bottom-up PDF Y coordinate
+          const y = unscaledHeight - (w.bbox.y1 / scale);
+          const width = Math.max(4, (w.bbox.x1 - w.bbox.x0) / scale);
+          const height = Math.max(8, (w.bbox.y1 - w.bbox.y0) / scale);
+
+          items.push({
+            str: text,
+            x,
+            y,
+            width,
+            height,
+            fontSize: Math.round(height * 0.85),
+            bold: !!w.is_bold,
+            italic: !!w.is_italic,
+            fontFamily: 'Calibri'
+          });
+        });
+      }
+
+      // Free canvas memory
+      canvas.width = 0;
+      canvas.height = 0;
+
+      return {
+        items,
+        pageWidth: unscaledWidth,
+        pageHeight: unscaledHeight,
+        usedOCR: true
+      };
+    }
+
+    // --- Main React Component ---
     const App = () => {
       const [status, setStatus] = useState("Waiting for PDF upload...");
       const [pagesData, setPagesData] = useState([]);
       const [isProcessing, setIsProcessing] = useState(false);
       const [fileName, setFileName] = useState("");
+      const [ocrMode, setOcrMode] = useState("auto"); // "auto" | "force" | "off"
+      const [isDragging, setIsDragging] = useState(false);
       const fileInputRef = useRef(null);
+      const lastFileRef = useRef(null);
 
-      const processPDF = async (file) => {
+      const processPDF = async (file, selectedOcrMode = ocrMode) => {
+        if (!file) return;
+        lastFileRef.current = file;
         setIsProcessing(true);
-        setStatus("Reading PDF data...");
+        setStatus("Reading PDF structure...");
         setFileName(file.name);
-        
+        setPagesData([]);
+
+        let ocrWorker = null;
+
         try {
           const buffer = await file.arrayBuffer();
           const pdf = await pdfjsLib.getDocument({ data: buffer }).promise;
           const parsedPages = [];
 
           for (let p = 1; p <= pdf.numPages; p++) {
-            setStatus(`Processing page ${p} of ${pdf.numPages}...`);
+            setStatus(`Analyzing layout on page ${p} of ${pdf.numPages}...`);
             const page = await pdf.getPage(p);
+            const viewport = page.getViewport({ scale: 1.0 });
+            const pageWidth = viewport.width;
+            const pageHeight = viewport.height;
+
             const content = await page.getTextContent();
-            const items = content.items.map(i => ({
-              str: i.str,
-              x: i.transform[4],
-              y: i.transform[5],
-              fontName: i.fontName || '',
-              height: i.height || 0
-            }));
-            
-            // Group lines by Y
-            const lines = {};
-            items.forEach(it => {
-              const y = Math.round(it.y);
-              lines[y] = lines[y] || [];
-              lines[y].push(it);
-            });
+            const styles = content.styles || {};
 
-            const sortedLines = Object.values(lines)
-              .map(arr => arr.sort((a,b)=>a.x-b.x))
-              .sort((a,b)=>b[0].y - a[0].y);
+            let items = content.items
+              .filter(i => i.str && i.str.trim().length > 0)
+              .map(i => {
+                const scaleX = Math.hypot(i.transform[0], i.transform[1]);
+                const scaleY = Math.hypot(i.transform[2], i.transform[3]);
+                const fontSize = Math.max(6, Math.round((scaleY || i.height || 11) * 10) / 10);
+                const style = detectFontStyle(i.fontName, styles);
 
-            const pageBlocks = [];
-            sortedLines.forEach(line => {
-              // segment by big horizontal gaps
-              let row = [line[0]];
-              for (let i = 1; i < line.length; i++) {
-                const prev = line[i-1];
-                const cur = line[i];
-                const xgap = cur.x - prev.x;
-                if (xgap > 20) {
-                  pageBlocks.push({ type:'tableRow', cells: row });
-                  row = [cur];
-                } else {
-                  row.push(cur);
-                }
+                return {
+                  str: i.str,
+                  x: i.transform[4],
+                  y: i.transform[5],
+                  width: i.width || (i.str.length * fontSize * 0.5),
+                  height: i.height || fontSize,
+                  fontSize,
+                  bold: style.bold,
+                  italic: style.italic,
+                  fontFamily: style.family
+                };
+              });
+
+            const totalChars = items.reduce((acc, it) => acc + it.str.trim().length, 0);
+            const needsOCR =
+              selectedOcrMode === "force" ||
+              (selectedOcrMode === "auto" && totalChars < 25 && window.Tesseract);
+
+            let usedOCR = false;
+            if (needsOCR && window.Tesseract) {
+              if (!ocrWorker) {
+                setStatus("Initializing local OCR engine (first run downloads language data)...");
+                ocrWorker = await Tesseract.createWorker('eng');
               }
-              pageBlocks.push({ type:'tableRow', cells: row });
-            });
+              const ocrResult = await extractPageWithOCR(page, p, pdf.numPages, setStatus, ocrWorker);
+              items = ocrResult.items;
+              usedOCR = true;
+            }
 
-            parsedPages.push({ page: p, blocks: pageBlocks });
+            const lines = groupItemsIntoLines(items, pageWidth, pageHeight);
+            const blocks = buildStructuredBlocks(lines, pageWidth);
+
+            parsedPages.push({
+              page: p,
+              pageWidth,
+              pageHeight,
+              usedOCR,
+              blocks
+            });
+          }
+
+          if (ocrWorker) {
+            await ocrWorker.terminate();
           }
 
           setPagesData(parsedPages);
-          setStatus("PDF parsed successfully. Ready to convert!");
+          const ocrCount = parsedPages.filter(p => p.usedOCR).length;
+          setStatus(
+            ocrCount > 0
+              ? `Parsed ${parsedPages.length} page(s) (${ocrCount} via OCR). Ready to download!`
+              : `Parsed ${parsedPages.length} page(s) with layout & tables. Ready to download!`
+          );
         } catch (error) {
           console.error(error);
-          setStatus("Error processing PDF. The file might be corrupted or encrypted.");
+          if (ocrWorker) {
+            try { await ocrWorker.terminate(); } catch (_) {}
+          }
+          setStatus("Error processing PDF. The file might be corrupted or password-protected.");
         } finally {
           setIsProcessing(false);
         }
@@ -387,11 +830,30 @@
       const handleFileChange = (e) => {
         const file = e.target.files[0];
         if (!file) return;
-        if (file.type !== "application/pdf") {
-            alert("Please upload a valid PDF file.");
-            return;
+        if (file.type !== "application/pdf" && !file.name.toLowerCase().endsWith(".pdf")) {
+          alert("Please upload a valid PDF file.");
+          return;
         }
         processPDF(file);
+      };
+
+      const handleDrop = (e) => {
+        e.preventDefault();
+        setIsDragging(false);
+        const file = e.dataTransfer.files[0];
+        if (!file) return;
+        if (file.type !== "application/pdf" && !file.name.toLowerCase().endsWith(".pdf")) {
+          alert("Please upload a valid PDF file.");
+          return;
+        }
+        processPDF(file);
+      };
+
+      const handleOcrModeChange = (newMode) => {
+        setOcrMode(newMode);
+        if (lastFileRef.current && !isProcessing) {
+          processPDF(lastFileRef.current, newMode);
+        }
       };
 
       const handleConvert = async () => {
@@ -399,98 +861,186 @@
           alert("Please upload and parse a PDF first.");
           return;
         }
-        
-        setStatus("Building DOCX file...");
+
+        setStatus("Building formatted DOCX file...");
         setIsProcessing(true);
 
         try {
-          const { Document, Packer, Paragraph, Table, TableRow, TableCell, TextRun, WidthType } = docx;
-          const docChildren = [];
+          const {
+            Document,
+            Packer,
+            Paragraph,
+            Table,
+            TableRow,
+            TableCell,
+            TextRun,
+            WidthType,
+            AlignmentType,
+            HeadingLevel,
+            BorderStyle,
+            PageBreak,
+            ShadingType,
+            convertInchesToTwip
+          } = docx;
 
-          pagesData.forEach((pd, idx) => {
-            docChildren.push(new Paragraph({ 
-                children: [new TextRun({ text: `--- Page ${pd.page} ---`, bold: true, color: "888888" })], 
-                spacing: { after: 200 }
-            }));
+          const mapAlignment = (align) => {
+            if (align === 'center') return AlignmentType.CENTER;
+            if (align === 'right') return AlignmentType.RIGHT;
+            return AlignmentType.LEFT;
+          };
 
-            pd.blocks.forEach(bl => {
-              const rowStrings = bl.cells.map(c => c.str.trim()).filter(s => s);
-              if (rowStrings.length > 1) {
-                const rowCells = rowStrings.map(text => new TableCell({
-                  children: [ new Paragraph(text) ],
-                  width: { size: 100 / rowStrings.length, type: WidthType.PERCENTAGE }
-                }));
-                docChildren.push(new TableRow({ children: rowCells }));
-              } else if (rowStrings.length) {
-                const isHeader = bl.cells.some(c => c.fontName.toLowerCase().includes('bold') || c.height > 20);
-                docChildren.push(new Paragraph({
-                  children: [ new TextRun({
-                    text: rowStrings[0],
-                    bold: isHeader
-                  }) ]
-                }));
+          const sections = pagesData.map((pd, pageIdx) => {
+            const children = [];
+
+            pd.blocks.forEach((bl) => {
+              if (bl.type === 'table') {
+                const tableRows = bl.rows.map((rowCells, rIdx) => {
+                  const isHeaderRow = rIdx === 0;
+                  const cells = rowCells.map((cellSegs, cIdx) => {
+                    const cellParagraphs = cellSegs.length
+                      ? cellSegs.map(seg => new Paragraph({
+                          spacing: { before: 40, after: 40 },
+                          children: seg.runs.map(r => new TextRun({
+                            text: r.text,
+                            bold: r.bold || isHeaderRow,
+                            italics: r.italic,
+                            font: r.fontFamily,
+                            size: Math.max(16, Math.min(48, Math.round(r.fontSize * 2)))
+                          }))
+                        }))
+                      : [new Paragraph({ children: [new TextRun("")] })];
+
+                    return new TableCell({
+                      children: cellParagraphs,
+                      width: { size: bl.colWidths[cIdx] || (100 / bl.numCols), type: WidthType.PERCENTAGE },
+                      shading: isHeaderRow
+                        ? { fill: "F1F5F9", type: ShadingType.CLEAR, color: "auto" }
+                        : undefined,
+                      margins: {
+                        top: 80,
+                        bottom: 80,
+                        left: 120,
+                        right: 120
+                      },
+                      borders: {
+                        top: { style: BorderStyle.SINGLE, size: 4, color: "CBD5E1" },
+                        bottom: { style: BorderStyle.SINGLE, size: 4, color: "CBD5E1" },
+                        left: { style: BorderStyle.SINGLE, size: 4, color: "CBD5E1" },
+                        right: { style: BorderStyle.SINGLE, size: 4, color: "CBD5E1" }
+                      }
+                    });
+                  });
+
+                  return new TableRow({
+                    tableHeader: isHeaderRow,
+                    children: cells
+                  });
+                });
+
+                children.push(
+                  new Table({
+                    width: { size: 100, type: WidthType.PERCENTAGE },
+                    rows: tableRows
+                  })
+                );
+                children.push(new Paragraph({ spacing: { after: 120 }, children: [] }));
+              } else if (bl.type === 'paragraph') {
+                const headingMap = {
+                  1: HeadingLevel.HEADING_1,
+                  2: HeadingLevel.HEADING_2,
+                  3: HeadingLevel.HEADING_3
+                };
+
+                children.push(
+                  new Paragraph({
+                    heading: bl.isHeading ? headingMap[bl.headingLevel] : undefined,
+                    alignment: mapAlignment(bl.align),
+                    indent: bl.align === 'left' && bl.indentLeft > 15
+                      ? { left: Math.min(3600, bl.indentLeft * 15) }
+                      : undefined,
+                    spacing: {
+                      before: bl.isHeading ? 180 : 40,
+                      after: (bl.spaceAfterPt || 8) * 18,
+                      line: 276 // 1.15 natural line spacing
+                    },
+                    children: bl.runs.map(r => new TextRun({
+                      text: r.text,
+                      bold: r.bold || bl.isHeading,
+                      italics: r.italic,
+                      font: r.fontFamily,
+                      size: Math.max(16, Math.min(72, Math.round(r.fontSize * 2))),
+                      color: bl.isHeading ? "0F172A" : "1E293B"
+                    }))
+                  })
+                );
               }
             });
 
-            if (idx < pagesData.length - 1) {
-              docChildren.push(new Paragraph({ children:[ new TextRun("") ] }));
-              docChildren.push(new Paragraph({ children:[ new TextRun("") ] }));
-            }
+            // Convert PDF points (72 DPI) to Twips (1440 per inch -> 20 twips per point)
+            const widthTwips = Math.round((pd.pageWidth || 612) * 20);
+            const heightTwips = Math.round((pd.pageHeight || 792) * 20);
+
+            return {
+              properties: {
+                page: {
+                  size: {
+                    width: widthTwips,
+                    height: heightTwips
+                  },
+                  margin: {
+                    top: convertInchesToTwip(0.75),
+                    bottom: convertInchesToTwip(0.75),
+                    left: convertInchesToTwip(0.75),
+                    right: convertInchesToTwip(0.75)
+                  }
+                }
+              },
+              children: children.length ? children : [new Paragraph({ children: [new TextRun("")] })]
+            };
           });
 
-          // Bundle consecutive TableRows into actual Table objects
-          const elements = [];
-          let currentRows = [];
-          
-          docChildren.forEach(child => {
-            if (child instanceof docx.TableRow) {
-              currentRows.push(child);
-            } else {
-              if (currentRows.length) {
-                elements.push(new Table({ width:{ size:100, type:WidthType.PERCENTAGE }, rows: currentRows }));
-                currentRows = [];
-              }
-              elements.push(child);
-            }
+          const doc = new Document({
+            creator: "SimpliConvert PDF to Word",
+            sections
           });
-          if (currentRows.length) {
-              elements.push(new Table({ width:{ size:100, type:WidthType.PERCENTAGE }, rows: currentRows }));
-          }
 
-          const doc = new Document({ sections: [{ children: elements }] });
           const blob = await Packer.toBlob(doc);
-          
-          // Trigger download
+
           const url = window.URL.createObjectURL(blob);
           const a = document.createElement("a");
           a.href = url;
-          a.download = fileName.replace(".pdf", "") + "_converted.docx";
+          a.download = fileName.replace(/\.pdf$/i, "") + "_converted.docx";
           a.click();
           window.URL.revokeObjectURL(url);
-          
-          setStatus("DOCX downloaded successfully!");
+
+          setStatus("Formatted DOCX downloaded successfully!");
         } catch (error) {
-            console.error(error);
-            setStatus("Error generating Word document.");
+          console.error(error);
+          setStatus("Error generating Word document.");
         } finally {
-            setIsProcessing(false);
+          setIsProcessing(false);
         }
       };
 
       return html`
-        <div className="hero-card rounded-[2rem] p-8 mb-8 animate-fade">
+        <div className="hero-card rounded-[2rem] p-6 sm:p-8 mb-8 animate-fade">
           
-          <div className="mb-8">
+          <div className="mb-6">
             <div 
-                className="border-2 border-dashed border-slate-300 rounded-2xl p-10 text-center hover:border-[#da3f0b] hover:bg-slate-50 transition-colors cursor-pointer relative"
+                className=${`border-2 border-dashed rounded-2xl p-8 sm:p-10 text-center transition-colors cursor-pointer relative ${
+                  isDragging ? 'border-[#da3f0b] bg-orange-50/40' : 'border-slate-300 hover:border-[#da3f0b] hover:bg-slate-50'
+                }`}
                 onClick=${() => fileInputRef.current.click()}
+                onDragOver=${(e) => { e.preventDefault(); setIsDragging(true); }}
+                onDragLeave=${() => setIsDragging(false)}
+                onDrop=${handleDrop}
             >
               <input 
                 type="file" 
-                ref=${fileInputRef}
+                ref=${fileInputRef} 
                 className="hidden" 
-                accept="application/pdf"
-                onChange=${handleFileChange}
+                accept="application/pdf" 
+                onChange=${handleFileChange} 
               />
               <div className="text-[#da3f0b] text-4xl mb-4">
                 <i className="fas fa-file-pdf"></i>
@@ -499,20 +1049,53 @@
                  ${fileName ? fileName : "Upload a PDF Document"}
               </h3>
               <p className="text-slate-500 text-sm">
-                 Click to browse or drag and drop your file here.
+                 Click to browse or drag and drop your PDF here (supports native & scanned PDFs).
               </p>
+            </div>
+          </div>
+
+          <div className="flex flex-wrap items-center justify-between gap-3 mb-4 px-1">
+            <div className="flex items-center gap-2 text-xs font-semibold text-slate-600">
+              <i className="fas fa-eye text-[#da3f0b]"></i>
+              <span>OCR Mode (Scanned PDFs):</span>
+            </div>
+            <div className="inline-flex rounded-lg bg-slate-100 p-1 text-xs font-semibold">
+              <button
+                type="button"
+                disabled=${isProcessing}
+                onClick=${() => handleOcrModeChange("auto")}
+                className=${`px-3 py-1.5 rounded-md transition-all ${ocrMode === 'auto' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-600 hover:text-slate-900'}`}
+              >
+                Auto-Detect
+              </button>
+              <button
+                type="button"
+                disabled=${isProcessing}
+                onClick=${() => handleOcrModeChange("force")}
+                className=${`px-3 py-1.5 rounded-md transition-all ${ocrMode === 'force' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-600 hover:text-slate-900'}`}
+              >
+                Force OCR
+              </button>
+              <button
+                type="button"
+                disabled=${isProcessing}
+                onClick=${() => handleOcrModeChange("off")}
+                className=${`px-3 py-1.5 rounded-md transition-all ${ocrMode === 'off' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-600 hover:text-slate-900'}`}
+              >
+                Text Only
+              </button>
             </div>
           </div>
 
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-6 bg-slate-50 p-4 rounded-xl border border-slate-100">
              <div className="flex items-center gap-3">
-                <div className=${`w-3 h-3 rounded-full ${isProcessing ? 'bg-amber-400 animate-pulse' : pagesData.length ? 'bg-green-500' : 'bg-slate-300'}`}></div>
+                <div className=${`w-3 h-3 rounded-full shrink-0 ${isProcessing ? 'bg-amber-400 animate-pulse' : pagesData.length ? 'bg-green-500' : 'bg-slate-300'}`}></div>
                 <span className="text-sm font-semibold text-slate-700">${status}</span>
              </div>
              
              <button 
-                onClick=${handleConvert}
-                disabled=${!pagesData.length || isProcessing}
+                onClick=${handleConvert} 
+                disabled=${!pagesData.length || isProcessing} 
                 className="primary-gradient text-white px-8 py-3 rounded-xl font-bold hover:shadow-lg hover:-translate-y-0.5 transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0 flex items-center gap-2 w-full sm:w-auto justify-center"
              >
                 <i className="fas fa-file-word"></i>
@@ -522,28 +1105,78 @@
 
           ${pagesData.length > 0 && html`
             <div className="mt-8 animate-fade">
-              <h4 className="text-sm font-bold text-slate-800 uppercase tracking-widest mb-4">Data Extraction Preview</h4>
+              <div className="flex items-center justify-between mb-4">
+                <h4 className="text-sm font-bold text-slate-800 uppercase tracking-widest">Reconstructed Layout Preview</h4>
+                <span className="text-xs text-slate-500">${pagesData.length} page(s)</span>
+              </div>
               <div className="preview-container">
                 ${pagesData.map((pd, index) => html`
                   <div key=${index} className="preview-page">
-                    <div className="text-xs font-bold text-slate-400 mb-4 border-b pb-2">PAGE ${pd.page}</div>
+                    <div className="flex items-center justify-between text-xs font-bold text-slate-400 mb-4 border-b pb-2">
+                      <span>PAGE ${pd.page}</span>
+                      ${pd.usedOCR && html`
+                        <span className="bg-amber-100 text-amber-800 px-2 py-0.5 rounded text-[11px] font-semibold">
+                          OCR Extracted
+                        </span>
+                      `}
+                    </div>
+
+                    ${pd.blocks.length === 0 && html`
+                      <p className="text-xs italic text-slate-400">No text detected on this page. Try switching OCR Mode to "Force OCR".</p>
+                    `}
+
                     ${pd.blocks.map((bl, bIndex) => {
-                      const rowStrings = bl.cells.map(c => c.str.trim()).filter(s => s);
-                      if (rowStrings.length > 1) {
+                      if (bl.type === 'table') {
                         return html`
-                          <div key=${bIndex} className="mb-2">
-                            ${rowStrings.map((cell, cIndex) => html`
-                              <span key=${cIndex} className="preview-table-cell">${cell}</span>
-                            `)}
-                          </div>
-                        `;
-                      } else if (rowStrings.length) {
-                        return html`
-                          <div key=${bIndex} className="preview-paragraph">
-                            ${rowStrings[0]}
+                          <div key=${bIndex} className="overflow-x-auto my-3">
+                            <table className="preview-table">
+                              <tbody>
+                                ${bl.rows.map((rowCells, rIndex) => html`
+                                  <tr key=${rIndex}>
+                                    ${rowCells.map((cellSegs, cIndex) => html`
+                                      <td key=${cIndex} style=${{ width: `${bl.colWidths[cIndex]}%` }}>
+                                        ${cellSegs.map((seg, sIdx) => html`
+                                          <div key=${sIdx}>
+                                            ${seg.runs.map((r, rIdx) => html`
+                                              <span key=${rIdx} style=${{
+                                                fontWeight: r.bold ? '700' : '400',
+                                                fontStyle: r.italic ? 'italic' : 'normal'
+                                              }}>${r.text}</span>
+                                            `)}
+                                          </div>
+                                        `)}
+                                      </td>
+                                    `)}
+                                  </tr>
+                                `)}
+                              </tbody>
+                            </table>
                           </div>
                         `;
                       }
+
+                      if (bl.type === 'paragraph') {
+                        return html`
+                          <div
+                            key=${bIndex}
+                            className="preview-paragraph"
+                            style=${{
+                              textAlign: bl.align || 'left',
+                              fontSize: bl.isHeading ? '1.05rem' : '0.875rem',
+                              fontWeight: bl.isHeading ? '700' : '400',
+                              marginTop: bl.isHeading ? '0.9rem' : '0.35rem'
+                            }}
+                          >
+                            ${bl.runs.map((r, rIdx) => html`
+                              <span key=${rIdx} style=${{
+                                fontWeight: (r.bold || bl.isHeading) ? '700' : '400',
+                                fontStyle: r.italic ? 'italic' : 'normal'
+                              }}>${r.text}</span>
+                            `)}
+                          </div>
+                        `;
+                      }
+
                       return null;
                     })}
                   </div>
